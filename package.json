@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "openapi2schema": "^0.5.0",
+    "swagger-ui-watcher": "^2.1.13"
+  }
+}

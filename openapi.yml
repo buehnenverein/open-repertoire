@@ -1,0 +1,192 @@
+openapi: 3.0.3
+info:
+  title: Use Case 3 - API
+  description: |-
+    This document describes the public API implemented by theaters to provide their current repertoire.
+
+    This document is intended as documentation for consumers of the API *as well as* anyone who intends to implement an API endpoint that is compatible with Use Case 3. 
+  
+    **Note for API implementors: It's not required to use the same endpoint name as documented here. The important part is to implement a single endpoint that returns data in the format declared in this specification.**
+  # termsOfService: http://swagger.io/terms/
+  contact:
+    email: retzlaff@buehnenverein.de
+  # license:
+  #   name: Apache 2.0
+  #   url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 0.1.0
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+# servers:
+#   - url: https://petstore3.swagger.io/api/v3
+tags:
+  - name: events
+    description: Endpoint providing public information about upcoming events
+paths:
+  /events:
+    get:
+      tags:
+        - events
+      summary: Provides public information about events
+      description: "TODO: Write description"
+      operationId: getEvents
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Repertoire'          
+        '400':
+          description: Invalid status value
+components:
+  schemas:
+    Repertoire:
+      required:
+        - name
+        - events
+      additionalProperties: false
+      type: object
+      properties:
+        name:
+          type: string
+          description: "The organization's name"
+          example: "Staatstheater Augsburg"
+        address:
+          type: object
+          additionalProperties: false
+          properties:
+            postalCode:
+              type: string
+              # pattern: "\d{5}"
+              example: 86153
+            streetAddress:
+              type: string
+              example: Provinostr. 52
+            city:
+              type: string
+              example: Augsburg
+        events:
+          type: array
+          description: "List of current events offered by the organization"
+          items:
+            $ref: "#/components/schemas/Event"
+    Event:
+      type: object
+      required:
+        - title
+        - description
+        - startDate
+      additionalProperties: false
+      properties:
+        title:
+          type: string
+          description: The event title
+          example: Hedwig and the Angry Inch
+        subtitle:
+          type: string
+          description: The event's optional subtitle
+          example: US-amerikanisches Off-Broadway-Rock-Musical
+        description:
+          type: string
+          example: Hedwig, die Queen des Glamrock, kommt auf ihrer Tournee in Augsburg vorbei! Gemeinsam mit ihrer Band The Angry Inch gibt sie eines ihrer mitreißenden Konzerte. Zwischen den Songs, die – mal Rocknummer, mal Country-Ballade – von ihrem Leben und der Suche nach der eigenen Identität erzählen, kommt sie dem Publikum so nah wie nie.\nDiese Show sollten Sie nicht verpassen!
+        startDate:
+          type: string
+          description: "The start date and time of the event (in ISO 8601 date format)."
+          format: date-time
+        endDate:
+          type: string
+          description:  "The end date and time of the event (in ISO 8601 date format)."
+          format: date-time
+        duration:
+          type: integer
+          format: int64
+          description: The duration of the event in seconds.
+          example: 5400
+        # pause:
+        #   type: boolean
+        #   description: "TODO: Gibt es hierfür eine Entsprechung in schema.org?"
+        #   example: false
+        url: 
+          type: string
+          description: Link to further information about the event
+          format: uri
+          example: "https://staatstheater-augsburg.de/hedwig_and_the_angry_inch"
+        collaborators: 
+          description: List of people collaborating on the event
+          type: array
+          items:
+            $ref: "#/components/schemas/Person"
+        performers:
+          type: array
+          items:
+            $ref: "#/components/schemas/Person"
+        # inLanguage: 
+        #   type: string
+        #   description: Primary language of the event
+        #   format: can/should we make this an enum of language codes?
+        location:
+          description: Location where this event is happening.
+          $ref: "#/components/schemas/Location"
+        offers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Offer'
+
+    Offer:
+      type: object
+      additionalProperties: false
+      properties:
+        url:
+          type: string
+          description: Ticketing link of the event
+          format: uri
+          example: "https://webshop-tickets.staatstheater-augsburg.de/de/tickets/hedwig-and-the-angry-inch/brechtbuehne-im-gaswerk-14-12-2023-19-30"
+
+    Person:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+        role:
+          type: string
+          description: "This person's role in the performance, e.g. \"Regie\" or \"Dramaturgie\". For performers, this should be the name of the role they are performing on stage."
+
+    Location:
+        type: object
+        additionalProperties: false
+        properties:
+          name:
+            type: string
+            example: brechtbühne im Gaswerk
+          postalCode:
+            type: string
+            example: 86156
+            # pattern: "\d{5}"
+          streetAddress:
+            type: string
+            example: Am Alten Gaswerk 7
+          city:
+            type: string
+            example: Augsburg
+
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+      xml:
+        name: '##default'
+  requestBodies:
+    Repertoire:
+      description: Repertoire object that needs to be added to the store
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Repertoire'

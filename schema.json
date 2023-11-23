@@ -1,0 +1,156 @@
+{
+  "required": [
+    "name",
+    "events"
+  ],
+  "additionalProperties": false,
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The organization's name"
+    },
+    "address": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "postalCode": {
+          "type": "string"
+        },
+        "streetAddress": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        }
+      }
+    },
+    "events": {
+      "type": "array",
+      "description": "List of current events offered by the organization",
+      "items": {
+        "type": "object",
+        "required": [
+          "title",
+          "description",
+          "startDate"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "The event title"
+          },
+          "subtitle": {
+            "type": "string",
+            "description": "The event's optional subtitle"
+          },
+          "description": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string",
+            "description": "The start date and time of the event (in ISO 8601 date format).",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "description": "The end date and time of the event (in ISO 8601 date format).",
+            "format": "date-time"
+          },
+          "duration": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The duration of the event in seconds.",
+            "minimum": -9223372036854776000,
+            "maximum": 9223372036854776000
+          },
+          "pause": {
+            "type": "boolean",
+            "description": "TODO: Gibt es hierfür eine Entsprechung in schema.org?"
+          },
+          "url": {
+            "type": "string",
+            "description": "Link to further information about the event",
+            "format": "uri"
+          },
+          "collaborators": {
+            "description": "List of people collaborating on the event",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "role": {
+                  "type": "string",
+                  "description": "This person's role in the performance, e.g. \"Regie\" or \"Dramaturgie\". For performers, this should be the name of the role they are performing on stage."
+                }
+              }
+            }
+          },
+          "performers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "role": {
+                  "type": "string",
+                  "description": "This person's role in the performance, e.g. \"Regie\" or \"Dramaturgie\". For performers, this should be the name of the role they are performing on stage."
+                }
+              }
+            }
+          },
+          "inLanguage": {
+            "type": "string",
+            "description": "Primary language of the event",
+            "format": "can/should we make this an enum of language codes?"
+          },
+          "location": {
+            "description": "Location where this event is happening.",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "postalCode": {
+                "type": "string"
+              },
+              "streetAddress": {
+                "type": "string"
+              },
+              "city": {
+                "type": "string"
+              }
+            }
+          },
+          "offers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "description": "Ticketing link of the event",
+                  "format": "uri"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "$schema": "http://json-schema.org/draft-04/schema#"
+}
