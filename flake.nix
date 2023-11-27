@@ -33,7 +33,10 @@
           modules = [
             {
               # https://devenv.sh/reference/options/
-              packages = [];
+              packages = [
+                pkgs.jq
+                pkgs.shellcheck
+              ];
               languages.javascript.enable = true;
             }
           ];

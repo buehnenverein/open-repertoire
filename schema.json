@@ -14,9 +14,6 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "name": {
-          "type": "string"
-        },
         "postalCode": {
           "type": "string"
         },
@@ -68,10 +65,6 @@
             "minimum": -9223372036854776000,
             "maximum": 9223372036854776000
           },
-          "pause": {
-            "type": "boolean",
-            "description": "TODO: Gibt es hierfür eine Entsprechung in schema.org?"
-          },
           "url": {
             "type": "string",
             "description": "Link to further information about the event",
@@ -110,11 +103,6 @@
               }
             }
           },
-          "inLanguage": {
-            "type": "string",
-            "description": "Primary language of the event",
-            "format": "can/should we make this an enum of language codes?"
-          },
           "location": {
             "description": "Location where this event is happening.",
             "type": "object",
@@ -152,5 +140,5 @@
       }
     }
   },
-  "$schema": "http://json-schema.org/draft-04/schema#"
+  "$schema": "http://json-schema.org/draft-07/schema#"
 }
