@@ -38,6 +38,7 @@
                 pkgs.shellcheck
               ];
               languages.javascript.enable = true;
+              languages.elm.enable = true;
             }
           ];
         };

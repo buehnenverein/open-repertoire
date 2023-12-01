@@ -1,0 +1,8 @@
+{
+  "targets": {
+    "validator": {
+      "inputs": ["src/Main.elm"],
+      "output": "main.js"
+    }
+  }
+}
