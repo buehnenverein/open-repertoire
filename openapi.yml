@@ -37,13 +37,13 @@ paths:
       description: "TODO: Write description"
       operationId: getEvents
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Repertoire'          
-        '400':
+                $ref: "#/components/schemas/Repertoire"
+        "400":
           description: Invalid status value
 components:
   schemas:
@@ -102,7 +102,7 @@ components:
           format: date-time
         endDate:
           type: string
-          description:  "The end date and time of the event (in ISO 8601 date format)."
+          description: "The end date and time of the event (in ISO 8601 date format)."
           format: date-time
         duration:
           type: integer
@@ -113,12 +113,12 @@ components:
         #   type: boolean
         #   description: "TODO: Gibt es hierfür eine Entsprechung in schema.org?"
         #   example: false
-        url: 
+        url:
           type: string
           description: Link to further information about the event
           format: uri
           example: "https://staatstheater-augsburg.de/hedwig_and_the_angry_inch"
-        collaborators: 
+        collaborators:
           description: List of people collaborating on the event
           type: array
           items:
@@ -127,7 +127,7 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Person"
-        # inLanguage: 
+        # inLanguage:
         #   type: string
         #   description: Primary language of the event
         #   format: can/should we make this an enum of language codes?
@@ -137,7 +137,7 @@ components:
         offers:
           type: array
           items:
-            $ref: '#/components/schemas/Offer'
+            $ref: "#/components/schemas/Offer"
 
     Offer:
       type: object
@@ -157,25 +157,25 @@ components:
           type: string
         role:
           type: string
-          description: "This person's role in the performance, e.g. \"Regie\" or \"Dramaturgie\". For performers, this should be the name of the role they are performing on stage."
+          description: 'This person''s role in the performance, e.g. "Regie" or "Dramaturgie". For performers, this should be the name of the role they are performing on stage.'
 
     Location:
-        type: object
-        additionalProperties: false
-        properties:
-          name:
-            type: string
-            example: brechtbühne im Gaswerk
-          postalCode:
-            type: string
-            example: 86156
-            # pattern: "\d{5}"
-          streetAddress:
-            type: string
-            example: Am Alten Gaswerk 7
-          city:
-            type: string
-            example: Augsburg
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          example: brechtbühne im Gaswerk
+        postalCode:
+          type: string
+          example: 86156
+          # pattern: "\d{5}"
+        streetAddress:
+          type: string
+          example: Am Alten Gaswerk 7
+        city:
+          type: string
+          example: Augsburg
 
     ApiResponse:
       type: object
@@ -188,11 +188,11 @@ components:
         message:
           type: string
       xml:
-        name: '##default'
+        name: "##default"
   requestBodies:
     Repertoire:
       description: Repertoire object that needs to be added to the store
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Repertoire'
+            $ref: "#/components/schemas/Repertoire"
