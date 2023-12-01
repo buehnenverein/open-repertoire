@@ -7,8 +7,12 @@ info:
     This document describes the public API implemented by theaters to provide their current repertoire.
 
     This document is intended as documentation for consumers of the API *as well as* anyone who intends to implement an API endpoint that is compatible with Use Case 3. 
-  
-    **Note for API implementors: It's not required to use the same endpoint name as documented here. The important part is to implement a single endpoint that returns data in the format declared in this specification.**
+
+    Notes for API implementors
+    ===========
+
+    * It's not required to use the same endpoint name as documented here. The important part is to implement a single endpoint that returns data in the format declared in this specification.
+    * You can test whether your implementation matches this specification using our custom [validation page](/validate)
   # termsOfService: http://swagger.io/terms/
   contact:
     email: retzlaff@buehnenverein.de
