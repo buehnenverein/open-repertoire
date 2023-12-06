@@ -143,6 +143,18 @@ components:
       type: object
       additionalProperties: false
       properties:
+        name:
+          type: string
+          example: Normalpreis
+          description: 'A descriptive name for this offer, e.g. "Normalpreis", "Ermäßigt", "Preisgruppe A", usw.'
+        price:
+          type: number
+          format: float
+          example: 25.50
+        priceCurrency:
+          type: string
+          description: "The currency of the price. Use standard formats: TODO"
+          example: EUR
         url:
           type: string
           description: Ticketing link of the event
