@@ -118,8 +118,8 @@ components:
           description: Link to further information about the event
           format: uri
           example: "https://staatstheater-augsburg.de/hedwig_and_the_angry_inch"
-        collaborators:
-          description: List of people collaborating on the event
+        contributors:
+          description: List of people contributing to the event
           type: array
           items:
             $ref: "#/components/schemas/Person"
@@ -157,7 +157,7 @@ components:
           type: string
         role:
           type: string
-          description: 'This person''s role in the performance, e.g. "Regie" or "Dramaturgie". For performers, this should be the name of the role they are performing on stage.'
+          description: 'This person''s role in the performance, e.g. "Regie" or "Dramaturgie". For performers, this should be the name of the role they are performing.'
 
     Location:
       type: object
