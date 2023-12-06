@@ -70,8 +70,8 @@
             "description": "Link to further information about the event",
             "format": "uri"
           },
-          "collaborators": {
-            "description": "List of people collaborating on the event",
+          "contributors": {
+            "description": "List of people contributing to the event",
             "type": "array",
             "items": {
               "type": "object",
@@ -82,7 +82,7 @@
                 },
                 "role": {
                   "type": "string",
-                  "description": "This person's role in the performance, e.g. \"Regie\" or \"Dramaturgie\". For performers, this should be the name of the role they are performing on stage."
+                  "description": "This person's role in the performance, e.g. \"Regie\" or \"Dramaturgie\". For performers, this should be the name of the role they are performing."
                 }
               }
             }
@@ -98,7 +98,7 @@
                 },
                 "role": {
                   "type": "string",
-                  "description": "This person's role in the performance, e.g. \"Regie\" or \"Dramaturgie\". For performers, this should be the name of the role they are performing on stage."
+                  "description": "This person's role in the performance, e.g. \"Regie\" or \"Dramaturgie\". For performers, this should be the name of the role they are performing."
                 }
               }
             }
@@ -128,6 +128,20 @@
               "type": "object",
               "additionalProperties": false,
               "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "A descriptive name for this offer, e.g. \"Normalpreis\", \"Ermäßigt\", \"Preisgruppe A\", usw."
+                },
+                "price": {
+                  "type": "number",
+                  "format": "float",
+                  "minimum": -3.402823669209385e+38,
+                  "maximum": 3.402823669209385e+38
+                },
+                "priceCurrency": {
+                  "type": "string",
+                  "description": "The currency of the price. Use standard formats: TODO"
+                },
                 "url": {
                   "type": "string",
                   "description": "Ticketing link of the event",
