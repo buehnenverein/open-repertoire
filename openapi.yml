@@ -102,6 +102,8 @@ components:
           format: int64
           description: The duration of the event in seconds.
           example: 5400
+        accessibility:
+          $ref: "#/components/schemas/Accessibility"
         # pause:
         #   type: boolean
         #   description: "TODO: Gibt es hierfür eine Entsprechung in schema.org?"
@@ -181,3 +183,36 @@ components:
         city:
           type: string
           example: Augsburg
+
+    Accessibility:
+      type: object
+      additionalProperties: false
+      properties:
+        accessModeSufficient:
+          type: array
+          items:
+            type: string
+            description: A list of single or combined accessModes that are sufficient to understand all the intellectual content of a resource.
+            enum: [auditory, tactile, textual, visual]
+        accessibilityHazard:
+          type: array
+          items:
+            type: string
+            enum:
+              [
+                none,
+                unknown,
+                flashingHazard,
+                motionSimulationHazard,
+                soundHazard,
+                noFlashingHazard,
+                noMotionSimulationHazard,
+                noSoundHazard,
+                unknownFlashingHazard,
+                unknownMotionSimulationHazard,
+                unknownSoundHazard,
+              ]
+        accessibilitySummary:
+          type: string
+          description: A human-readable summary of specific accessibility features or deficiencies
+          example: "Dieses Stück enthält Stroboskoplicht"
