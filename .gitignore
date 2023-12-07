@@ -2,3 +2,4 @@
 node_modules
 validate/elm-stuff
 .DS_Store
+tmp/

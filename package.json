@@ -1,10 +1,12 @@
 {
   "dependencies": {
+    "@openapi-contrib/openapi-schema-to-json-schema": "^5.1.0",
+    "@redocly/cli": "^1.5.0",
     "ajv-cli": "^5.0.0",
     "ajv-formats": "^2.1.1",
     "browserify": "^17.0.0",
     "elm-watch": "^1.1.2",
-    "openapi2schema": "^0.5.0",
+    "js-yaml": "^4.1.0",
     "swagger-ui-watcher": "^2.1.13"
   }
 }
