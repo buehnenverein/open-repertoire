@@ -1,6 +1,7 @@
 {
   "required": [
     "name",
+    "productions",
     "events"
   ],
   "additionalProperties": false,
@@ -25,17 +26,16 @@
         }
       }
     },
-    "events": {
-      "type": "array",
-      "description": "List of current events offered by the organization",
-      "items": {
+    "productions": {
+      "type": "object",
+      "description": "The collection of all productions in the repertoire. The value must be an object that maps from a unique production ID to a `Production` object describing the production.",
+      "additionalProperties": {
         "type": "object",
+        "description": "An object containing unchanging information about the production.",
         "required": [
           "title",
-          "description",
-          "startDate"
+          "description"
         ],
-        "additionalProperties": false,
         "properties": {
           "title": {
             "type": "string",
@@ -47,23 +47,6 @@
           },
           "description": {
             "type": "string"
-          },
-          "startDate": {
-            "type": "string",
-            "description": "The start date and time of the event (in ISO 8601 date format).",
-            "format": "date-time"
-          },
-          "endDate": {
-            "type": "string",
-            "description": "The end date and time of the event (in ISO 8601 date format).",
-            "format": "date-time"
-          },
-          "duration": {
-            "type": "integer",
-            "format": "int64",
-            "description": "The duration of the event in seconds.",
-            "minimum": -9223372036854776000,
-            "maximum": 9223372036854776000
           },
           "accessibility": {
             "type": "object",
@@ -107,44 +90,6 @@
               }
             }
           },
-          "url": {
-            "type": "string",
-            "description": "Link to further information about the event",
-            "format": "uri"
-          },
-          "contributors": {
-            "description": "List of people contributing to the event",
-            "type": "array",
-            "items": {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "role": {
-                  "type": "string",
-                  "description": "This person's role in the performance, e.g. \"Regie\" or \"Dramaturgie\". For performers, this should be the name of the role they are performing."
-                }
-              }
-            }
-          },
-          "performers": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "role": {
-                  "type": "string",
-                  "description": "This person's role in the performance, e.g. \"Regie\" or \"Dramaturgie\". For performers, this should be the name of the role they are performing."
-                }
-              }
-            }
-          },
           "location": {
             "description": "Location where this event is happening.",
             "type": "object",
@@ -163,6 +108,81 @@
                 "type": "string"
               }
             }
+          },
+          "contributors": {
+            "description": "List of people contributing to the production, e.g. director(s), stage designer(s), musical director(s), etc.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The person's name"
+                },
+                "role": {
+                  "type": "string",
+                  "description": "This person's role in the production, e.g. \"Regie\" or \"Dramaturgie\". For performers, this should be the name of the role(s) they are performing."
+                }
+              }
+            }
+          },
+          "performers": {
+            "description": "List of people performing in the production.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The person's name"
+                },
+                "role": {
+                  "type": "string",
+                  "description": "This person's role in the production, e.g. \"Regie\" or \"Dramaturgie\". For performers, this should be the name of the role(s) they are performing."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "events": {
+      "type": "array",
+      "description": "List of current events offered by the organization",
+      "items": {
+        "type": "object",
+        "required": [
+          "startDate"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "productionId": {
+            "type": "string",
+            "description": "Reference to the production that this event belongs to. This value MUST match one of the keys in the top-level `productions` object."
+          },
+          "startDate": {
+            "type": "string",
+            "description": "The start date and time of the event (in ISO 8601 date format).",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "description": "The end date and time of the event (in ISO 8601 date format).",
+            "format": "date-time"
+          },
+          "duration": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The duration of the event in seconds.",
+            "minimum": -9223372036854776000,
+            "maximum": 9223372036854776000
+          },
+          "url": {
+            "type": "string",
+            "description": "Link to further information about the event",
+            "format": "uri"
           },
           "offers": {
             "type": "array",
