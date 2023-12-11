@@ -2,11 +2,19 @@
   "required": [
     "name",
     "productions",
-    "events"
+    "events",
+    "version"
   ],
   "additionalProperties": false,
   "type": "object",
   "properties": {
+    "version": {
+      "type": "string",
+      "description": "The API version that is being used. MUST be the string \"v1\" for now.",
+      "enum": [
+        "v1"
+      ]
+    },
     "name": {
       "type": "string",
       "description": "The organization's name"
