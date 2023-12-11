@@ -122,6 +122,32 @@
               },
               "city": {
                 "type": "string"
+              },
+              "wheelChairPlaces": {
+                "type": "array",
+                "description": "Describes the presence of reserved spots for wheelchairs in this location, as defined by [a11yjson](https://sozialhelden.github.io/a11yjson/describing-objects/interfaces/#wheelchairplaces).",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "description": "Describes the presence of reserved spots for wheelchairs, as defined by [a11yjson](https://sozialhelden.github.io/a11yjson/describing-objects/interfaces/#wheelchairplaces).",
+                  "required": [
+                    "count"
+                  ],
+                  "properties": {
+                    "count": {
+                      "type": "integer",
+                      "description": "The number of designated places for wheelchairs in this location."
+                    },
+                    "hasSpaceForAssistant": {
+                      "type": "boolean",
+                      "description": "Is there additional space for an assistant?"
+                    },
+                    "wheelchairUserCapacity": {
+                      "type": "integer",
+                      "description": "The number of people using a wheelchair that can be accomodated at the same time. Use this when there is no designated space for wheelchair users, but the number is known."
+                    }
+                  }
+                }
               }
             }
           },

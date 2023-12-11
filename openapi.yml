@@ -218,6 +218,11 @@ components:
         city:
           type: string
           example: Augsburg
+        wheelChairPlaces:
+          type: array
+          description: Describes the presence of reserved spots for wheelchairs in this location, as defined by [a11yjson](https://sozialhelden.github.io/a11yjson/describing-objects/interfaces/#wheelchairplaces).
+          items:
+            $ref: "#/components/schemas/WheelChairPlace"
 
     Accessibility:
       type: object
@@ -233,6 +238,7 @@ components:
           type: array
           items:
             type: string
+            example: flashingHazard,
             enum:
               [
                 none,
@@ -251,3 +257,22 @@ components:
           type: string
           description: A human-readable summary of specific accessibility features or deficiencies
           example: "Dieses Stück enthält Stroboskoplicht"
+
+    WheelChairPlace:
+      type: object
+      additionalProperties: false
+      description: Describes the presence of reserved spots for wheelchairs, as defined by [a11yjson](https://sozialhelden.github.io/a11yjson/describing-objects/interfaces/#wheelchairplaces).
+      required:
+        - count
+      properties:
+        count:
+          type: integer
+          example: 2
+          description: The number of designated places for wheelchairs in this location.
+        hasSpaceForAssistant:
+          type: boolean
+          description: Is there additional space for an assistant?
+          example: false
+        wheelchairUserCapacity:
+          type: integer
+          description: The number of people using a wheelchair that can be accomodated at the same time. Use this when there is no designated space for wheelchair users, but the number is known.
