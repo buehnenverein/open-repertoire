@@ -40,6 +40,7 @@
       "additionalProperties": {
         "type": "object",
         "description": "An object containing unchanging information about the production.",
+        "additionalProperties": false,
         "required": [
           "title",
           "description"
