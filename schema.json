@@ -56,6 +56,14 @@
           "description": {
             "type": "string"
           },
+          "branch": {
+            "type": "string",
+            "description": "The branch of theatre this production belongs to, e.g. \"Schauspiel\", \"Musiktheater\", \"Oper\", etc."
+          },
+          "genre": {
+            "type": "string",
+            "description": "The genre of this production."
+          },
           "accessibility": {
             "type": "object",
             "additionalProperties": false,

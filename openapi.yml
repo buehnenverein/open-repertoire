@@ -101,6 +101,14 @@ components:
         description:
           type: string
           example: Hedwig, die Queen des Glamrock, kommt auf ihrer Tournee in Augsburg vorbei! Gemeinsam mit ihrer Band The Angry Inch gibt sie eines ihrer mitreißenden Konzerte. Zwischen den Songs, die – mal Rocknummer, mal Country-Ballade – von ihrem Leben und der Suche nach der eigenen Identität erzählen, kommt sie dem Publikum so nah wie nie.\nDiese Show sollten Sie nicht verpassen!
+        branch:
+          type: string
+          description: The branch of theatre this production belongs to, e.g. "Schauspiel", "Musiktheater", "Oper", etc.
+          example: "Musiktheater"
+        genre:
+          type: string
+          description: The genre of this production.
+          example: "Rock-Musical"
         accessibility:
           $ref: "#/components/schemas/Accessibility"
         location:
