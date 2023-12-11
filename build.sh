@@ -11,7 +11,11 @@ npx  @openapi-contrib/openapi-schema-to-json-schema -f tmp/openapi.json -o tmp/c
 cat tmp/converted.json | jq '."$schema" = "http://json-schema.org/draft-07/schema#"' > schema.json
 
 # Build documentation page.
-npx @redocly/cli build-docs openapi.yml -o index.html
+npx @redocly/cli build-docs openapi.yml -o index.html \
+  --theme.openapi.disableSearch \
+  --theme.openapi.expandResponses=all \
+  --theme.openapi.jsonSampleExpandLevel=3 \
+  --theme.openapi.schemaExpansionLevel=2
 
 # Build static JSON schema validator script.
 npx ajv compile -s schema.json -o ./validate/validator.js --spec=draft7 -c ajv-formats --all-errors
