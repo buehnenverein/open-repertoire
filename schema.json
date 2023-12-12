@@ -2,7 +2,6 @@
   "required": [
     "name",
     "productions",
-    "events",
     "version"
   ],
   "additionalProperties": false,
@@ -35,15 +34,16 @@
       }
     },
     "productions": {
-      "type": "object",
+      "type": "array",
       "description": "The collection of all productions in the repertoire. The value must be an object that maps from a unique production ID to a `Production` object describing the production.",
-      "additionalProperties": {
+      "items": {
         "type": "object",
         "description": "An object containing unchanging information about the production.",
         "additionalProperties": false,
         "required": [
           "title",
-          "description"
+          "description",
+          "events"
         ],
         "properties": {
           "title": {
@@ -56,6 +56,114 @@
           },
           "description": {
             "type": "string"
+          },
+          "events": {
+            "type": "array",
+            "description": "List of current events offered by the organization",
+            "items": {
+              "type": "object",
+              "required": [
+                "startDate"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "startDate": {
+                  "type": "string",
+                  "description": "The start date and time of the event (in ISO 8601 date format).",
+                  "format": "date-time"
+                },
+                "endDate": {
+                  "type": "string",
+                  "description": "The end date and time of the event (in ISO 8601 date format).",
+                  "format": "date-time"
+                },
+                "duration": {
+                  "type": "integer",
+                  "format": "int64",
+                  "description": "The duration of the event in seconds.",
+                  "minimum": -9223372036854776000,
+                  "maximum": 9223372036854776000
+                },
+                "url": {
+                  "type": "string",
+                  "description": "Link to further information about the event",
+                  "format": "uri"
+                },
+                "location": {
+                  "description": "Location where this event is happening.",
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "postalCode": {
+                      "type": "string"
+                    },
+                    "streetAddress": {
+                      "type": "string"
+                    },
+                    "city": {
+                      "type": "string"
+                    },
+                    "wheelChairPlaces": {
+                      "type": "array",
+                      "description": "Describes the presence of reserved spots for wheelchairs in this location, as defined by [a11yjson](https://sozialhelden.github.io/a11yjson/describing-objects/interfaces/#wheelchairplaces).",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "description": "Describes the presence of reserved spots for wheelchairs, as defined by [a11yjson](https://sozialhelden.github.io/a11yjson/describing-objects/interfaces/#wheelchairplaces).",
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "type": "integer",
+                            "description": "The number of designated places for wheelchairs in this location."
+                          },
+                          "hasSpaceForAssistant": {
+                            "type": "boolean",
+                            "description": "Is there additional space for an assistant?"
+                          },
+                          "wheelchairUserCapacity": {
+                            "type": "integer",
+                            "description": "The number of people using a wheelchair that can be accomodated at the same time. Use this when there is no designated space for wheelchair users, but the number is known."
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "offers": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "description": "A descriptive name for this offer, e.g. \"Normalpreis\", \"Ermäßigt\", \"Preisgruppe A\", usw."
+                      },
+                      "price": {
+                        "type": "number",
+                        "format": "float",
+                        "minimum": -3.402823669209385e+38,
+                        "maximum": 3.402823669209385e+38
+                      },
+                      "priceCurrency": {
+                        "type": "string",
+                        "description": "The currency of the price. Use standard formats: TODO"
+                      },
+                      "url": {
+                        "type": "string",
+                        "description": "Ticketing link of the event",
+                        "format": "uri"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           },
           "branch": {
             "type": "string",
@@ -107,51 +215,6 @@
               }
             }
           },
-          "location": {
-            "description": "Location where this event is happening.",
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "name": {
-                "type": "string"
-              },
-              "postalCode": {
-                "type": "string"
-              },
-              "streetAddress": {
-                "type": "string"
-              },
-              "city": {
-                "type": "string"
-              },
-              "wheelChairPlaces": {
-                "type": "array",
-                "description": "Describes the presence of reserved spots for wheelchairs in this location, as defined by [a11yjson](https://sozialhelden.github.io/a11yjson/describing-objects/interfaces/#wheelchairplaces).",
-                "items": {
-                  "type": "object",
-                  "additionalProperties": false,
-                  "description": "Describes the presence of reserved spots for wheelchairs, as defined by [a11yjson](https://sozialhelden.github.io/a11yjson/describing-objects/interfaces/#wheelchairplaces).",
-                  "required": [
-                    "count"
-                  ],
-                  "properties": {
-                    "count": {
-                      "type": "integer",
-                      "description": "The number of designated places for wheelchairs in this location."
-                    },
-                    "hasSpaceForAssistant": {
-                      "type": "boolean",
-                      "description": "Is there additional space for an assistant?"
-                    },
-                    "wheelchairUserCapacity": {
-                      "type": "integer",
-                      "description": "The number of people using a wheelchair that can be accomodated at the same time. Use this when there is no designated space for wheelchair users, but the number is known."
-                    }
-                  }
-                }
-              }
-            }
-          },
           "contributors": {
             "description": "List of people contributing to the production, e.g. director(s), stage designer(s), musical director(s), etc.",
             "type": "array",
@@ -184,74 +247,6 @@
                 "role": {
                   "type": "string",
                   "description": "This person's role in the production, e.g. \"Regie\" or \"Dramaturgie\". For performers, this should be the name of the role(s) they are performing."
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "events": {
-      "type": "array",
-      "description": "List of current events offered by the organization",
-      "items": {
-        "type": "object",
-        "required": [
-          "productionId",
-          "startDate"
-        ],
-        "additionalProperties": false,
-        "properties": {
-          "productionId": {
-            "type": "string",
-            "description": "Reference to the production that this event belongs to. This value MUST match one of the keys in the top-level `productions` object."
-          },
-          "startDate": {
-            "type": "string",
-            "description": "The start date and time of the event (in ISO 8601 date format).",
-            "format": "date-time"
-          },
-          "endDate": {
-            "type": "string",
-            "description": "The end date and time of the event (in ISO 8601 date format).",
-            "format": "date-time"
-          },
-          "duration": {
-            "type": "integer",
-            "format": "int64",
-            "description": "The duration of the event in seconds.",
-            "minimum": -9223372036854776000,
-            "maximum": 9223372036854776000
-          },
-          "url": {
-            "type": "string",
-            "description": "Link to further information about the event",
-            "format": "uri"
-          },
-          "offers": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                "name": {
-                  "type": "string",
-                  "description": "A descriptive name for this offer, e.g. \"Normalpreis\", \"Ermäßigt\", \"Preisgruppe A\", usw."
-                },
-                "price": {
-                  "type": "number",
-                  "format": "float",
-                  "minimum": -3.402823669209385e+38,
-                  "maximum": 3.402823669209385e+38
-                },
-                "priceCurrency": {
-                  "type": "string",
-                  "description": "The currency of the price. Use standard formats: TODO"
-                },
-                "url": {
-                  "type": "string",
-                  "description": "Ticketing link of the event",
-                  "format": "uri"
                 }
               }
             }

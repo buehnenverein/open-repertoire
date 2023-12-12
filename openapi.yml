@@ -44,7 +44,6 @@ components:
       required:
         - name
         - productions
-        - events
         - version
       additionalProperties: false
       type: object
@@ -73,15 +72,10 @@ components:
               type: string
               example: Augsburg
         productions:
-          type: object
-          description: "The collection of all productions in the repertoire. The value must be an object that maps from a unique production ID to a `Production` object describing the production."
-          additionalProperties:
-            $ref: "#/components/schemas/Production"
-        events:
           type: array
-          description: "List of current events offered by the organization"
+          description: "The collection of all productions in the repertoire. The value must be an object that maps from a unique production ID to a `Production` object describing the production."
           items:
-            $ref: "#/components/schemas/Event"
+            $ref: "#/components/schemas/Production"
 
     Production:
       type: object
@@ -90,6 +84,7 @@ components:
       required:
         - title
         - description
+        - events
       properties:
         title:
           type: string
@@ -102,6 +97,11 @@ components:
         description:
           type: string
           example: Hedwig, die Queen des Glamrock, kommt auf ihrer Tournee in Augsburg vorbei! Gemeinsam mit ihrer Band The Angry Inch gibt sie eines ihrer mitreißenden Konzerte. Zwischen den Songs, die – mal Rocknummer, mal Country-Ballade – von ihrem Leben und der Suche nach der eigenen Identität erzählen, kommt sie dem Publikum so nah wie nie.\nDiese Show sollten Sie nicht verpassen!
+        events:
+          type: array
+          description: "List of current events offered by the organization"
+          items:
+            $ref: "#/components/schemas/Event"
         branch:
           type: string
           description: The branch of theatre this production belongs to, e.g. "Schauspiel", "Musiktheater", "Oper", etc.
@@ -112,9 +112,6 @@ components:
           example: "Rock-Musical"
         accessibility:
           $ref: "#/components/schemas/Accessibility"
-        location:
-          description: Location where this event is happening.
-          $ref: "#/components/schemas/Location"    
         contributors:
           description: List of people contributing to the production, e.g. director(s), stage designer(s), musical director(s), etc.
           type: array
@@ -129,14 +126,9 @@ components:
     Event:
       type: object
       required:
-        - productionId
         - startDate
       additionalProperties: false
       properties:
-        productionId:
-          type: string
-          description: "Reference to the production that this event belongs to. This value MUST match one of the keys in the top-level `productions` object."
-          example: "property1"
         startDate:
           type: string
           description: "The start date and time of the event (in ISO 8601 date format)."
@@ -164,6 +156,9 @@ components:
         #   description: Primary language of the event
         #   format: can/should we make this an enum of language codes?
         
+        location:
+          description: Location where this event is happening.
+          $ref: "#/components/schemas/Location"    
         offers:
           type: array
           items:
