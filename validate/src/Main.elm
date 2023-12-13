@@ -46,6 +46,7 @@ type alias ValidationError =
     , message : String
     , keyword : String
     , additionalProperty : Maybe String
+    , allowedEnumValues : Maybe (List String)
     }
 
 
@@ -233,6 +234,15 @@ viewValidationErrors errors jsonValue =
 
 viewValidationError : Encode.Value -> ValidationErrorGroup -> Html Msg
 viewValidationError jsonValue ( err, others ) =
+    let
+        message =
+            case err.allowedEnumValues of
+                Just list ->
+                    err.message ++ ": [" ++ (String.join ", " list) ++ "]"
+
+                Nothing ->
+                    err.message
+    in
     tr []
         [ td [ style "white-space" "pre-wrap" ]
             [ text
@@ -243,7 +253,7 @@ viewValidationError jsonValue ( err, others ) =
                     err.path
                 )
             ]
-        , td [] [ text err.message ]
+        , td [] [ text message ]
         , td [ style "white-space" "pre-wrap" ]
             (viewHighlightedJson ( err, others ) jsonValue)
         , td [] [ text (String.fromInt (List.length others + 1)) ]
@@ -497,9 +507,10 @@ resultDecoder =
 errorDecoder : Decoder (List ValidationError)
 errorDecoder =
     Decode.list
-        (Decode.map4 ValidationError
+        (Decode.map5 ValidationError
             (Decode.field "instancePath" Decode.string)
             (Decode.field "message" Decode.string)
             (Decode.field "keyword" Decode.string)
             (Decode.maybe (Decode.at [ "params", "additionalProperty" ] Decode.string))
+            (Decode.maybe (Decode.at [ "params", "allowedValues" ] (Decode.list Decode.string)))
         )
