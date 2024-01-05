@@ -71,12 +71,7 @@ type Msg
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( Init
-        { url = ""
-        , text = ""
-        }
-    , Cmd.none
-    )
+    ( Init { url = "", text = "" }, Cmd.none )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -216,8 +211,7 @@ viewValidationErrors errors jsonValue =
             [ table []
                 [ thead []
                     [ tr []
-                        [ th [] [ text "Path" ]
-                        , th [] [ text "Error" ]
+                        [ th [] [ text "Error" ]
                         , th [] [ text "Value" ]
                         , th [] [ text "Error count" ]
                         ]
@@ -235,25 +229,34 @@ viewValidationErrors errors jsonValue =
 viewValidationError : Encode.Value -> ValidationErrorGroup -> Html Msg
 viewValidationError jsonValue ( err, others ) =
     let
-        message =
-            case err.allowedEnumValues of
-                Just list ->
-                    err.message ++ ": [" ++ (String.join ", " list) ++ "]"
+        additionalProperties =
+            List.Extra.unique
+                (List.filterMap .additionalProperty (err :: others))
 
-                Nothing ->
-                    err.message
+        errorPath =
+            if String.isEmpty err.path then
+                "Top-level object"
+
+            else
+                err.path
+
+        message =
+            String.join " "
+                [ errorPath
+                , err.message
+                , case ( err.allowedEnumValues, additionalProperties ) of
+                    ( Just list, _ ) ->
+                        "[" ++ String.join ", " list ++ "]"
+
+                    ( Nothing, [] ) ->
+                        ""
+
+                    ( Nothing, _ ) ->
+                        "[" ++ String.join ", " additionalProperties ++ "]"
+                ]
     in
     tr []
-        [ td [ style "white-space" "pre-wrap" ]
-            [ text
-                (if String.isEmpty err.path then
-                    "Top-level object"
-
-                 else
-                    err.path
-                )
-            ]
-        , td [] [ text message ]
+        [ td [] [ text message ]
         , td [ style "white-space" "pre-wrap" ]
             (viewHighlightedJson ( err, others ) jsonValue)
         , td [] [ text (String.fromInt (List.length others + 1)) ]

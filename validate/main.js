@@ -784,11 +784,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.N.B === region.V.B)
+	if (region.O.B === region.V.B)
 	{
-		return 'on line ' + region.N.B;
+		return 'on line ' + region.O.B;
 	}
-	return 'on lines ' + region.N.B + ' through ' + region.V.B;
+	return 'on lines ' + region.O.B + ' through ' + region.V.B;
 }
 
 
@@ -2719,9 +2719,9 @@ var _VirtualDom_mapEventTuple = F2(function(func, tuple)
 var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
-		C: func(record.C),
-		O: record.O,
-		L: record.L
+		H: func(record.H),
+		P: record.P,
+		M: record.M
 	}
 });
 
@@ -2989,11 +2989,11 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 		// 3 = Custom
 
 		var value = result.a;
-		var message = !tag ? value : tag < 3 ? value.a : value.C;
-		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.O;
+		var message = !tag ? value : tag < 3 ? value.a : value.H;
+		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.P;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.L) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value.M) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -3983,7 +3983,7 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 		impl.aV,
 		impl.aS,
 		function(sendToApp, initialModel) {
-			var divertHrefToApp = impl.M && impl.M(sendToApp)
+			var divertHrefToApp = impl.N && impl.N(sendToApp)
 			var view = impl.aW;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
@@ -4058,7 +4058,7 @@ function _Browser_application(impl)
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
-		M: function(sendToApp)
+		N: function(sendToApp)
 		{
 			key.a = sendToApp;
 			_Browser_window.addEventListener('popstate', key);
@@ -6308,7 +6308,7 @@ var $author$project$Main$similarPath = F2(
 	});
 var $author$project$Main$similarError = F2(
 	function (err1, err2) {
-		return A2($author$project$Main$similarPath, err1.w, err2.w) && (_Utils_eq(err1.C, err2.C) && _Utils_eq(err1.H, err2.H));
+		return A2($author$project$Main$similarPath, err1.w, err2.w) && (_Utils_eq(err1.H, err2.H) && _Utils_eq(err1.G, err2.G));
 	});
 var $author$project$Main$groupErrors = function (validationErrors) {
 	return A2($elm_community$list_extra$List$Extra$gatherWith, $author$project$Main$similarError, validationErrors);
@@ -6322,7 +6322,7 @@ var $elm$json$Json$Decode$andThen = _Json_andThen;
 var $elm$json$Json$Decode$bool = _Json_decodeBool;
 var $author$project$Main$ValidationError = F5(
 	function (path, message, keyword, additionalProperty, allowedEnumValues) {
-		return {R: additionalProperty, S: allowedEnumValues, H: keyword, C: message, w: path};
+		return {I: additionalProperty, S: allowedEnumValues, G: keyword, H: message, w: path};
 	});
 var $elm$json$Json$Decode$field = _Json_decodeField;
 var $elm$json$Json$Decode$at = F2(
@@ -6824,6 +6824,52 @@ var $elm$html$Html$th = _VirtualDom_node('th');
 var $elm$html$Html$thead = _VirtualDom_node('thead');
 var $elm$html$Html$tr = _VirtualDom_node('tr');
 var $elm$html$Html$td = _VirtualDom_node('td');
+var $elm$core$List$member = F2(
+	function (x, xs) {
+		return A2(
+			$elm$core$List$any,
+			function (a) {
+				return _Utils_eq(a, x);
+			},
+			xs);
+	});
+var $elm_community$list_extra$List$Extra$uniqueHelp = F4(
+	function (f, existing, remaining, accumulator) {
+		uniqueHelp:
+		while (true) {
+			if (!remaining.b) {
+				return $elm$core$List$reverse(accumulator);
+			} else {
+				var first = remaining.a;
+				var rest = remaining.b;
+				var computedFirst = f(first);
+				if (A2($elm$core$List$member, computedFirst, existing)) {
+					var $temp$f = f,
+						$temp$existing = existing,
+						$temp$remaining = rest,
+						$temp$accumulator = accumulator;
+					f = $temp$f;
+					existing = $temp$existing;
+					remaining = $temp$remaining;
+					accumulator = $temp$accumulator;
+					continue uniqueHelp;
+				} else {
+					var $temp$f = f,
+						$temp$existing = A2($elm$core$List$cons, computedFirst, existing),
+						$temp$remaining = rest,
+						$temp$accumulator = A2($elm$core$List$cons, first, accumulator);
+					f = $temp$f;
+					existing = $temp$existing;
+					remaining = $temp$remaining;
+					accumulator = $temp$accumulator;
+					continue uniqueHelp;
+				}
+			}
+		}
+	});
+var $elm_community$list_extra$List$Extra$unique = function (list) {
+	return A4($elm_community$list_extra$List$Extra$uniqueHelp, $elm$core$Basics$identity, _List_Nil, list, _List_Nil);
+};
 var $elm$core$List$filter = F2(
 	function (isGood, list) {
 		return A3(
@@ -6930,12 +6976,12 @@ var $author$project$Main$viewHighlightedJson = F2(
 			return A2(
 				$elm$core$List$filterMap,
 				function ($) {
-					return $.R;
+					return $.I;
 				},
 				errors);
 		};
 		var highlightAdditionalProperties = function (line) {
-			return (err.H === 'additionalProperties') ? A2(
+			return (err.G === 'additionalProperties') ? A2(
 				$elm$core$List$any,
 				isProperty(line),
 				extractAdditionalProperties(
@@ -6979,31 +7025,42 @@ var $author$project$Main$viewValidationError = F2(
 	function (jsonValue, _v0) {
 		var err = _v0.a;
 		var others = _v0.b;
-		var message = function () {
-			var _v1 = err.S;
-			if (!_v1.$) {
-				var list = _v1.a;
-				return err.C + (': [' + (A2($elm$core$String$join, ', ', list) + ']'));
-			} else {
-				return err.C;
-			}
-		}();
+		var errorPath = $elm$core$String$isEmpty(err.w) ? 'Top-level object' : err.w;
+		var additionalProperties = $elm_community$list_extra$List$Extra$unique(
+			A2(
+				$elm$core$List$filterMap,
+				function ($) {
+					return $.I;
+				},
+				A2($elm$core$List$cons, err, others)));
+		var message = A2(
+			$elm$core$String$join,
+			' ',
+			_List_fromArray(
+				[
+					errorPath,
+					err.H,
+					function () {
+					var _v1 = _Utils_Tuple2(err.S, additionalProperties);
+					if (!_v1.a.$) {
+						var list = _v1.a.a;
+						return '[' + (A2($elm$core$String$join, ', ', list) + ']');
+					} else {
+						if (!_v1.b.b) {
+							var _v2 = _v1.a;
+							return '';
+						} else {
+							var _v3 = _v1.a;
+							return '[' + (A2($elm$core$String$join, ', ', additionalProperties) + ']');
+						}
+					}
+				}()
+				]));
 		return A2(
 			$elm$html$Html$tr,
 			_List_Nil,
 			_List_fromArray(
 				[
-					A2(
-					$elm$html$Html$td,
-					_List_fromArray(
-						[
-							A2($elm$html$Html$Attributes$style, 'white-space', 'pre-wrap')
-						]),
-					_List_fromArray(
-						[
-							$elm$html$Html$text(
-							$elm$core$String$isEmpty(err.w) ? 'Top-level object' : err.w)
-						])),
 					A2(
 					$elm$html$Html$td,
 					_List_Nil,
@@ -7072,13 +7129,6 @@ var $author$project$Main$viewValidationErrors = F2(
 											_List_Nil,
 											_List_fromArray(
 												[
-													A2(
-													$elm$html$Html$th,
-													_List_Nil,
-													_List_fromArray(
-														[
-															$elm$html$Html$text('Path')
-														])),
 													A2(
 													$elm$html$Html$th,
 													_List_Nil,
