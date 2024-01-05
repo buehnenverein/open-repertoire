@@ -121,7 +121,7 @@ components:
           description: List of people performing in the production.
           type: array
           items:
-            $ref: "#/components/schemas/Person"
+            $ref: "#/components/schemas/Performer"
 
     Event:
       type: object
@@ -193,9 +193,28 @@ components:
         name:
           type: string
           description: The person's name
+          example: Marion Mustermann
+        function:
+          type: string
+          description: 'This person''s function in the production, e.g. "Regie", "Dramaturgie", "Schauspiel", etc.'
+          example: Regie
+
+    Performer:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          description: The person's name
+          example: Max Mustermann
+        function:
+          type: string
+          description: 'This person''s function in the production, e.g. "Regie", "Dramaturgie", "Schauspiel", etc.'
+          example: Schauspiel
         role:
           type: string
-          description: 'This person''s role in the production, e.g. "Regie" or "Dramaturgie". For performers, this should be the name of the role(s) they are performing.'
+          description: The name of the role this person is performing on stage
+          example: Mephistopheles
 
     Location:
       type: object

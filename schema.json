@@ -226,9 +226,9 @@
                   "type": "string",
                   "description": "The person's name"
                 },
-                "role": {
+                "function": {
                   "type": "string",
-                  "description": "This person's role in the production, e.g. \"Regie\" or \"Dramaturgie\". For performers, this should be the name of the role(s) they are performing."
+                  "description": "This person's function in the production, e.g. \"Regie\", \"Dramaturgie\", \"Schauspiel\", etc."
                 }
               }
             }
@@ -244,9 +244,13 @@
                   "type": "string",
                   "description": "The person's name"
                 },
+                "function": {
+                  "type": "string",
+                  "description": "This person's function in the production, e.g. \"Regie\", \"Dramaturgie\", \"Schauspiel\", etc."
+                },
                 "role": {
                   "type": "string",
-                  "description": "This person's role in the production, e.g. \"Regie\" or \"Dramaturgie\". For performers, this should be the name of the role(s) they are performing."
+                  "description": "The name of the role this person is performing on stage"
                 }
               }
             }
