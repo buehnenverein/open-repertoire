@@ -26,14 +26,20 @@ main =
         }
 
 
-type Model
-    = Init Inputs
-    | Validating Inputs (Maybe Encode.Value)
-    | RequestFailed Inputs Http.Error
-    | ResultSuccess Inputs
-    | ResultError Inputs (List ValidationErrorGroup) Encode.Value
-    | JsonParsingError Inputs String
-    | ValidationParsingError Inputs String
+type alias Model =
+    { inputs : Inputs
+    , state : State
+    }
+
+
+type State
+    = Init
+    | Validating (Maybe Encode.Value)
+    | RequestFailed Http.Error
+    | ResultSuccess
+    | ResultError (List ValidationErrorGroup) Encode.Value
+    | JsonParsingError String
+    | ValidationParsingError String
 
 
 type ValidationResult
@@ -71,7 +77,11 @@ type Msg
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( Init { url = "", text = "" }, Cmd.none )
+    let
+        inputs =
+            { url = "", text = "" }
+    in
+    ( { inputs = inputs, state = Init }, Cmd.none )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -82,46 +92,54 @@ update msg model =
     in
     case msg of
         SubmitUrl url ->
-            ( Validating inputs Nothing, Http.get { url = url, expect = Http.expectJson Response jsonDecoder } )
+            ( { model | state = Validating Nothing }, Http.get { url = url, expect = Http.expectJson Response jsonDecoder } )
 
         SubmitJson text ->
             case Decode.decodeString jsonDecoder text of
                 Ok jsonValue ->
-                    ( Validating inputs (Just jsonValue), sendData jsonValue )
+                    ( { model | state = Validating (Just jsonValue) }, sendData jsonValue )
 
                 Err parsingError ->
-                    ( JsonParsingError inputs (Decode.errorToString parsingError), Cmd.none )
+                    ( { model | state = JsonParsingError (Decode.errorToString parsingError) }, Cmd.none )
 
         UrlChange url ->
-            ( Init { inputs | url = url }, Cmd.none )
+            let
+                newInputs =
+                    { inputs | url = url }
+            in
+            ( { model | inputs = newInputs }, Cmd.none )
 
         TextChange text ->
-            ( Init { inputs | text = text }, Cmd.none )
+            let
+                newInputs =
+                    { inputs | text = text }
+            in
+            ( { model | inputs = newInputs }, Cmd.none )
 
         Response (Ok value) ->
-            ( Validating inputs (Just value), sendData value )
+            ( { model | state = Validating (Just value) }, sendData value )
 
         Response (Err error) ->
-            ( RequestFailed inputs error, Cmd.none )
+            ( { model | state = RequestFailed error }, Cmd.none )
 
         ReceiveValidationResult responseValue validationResult ->
             case Decode.decodeValue resultDecoder validationResult of
                 Ok Valid ->
-                    ( ResultSuccess inputs, Cmd.none )
+                    ( { model | state = ResultSuccess }, Cmd.none )
 
                 Ok (Error errors) ->
-                    ( ResultError inputs (groupErrors errors) responseValue, Cmd.none )
+                    ( { model | state = ResultError (groupErrors errors) responseValue }, Cmd.none )
 
                 Err parsingError ->
-                    ( ValidationParsingError inputs (Decode.errorToString parsingError), Cmd.none )
+                    ( { model | state = ValidationParsingError (Decode.errorToString parsingError) }, Cmd.none )
 
 
 view : Model -> Html Msg
 view model =
     let
         enableButton =
-            case model of
-                Validating _ _ ->
+            case model.state of
+                Validating _ ->
                     False
 
                 _ ->
@@ -130,23 +148,23 @@ view model =
     div [ class "container" ]
         [ viewIntroduction
         , viewInputs (getInputs model) enableButton
-        , case model of
-            Init _ ->
+        , case model.state of
+            Init ->
                 text ""
 
-            Validating _ _ ->
+            Validating _ ->
                 text ""
 
-            RequestFailed _ error ->
+            RequestFailed error ->
                 viewRequestError error
 
-            ResultSuccess _ ->
+            ResultSuccess ->
                 viewValid
 
-            ResultError _ errors jsonValue ->
+            ResultError errors jsonValue ->
                 viewValidationErrors errors jsonValue
 
-            JsonParsingError _ message ->
+            JsonParsingError message ->
                 div [ class "notification is-danger", style "white-space" "pre-wrap" ]
                     [ text
                         ("Unfortunately, I wasn't able to parse the data you provided. Are you sure that it is valid JSON?"
@@ -155,7 +173,7 @@ view model =
                         )
                     ]
 
-            ValidationParsingError _ message ->
+            ValidationParsingError message ->
                 div [ class "notification is-danger", style "white-space" "pre-wrap" ]
                     [ text
                         ("Unfortunately, I encountered an error while parsing the validation result, so I could not check whether your JSON is valid or not."
@@ -360,8 +378,8 @@ viewInputs inputs buttonEnabled =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    case model of
-        Validating _ (Just responseValue) ->
+    case model.state of
+        Validating (Just responseValue) ->
             receiveResult (ReceiveValidationResult responseValue)
 
         _ ->
@@ -374,27 +392,7 @@ subscriptions model =
 
 getInputs : Model -> Inputs
 getInputs model =
-    case model of
-        Init inputs ->
-            inputs
-
-        Validating inputs _ ->
-            inputs
-
-        RequestFailed inputs _ ->
-            inputs
-
-        ResultSuccess inputs ->
-            inputs
-
-        ResultError inputs _ _ ->
-            inputs
-
-        ValidationParsingError inputs _ ->
-            inputs
-
-        JsonParsingError inputs _ ->
-            inputs
+    model.inputs
 
 
 extractPath : String -> Encode.Value -> String
