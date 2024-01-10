@@ -80,7 +80,7 @@
                 "duration": {
                   "type": "integer",
                   "format": "int64",
-                  "description": "The duration of the event in seconds.",
+                  "description": "The duration of the event in minutes.",
                   "minimum": -9223372036854776000,
                   "maximum": 9223372036854776000
                 },
