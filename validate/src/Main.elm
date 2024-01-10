@@ -673,19 +673,14 @@ validateEventDuration productionId eventId event =
     event.duration
         |> Maybe.andThen
             (\minutes ->
-                if minutes > 300 then
+                if minutes > 900 then
                     Just
                         { path = "/productions/" ++ String.fromInt productionId ++ "/events/" ++ String.fromInt eventId ++ "/duration"
                         , message = "seems to be very long. The duration field is supposed to contain the event's duration in minutes. Are you sure you didn't accidentally use seconds instead?"
                         }
 
-                else if minutes < 0 then
-                    Just
-                        { path = "/productions/" ++ String.fromInt productionId ++ "/events/" ++ String.fromInt eventId ++ "/duration"
-                        , message = "is negative. The duration field is supposed to contain the event's duration in minutes, so it should never be negative."
-                        }
-
-                else if minutes < 10 then
+                else if minutes >= 0 && minutes < 10 then
+                    -- the duration being negative is already a validation error, so we don't need to cover this case here
                     Just
                         { path = "/productions/" ++ String.fromInt productionId ++ "/events/" ++ String.fromInt eventId ++ "/duration"
                         , message = "seems to be very short. The duration field is supposed to contain the event's duration in minutes. Are you sure you didn't accidentally use hours instead?"

@@ -2719,7 +2719,7 @@ var _VirtualDom_mapEventTuple = F2(function(func, tuple)
 var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
-		j: func(record.j),
+		k: func(record.k),
 		Q: record.Q,
 		N: record.N
 	}
@@ -2989,7 +2989,7 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 		// 3 = Custom
 
 		var value = result.a;
-		var message = !tag ? value : tag < 3 ? value.a : value.j;
+		var message = !tag ? value : tag < 3 ? value.a : value.k;
 		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.Q;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
@@ -4951,7 +4951,7 @@ var $elm$core$Array$treeFromBuilder = F2(
 	});
 var $elm$core$Array$builderToArray = F2(
 	function (reverseNodeList, builder) {
-		if (!builder.b) {
+		if (!builder.a) {
 			return A4(
 				$elm$core$Array$Array_elm_builtin,
 				$elm$core$Elm$JsArray$length(builder.c),
@@ -4959,11 +4959,11 @@ var $elm$core$Array$builderToArray = F2(
 				$elm$core$Elm$JsArray$empty,
 				builder.c);
 		} else {
-			var treeLen = builder.b * $elm$core$Array$branchFactor;
+			var treeLen = builder.a * $elm$core$Array$branchFactor;
 			var depth = $elm$core$Basics$floor(
 				A2($elm$core$Basics$logBase, $elm$core$Array$branchFactor, treeLen - 1));
 			var correctNodeList = reverseNodeList ? $elm$core$List$reverse(builder.d) : builder.d;
-			var tree = A2($elm$core$Array$treeFromBuilder, correctNodeList, builder.b);
+			var tree = A2($elm$core$Array$treeFromBuilder, correctNodeList, builder.a);
 			return A4(
 				$elm$core$Array$Array_elm_builtin,
 				$elm$core$Elm$JsArray$length(builder.c) + treeLen,
@@ -4982,7 +4982,7 @@ var $elm$core$Array$initializeHelp = F5(
 				return A2(
 					$elm$core$Array$builderToArray,
 					false,
-					{d: nodeList, b: (len / $elm$core$Array$branchFactor) | 0, c: tail});
+					{d: nodeList, a: (len / $elm$core$Array$branchFactor) | 0, c: tail});
 			} else {
 				var leaf = $elm$core$Array$Leaf(
 					A3($elm$core$Elm$JsArray$initialize, $elm$core$Array$branchFactor, fromIndex, fn));
@@ -5049,7 +5049,7 @@ var $elm$url$Url$Http = 0;
 var $elm$url$Url$Https = 1;
 var $elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
-		return {aa: fragment, ad: host, a: path, ai: port_, al: protocol, am: query};
+		return {aa: fragment, ad: host, b: path, ai: port_, al: protocol, am: query};
 	});
 var $elm$core$String$contains = _String_contains;
 var $elm$core$String$length = _String_length;
@@ -6282,14 +6282,14 @@ var $author$project$Main$similarPath = F2(
 	});
 var $author$project$Main$similarError = F2(
 	function (err1, err2) {
-		return A2($author$project$Main$similarPath, err1.a, err2.a) && (_Utils_eq(err1.j, err2.j) && _Utils_eq(err1.H, err2.H));
+		return A2($author$project$Main$similarPath, err1.b, err2.b) && (_Utils_eq(err1.k, err2.k) && _Utils_eq(err1.H, err2.H));
 	});
 var $author$project$Main$groupErrors = function (validationErrors) {
 	return A2($elm_community$list_extra$List$Extra$gatherWith, $author$project$Main$similarError, validationErrors);
 };
 var $author$project$Main$similarWarning = F2(
 	function (warning1, warning2) {
-		return A2($author$project$Main$similarPath, warning1.a, warning2.a) && _Utils_eq(warning1.j, warning2.j);
+		return A2($author$project$Main$similarPath, warning1.b, warning2.b) && _Utils_eq(warning1.k, warning2.k);
 	});
 var $author$project$Main$groupWarnings = function (validationWarnings) {
 	return A2($elm_community$list_extra$List$Extra$gatherWith, $author$project$Main$similarWarning, validationWarnings);
@@ -6306,24 +6306,21 @@ var $elm$core$Maybe$andThen = F2(
 			return $elm$core$Maybe$Nothing;
 		}
 	});
+var $elm$core$Basics$ge = _Utils_ge;
 var $author$project$Main$validateEventDuration = F3(
 	function (productionId, eventId, event) {
 		return A2(
 			$elm$core$Maybe$andThen,
 			function (minutes) {
-				return (minutes > 300) ? $elm$core$Maybe$Just(
+				return (minutes > 900) ? $elm$core$Maybe$Just(
 					{
-						j: 'seems to be very long. The duration field is supposed to contain the event\'s duration in minutes. Are you sure you didn\'t accidentally use seconds instead?',
-						a: '/productions/' + ($elm$core$String$fromInt(productionId) + ('/events/' + ($elm$core$String$fromInt(eventId) + '/duration')))
-					}) : ((minutes < 0) ? $elm$core$Maybe$Just(
+						k: 'seems to be very long. The duration field is supposed to contain the event\'s duration in minutes. Are you sure you didn\'t accidentally use seconds instead?',
+						b: '/productions/' + ($elm$core$String$fromInt(productionId) + ('/events/' + ($elm$core$String$fromInt(eventId) + '/duration')))
+					}) : (((minutes >= 0) && (minutes < 10)) ? $elm$core$Maybe$Just(
 					{
-						j: 'is negative. The duration field is supposed to contain the event\'s duration in minutes, so it should never be negative.',
-						a: '/productions/' + ($elm$core$String$fromInt(productionId) + ('/events/' + ($elm$core$String$fromInt(eventId) + '/duration')))
-					}) : ((minutes < 10) ? $elm$core$Maybe$Just(
-					{
-						j: 'seems to be very short. The duration field is supposed to contain the event\'s duration in minutes. Are you sure you didn\'t accidentally use hours instead?',
-						a: '/productions/' + ($elm$core$String$fromInt(productionId) + ('/events/' + ($elm$core$String$fromInt(eventId) + '/duration')))
-					}) : $elm$core$Maybe$Nothing));
+						k: 'seems to be very short. The duration field is supposed to contain the event\'s duration in minutes. Are you sure you didn\'t accidentally use hours instead?',
+						b: '/productions/' + ($elm$core$String$fromInt(productionId) + ('/events/' + ($elm$core$String$fromInt(eventId) + '/duration')))
+					}) : $elm$core$Maybe$Nothing);
 			},
 			event.X);
 	});
@@ -6339,10 +6336,10 @@ var $author$project$Main$parseEventsWarnings = F2(
 	});
 var $elm$core$String$trim = _String_trim;
 var $author$project$Main$validateRequiredTextField = function (_v0) {
-	var path = _v0.a;
+	var path = _v0.b;
 	var value = _v0.I;
 	return ($elm$core$String$trim(value) === '') ? $elm$core$Maybe$Just(
-		{j: 'is a required text field, but you provided an empty value', a: path}) : $elm$core$Maybe$Nothing;
+		{k: 'is a required text field, but you provided an empty value', b: path}) : $elm$core$Maybe$Nothing;
 };
 var $author$project$Main$parseProductionWarnings = F2(
 	function (index, production) {
@@ -6353,9 +6350,9 @@ var $author$project$Main$parseProductionWarnings = F2(
 			_List_fromArray(
 				[
 					$author$project$Main$validateRequiredTextField(
-					{a: basePath + 'title', I: production.av}),
+					{b: basePath + 'title', I: production.av}),
 					$author$project$Main$validateRequiredTextField(
-					{a: basePath + 'description', I: production.W})
+					{b: basePath + 'description', I: production.W})
 				]));
 	});
 var $author$project$Main$Production = F3(
@@ -6425,7 +6422,7 @@ var $author$project$Main$parseWarnings = function (jsonValue) {
 				_List_fromArray(
 					[
 						$author$project$Main$validateRequiredTextField(
-						{a: '/name', I: name})
+						{b: '/name', I: name})
 					]));
 		} else {
 			return _List_Nil;
@@ -6446,7 +6443,7 @@ var $elm$json$Json$Decode$andThen = _Json_andThen;
 var $elm$json$Json$Decode$bool = _Json_decodeBool;
 var $author$project$Main$ValidationError = F5(
 	function (path, message, keyword, additionalProperty, allowedEnumValues) {
-		return {J: additionalProperty, T: allowedEnumValues, H: keyword, j: message, a: path};
+		return {J: additionalProperty, T: allowedEnumValues, H: keyword, k: message, b: path};
 	});
 var $elm$json$Json$Decode$at = F2(
 	function (fields, decoder) {
@@ -7162,13 +7159,13 @@ var $author$project$Main$viewHighlightedJson = F2(
 			A2(
 				$elm$core$String$split,
 				'\n',
-				A2($author$project$Main$extractPath, err.a, jsonValue)));
+				A2($author$project$Main$extractPath, err.b, jsonValue)));
 	});
 var $author$project$Main$viewValidationError = F2(
 	function (jsonValue, _v0) {
 		var err = _v0.a;
 		var others = _v0.b;
-		var errorPath = $elm$core$String$isEmpty(err.a) ? 'Top-level object' : err.a;
+		var errorPath = $elm$core$String$isEmpty(err.b) ? 'Top-level object' : err.b;
 		var additionalProperties = $elm_community$list_extra$List$Extra$unique(
 			A2(
 				$elm$core$List$filterMap,
@@ -7182,7 +7179,7 @@ var $author$project$Main$viewValidationError = F2(
 			_List_fromArray(
 				[
 					errorPath,
-					err.j,
+					err.k,
 					function () {
 					var _v1 = _Utils_Tuple2(err.T, additionalProperties);
 					if (!_v1.a.$) {
@@ -7340,18 +7337,18 @@ var $author$project$Main$viewWarningJson = F2(
 			A2(
 				$elm$core$String$split,
 				'\n',
-				A2($author$project$Main$extractPath, warning.a, jsonValue)));
+				A2($author$project$Main$extractPath, warning.b, jsonValue)));
 	});
 var $author$project$Main$viewValidationWarning = F2(
 	function (jsonValue, _v0) {
 		var err = _v0.a;
 		var others = _v0.b;
-		var errorPath = $elm$core$String$isEmpty(err.a) ? 'Top-level object' : err.a;
+		var errorPath = $elm$core$String$isEmpty(err.b) ? 'Top-level object' : err.b;
 		var message = A2(
 			$elm$core$String$join,
 			' ',
 			_List_fromArray(
-				[errorPath, err.j]));
+				[errorPath, err.k]));
 		return A2(
 			$elm$html$Html$tr,
 			_List_Nil,

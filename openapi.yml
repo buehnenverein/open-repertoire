@@ -142,6 +142,7 @@ components:
           format: int64
           description: The duration of the event in minutes.
           example: 90
+          minimum: 0
         # pause:
         #   type: boolean
         #   description: "TODO: Gibt es hierfür eine Entsprechung in schema.org?"
@@ -176,6 +177,7 @@ components:
           type: number
           format: float
           example: 25.50
+          minimum: 0
         priceCurrency:
           type: string
           description: "The currency of the price. Use standard formats: TODO"
