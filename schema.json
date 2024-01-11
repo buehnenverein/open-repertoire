@@ -80,8 +80,8 @@
                 "duration": {
                   "type": "integer",
                   "format": "int64",
-                  "description": "The duration of the event in seconds.",
-                  "minimum": -9223372036854776000,
+                  "description": "The duration of the event in minutes.",
+                  "minimum": 0,
                   "maximum": 9223372036854776000
                 },
                 "url": {
@@ -147,7 +147,7 @@
                       "price": {
                         "type": "number",
                         "format": "float",
-                        "minimum": -3.402823669209385e+38,
+                        "minimum": 0,
                         "maximum": 3.402823669209385e+38
                       },
                       "priceCurrency": {

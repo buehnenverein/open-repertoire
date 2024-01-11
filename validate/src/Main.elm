@@ -26,32 +26,59 @@ main =
         }
 
 
-type Model
-    = Init Inputs
-    | Validating Inputs (Maybe Encode.Value)
-    | RequestFailed Inputs Http.Error
-    | ResultSuccess Inputs
-    | ResultError Inputs (List ValidationErrorGroup) Encode.Value
-    | JsonParsingError Inputs String
-    | ValidationParsingError Inputs String
+type alias Model =
+    { inputs : Inputs
+    , state : State
+    }
+
+
+type State
+    = Init
+    | Validating (Maybe Encode.Value)
+    | RequestFailed Http.Error
+    | ResultSuccess (List ValidationIssueGroup) Encode.Value
+    | ResultError { errors : List ValidationIssueGroup, warnings : List ValidationIssueGroup } Encode.Value
+    | JsonParsingError String
+    | ValidationParsingError String
 
 
 type ValidationResult
     = Valid
-    | Error (List ValidationError)
+    | Error (List ValidationIssue)
 
 
-type alias ValidationError =
+type alias ValidationIssue =
     { path : String
     , message : String
-    , keyword : String
+    , kind : IssueType
+    }
+
+
+type IssueType
+    = ValidationWarning
+    | ValidationError ErrorInfo
+
+
+type alias ErrorInfo =
+    { keyword : String
     , additionalProperty : Maybe String
     , allowedEnumValues : Maybe (List String)
     }
 
 
-type alias ValidationErrorGroup =
-    ( ValidationError, List ValidationError )
+type alias ValidationIssueGroup =
+    ( ValidationIssue, List ValidationIssue )
+
+
+type alias Production =
+    { title : String
+    , description : String
+    , events : List Event
+    }
+
+
+type alias Event =
+    { duration : Maybe Int }
 
 
 type alias Inputs =
@@ -71,7 +98,11 @@ type Msg
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( Init { url = "", text = "" }, Cmd.none )
+    let
+        inputs =
+            { url = "", text = "" }
+    in
+    ( { inputs = inputs, state = Init }, Cmd.none )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -82,46 +113,63 @@ update msg model =
     in
     case msg of
         SubmitUrl url ->
-            ( Validating inputs Nothing, Http.get { url = url, expect = Http.expectJson Response jsonDecoder } )
+            ( { model | state = Validating Nothing }, Http.get { url = url, expect = Http.expectJson Response jsonDecoder } )
 
         SubmitJson text ->
             case Decode.decodeString jsonDecoder text of
                 Ok jsonValue ->
-                    ( Validating inputs (Just jsonValue), sendData jsonValue )
+                    ( { model | state = Validating (Just jsonValue) }, sendData jsonValue )
 
                 Err parsingError ->
-                    ( JsonParsingError inputs (Decode.errorToString parsingError), Cmd.none )
+                    ( { model | state = JsonParsingError (Decode.errorToString parsingError) }, Cmd.none )
 
         UrlChange url ->
-            ( Init { inputs | url = url }, Cmd.none )
+            let
+                newInputs =
+                    { inputs | url = url }
+            in
+            ( { model | inputs = newInputs }, Cmd.none )
 
         TextChange text ->
-            ( Init { inputs | text = text }, Cmd.none )
+            let
+                newInputs =
+                    { inputs | text = text }
+            in
+            ( { model | inputs = newInputs }, Cmd.none )
 
         Response (Ok value) ->
-            ( Validating inputs (Just value), sendData value )
+            ( { model | state = Validating (Just value) }, sendData value )
 
         Response (Err error) ->
-            ( RequestFailed inputs error, Cmd.none )
+            ( { model | state = RequestFailed error }, Cmd.none )
 
         ReceiveValidationResult responseValue validationResult ->
             case Decode.decodeValue resultDecoder validationResult of
                 Ok Valid ->
-                    ( ResultSuccess inputs, Cmd.none )
+                    ( { model | state = ResultSuccess (groupedWarnings responseValue) responseValue }, Cmd.none )
 
                 Ok (Error errors) ->
-                    ( ResultError inputs (groupErrors errors) responseValue, Cmd.none )
+                    ( { model
+                        | state =
+                            ResultError
+                                { errors = groupIssues errors
+                                , warnings = groupedWarnings responseValue
+                                }
+                                responseValue
+                      }
+                    , Cmd.none
+                    )
 
                 Err parsingError ->
-                    ( ValidationParsingError inputs (Decode.errorToString parsingError), Cmd.none )
+                    ( { model | state = ValidationParsingError (Decode.errorToString parsingError) }, Cmd.none )
 
 
 view : Model -> Html Msg
 view model =
     let
         enableButton =
-            case model of
-                Validating _ _ ->
+            case model.state of
+                Validating _ ->
                     False
 
                 _ ->
@@ -130,23 +178,29 @@ view model =
     div [ class "container" ]
         [ viewIntroduction
         , viewInputs (getInputs model) enableButton
-        , case model of
-            Init _ ->
+        , case model.state of
+            Init ->
                 text ""
 
-            Validating _ _ ->
+            Validating _ ->
                 text ""
 
-            RequestFailed _ error ->
+            RequestFailed error ->
                 viewRequestError error
 
-            ResultSuccess _ ->
-                viewValid
+            ResultSuccess warnings jsonValue ->
+                div []
+                    [ viewValid
+                    , viewValidationWarnings warnings jsonValue
+                    ]
 
-            ResultError _ errors jsonValue ->
-                viewValidationErrors errors jsonValue
+            ResultError { errors, warnings } jsonValue ->
+                div []
+                    [ viewValidationErrors errors jsonValue
+                    , viewValidationWarnings warnings jsonValue
+                    ]
 
-            JsonParsingError _ message ->
+            JsonParsingError message ->
                 div [ class "notification is-danger", style "white-space" "pre-wrap" ]
                     [ text
                         ("Unfortunately, I wasn't able to parse the data you provided. Are you sure that it is valid JSON?"
@@ -155,7 +209,7 @@ view model =
                         )
                     ]
 
-            ValidationParsingError _ message ->
+            ValidationParsingError message ->
                 div [ class "notification is-danger", style "white-space" "pre-wrap" ]
                     [ text
                         ("Unfortunately, I encountered an error while parsing the validation result, so I could not check whether your JSON is valid or not."
@@ -164,6 +218,10 @@ view model =
                         )
                     ]
         ]
+
+
+
+-- VIEW HELPERS
 
 
 viewRequestError : Http.Error -> Html Msg
@@ -203,10 +261,10 @@ viewValid =
         ]
 
 
-viewValidationErrors : List ValidationErrorGroup -> Encode.Value -> Html Msg
+viewValidationErrors : List ValidationIssueGroup -> Encode.Value -> Html Msg
 viewValidationErrors errors jsonValue =
     div []
-        [ div [ class "notification is-warning" ] [ text "I have found some issues in your JSON." ]
+        [ div [ class "notification is-danger" ] [ text "I have found some issues in your JSON." ]
         , div [ class "row" ]
             [ table []
                 [ thead []
@@ -218,7 +276,7 @@ viewValidationErrors errors jsonValue =
                     ]
                 , tbody []
                     (List.map
-                        (viewValidationError jsonValue)
+                        (viewValidationIssue jsonValue)
                         errors
                     )
                 ]
@@ -226,12 +284,66 @@ viewValidationErrors errors jsonValue =
         ]
 
 
-viewValidationError : Encode.Value -> ValidationErrorGroup -> Html Msg
-viewValidationError jsonValue ( err, others ) =
+viewValidationWarnings : List ValidationIssueGroup -> Encode.Value -> Html Msg
+viewValidationWarnings warnings jsonValue =
+    if List.isEmpty warnings then
+        text ""
+
+    else
+        div []
+            [ div [ class "notification is-warning" ]
+                [ text "I have found some potential issues. These are not technically validation errors, but they might indicate issues with your data."
+                ]
+            , div [ class "row" ]
+                [ table []
+                    [ thead []
+                        [ tr []
+                            [ th [] [ text "Warning" ]
+                            , th [] [ text "Value" ]
+                            , th [] [ text "Warning count" ]
+                            ]
+                        ]
+                    , tbody []
+                        (List.map
+                            (viewValidationIssue jsonValue)
+                            warnings
+                        )
+                    ]
+                ]
+            ]
+
+
+getAdditionalProperty : ValidationIssue -> Maybe String
+getAdditionalProperty issue =
+    getErrorInfoField .additionalProperty Nothing issue
+
+
+getAllowedEnumValues : ValidationIssue -> Maybe (List String)
+getAllowedEnumValues issue =
+    getErrorInfoField .allowedEnumValues Nothing issue
+
+
+getKeyword : ValidationIssue -> String
+getKeyword issue =
+    getErrorInfoField .keyword "warning" issue
+
+
+getErrorInfoField : (ErrorInfo -> a) -> a -> ValidationIssue -> a
+getErrorInfoField accessor default issue =
+    case issue.kind of
+        ValidationError errorData ->
+            accessor errorData
+
+        ValidationWarning ->
+            default
+
+
+viewValidationIssue : Encode.Value -> ValidationIssueGroup -> Html Msg
+viewValidationIssue jsonValue ( err, others ) =
     let
         additionalProperties =
             List.Extra.unique
-                (List.filterMap .additionalProperty (err :: others))
+                (List.filterMap getAdditionalProperty (err :: others))
 
         errorPath =
             if String.isEmpty err.path then
@@ -244,7 +356,7 @@ viewValidationError jsonValue ( err, others ) =
             String.join " "
                 [ errorPath
                 , err.message
-                , case ( err.allowedEnumValues, additionalProperties ) of
+                , case ( getAllowedEnumValues err, additionalProperties ) of
                     ( Just list, _ ) ->
                         "[" ++ String.join ", " list ++ "]"
 
@@ -263,17 +375,17 @@ viewValidationError jsonValue ( err, others ) =
         ]
 
 
-viewHighlightedJson : ValidationErrorGroup -> Encode.Value -> List (Html Msg)
+viewHighlightedJson : ValidationIssueGroup -> Encode.Value -> List (Html Msg)
 viewHighlightedJson ( err, others ) jsonValue =
     let
         extractAdditionalProperties errors =
-            List.filterMap .additionalProperty errors
+            List.filterMap getAdditionalProperty errors
 
         isProperty line property =
             String.contains ("\"" ++ property ++ "\":") line
 
         highlightAdditionalProperties line =
-            if err.keyword == "additionalProperties" then
+            if getKeyword err == "additionalProperties" then
                 List.any (isProperty line) (extractAdditionalProperties (err :: others))
 
             else
@@ -360,8 +472,8 @@ viewInputs inputs buttonEnabled =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    case model of
-        Validating _ (Just responseValue) ->
+    case model.state of
+        Validating (Just responseValue) ->
             receiveResult (ReceiveValidationResult responseValue)
 
         _ ->
@@ -374,27 +486,7 @@ subscriptions model =
 
 getInputs : Model -> Inputs
 getInputs model =
-    case model of
-        Init inputs ->
-            inputs
-
-        Validating inputs _ ->
-            inputs
-
-        RequestFailed inputs _ ->
-            inputs
-
-        ResultSuccess inputs ->
-            inputs
-
-        ResultError inputs _ _ ->
-            inputs
-
-        ValidationParsingError inputs _ ->
-            inputs
-
-        JsonParsingError inputs _ ->
-            inputs
+    model.inputs
 
 
 extractPath : String -> Encode.Value -> String
@@ -436,18 +528,22 @@ decodePath components =
         components
 
 
-groupErrors : List ValidationError -> List ValidationErrorGroup
-groupErrors validationErrors =
+
+-- VALIDATION ISSUES
+
+
+groupIssues : List ValidationIssue -> List ValidationIssueGroup
+groupIssues validationIssues =
     -- Selects a representative example of each type of error,
-    -- to not repeat similar errors that happen e.g. in each element of an array.
-    List.Extra.gatherWith similarError validationErrors
+    -- to not repeat similar errors that appear e.g. in each element of an array.
+    List.Extra.gatherWith similarIssues validationIssues
 
 
-similarError : ValidationError -> ValidationError -> Bool
-similarError err1 err2 =
-    similarPath err1.path err2.path
-        && (err1.message == err2.message)
-        && (err1.keyword == err2.keyword)
+similarIssues : ValidationIssue -> ValidationIssue -> Bool
+similarIssues issue1 issue2 =
+    similarPath issue1.path issue2.path
+        && (issue1.message == issue2.message)
+        && (getKeyword issue1 == getKeyword issue2)
 
 
 similarPath : String -> String -> Bool
@@ -484,6 +580,103 @@ isInteger string =
             False
 
 
+groupedWarnings : Decode.Value -> List ValidationIssueGroup
+groupedWarnings jsonValue =
+    groupIssues (parseWarnings jsonValue)
+
+
+parseWarnings : Decode.Value -> List ValidationIssue
+parseWarnings jsonValue =
+    let
+        productionsResult =
+            Decode.decodeValue productionsDecoder jsonValue
+
+        productionWarnings =
+            case productionsResult of
+                Ok productions ->
+                    List.indexedMap
+                        (\index production ->
+                            parseProductionWarnings index production
+                                ++ parseEventsWarnings index production.events
+                        )
+                        productions
+                        |> List.foldr (++) []
+
+                Err _ ->
+                    []
+
+        nameResult =
+            Decode.decodeValue nameDecoder jsonValue
+
+        nameWarnings =
+            case nameResult of
+                Ok name ->
+                    [ validateRequiredTextField { path = "/name", value = name }
+                    ]
+                        |> List.filterMap identity
+
+                Err _ ->
+                    []
+    in
+    nameWarnings ++ productionWarnings
+
+
+parseProductionWarnings : Int -> Production -> List ValidationIssue
+parseProductionWarnings index production =
+    let
+        basePath =
+            "/productions/" ++ String.fromInt index ++ "/"
+    in
+    [ validateRequiredTextField { path = basePath ++ "title", value = production.title }
+    , validateRequiredTextField { path = basePath ++ "description", value = production.description }
+    ]
+        |> List.filterMap identity
+
+
+validateRequiredTextField : { path : String, value : String } -> Maybe ValidationIssue
+validateRequiredTextField { path, value } =
+    if String.trim value == "" then
+        Just
+            { path = path
+            , message = "is a required text field, but you provided an empty value"
+            , kind = ValidationWarning
+            }
+
+    else
+        Nothing
+
+
+parseEventsWarnings : Int -> List Event -> List ValidationIssue
+parseEventsWarnings productionIndex events =
+    List.indexedMap (validateEventDuration productionIndex) events
+        |> List.filterMap identity
+
+
+validateEventDuration : Int -> Int -> Event -> Maybe ValidationIssue
+validateEventDuration productionId eventId event =
+    event.duration
+        |> Maybe.andThen
+            (\minutes ->
+                if minutes > 900 then
+                    Just
+                        { path = "/productions/" ++ String.fromInt productionId ++ "/events/" ++ String.fromInt eventId ++ "/duration"
+                        , message = "seems to be very long. The duration field is supposed to contain the event's duration in minutes. Are you sure you didn't accidentally use seconds instead?"
+                        , kind = ValidationWarning
+                        }
+
+                else if minutes >= 0 && minutes < 10 then
+                    -- the duration being negative is already a validation error, so we don't need to cover this case here
+                    Just
+                        { path = "/productions/" ++ String.fromInt productionId ++ "/events/" ++ String.fromInt eventId ++ "/duration"
+                        , message = "seems to be very short. The duration field is supposed to contain the event's duration in minutes. Are you sure you didn't accidentally use hours instead?"
+                        , kind = ValidationWarning
+                        }
+
+                else
+                    Nothing
+            )
+
+
 
 -- JSON Decoding
 
@@ -503,17 +696,52 @@ resultDecoder =
 
                 else
                     Decode.map Error
-                        (Decode.field "errors" errorDecoder)
+                        (Decode.field "errors" issueDecoder)
             )
 
 
-errorDecoder : Decoder (List ValidationError)
-errorDecoder =
+issueDecoder : Decoder (List ValidationIssue)
+issueDecoder =
     Decode.list
-        (Decode.map5 ValidationError
+        (Decode.map3 ValidationIssue
             (Decode.field "instancePath" Decode.string)
             (Decode.field "message" Decode.string)
-            (Decode.field "keyword" Decode.string)
-            (Decode.maybe (Decode.at [ "params", "additionalProperty" ] Decode.string))
-            (Decode.maybe (Decode.at [ "params", "allowedValues" ] (Decode.list Decode.string)))
+            issueTypeDecoder
+        )
+
+
+issueTypeDecoder : Decoder IssueType
+issueTypeDecoder =
+    Decode.map3 ErrorInfo
+        (Decode.field "keyword" Decode.string)
+        (Decode.maybe (Decode.at [ "params", "additionalProperty" ] Decode.string))
+        (Decode.maybe (Decode.at [ "params", "allowedValues" ] (Decode.list Decode.string)))
+        |> Decode.andThen
+            (\info ->
+                Decode.succeed (ValidationError info)
+            )
+
+
+nameDecoder : Decoder String
+nameDecoder =
+    Decode.field "name" Decode.string
+
+
+productionsDecoder : Decoder (List Production)
+productionsDecoder =
+    Decode.field "productions"
+        (Decode.list
+            (Decode.map3 Production
+                (Decode.field "title" Decode.string)
+                (Decode.field "description" Decode.string)
+                (Decode.field "events" eventsDecoder)
+            )
+        )
+
+
+eventsDecoder : Decoder (List Event)
+eventsDecoder =
+    Decode.list
+        (Decode.map Event
+            (Decode.maybe (Decode.field "duration" Decode.int))
         )
