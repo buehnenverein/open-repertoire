@@ -36,38 +36,38 @@ type State
     = Init
     | Validating (Maybe Encode.Value)
     | RequestFailed Http.Error
-    | ResultSuccess (List ValidationWarningGroup) Encode.Value
-    | ResultError (List ValidationErrorGroup) (List ValidationWarningGroup) Encode.Value
+    | ResultSuccess (List ValidationIssueGroup) Encode.Value
+    | ResultError { errors : List ValidationIssueGroup, warnings : List ValidationIssueGroup } Encode.Value
     | JsonParsingError String
     | ValidationParsingError String
 
 
 type ValidationResult
     = Valid
-    | Error (List ValidationError)
+    | Error (List ValidationIssue)
 
 
-type alias ValidationError =
+type alias ValidationIssue =
     { path : String
     , message : String
-    , keyword : String
+    , kind : IssueType
+    }
+
+
+type IssueType
+    = ValidationWarning
+    | ValidationError ErrorInfo
+
+
+type alias ErrorInfo =
+    { keyword : String
     , additionalProperty : Maybe String
     , allowedEnumValues : Maybe (List String)
     }
 
 
-type alias ValidationWarning =
-    { path : String
-    , message : String
-    }
-
-
-type alias ValidationErrorGroup =
-    ( ValidationError, List ValidationError )
-
-
-type alias ValidationWarningGroup =
-    ( ValidationWarning, List ValidationWarning )
+type alias ValidationIssueGroup =
+    ( ValidationIssue, List ValidationIssue )
 
 
 type alias Production =
@@ -149,7 +149,16 @@ update msg model =
                     ( { model | state = ResultSuccess (groupedWarnings responseValue) responseValue }, Cmd.none )
 
                 Ok (Error errors) ->
-                    ( { model | state = ResultError (groupErrors errors) (groupedWarnings responseValue) responseValue }, Cmd.none )
+                    ( { model
+                        | state =
+                            ResultError
+                                { errors = groupIssues errors
+                                , warnings = groupedWarnings responseValue
+                                }
+                                responseValue
+                      }
+                    , Cmd.none
+                    )
 
                 Err parsingError ->
                     ( { model | state = ValidationParsingError (Decode.errorToString parsingError) }, Cmd.none )
@@ -185,7 +194,7 @@ view model =
                     , viewValidationWarnings warnings jsonValue
                     ]
 
-            ResultError errors warnings jsonValue ->
+            ResultError { errors, warnings } jsonValue ->
                 div []
                     [ viewValidationErrors errors jsonValue
                     , viewValidationWarnings warnings jsonValue
@@ -252,7 +261,7 @@ viewValid =
         ]
 
 
-viewValidationErrors : List ValidationErrorGroup -> Encode.Value -> Html Msg
+viewValidationErrors : List ValidationIssueGroup -> Encode.Value -> Html Msg
 viewValidationErrors errors jsonValue =
     div []
         [ div [ class "notification is-danger" ] [ text "I have found some issues in your JSON." ]
@@ -267,7 +276,7 @@ viewValidationErrors errors jsonValue =
                     ]
                 , tbody []
                     (List.map
-                        (viewValidationError jsonValue)
+                        (viewValidationIssue jsonValue)
                         errors
                     )
                 ]
@@ -275,73 +284,7 @@ viewValidationErrors errors jsonValue =
         ]
 
 
-viewValidationError : Encode.Value -> ValidationErrorGroup -> Html Msg
-viewValidationError jsonValue ( err, others ) =
-    let
-        additionalProperties =
-            List.Extra.unique
-                (List.filterMap .additionalProperty (err :: others))
-
-        errorPath =
-            if String.isEmpty err.path then
-                "Top-level object"
-
-            else
-                err.path
-
-        message =
-            String.join " "
-                [ errorPath
-                , err.message
-                , case ( err.allowedEnumValues, additionalProperties ) of
-                    ( Just list, _ ) ->
-                        "[" ++ String.join ", " list ++ "]"
-
-                    ( Nothing, [] ) ->
-                        ""
-
-                    ( Nothing, _ ) ->
-                        "[" ++ String.join ", " additionalProperties ++ "]"
-                ]
-    in
-    tr []
-        [ td [] [ text message ]
-        , td [ style "white-space" "pre-wrap" ]
-            (viewHighlightedJson ( err, others ) jsonValue)
-        , td [] [ text (String.fromInt (List.length others + 1)) ]
-        ]
-
-
-viewHighlightedJson : ValidationErrorGroup -> Encode.Value -> List (Html Msg)
-viewHighlightedJson ( err, others ) jsonValue =
-    let
-        extractAdditionalProperties errors =
-            List.filterMap .additionalProperty errors
-
-        isProperty line property =
-            String.contains ("\"" ++ property ++ "\":") line
-
-        highlightAdditionalProperties line =
-            if err.keyword == "additionalProperties" then
-                List.any (isProperty line) (extractAdditionalProperties (err :: others))
-
-            else
-                False
-    in
-    extractPath err.path jsonValue
-        |> String.split "\n"
-        |> List.map
-            (\line ->
-                p [ class "json-line" ]
-                    [ span
-                        [ classList [ ( "is-danger", highlightAdditionalProperties line ) ]
-                        ]
-                        [ text line ]
-                    ]
-            )
-
-
-viewValidationWarnings : List ValidationWarningGroup -> Encode.Value -> Html Msg
+viewValidationWarnings : List ValidationIssueGroup -> Encode.Value -> Html Msg
 viewValidationWarnings warnings jsonValue =
     if List.isEmpty warnings then
         text ""
@@ -362,7 +305,7 @@ viewValidationWarnings warnings jsonValue =
                         ]
                     , tbody []
                         (List.map
-                            (viewValidationWarning jsonValue)
+                            (viewValidationIssue jsonValue)
                             warnings
                         )
                     ]
@@ -370,9 +313,38 @@ viewValidationWarnings warnings jsonValue =
             ]
 
 
-viewValidationWarning : Encode.Value -> ValidationWarningGroup -> Html Msg
-viewValidationWarning jsonValue ( err, others ) =
+getAdditionalProperty : ValidationIssue -> Maybe String
+getAdditionalProperty issue =
+    getErrorInfoField .additionalProperty Nothing issue
+
+
+getAllowedEnumValues : ValidationIssue -> Maybe (List String)
+getAllowedEnumValues issue =
+    getErrorInfoField .allowedEnumValues Nothing issue
+
+
+getKeyword : ValidationIssue -> String
+getKeyword issue =
+    getErrorInfoField .keyword "warning" issue
+
+
+getErrorInfoField : (ErrorInfo -> a) -> a -> ValidationIssue -> a
+getErrorInfoField accessor default issue =
+    case issue.kind of
+        ValidationError errorData ->
+            accessor errorData
+
+        ValidationWarning ->
+            default
+
+
+viewValidationIssue : Encode.Value -> ValidationIssueGroup -> Html Msg
+viewValidationIssue jsonValue ( err, others ) =
     let
+        additionalProperties =
+            List.Extra.unique
+                (List.filterMap getAdditionalProperty (err :: others))
+
         errorPath =
             if String.isEmpty err.path then
                 "Top-level object"
@@ -384,25 +356,49 @@ viewValidationWarning jsonValue ( err, others ) =
             String.join " "
                 [ errorPath
                 , err.message
+                , case ( getAllowedEnumValues err, additionalProperties ) of
+                    ( Just list, _ ) ->
+                        "[" ++ String.join ", " list ++ "]"
+
+                    ( Nothing, [] ) ->
+                        ""
+
+                    ( Nothing, _ ) ->
+                        "[" ++ String.join ", " additionalProperties ++ "]"
                 ]
     in
     tr []
         [ td [] [ text message ]
         , td [ style "white-space" "pre-wrap" ]
-            (viewWarningJson ( err, others ) jsonValue)
+            (viewHighlightedJson ( err, others ) jsonValue)
         , td [] [ text (String.fromInt (List.length others + 1)) ]
         ]
 
 
-viewWarningJson : ValidationWarningGroup -> Encode.Value -> List (Html Msg)
-viewWarningJson ( warning, others ) jsonValue =
-    extractPath warning.path jsonValue
+viewHighlightedJson : ValidationIssueGroup -> Encode.Value -> List (Html Msg)
+viewHighlightedJson ( err, others ) jsonValue =
+    let
+        extractAdditionalProperties errors =
+            List.filterMap getAdditionalProperty errors
+
+        isProperty line property =
+            String.contains ("\"" ++ property ++ "\":") line
+
+        highlightAdditionalProperties line =
+            if getKeyword err == "additionalProperties" then
+                List.any (isProperty line) (extractAdditionalProperties (err :: others))
+
+            else
+                False
+    in
+    extractPath err.path jsonValue
         |> String.split "\n"
         |> List.map
             (\line ->
                 p [ class "json-line" ]
                     [ span
-                        []
+                        [ classList [ ( "is-danger", highlightAdditionalProperties line ) ]
+                        ]
                         [ text line ]
                     ]
             )
@@ -536,31 +532,18 @@ decodePath components =
 -- VALIDATION ISSUES
 
 
-groupWarnings : List ValidationWarning -> List ValidationWarningGroup
-groupWarnings validationWarnings =
-    -- Selects a representative example of each type of warning,
-    -- to not repeat similar warnings that appear e.g. in each element of an array.
-    List.Extra.gatherWith similarWarning validationWarnings
-
-
-similarWarning : ValidationWarning -> ValidationWarning -> Bool
-similarWarning warning1 warning2 =
-    similarPath warning1.path warning2.path
-        && (warning1.message == warning2.message)
-
-
-groupErrors : List ValidationError -> List ValidationErrorGroup
-groupErrors validationErrors =
+groupIssues : List ValidationIssue -> List ValidationIssueGroup
+groupIssues validationIssues =
     -- Selects a representative example of each type of error,
     -- to not repeat similar errors that appear e.g. in each element of an array.
-    List.Extra.gatherWith similarError validationErrors
+    List.Extra.gatherWith similarIssues validationIssues
 
 
-similarError : ValidationError -> ValidationError -> Bool
-similarError err1 err2 =
-    similarPath err1.path err2.path
-        && (err1.message == err2.message)
-        && (err1.keyword == err2.keyword)
+similarIssues : ValidationIssue -> ValidationIssue -> Bool
+similarIssues issue1 issue2 =
+    similarPath issue1.path issue2.path
+        && (issue1.message == issue2.message)
+        && (getKeyword issue1 == getKeyword issue2)
 
 
 similarPath : String -> String -> Bool
@@ -597,12 +580,12 @@ isInteger string =
             False
 
 
-groupedWarnings : Decode.Value -> List ValidationWarningGroup
+groupedWarnings : Decode.Value -> List ValidationIssueGroup
 groupedWarnings jsonValue =
-    groupWarnings (parseWarnings jsonValue)
+    groupIssues (parseWarnings jsonValue)
 
 
-parseWarnings : Decode.Value -> List ValidationWarning
+parseWarnings : Decode.Value -> List ValidationIssue
 parseWarnings jsonValue =
     let
         productionsResult =
@@ -638,7 +621,7 @@ parseWarnings jsonValue =
     nameWarnings ++ productionWarnings
 
 
-parseProductionWarnings : Int -> Production -> List ValidationWarning
+parseProductionWarnings : Int -> Production -> List ValidationIssue
 parseProductionWarnings index production =
     let
         basePath =
@@ -650,25 +633,26 @@ parseProductionWarnings index production =
         |> List.filterMap identity
 
 
-validateRequiredTextField : { path : String, value : String } -> Maybe ValidationWarning
+validateRequiredTextField : { path : String, value : String } -> Maybe ValidationIssue
 validateRequiredTextField { path, value } =
     if String.trim value == "" then
         Just
             { path = path
             , message = "is a required text field, but you provided an empty value"
+            , kind = ValidationWarning
             }
 
     else
         Nothing
 
 
-parseEventsWarnings : Int -> List Event -> List ValidationWarning
+parseEventsWarnings : Int -> List Event -> List ValidationIssue
 parseEventsWarnings productionIndex events =
     List.indexedMap (validateEventDuration productionIndex) events
         |> List.filterMap identity
 
 
-validateEventDuration : Int -> Int -> Event -> Maybe ValidationWarning
+validateEventDuration : Int -> Int -> Event -> Maybe ValidationIssue
 validateEventDuration productionId eventId event =
     event.duration
         |> Maybe.andThen
@@ -677,6 +661,7 @@ validateEventDuration productionId eventId event =
                     Just
                         { path = "/productions/" ++ String.fromInt productionId ++ "/events/" ++ String.fromInt eventId ++ "/duration"
                         , message = "seems to be very long. The duration field is supposed to contain the event's duration in minutes. Are you sure you didn't accidentally use seconds instead?"
+                        , kind = ValidationWarning
                         }
 
                 else if minutes >= 0 && minutes < 10 then
@@ -684,6 +669,7 @@ validateEventDuration productionId eventId event =
                     Just
                         { path = "/productions/" ++ String.fromInt productionId ++ "/events/" ++ String.fromInt eventId ++ "/duration"
                         , message = "seems to be very short. The duration field is supposed to contain the event's duration in minutes. Are you sure you didn't accidentally use hours instead?"
+                        , kind = ValidationWarning
                         }
 
                 else
@@ -710,20 +696,30 @@ resultDecoder =
 
                 else
                     Decode.map Error
-                        (Decode.field "errors" errorDecoder)
+                        (Decode.field "errors" issueDecoder)
             )
 
 
-errorDecoder : Decoder (List ValidationError)
-errorDecoder =
+issueDecoder : Decoder (List ValidationIssue)
+issueDecoder =
     Decode.list
-        (Decode.map5 ValidationError
+        (Decode.map3 ValidationIssue
             (Decode.field "instancePath" Decode.string)
             (Decode.field "message" Decode.string)
-            (Decode.field "keyword" Decode.string)
-            (Decode.maybe (Decode.at [ "params", "additionalProperty" ] Decode.string))
-            (Decode.maybe (Decode.at [ "params", "allowedValues" ] (Decode.list Decode.string)))
+            issueTypeDecoder
         )
+
+
+issueTypeDecoder : Decoder IssueType
+issueTypeDecoder =
+    Decode.map3 ErrorInfo
+        (Decode.field "keyword" Decode.string)
+        (Decode.maybe (Decode.at [ "params", "additionalProperty" ] Decode.string))
+        (Decode.maybe (Decode.at [ "params", "allowedValues" ] (Decode.list Decode.string)))
+        |> Decode.andThen
+            (\info ->
+                Decode.succeed (ValidationError info)
+            )
 
 
 nameDecoder : Decoder String

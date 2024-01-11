@@ -784,11 +784,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.P.C === region.Y.C)
+	if (region.O.D === region.Y.D)
 	{
-		return 'on line ' + region.P.C;
+		return 'on line ' + region.O.D;
 	}
-	return 'on lines ' + region.P.C + ' through ' + region.Y.C;
+	return 'on lines ' + region.O.D + ' through ' + region.Y.D;
 }
 
 
@@ -1857,9 +1857,9 @@ var _Platform_worker = F4(function(impl, flagDecoder, debugMetadata, args)
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.aM,
-		impl.aZ,
-		impl.aX,
+		impl.aP,
+		impl.a0,
+		impl.a_,
 		function() { return function() {} }
 	);
 });
@@ -2719,9 +2719,9 @@ var _VirtualDom_mapEventTuple = F2(function(func, tuple)
 var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
-		k: func(record.k),
-		Q: record.Q,
-		N: record.N
+		r: func(record.r),
+		P: record.P,
+		M: record.M
 	}
 });
 
@@ -2989,11 +2989,11 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 		// 3 = Custom
 
 		var value = result.a;
-		var message = !tag ? value : tag < 3 ? value.a : value.k;
-		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.Q;
+		var message = !tag ? value : tag < 3 ? value.a : value.r;
+		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.P;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.N) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value.M) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -3943,11 +3943,11 @@ var _Browser_element = _Debugger_element || F4(function(impl, flagDecoder, debug
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.aM,
-		impl.aZ,
-		impl.aX,
+		impl.aP,
+		impl.a0,
+		impl.a_,
 		function(sendToApp, initialModel) {
-			var view = impl.a_;
+			var view = impl.a1;
 			/**/
 			var domNode = args['node'];
 			//*/
@@ -3979,12 +3979,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.aM,
-		impl.aZ,
-		impl.aX,
+		impl.aP,
+		impl.a0,
+		impl.a_,
 		function(sendToApp, initialModel) {
-			var divertHrefToApp = impl.O && impl.O(sendToApp)
-			var view = impl.a_;
+			var divertHrefToApp = impl.N && impl.N(sendToApp)
+			var view = impl.a1;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
 			var currNode = _VirtualDom_virtualize(bodyNode);
@@ -3992,12 +3992,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 			{
 				_VirtualDom_divertHrefToApp = divertHrefToApp;
 				var doc = view(model);
-				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.aE);
+				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.aH);
 				var patches = _VirtualDom_diff(currNode, nextNode);
 				bodyNode = _VirtualDom_applyPatches(bodyNode, currNode, patches, sendToApp);
 				currNode = nextNode;
 				_VirtualDom_divertHrefToApp = 0;
-				(title !== doc.av) && (_VirtualDom_doc.title = title = doc.av);
+				(title !== doc.ax) && (_VirtualDom_doc.title = title = doc.ax);
 			});
 		}
 	);
@@ -4053,12 +4053,12 @@ function _Browser_makeAnimator(model, draw)
 
 function _Browser_application(impl)
 {
-	var onUrlChange = impl.aP;
-	var onUrlRequest = impl.aQ;
+	var onUrlChange = impl.aS;
+	var onUrlRequest = impl.aT;
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
-		O: function(sendToApp)
+		N: function(sendToApp)
 		{
 			key.a = sendToApp;
 			_Browser_window.addEventListener('popstate', key);
@@ -4074,9 +4074,9 @@ function _Browser_application(impl)
 					var next = $elm$url$Url$fromString(href).a;
 					sendToApp(onUrlRequest(
 						(next
-							&& curr.al === next.al
-							&& curr.ad === next.ad
-							&& curr.ai.a === next.ai.a
+							&& curr.an === next.an
+							&& curr.ae === next.ae
+							&& curr.ak.a === next.ak.a
 						)
 							? $elm$browser$Browser$Internal(next)
 							: $elm$browser$Browser$External(href)
@@ -4084,13 +4084,13 @@ function _Browser_application(impl)
 				}
 			});
 		},
-		aM: function(flags)
+		aP: function(flags)
 		{
-			return A3(impl.aM, flags, _Browser_getUrl(), key);
+			return A3(impl.aP, flags, _Browser_getUrl(), key);
 		},
-		a_: impl.a_,
-		aZ: impl.aZ,
-		aX: impl.aX
+		a1: impl.a1,
+		a0: impl.a0,
+		a_: impl.a_
 	});
 }
 
@@ -4156,17 +4156,17 @@ var _Browser_decodeEvent = F2(function(decoder, event)
 function _Browser_visibilityInfo()
 {
 	return (typeof _VirtualDom_doc.hidden !== 'undefined')
-		? { aK: 'hidden', aF: 'visibilitychange' }
+		? { aN: 'hidden', aI: 'visibilitychange' }
 		:
 	(typeof _VirtualDom_doc.mozHidden !== 'undefined')
-		? { aK: 'mozHidden', aF: 'mozvisibilitychange' }
+		? { aN: 'mozHidden', aI: 'mozvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.msHidden !== 'undefined')
-		? { aK: 'msHidden', aF: 'msvisibilitychange' }
+		? { aN: 'msHidden', aI: 'msvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.webkitHidden !== 'undefined')
-		? { aK: 'webkitHidden', aF: 'webkitvisibilitychange' }
-		: { aK: 'hidden', aF: 'visibilitychange' };
+		? { aN: 'webkitHidden', aI: 'webkitvisibilitychange' }
+		: { aN: 'hidden', aI: 'visibilitychange' };
 }
 
 
@@ -4247,12 +4247,12 @@ var _Browser_call = F2(function(functionName, id)
 function _Browser_getViewport()
 {
 	return {
-		ar: _Browser_getScene(),
-		ax: {
-			az: _Browser_window.pageXOffset,
-			aA: _Browser_window.pageYOffset,
-			ay: _Browser_doc.documentElement.clientWidth,
-			ac: _Browser_doc.documentElement.clientHeight
+		at: _Browser_getScene(),
+		az: {
+			aC: _Browser_window.pageXOffset,
+			aD: _Browser_window.pageYOffset,
+			aB: _Browser_doc.documentElement.clientWidth,
+			ad: _Browser_doc.documentElement.clientHeight
 		}
 	};
 }
@@ -4262,8 +4262,8 @@ function _Browser_getScene()
 	var body = _Browser_doc.body;
 	var elem = _Browser_doc.documentElement;
 	return {
-		ay: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
-		ac: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
+		aB: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
+		ad: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
 
@@ -4286,15 +4286,15 @@ function _Browser_getViewportOf(id)
 	return _Browser_withNode(id, function(node)
 	{
 		return {
-			ar: {
-				ay: node.scrollWidth,
-				ac: node.scrollHeight
+			at: {
+				aB: node.scrollWidth,
+				ad: node.scrollHeight
 			},
-			ax: {
-				az: node.scrollLeft,
-				aA: node.scrollTop,
-				ay: node.clientWidth,
-				ac: node.clientHeight
+			az: {
+				aC: node.scrollLeft,
+				aD: node.scrollTop,
+				aB: node.clientWidth,
+				ad: node.clientHeight
 			}
 		};
 	});
@@ -4324,18 +4324,18 @@ function _Browser_getElement(id)
 		var x = _Browser_window.pageXOffset;
 		var y = _Browser_window.pageYOffset;
 		return {
-			ar: _Browser_getScene(),
-			ax: {
-				az: x,
-				aA: y,
-				ay: _Browser_doc.documentElement.clientWidth,
-				ac: _Browser_doc.documentElement.clientHeight
+			at: _Browser_getScene(),
+			az: {
+				aC: x,
+				aD: y,
+				aB: _Browser_doc.documentElement.clientWidth,
+				ad: _Browser_doc.documentElement.clientHeight
 			},
-			aH: {
-				az: x + rect.left,
-				aA: y + rect.top,
-				ay: rect.width,
-				ac: rect.height
+			aK: {
+				aC: x + rect.left,
+				aD: y + rect.top,
+				aB: rect.width,
+				ad: rect.height
 			}
 		};
 	});
@@ -4380,25 +4380,25 @@ var _Http_toTask = F3(function(router, toTask, request)
 	return _Scheduler_binding(function(callback)
 	{
 		function done(response) {
-			callback(toTask(request.aI.a(response)));
+			callback(toTask(request.aL.a(response)));
 		}
 
 		var xhr = new XMLHttpRequest();
 		xhr.addEventListener('error', function() { done($elm$http$Http$NetworkError_); });
 		xhr.addEventListener('timeout', function() { done($elm$http$Http$Timeout_); });
-		xhr.addEventListener('load', function() { done(_Http_toResponse(request.aI.b, xhr)); });
-		$elm$core$Maybe$isJust(request.aw) && _Http_track(router, xhr, request.aw.a);
+		xhr.addEventListener('load', function() { done(_Http_toResponse(request.aL.b, xhr)); });
+		$elm$core$Maybe$isJust(request.ay) && _Http_track(router, xhr, request.ay.a);
 
 		try {
-			xhr.open(request.aN, request.u, true);
+			xhr.open(request.aQ, request.u, true);
 		} catch (e) {
 			return done($elm$http$Http$BadUrl_(request.u));
 		}
 
 		_Http_configureRequest(xhr, request);
 
-		request.aE.a && xhr.setRequestHeader('Content-Type', request.aE.a);
-		xhr.send(request.aE.b);
+		request.aH.a && xhr.setRequestHeader('Content-Type', request.aH.a);
+		xhr.send(request.aH.b);
 
 		return function() { xhr.c = true; xhr.abort(); };
 	});
@@ -4409,13 +4409,13 @@ var _Http_toTask = F3(function(router, toTask, request)
 
 function _Http_configureRequest(xhr, request)
 {
-	for (var headers = request.ab; headers.b; headers = headers.b) // WHILE_CONS
+	for (var headers = request.ac; headers.b; headers = headers.b) // WHILE_CONS
 	{
 		xhr.setRequestHeader(headers.a.a, headers.a.b);
 	}
-	xhr.timeout = request.aY.a || 0;
-	xhr.responseType = request.aI.d;
-	xhr.withCredentials = request.aC;
+	xhr.timeout = request.a$.a || 0;
+	xhr.responseType = request.aL.d;
+	xhr.withCredentials = request.aF;
 }
 
 
@@ -4437,9 +4437,9 @@ function _Http_toMetadata(xhr)
 {
 	return {
 		u: xhr.responseURL,
-		aV: xhr.status,
-		aW: xhr.statusText,
-		ab: _Http_parseHeaders(xhr.getAllResponseHeaders())
+		aY: xhr.status,
+		aZ: xhr.statusText,
+		ac: _Http_parseHeaders(xhr.getAllResponseHeaders())
 	};
 }
 
@@ -4534,15 +4534,15 @@ function _Http_track(router, xhr, tracker)
 	xhr.upload.addEventListener('progress', function(event) {
 		if (xhr.c) { return; }
 		_Scheduler_rawSpawn(A2($elm$core$Platform$sendToSelf, router, _Utils_Tuple2(tracker, $elm$http$Http$Sending({
-			aU: event.loaded,
-			as: event.total
+			aX: event.loaded,
+			au: event.total
 		}))));
 	});
 	xhr.addEventListener('progress', function(event) {
 		if (xhr.c) { return; }
 		_Scheduler_rawSpawn(A2($elm$core$Platform$sendToSelf, router, _Utils_Tuple2(tracker, $elm$http$Http$Receiving({
-			aS: event.loaded,
-			as: event.lengthComputable ? $elm$core$Maybe$Just(event.total) : $elm$core$Maybe$Nothing
+			aV: event.loaded,
+			au: event.lengthComputable ? $elm$core$Maybe$Just(event.total) : $elm$core$Maybe$Nothing
 		}))));
 	});
 }var $elm$core$Basics$EQ = 1;
@@ -4954,22 +4954,22 @@ var $elm$core$Array$builderToArray = F2(
 		if (!builder.a) {
 			return A4(
 				$elm$core$Array$Array_elm_builtin,
-				$elm$core$Elm$JsArray$length(builder.c),
+				$elm$core$Elm$JsArray$length(builder.b),
 				$elm$core$Array$shiftStep,
 				$elm$core$Elm$JsArray$empty,
-				builder.c);
+				builder.b);
 		} else {
 			var treeLen = builder.a * $elm$core$Array$branchFactor;
 			var depth = $elm$core$Basics$floor(
 				A2($elm$core$Basics$logBase, $elm$core$Array$branchFactor, treeLen - 1));
-			var correctNodeList = reverseNodeList ? $elm$core$List$reverse(builder.d) : builder.d;
+			var correctNodeList = reverseNodeList ? $elm$core$List$reverse(builder.c) : builder.c;
 			var tree = A2($elm$core$Array$treeFromBuilder, correctNodeList, builder.a);
 			return A4(
 				$elm$core$Array$Array_elm_builtin,
-				$elm$core$Elm$JsArray$length(builder.c) + treeLen,
+				$elm$core$Elm$JsArray$length(builder.b) + treeLen,
 				A2($elm$core$Basics$max, 5, depth * $elm$core$Array$shiftStep),
 				tree,
-				builder.c);
+				builder.b);
 		}
 	});
 var $elm$core$Basics$idiv = _Basics_idiv;
@@ -4982,7 +4982,7 @@ var $elm$core$Array$initializeHelp = F5(
 				return A2(
 					$elm$core$Array$builderToArray,
 					false,
-					{d: nodeList, a: (len / $elm$core$Array$branchFactor) | 0, c: tail});
+					{c: nodeList, a: (len / $elm$core$Array$branchFactor) | 0, b: tail});
 			} else {
 				var leaf = $elm$core$Array$Leaf(
 					A3($elm$core$Elm$JsArray$initialize, $elm$core$Array$branchFactor, fromIndex, fn));
@@ -5049,7 +5049,7 @@ var $elm$url$Url$Http = 0;
 var $elm$url$Url$Https = 1;
 var $elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
-		return {aa: fragment, ad: host, b: path, ai: port_, al: protocol, am: query};
+		return {ab: fragment, ae: host, f: path, ak: port_, an: protocol, ao: query};
 	});
 var $elm$core$String$contains = _String_contains;
 var $elm$core$String$length = _String_length;
@@ -5364,9 +5364,9 @@ var $author$project$Main$RequestFailed = function (a) {
 var $author$project$Main$Response = function (a) {
 	return {$: 4, a: a};
 };
-var $author$project$Main$ResultError = F3(
-	function (a, b, c) {
-		return {$: 4, a: a, b: b, c: c};
+var $author$project$Main$ResultError = F2(
+	function (a, b) {
+		return {$: 4, a: a, b: b};
 	});
 var $author$project$Main$ResultSuccess = F2(
 	function (a, b) {
@@ -5971,7 +5971,7 @@ var $elm$http$Http$resolve = F2(
 			case 3:
 				var metadata = response.a;
 				return $elm$core$Result$Err(
-					$elm$http$Http$BadStatus(metadata.aV));
+					$elm$http$Http$BadStatus(metadata.aY));
 			default:
 				var body = response.b;
 				return A2(
@@ -5999,7 +5999,7 @@ var $elm$http$Http$Request = function (a) {
 };
 var $elm$http$Http$State = F2(
 	function (reqs, subs) {
-		return {ao: reqs, at: subs};
+		return {aq: reqs, av: subs};
 	});
 var $elm$http$Http$init = $elm$core$Task$succeed(
 	A2($elm$http$Http$State, $elm$core$Dict$empty, _List_Nil));
@@ -6043,7 +6043,7 @@ var $elm$http$Http$updateReqs = F3(
 					return A2(
 						$elm$core$Task$andThen,
 						function (pid) {
-							var _v4 = req.aw;
+							var _v4 = req.ay;
 							if (_v4.$ === 1) {
 								return A3($elm$http$Http$updateReqs, router, otherCmds, reqs);
 							} else {
@@ -6073,7 +6073,7 @@ var $elm$http$Http$onEffects = F4(
 				return $elm$core$Task$succeed(
 					A2($elm$http$Http$State, reqs, subs));
 			},
-			A3($elm$http$Http$updateReqs, router, cmds, state.ao));
+			A3($elm$http$Http$updateReqs, router, cmds, state.aq));
 	});
 var $elm$core$List$maybeCons = F3(
 	function (f, mx, xs) {
@@ -6116,7 +6116,7 @@ var $elm$http$Http$onSelfMsg = F3(
 				A2(
 					$elm$core$List$filterMap,
 					A3($elm$http$Http$maybeSend, router, tracker, progress),
-					state.at)));
+					state.av)));
 	});
 var $elm$http$Http$Cancel = function (a) {
 	return {$: 0, a: a};
@@ -6130,13 +6130,13 @@ var $elm$http$Http$cmdMap = F2(
 			var r = cmd.a;
 			return $elm$http$Http$Request(
 				{
-					aC: r.aC,
-					aE: r.aE,
-					aI: A2(_Http_mapExpect, func, r.aI),
-					ab: r.ab,
-					aN: r.aN,
-					aY: r.aY,
-					aw: r.aw,
+					aF: r.aF,
+					aH: r.aH,
+					aL: A2(_Http_mapExpect, func, r.aL),
+					ac: r.ac,
+					aQ: r.aQ,
+					a$: r.a$,
+					ay: r.ay,
 					u: r.u
 				});
 		}
@@ -6160,11 +6160,11 @@ var $elm$http$Http$subscription = _Platform_leaf('Http');
 var $elm$http$Http$request = function (r) {
 	return $elm$http$Http$command(
 		$elm$http$Http$Request(
-			{aC: false, aE: r.aE, aI: r.aI, ab: r.ab, aN: r.aN, aY: r.aY, aw: r.aw, u: r.u}));
+			{aF: false, aH: r.aH, aL: r.aL, ac: r.ac, aQ: r.aQ, a$: r.a$, ay: r.ay, u: r.u}));
 };
 var $elm$http$Http$get = function (r) {
 	return $elm$http$Http$request(
-		{aE: $elm$http$Http$emptyBody, aI: r.aI, ab: _List_Nil, aN: 'GET', aY: $elm$core$Maybe$Nothing, aw: $elm$core$Maybe$Nothing, u: r.u});
+		{aH: $elm$http$Http$emptyBody, aL: r.aL, ac: _List_Nil, aQ: 'GET', a$: $elm$core$Maybe$Nothing, ay: $elm$core$Maybe$Nothing, u: r.u});
 };
 var $author$project$Main$getInputs = function (model) {
 	return model.B;
@@ -6217,6 +6217,25 @@ var $elm_community$list_extra$List$Extra$gatherWith = F2(
 			});
 		return A2(helper, list, _List_Nil);
 	});
+var $author$project$Main$getErrorInfoField = F3(
+	function (accessor, _default, issue) {
+		var _v0 = issue.C;
+		if (_v0.$ === 1) {
+			var errorData = _v0.a;
+			return accessor(errorData);
+		} else {
+			return _default;
+		}
+	});
+var $author$project$Main$getKeyword = function (issue) {
+	return A3(
+		$author$project$Main$getErrorInfoField,
+		function ($) {
+			return $.ag;
+		},
+		'warning',
+		issue);
+};
 var $elm$core$List$any = F2(
 	function (isOkay, list) {
 		any:
@@ -6280,23 +6299,19 @@ var $author$project$Main$similarPath = F2(
 			A2($elm$core$String$split, '/', path1),
 			A2($elm$core$String$split, '/', path2));
 	});
-var $author$project$Main$similarError = F2(
-	function (err1, err2) {
-		return A2($author$project$Main$similarPath, err1.b, err2.b) && (_Utils_eq(err1.k, err2.k) && _Utils_eq(err1.H, err2.H));
+var $author$project$Main$similarIssues = F2(
+	function (issue1, issue2) {
+		return A2($author$project$Main$similarPath, issue1.f, issue2.f) && (_Utils_eq(issue1.r, issue2.r) && _Utils_eq(
+			$author$project$Main$getKeyword(issue1),
+			$author$project$Main$getKeyword(issue2)));
 	});
-var $author$project$Main$groupErrors = function (validationErrors) {
-	return A2($elm_community$list_extra$List$Extra$gatherWith, $author$project$Main$similarError, validationErrors);
-};
-var $author$project$Main$similarWarning = F2(
-	function (warning1, warning2) {
-		return A2($author$project$Main$similarPath, warning1.b, warning2.b) && _Utils_eq(warning1.k, warning2.k);
-	});
-var $author$project$Main$groupWarnings = function (validationWarnings) {
-	return A2($elm_community$list_extra$List$Extra$gatherWith, $author$project$Main$similarWarning, validationWarnings);
+var $author$project$Main$groupIssues = function (validationIssues) {
+	return A2($elm_community$list_extra$List$Extra$gatherWith, $author$project$Main$similarIssues, validationIssues);
 };
 var $elm$json$Json$Decode$field = _Json_decodeField;
 var $elm$json$Json$Decode$string = _Json_decodeString;
 var $author$project$Main$nameDecoder = A2($elm$json$Json$Decode$field, 'name', $elm$json$Json$Decode$string);
+var $author$project$Main$ValidationWarning = {$: 0};
 var $elm$core$Maybe$andThen = F2(
 	function (callback, maybeValue) {
 		if (!maybeValue.$) {
@@ -6314,12 +6329,14 @@ var $author$project$Main$validateEventDuration = F3(
 			function (minutes) {
 				return (minutes > 900) ? $elm$core$Maybe$Just(
 					{
-						k: 'seems to be very long. The duration field is supposed to contain the event\'s duration in minutes. Are you sure you didn\'t accidentally use seconds instead?',
-						b: '/productions/' + ($elm$core$String$fromInt(productionId) + ('/events/' + ($elm$core$String$fromInt(eventId) + '/duration')))
+						C: $author$project$Main$ValidationWarning,
+						r: 'seems to be very long. The duration field is supposed to contain the event\'s duration in minutes. Are you sure you didn\'t accidentally use seconds instead?',
+						f: '/productions/' + ($elm$core$String$fromInt(productionId) + ('/events/' + ($elm$core$String$fromInt(eventId) + '/duration')))
 					}) : (((minutes >= 0) && (minutes < 10)) ? $elm$core$Maybe$Just(
 					{
-						k: 'seems to be very short. The duration field is supposed to contain the event\'s duration in minutes. Are you sure you didn\'t accidentally use hours instead?',
-						b: '/productions/' + ($elm$core$String$fromInt(productionId) + ('/events/' + ($elm$core$String$fromInt(eventId) + '/duration')))
+						C: $author$project$Main$ValidationWarning,
+						r: 'seems to be very short. The duration field is supposed to contain the event\'s duration in minutes. Are you sure you didn\'t accidentally use hours instead?',
+						f: '/productions/' + ($elm$core$String$fromInt(productionId) + ('/events/' + ($elm$core$String$fromInt(eventId) + '/duration')))
 					}) : $elm$core$Maybe$Nothing);
 			},
 			event.X);
@@ -6336,10 +6353,10 @@ var $author$project$Main$parseEventsWarnings = F2(
 	});
 var $elm$core$String$trim = _String_trim;
 var $author$project$Main$validateRequiredTextField = function (_v0) {
-	var path = _v0.b;
+	var path = _v0.f;
 	var value = _v0.I;
 	return ($elm$core$String$trim(value) === '') ? $elm$core$Maybe$Just(
-		{k: 'is a required text field, but you provided an empty value', b: path}) : $elm$core$Maybe$Nothing;
+		{C: $author$project$Main$ValidationWarning, r: 'is a required text field, but you provided an empty value', f: path}) : $elm$core$Maybe$Nothing;
 };
 var $author$project$Main$parseProductionWarnings = F2(
 	function (index, production) {
@@ -6350,14 +6367,14 @@ var $author$project$Main$parseProductionWarnings = F2(
 			_List_fromArray(
 				[
 					$author$project$Main$validateRequiredTextField(
-					{b: basePath + 'title', I: production.av}),
+					{f: basePath + 'title', I: production.ax}),
 					$author$project$Main$validateRequiredTextField(
-					{b: basePath + 'description', I: production.W})
+					{f: basePath + 'description', I: production.W})
 				]));
 	});
 var $author$project$Main$Production = F3(
 	function (title, description, events) {
-		return {W: description, _: events, av: title};
+		return {W: description, aa: events, ax: title};
 	});
 var $author$project$Main$Event = function (duration) {
 	return {X: duration};
@@ -6405,7 +6422,7 @@ var $author$project$Main$parseWarnings = function (jsonValue) {
 						function (index, production) {
 							return _Utils_ap(
 								A2($author$project$Main$parseProductionWarnings, index, production),
-								A2($author$project$Main$parseEventsWarnings, index, production._));
+								A2($author$project$Main$parseEventsWarnings, index, production.aa));
 						}),
 					productions));
 		} else {
@@ -6422,7 +6439,7 @@ var $author$project$Main$parseWarnings = function (jsonValue) {
 				_List_fromArray(
 					[
 						$author$project$Main$validateRequiredTextField(
-						{b: '/name', I: name})
+						{f: '/name', I: name})
 					]));
 		} else {
 			return _List_Nil;
@@ -6431,7 +6448,7 @@ var $author$project$Main$parseWarnings = function (jsonValue) {
 	return _Utils_ap(nameWarnings, productionWarnings);
 };
 var $author$project$Main$groupedWarnings = function (jsonValue) {
-	return $author$project$Main$groupWarnings(
+	return $author$project$Main$groupIssues(
 		$author$project$Main$parseWarnings(jsonValue));
 };
 var $author$project$Main$jsonDecoder = $elm$json$Json$Decode$value;
@@ -6441,21 +6458,30 @@ var $author$project$Main$Error = function (a) {
 var $author$project$Main$Valid = {$: 0};
 var $elm$json$Json$Decode$andThen = _Json_andThen;
 var $elm$json$Json$Decode$bool = _Json_decodeBool;
-var $author$project$Main$ValidationError = F5(
-	function (path, message, keyword, additionalProperty, allowedEnumValues) {
-		return {J: additionalProperty, T: allowedEnumValues, H: keyword, k: message, b: path};
+var $author$project$Main$ValidationIssue = F3(
+	function (path, message, kind) {
+		return {C: kind, r: message, f: path};
 	});
+var $author$project$Main$ErrorInfo = F3(
+	function (keyword, additionalProperty, allowedEnumValues) {
+		return {S: additionalProperty, T: allowedEnumValues, ag: keyword};
+	});
+var $author$project$Main$ValidationError = function (a) {
+	return {$: 1, a: a};
+};
 var $elm$json$Json$Decode$at = F2(
 	function (fields, decoder) {
 		return A3($elm$core$List$foldr, $elm$json$Json$Decode$field, decoder, fields);
 	});
-var $elm$json$Json$Decode$map5 = _Json_map5;
-var $author$project$Main$errorDecoder = $elm$json$Json$Decode$list(
-	A6(
-		$elm$json$Json$Decode$map5,
-		$author$project$Main$ValidationError,
-		A2($elm$json$Json$Decode$field, 'instancePath', $elm$json$Json$Decode$string),
-		A2($elm$json$Json$Decode$field, 'message', $elm$json$Json$Decode$string),
+var $author$project$Main$issueTypeDecoder = A2(
+	$elm$json$Json$Decode$andThen,
+	function (info) {
+		return $elm$json$Json$Decode$succeed(
+			$author$project$Main$ValidationError(info));
+	},
+	A4(
+		$elm$json$Json$Decode$map3,
+		$author$project$Main$ErrorInfo,
 		A2($elm$json$Json$Decode$field, 'keyword', $elm$json$Json$Decode$string),
 		$elm$json$Json$Decode$maybe(
 			A2(
@@ -6469,13 +6495,20 @@ var $author$project$Main$errorDecoder = $elm$json$Json$Decode$list(
 				_List_fromArray(
 					['params', 'allowedValues']),
 				$elm$json$Json$Decode$list($elm$json$Json$Decode$string)))));
+var $author$project$Main$issueDecoder = $elm$json$Json$Decode$list(
+	A4(
+		$elm$json$Json$Decode$map3,
+		$author$project$Main$ValidationIssue,
+		A2($elm$json$Json$Decode$field, 'instancePath', $elm$json$Json$Decode$string),
+		A2($elm$json$Json$Decode$field, 'message', $elm$json$Json$Decode$string),
+		$author$project$Main$issueTypeDecoder));
 var $author$project$Main$resultDecoder = A2(
 	$elm$json$Json$Decode$andThen,
 	function (isValid) {
 		return isValid ? $elm$json$Json$Decode$succeed($author$project$Main$Valid) : A2(
 			$elm$json$Json$Decode$map,
 			$author$project$Main$Error,
-			A2($elm$json$Json$Decode$field, 'errors', $author$project$Main$errorDecoder));
+			A2($elm$json$Json$Decode$field, 'errors', $author$project$Main$issueDecoder));
 	},
 	A2($elm$json$Json$Decode$field, 'valid', $elm$json$Json$Decode$bool));
 var $author$project$Main$sendData = _Platform_outgoingPort('sendData', $elm$core$Basics$identity);
@@ -6493,7 +6526,7 @@ var $author$project$Main$update = F2(
 						}),
 					$elm$http$Http$get(
 						{
-							aI: A2($elm$http$Http$expectJson, $author$project$Main$Response, $author$project$Main$jsonDecoder),
+							aL: A2($elm$http$Http$expectJson, $author$project$Main$Response, $author$project$Main$jsonDecoder),
 							u: url
 						}));
 			case 1:
@@ -6584,10 +6617,12 @@ var $author$project$Main$update = F2(
 							_Utils_update(
 								model,
 								{
-									g: A3(
+									g: A2(
 										$author$project$Main$ResultError,
-										$author$project$Main$groupErrors(errors),
-										$author$project$Main$groupedWarnings(responseValue),
+										{
+											Z: $author$project$Main$groupIssues(errors),
+											aA: $author$project$Main$groupedWarnings(responseValue)
+										},
 										responseValue)
 								}),
 							$elm$core$Platform$Cmd$none);
@@ -6963,6 +6998,24 @@ var $elm$html$Html$tbody = _VirtualDom_node('tbody');
 var $elm$html$Html$th = _VirtualDom_node('th');
 var $elm$html$Html$thead = _VirtualDom_node('thead');
 var $elm$html$Html$tr = _VirtualDom_node('tr');
+var $author$project$Main$getAdditionalProperty = function (issue) {
+	return A3(
+		$author$project$Main$getErrorInfoField,
+		function ($) {
+			return $.S;
+		},
+		$elm$core$Maybe$Nothing,
+		issue);
+};
+var $author$project$Main$getAllowedEnumValues = function (issue) {
+	return A3(
+		$author$project$Main$getErrorInfoField,
+		function ($) {
+			return $.T;
+		},
+		$elm$core$Maybe$Nothing,
+		issue);
+};
 var $elm$html$Html$td = _VirtualDom_node('td');
 var $elm$core$List$member = F2(
 	function (x, xs) {
@@ -7113,15 +7166,10 @@ var $author$project$Main$viewHighlightedJson = F2(
 				return A2($elm$core$String$contains, '\"' + (property + '\":'), line);
 			});
 		var extractAdditionalProperties = function (errors) {
-			return A2(
-				$elm$core$List$filterMap,
-				function ($) {
-					return $.J;
-				},
-				errors);
+			return A2($elm$core$List$filterMap, $author$project$Main$getAdditionalProperty, errors);
 		};
 		var highlightAdditionalProperties = function (line) {
-			return (err.H === 'additionalProperties') ? A2(
+			return ($author$project$Main$getKeyword(err) === 'additionalProperties') ? A2(
 				$elm$core$List$any,
 				isProperty(line),
 				extractAdditionalProperties(
@@ -7159,19 +7207,17 @@ var $author$project$Main$viewHighlightedJson = F2(
 			A2(
 				$elm$core$String$split,
 				'\n',
-				A2($author$project$Main$extractPath, err.b, jsonValue)));
+				A2($author$project$Main$extractPath, err.f, jsonValue)));
 	});
-var $author$project$Main$viewValidationError = F2(
+var $author$project$Main$viewValidationIssue = F2(
 	function (jsonValue, _v0) {
 		var err = _v0.a;
 		var others = _v0.b;
-		var errorPath = $elm$core$String$isEmpty(err.b) ? 'Top-level object' : err.b;
+		var errorPath = $elm$core$String$isEmpty(err.f) ? 'Top-level object' : err.f;
 		var additionalProperties = $elm_community$list_extra$List$Extra$unique(
 			A2(
 				$elm$core$List$filterMap,
-				function ($) {
-					return $.J;
-				},
+				$author$project$Main$getAdditionalProperty,
 				A2($elm$core$List$cons, err, others)));
 		var message = A2(
 			$elm$core$String$join,
@@ -7179,9 +7225,11 @@ var $author$project$Main$viewValidationError = F2(
 			_List_fromArray(
 				[
 					errorPath,
-					err.k,
+					err.r,
 					function () {
-					var _v1 = _Utils_Tuple2(err.T, additionalProperties);
+					var _v1 = _Utils_Tuple2(
+						$author$project$Main$getAllowedEnumValues(err),
+						additionalProperties);
 					if (!_v1.a.$) {
 						var list = _v1.a.a;
 						return '[' + (A2($elm$core$String$join, ', ', list) + ']');
@@ -7297,7 +7345,7 @@ var $author$project$Main$viewValidationErrors = F2(
 									_List_Nil,
 									A2(
 										$elm$core$List$map,
-										$author$project$Main$viewValidationError(jsonValue),
+										$author$project$Main$viewValidationIssue(jsonValue),
 										errors))
 								]))
 						]))
@@ -7310,78 +7358,6 @@ var $elm$core$List$isEmpty = function (xs) {
 		return false;
 	}
 };
-var $author$project$Main$viewWarningJson = F2(
-	function (_v0, jsonValue) {
-		var warning = _v0.a;
-		var others = _v0.b;
-		return A2(
-			$elm$core$List$map,
-			function (line) {
-				return A2(
-					$elm$html$Html$p,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$class('json-line')
-						]),
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$span,
-							_List_Nil,
-							_List_fromArray(
-								[
-									$elm$html$Html$text(line)
-								]))
-						]));
-			},
-			A2(
-				$elm$core$String$split,
-				'\n',
-				A2($author$project$Main$extractPath, warning.b, jsonValue)));
-	});
-var $author$project$Main$viewValidationWarning = F2(
-	function (jsonValue, _v0) {
-		var err = _v0.a;
-		var others = _v0.b;
-		var errorPath = $elm$core$String$isEmpty(err.b) ? 'Top-level object' : err.b;
-		var message = A2(
-			$elm$core$String$join,
-			' ',
-			_List_fromArray(
-				[errorPath, err.k]));
-		return A2(
-			$elm$html$Html$tr,
-			_List_Nil,
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$td,
-					_List_Nil,
-					_List_fromArray(
-						[
-							$elm$html$Html$text(message)
-						])),
-					A2(
-					$elm$html$Html$td,
-					_List_fromArray(
-						[
-							A2($elm$html$Html$Attributes$style, 'white-space', 'pre-wrap')
-						]),
-					A2(
-						$author$project$Main$viewWarningJson,
-						_Utils_Tuple2(err, others),
-						jsonValue)),
-					A2(
-					$elm$html$Html$td,
-					_List_Nil,
-					_List_fromArray(
-						[
-							$elm$html$Html$text(
-							$elm$core$String$fromInt(
-								$elm$core$List$length(others) + 1))
-						]))
-				]));
-	});
 var $author$project$Main$viewValidationWarnings = F2(
 	function (warnings, jsonValue) {
 		return $elm$core$List$isEmpty(warnings) ? $elm$html$Html$text('') : A2(
@@ -7450,7 +7426,7 @@ var $author$project$Main$viewValidationWarnings = F2(
 									_List_Nil,
 									A2(
 										$elm$core$List$map,
-										$author$project$Main$viewValidationWarning(jsonValue),
+										$author$project$Main$viewValidationIssue(jsonValue),
 										warnings))
 								]))
 						]))
@@ -7500,9 +7476,9 @@ var $author$project$Main$view = function (model) {
 									A2($author$project$Main$viewValidationWarnings, warnings, jsonValue)
 								]));
 					case 4:
-						var errors = _v0.a;
-						var warnings = _v0.b;
-						var jsonValue = _v0.c;
+						var errors = _v0.a.Z;
+						var warnings = _v0.a.aA;
+						var jsonValue = _v0.b;
 						return A2(
 							$elm$html$Html$div,
 							_List_Nil,
@@ -7542,6 +7518,6 @@ var $author$project$Main$view = function (model) {
 			]));
 };
 var $author$project$Main$main = $elm$browser$Browser$element(
-	{aM: $author$project$Main$init, aX: $author$project$Main$subscriptions, aZ: $author$project$Main$update, a_: $author$project$Main$view});
+	{aP: $author$project$Main$init, a_: $author$project$Main$subscriptions, a0: $author$project$Main$update, a1: $author$project$Main$view});
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$succeed(0))(0)}});}(this));
