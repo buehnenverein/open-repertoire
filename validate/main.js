@@ -6654,14 +6654,8 @@ var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
 var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $author$project$Main$SubmitJson = function (a) {
-	return {$: 1, a: a};
-};
 var $author$project$Main$SubmitUrl = function (a) {
 	return {$: 0, a: a};
-};
-var $author$project$Main$TextChange = function (a) {
-	return {$: 3, a: a};
 };
 var $author$project$Main$UrlChange = function (a) {
 	return {$: 2, a: a};
@@ -6676,7 +6670,6 @@ var $elm$html$Html$Attributes$boolProperty = F2(
 			$elm$json$Json$Encode$bool(bool));
 	});
 var $elm$html$Html$Attributes$disabled = $elm$html$Html$Attributes$boolProperty('disabled');
-var $elm$html$Html$h2 = _VirtualDom_node('h2');
 var $elm$html$Html$h3 = _VirtualDom_node('h3');
 var $elm$html$Html$input = _VirtualDom_node('input');
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
@@ -6723,207 +6716,128 @@ var $elm$html$Html$Events$onInput = function (tagger) {
 			$elm$html$Html$Events$alwaysStop,
 			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
 };
-var $elm$html$Html$textarea = _VirtualDom_node('textarea');
 var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
 var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
+var $author$project$Main$endpointInput = F2(
+	function (inputs, buttonEnabled) {
+		return A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$class('grid-column')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$h3,
+					_List_Nil,
+					_List_fromArray(
+						[
+							$elm$html$Html$text('Enter the URL of your endpoint')
+						])),
+					A2(
+					$elm$html$Html$input,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$type_('text'),
+							$elm$html$Html$Events$onInput($author$project$Main$UrlChange),
+							$elm$html$Html$Attributes$value(inputs.u),
+							$elm$html$Html$Attributes$class('u-full-width')
+						]),
+					_List_Nil),
+					A2(
+					$elm$html$Html$button,
+					_List_fromArray(
+						[
+							$elm$html$Html$Events$onClick(
+							$author$project$Main$SubmitUrl(inputs.u)),
+							$elm$html$Html$Attributes$disabled(
+							(!buttonEnabled) || $elm$core$String$isEmpty(inputs.u)),
+							$elm$html$Html$Attributes$class('button-primary u-pull-right')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text('Validate endpoint')
+						]))
+				]));
+	});
+var $author$project$Main$SubmitJson = function (a) {
+	return {$: 1, a: a};
+};
+var $author$project$Main$TextChange = function (a) {
+	return {$: 3, a: a};
+};
+var $elm$html$Html$textarea = _VirtualDom_node('textarea');
+var $author$project$Main$jsonInput = F2(
+	function (inputs, buttonEnabled) {
+		return A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$class('grid-column')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$h3,
+					_List_Nil,
+					_List_fromArray(
+						[
+							$elm$html$Html$text('Paste your JSON output')
+						])),
+					A2(
+					$elm$html$Html$textarea,
+					_List_fromArray(
+						[
+							$elm$html$Html$Events$onInput($author$project$Main$TextChange),
+							$elm$html$Html$Attributes$value(inputs.y),
+							$elm$html$Html$Attributes$class('u-full-width')
+						]),
+					_List_Nil),
+					A2(
+					$elm$html$Html$button,
+					_List_fromArray(
+						[
+							$elm$html$Html$Events$onClick(
+							$author$project$Main$SubmitJson(inputs.y)),
+							$elm$html$Html$Attributes$disabled(
+							(!buttonEnabled) || $elm$core$String$isEmpty(inputs.y)),
+							$elm$html$Html$Attributes$class('button-primary u-pull-right')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text('Validate JSON')
+						]))
+				]));
+	});
 var $author$project$Main$viewInputs = F2(
 	function (inputs, buttonEnabled) {
 		return A2(
 			$elm$html$Html$div,
 			_List_fromArray(
 				[
-					$elm$html$Html$Attributes$class('inputs')
+					$elm$html$Html$Attributes$class('inputs grid-container')
 				]),
 			_List_fromArray(
 				[
+					A2($author$project$Main$endpointInput, inputs, buttonEnabled),
 					A2(
 					$elm$html$Html$div,
 					_List_fromArray(
 						[
-							$elm$html$Html$Attributes$class('row')
+							$elm$html$Html$Attributes$class('grid-item-centered')
 						]),
 					_List_fromArray(
 						[
 							A2(
-							$elm$html$Html$div,
+							$elm$html$Html$h3,
+							_List_Nil,
 							_List_fromArray(
 								[
-									$elm$html$Html$Attributes$class('five columns')
-								]),
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$h3,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text('Enter the URL of your endpoint')
-										]))
-								])),
-							A2(
-							$elm$html$Html$div,
-							_List_fromArray(
-								[
-									A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
-									$elm$html$Html$Attributes$class('two columns')
-								]),
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$h3,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text('- OR -')
-										]))
-								])),
-							A2(
-							$elm$html$Html$div,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('five columns')
-								]),
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$h2,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text('Paste your JSON output')
-										]))
+									$elm$html$Html$text('- OR -')
 								]))
 						])),
-					A2(
-					$elm$html$Html$div,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$class('row')
-						]),
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$div,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('five columns')
-								]),
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$input,
-									_List_fromArray(
-										[
-											$elm$html$Html$Attributes$type_('text'),
-											$elm$html$Html$Events$onInput($author$project$Main$UrlChange),
-											$elm$html$Html$Attributes$value(inputs.u),
-											$elm$html$Html$Attributes$class('u-full-width')
-										]),
-									_List_Nil)
-								])),
-							A2(
-							$elm$html$Html$div,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('two columns')
-								]),
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$div,
-									_List_fromArray(
-										[
-											$elm$html$Html$Attributes$class('u-full-width')
-										]),
-									_List_fromArray(
-										[
-											$elm$html$Html$text('\u00A0')
-										]))
-								])),
-							A2(
-							$elm$html$Html$div,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('five columns')
-								]),
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$textarea,
-									_List_fromArray(
-										[
-											$elm$html$Html$Events$onInput($author$project$Main$TextChange),
-											$elm$html$Html$Attributes$value(inputs.y),
-											$elm$html$Html$Attributes$class('u-full-width')
-										]),
-									_List_Nil)
-								]))
-						])),
-					A2(
-					$elm$html$Html$div,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$class('row')
-						]),
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$div,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('five columns')
-								]),
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$button,
-									_List_fromArray(
-										[
-											$elm$html$Html$Events$onClick(
-											$author$project$Main$SubmitUrl(inputs.u)),
-											$elm$html$Html$Attributes$disabled(
-											(!buttonEnabled) || $elm$core$String$isEmpty(inputs.u)),
-											$elm$html$Html$Attributes$class('button-primary u-pull-right')
-										]),
-									_List_fromArray(
-										[
-											$elm$html$Html$text('Validate endpoint')
-										]))
-								])),
-							A2(
-							$elm$html$Html$div,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('two columns')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('\u00A0')
-								])),
-							A2(
-							$elm$html$Html$div,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('five columns')
-								]),
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$button,
-									_List_fromArray(
-										[
-											$elm$html$Html$Events$onClick(
-											$author$project$Main$SubmitJson(inputs.y)),
-											$elm$html$Html$Attributes$disabled(
-											(!buttonEnabled) || $elm$core$String$isEmpty(inputs.y)),
-											$elm$html$Html$Attributes$class('button-primary u-pull-right')
-										]),
-									_List_fromArray(
-										[
-											$elm$html$Html$text('Validate JSON')
-										]))
-								]))
-						]))
+					A2($author$project$Main$jsonInput, inputs, buttonEnabled)
 				]));
 	});
 var $elm$html$Html$h1 = _VirtualDom_node('h1');

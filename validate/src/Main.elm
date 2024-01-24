@@ -1,7 +1,7 @@
 port module Main exposing (main)
 
 import Browser
-import Html exposing (Html, button, div, h1, h2, h3, input, p, span, table, tbody, td, text, textarea, th, thead, tr)
+import Html exposing (Html, button, div, h1, h3, input, p, span, table, tbody, td, text, textarea, th, thead, tr)
 import Html.Attributes exposing (class, classList, disabled, style, type_, value)
 import Html.Events exposing (onClick, onInput)
 import Http exposing (Error(..))
@@ -418,51 +418,49 @@ viewIntroduction =
 
 viewInputs : Inputs -> Bool -> Html Msg
 viewInputs inputs buttonEnabled =
-    div [ class "inputs" ]
-        [ div [ class "row" ]
-            [ div [ class "five columns" ] [ h3 [] [ text "Enter the URL of your endpoint" ] ]
-            , div [ style "text-align" "center", class "two columns" ] [ h3 [] [ text "- OR -" ] ]
-            , div [ class "five columns" ] [ h2 [] [ text "Paste your JSON output" ] ]
+    div [ class "inputs grid-container" ]
+        [ endpointInput inputs buttonEnabled
+        , div [ class "grid-item-centered" ] [ h3 [] [ text "- OR -" ] ]
+        , jsonInput inputs buttonEnabled
+        ]
+
+
+endpointInput : Inputs -> Bool -> Html Msg
+endpointInput inputs buttonEnabled =
+    div [ class "grid-column" ]
+        [ h3 [] [ text "Enter the URL of your endpoint" ]
+        , input
+            [ type_ "text"
+            , onInput UrlChange
+            , value inputs.url
+            , class "u-full-width"
             ]
-        , div [ class "row" ]
-            [ div [ class "five columns" ]
-                [ input
-                    [ type_ "text"
-                    , onInput UrlChange
-                    , value inputs.url
-                    , class "u-full-width"
-                    ]
-                    []
-                ]
-            , div [ class "two columns" ] [ div [ class "u-full-width" ] [ text "\u{00A0}" ] ]
-            , div [ class "five columns" ]
-                [ textarea
-                    [ onInput TextChange
-                    , value inputs.text
-                    , class "u-full-width"
-                    ]
-                    []
-                ]
+            []
+        , button
+            [ onClick (SubmitUrl inputs.url)
+            , disabled (not buttonEnabled || String.isEmpty inputs.url)
+            , class "button-primary u-pull-right"
             ]
-        , div [ class "row" ]
-            [ div [ class "five columns" ]
-                [ button
-                    [ onClick (SubmitUrl inputs.url)
-                    , disabled (not buttonEnabled || String.isEmpty inputs.url)
-                    , class "button-primary u-pull-right"
-                    ]
-                    [ text "Validate endpoint" ]
-                ]
-            , div [ class "two columns" ] [ text "\u{00A0}" ]
-            , div [ class "five columns" ]
-                [ button
-                    [ onClick (SubmitJson inputs.text)
-                    , disabled (not buttonEnabled || String.isEmpty inputs.text)
-                    , class "button-primary u-pull-right"
-                    ]
-                    [ text "Validate JSON" ]
-                ]
+            [ text "Validate endpoint" ]
+        ]
+
+
+jsonInput : Inputs -> Bool -> Html Msg
+jsonInput inputs buttonEnabled =
+    div [ class "grid-column" ]
+        [ h3 [] [ text "Paste your JSON output" ]
+        , textarea
+            [ onInput TextChange
+            , value inputs.text
+            , class "u-full-width"
             ]
+            []
+        , button
+            [ onClick (SubmitJson inputs.text)
+            , disabled (not buttonEnabled || String.isEmpty inputs.text)
+            , class "button-primary u-pull-right"
+            ]
+            [ text "Validate JSON" ]
         ]
 
 

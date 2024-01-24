@@ -1,0 +1,19 @@
+.grid-container {
+	display: grid;
+	grid-template-columns: 2fr 1fr 2fr;
+}
+
+@media (max-width: 1024px) {
+	.grid-container {
+		grid-template-columns: 1fr;
+	}
+}
+
+.grid-column {
+	display: grid;
+	grid-template-rows: auto 1fr auto;
+}
+
+.grid-item-centered {
+	place-self: center center;
+}
