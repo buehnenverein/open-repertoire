@@ -83,7 +83,6 @@ components:
       additionalProperties: false
       required:
         - title
-        - description
         - events
       properties:
         title:
@@ -96,7 +95,15 @@ components:
           example: US-amerikanisches Off-Broadway-Rock-Musical
         description:
           type: string
+          description: A text describing the production
           example: Hedwig, die Queen des Glamrock, kommt auf ihrer Tournee in Augsburg vorbei! Gemeinsam mit ihrer Band The Angry Inch gibt sie eines ihrer mitreißenden Konzerte. Zwischen den Songs, die – mal Rocknummer, mal Country-Ballade – von ihrem Leben und der Suche nach der eigenen Identität erzählen, kommt sie dem Publikum so nah wie nie.\nDiese Show sollten Sie nicht verpassen!
+        teaser:
+          type: string
+          description: A short text describing the production
+          example: "Das Kult-Rockmusical »Hedwig and the Angry Inch« wurde innerhalb weniger Jahre vom Off-Broadway-Geheimtipp zu einem Hit am Broadway selbst. 2023 erobert Hedwig, die »weltweit ignorierte Queen of Glamrock« endlich auch die Herzen des Augsburger Publikums – mit dem langjährigen Schauspiel-Ensemble-Mitglied Thomas Prazak in der Hauptrolle. Die Live-Musik steuern Stefan Leibold, Jonas Horche, Tilman Herpichböhm und Niklas Rehle als Band »The Angry Inch« bei."
+        additionalInfo:
+          type: string
+          description: Additional information about the production
         events:
           type: array
           description: "List of current events offered by the organization"

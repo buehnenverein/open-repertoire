@@ -42,7 +42,6 @@
         "additionalProperties": false,
         "required": [
           "title",
-          "description",
           "events"
         ],
         "properties": {
@@ -55,7 +54,16 @@
             "description": "The event's optional subtitle"
           },
           "description": {
-            "type": "string"
+            "type": "string",
+            "description": "A text describing the production"
+          },
+          "teaser": {
+            "type": "string",
+            "description": "A short text describing the production"
+          },
+          "additionalInfo": {
+            "type": "string",
+            "description": "Additional information about the production"
           },
           "events": {
             "type": "array",
