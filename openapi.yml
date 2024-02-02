@@ -224,10 +224,9 @@ components:
           type: string
           example: Augsburg
         wheelChairPlaces:
-          type: array
+          type: object
           description: Describes the presence of reserved spots for wheelchairs in this location, as defined by [a11yjson](https://sozialhelden.github.io/a11yjson/describing-objects/interfaces/#wheelchairplaces).
-          items:
-            $ref: "#/components/schemas/WheelChairPlace"
+          $ref: "#/components/schemas/WheelChairPlace"
 
     Accessibility:
       type: object

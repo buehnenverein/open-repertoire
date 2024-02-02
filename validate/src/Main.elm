@@ -626,7 +626,6 @@ parseProductionWarnings index production =
             "/productions/" ++ String.fromInt index ++ "/"
     in
     [ validateRequiredTextField { path = basePath ++ "title", value = production.title }
-    , validateRequiredTextField { path = basePath ++ "description", value = production.description }
     ]
         |> List.filterMap identity
 
