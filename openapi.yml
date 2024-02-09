@@ -73,7 +73,7 @@ components:
               example: Augsburg
         productions:
           type: array
-          description: "The collection of all productions in the repertoire. The value must be an object that maps from a unique production ID to a `Production` object describing the production."
+          description: "The collection of all productions in the repertoire."
           items:
             $ref: "#/components/schemas/Production"
 
@@ -119,16 +119,15 @@ components:
           example: "Rock-Musical"
         accessibility:
           $ref: "#/components/schemas/Accessibility"
-        contributors:
-          description: List of people contributing to the production, e.g. director(s), stage designer(s), musical director(s), etc.
+        participants:
+          description: |-
+            List of all people contributing to and participating in the production, e.g. directors, stage designers, musical directors, performers, etc.
+
+            If multiple people perform the same role/function (e.g. there is multiple directors or multiple actors perform the same role on stage at the same time),
+            each person should get their own entry in the `participants` array.
           type: array
           items:
-            $ref: "#/components/schemas/Person"
-        performers:
-          description: List of people performing in the production.
-          type: array
-          items:
-            $ref: "#/components/schemas/Person"
+            $ref: "#/components/schemas/Participant"
 
     Event:
       type: object
@@ -195,16 +194,71 @@ components:
           format: uri
           example: "https://webshop-tickets.staatstheater-augsburg.de/de/tickets/hedwig-and-the-angry-inch/brechtbuehne-im-gaswerk-14-12-2023-19-30"
 
-    Person:
+    Participant:
       type: object
+      required:
+        - names
       additionalProperties: false
       properties:
-        name:
+        function:
           type: string
-          description: The person's name
-        role:
+          description:
+            'This participant''s function in the production. Can take one of the pre-defined values.'
+          enum:
+            - akrobatik
+            - alles
+            - assistenz
+            - beratung
+            - buehne
+            - choreographie
+            - clownerie
+            - dramaturgie
+            - expertin-des-alltags
+            - fotografie
+            - gebaerdensprache
+            - gesang
+            - grafik
+            - jonglage
+            - kamera-video
+            - komposition
+            - konzept
+            - kostuem
+            - kuenstlerische-leitung
+            - licht
+            - live-musik
+            - marketing
+            - maske
+            - moderation
+            - musik
+            - musikalische-leitung
+            - performance
+            - produktion
+            - programmierung
+            - puppenbau
+            - puppenspiel
+            - regie
+            - rigging
+            - schauspiel
+            - sound
+            - tanz
+            - technik
+            - technische-leitung
+            - text
+            - ton
+            - uebersetzung
+            - vermittlung
+            - virtual-reality-design
+        roleName:
           type: string
-          description: 'This person''s role in the production, e.g. "Regie" or "Dramaturgie". For performers, this should be the name of the role(s) they are performing.'
+          description: 'The name of the role(s) this participant is performing on stage, if any.'
+        names:
+          type: array
+          items:
+            type: string
+          description:
+            The name(s) of the person(s) performing this function/role. Must contain at least one name. Can contain multiple names, if multiple persons are
+            performing the same role, but not at the same time.
+          minItems: 1
 
     Location:
       type: object
@@ -259,7 +313,7 @@ components:
               ]
         accessibilitySummary:
           type: string
-          description: A human-readable summary of specific accessibility features or deficiencies
+          description: A human-readable summary of specific accessibility features or deficiencies of the production.
           example: "Dieses Stück enthält Stroboskoplicht"
 
     WheelChairPlace:

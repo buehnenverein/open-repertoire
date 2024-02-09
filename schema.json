@@ -35,7 +35,7 @@
     },
     "productions": {
       "type": "array",
-      "description": "The collection of all productions in the repertoire. The value must be an object that maps from a unique production ID to a `Production` object describing the production.",
+      "description": "The collection of all productions in the repertoire.",
       "items": {
         "type": "object",
         "description": "An object containing unchanging information about the production.",
@@ -215,42 +215,80 @@
               },
               "accessibilitySummary": {
                 "type": "string",
-                "description": "A human-readable summary of specific accessibility features or deficiencies"
+                "description": "A human-readable summary of specific accessibility features or deficiencies of the production."
               }
             }
           },
-          "contributors": {
-            "description": "List of people contributing to the production, e.g. director(s), stage designer(s), musical director(s), etc.",
+          "participants": {
+            "description": "List of all people contributing to and participating in the production, e.g. directors, stage designers, musical directors, performers, etc.\n\nIf multiple people perform the same role/function (e.g. there is multiple directors or multiple actors perform the same role on stage at the same time),\neach person should get their own entry in the `participants` array.",
             "type": "array",
             "items": {
               "type": "object",
+              "required": [
+                "names"
+              ],
               "additionalProperties": false,
               "properties": {
-                "name": {
+                "function": {
                   "type": "string",
-                  "description": "The person's name"
+                  "description": "This participant's function in the production. Can take one of the pre-defined values.",
+                  "enum": [
+                    "akrobatik",
+                    "alles",
+                    "assistenz",
+                    "beratung",
+                    "buehne",
+                    "choreographie",
+                    "clownerie",
+                    "dramaturgie",
+                    "expertin-des-alltags",
+                    "fotografie",
+                    "gebaerdensprache",
+                    "gesang",
+                    "grafik",
+                    "jonglage",
+                    "kamera-video",
+                    "komposition",
+                    "konzept",
+                    "kostuem",
+                    "kuenstlerische-leitung",
+                    "licht",
+                    "live-musik",
+                    "marketing",
+                    "maske",
+                    "moderation",
+                    "musik",
+                    "musikalische-leitung",
+                    "performance",
+                    "produktion",
+                    "programmierung",
+                    "puppenbau",
+                    "puppenspiel",
+                    "regie",
+                    "rigging",
+                    "schauspiel",
+                    "sound",
+                    "tanz",
+                    "technik",
+                    "technische-leitung",
+                    "text",
+                    "ton",
+                    "uebersetzung",
+                    "vermittlung",
+                    "virtual-reality-design"
+                  ]
                 },
-                "role": {
+                "roleName": {
                   "type": "string",
-                  "description": "This person's role in the production, e.g. \"Regie\" or \"Dramaturgie\". For performers, this should be the name of the role(s) they are performing."
-                }
-              }
-            }
-          },
-          "performers": {
-            "description": "List of people performing in the production.",
-            "type": "array",
-            "items": {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                "name": {
-                  "type": "string",
-                  "description": "The person's name"
+                  "description": "The name of the role(s) this participant is performing on stage, if any."
                 },
-                "role": {
-                  "type": "string",
-                  "description": "This person's role in the production, e.g. \"Regie\" or \"Dramaturgie\". For performers, this should be the name of the role(s) they are performing."
+                "names": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "The name(s) of the person(s) performing this function/role. Must contain at least one name. Can contain multiple names, if multiple persons are performing the same role, but not at the same time.",
+                  "minItems": 1
                 }
               }
             }
