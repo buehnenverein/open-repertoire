@@ -6353,8 +6353,8 @@ var $author$project$Main$parseEventsWarnings = F2(
 	});
 var $elm$core$String$trim = _String_trim;
 var $author$project$Main$validateRequiredTextField = function (_v0) {
-	var path = _v0.j;
 	var value = _v0.Q;
+	var path = _v0.j;
 	return ($elm$core$String$trim(value) === '') ? $elm$core$Maybe$Just(
 		{G: $author$project$Main$ValidationWarning, v: 'is a required text field, but you provided an empty value', j: path}) : $elm$core$Maybe$Nothing;
 };
@@ -7930,8 +7930,8 @@ var $author$project$Main$view = function (model) {
 									A2($author$project$Main$viewValidationWarnings, warnings, jsonValue)
 								]));
 					case 4:
-						var errors = _v0.a.ar;
 						var warnings = _v0.a.bi;
+						var errors = _v0.a.ar;
 						var jsonValue = _v0.b;
 						return A2(
 							$elm$html$Html$div,

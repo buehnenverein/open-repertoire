@@ -41,6 +41,7 @@ paths:
 components:
   schemas:
     Repertoire:
+      $id: https://peret.github.io/uc3-openapi/schema.json
       required:
         - name
         - productions
