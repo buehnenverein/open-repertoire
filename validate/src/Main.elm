@@ -1,6 +1,7 @@
 port module Main exposing (main)
 
 import Browser
+import Data.Root exposing (Event, Production)
 import Html exposing (Html, button, div, h1, h3, input, p, span, table, tbody, td, text, textarea, th, thead, tr)
 import Html.Attributes exposing (class, classList, disabled, style, type_, value)
 import Html.Events exposing (onClick, onInput)
@@ -68,17 +69,6 @@ type alias ErrorInfo =
 
 type alias ValidationIssueGroup =
     ( ValidationIssue, List ValidationIssue )
-
-
-type alias Production =
-    { title : String
-    , description : String
-    , events : List Event
-    }
-
-
-type alias Event =
-    { duration : Maybe Int }
 
 
 type alias Inputs =
@@ -586,18 +576,18 @@ groupedWarnings jsonValue =
 parseWarnings : Decode.Value -> List ValidationIssue
 parseWarnings jsonValue =
     let
-        productionsResult =
-            Decode.decodeValue productionsDecoder jsonValue
+        decodingResult =
+            Decode.decodeValue Data.Root.rootDecoder jsonValue
 
         productionWarnings =
-            case productionsResult of
-                Ok productions ->
+            case decodingResult of
+                Ok data ->
                     List.indexedMap
                         (\index production ->
                             parseProductionWarnings index production
                                 ++ parseEventsWarnings index production.events
                         )
-                        productions
+                        data.productions
                         |> List.foldr (++) []
 
                 Err _ ->
@@ -626,6 +616,7 @@ parseProductionWarnings index production =
             "/productions/" ++ String.fromInt index ++ "/"
     in
     [ validateRequiredTextField { path = basePath ++ "title", value = production.title }
+    , Maybe.andThen (\value -> validateRequiredTextField { path = basePath ++ "description", value = value }) production.description
     ]
         |> List.filterMap identity
 
@@ -722,23 +713,3 @@ issueTypeDecoder =
 nameDecoder : Decoder String
 nameDecoder =
     Decode.field "name" Decode.string
-
-
-productionsDecoder : Decoder (List Production)
-productionsDecoder =
-    Decode.field "productions"
-        (Decode.list
-            (Decode.map3 Production
-                (Decode.field "title" Decode.string)
-                (Decode.field "description" Decode.string)
-                (Decode.field "events" eventsDecoder)
-            )
-        )
-
-
-eventsDecoder : Decoder (List Event)
-eventsDecoder =
-    Decode.list
-        (Decode.map Event
-            (Decode.maybe (Decode.field "duration" Decode.int))
-        )
