@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     systems.url = "github:nix-systems/default";
     devenv.url = "github:cachix/devenv";
   };
@@ -37,8 +37,20 @@
                 pkgs.jq
                 pkgs.shellcheck
               ];
-              languages.javascript.enable = true;
-              languages.elm.enable = true;
+              languages = {
+                javascript.enable = true;
+                elm.enable = true;
+                erlang.enable = true;
+              };
+
+              processes = {
+                elmwatch.exec = ''
+                  cd validate && npx elm-watch hot
+                '';
+                httpserver.exec = ''
+                  npx http-server
+                '';
+              };
             }
           ];
         };
