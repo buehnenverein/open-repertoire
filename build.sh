@@ -20,6 +20,15 @@ npx @redocly/cli build-docs openapi.yml -o index.html \
 # Build static JSON schema validator script.
 npx ajv compile -s schema.json -o ./validate/validator.js --spec=draft7 -c ajv-formats --all-errors
 
+if  ! git diff --exit-code schema.json
+then
+  ./js2e schema.json
+  cp ./js2e_output/src/Data/Root.elm ./validate/src/Data/Root.elm
+  cp ./js2e_output/src/Helper/Encode.elm ./validate/src/Helper/Encode.elm
+  echo "schema.json has changed and the Elm models were automatically generated. Make sure everything is correct, stage schema.json and re-run the build script"
+  exit 1
+fi
+
 # Compile validator app.
 cd validate
 elm make src/Main.elm --optimize --output=main.js

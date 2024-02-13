@@ -1,6 +1,8 @@
 port module Main exposing (main)
 
 import Browser
+import Data.Root
+import Helper.CustomValidations exposing (checkAll)
 import Html exposing (Html, button, div, h1, h3, input, p, span, table, tbody, td, text, textarea, th, thead, tr)
 import Html.Attributes exposing (class, classList, disabled, style, type_, value)
 import Html.Events exposing (onClick, onInput)
@@ -68,17 +70,6 @@ type alias ErrorInfo =
 
 type alias ValidationIssueGroup =
     ( ValidationIssue, List ValidationIssue )
-
-
-type alias Production =
-    { title : String
-    , description : String
-    , events : List Event
-    }
-
-
-type alias Event =
-    { duration : Maybe Int }
 
 
 type alias Inputs =
@@ -586,92 +577,18 @@ groupedWarnings jsonValue =
 parseWarnings : Decode.Value -> List ValidationIssue
 parseWarnings jsonValue =
     let
-        productionsResult =
-            Decode.decodeValue productionsDecoder jsonValue
+        decodingResult =
+            Decode.decodeValue Data.Root.rootDecoder jsonValue
 
-        productionWarnings =
-            case productionsResult of
-                Ok productions ->
-                    List.indexedMap
-                        (\index production ->
-                            parseProductionWarnings index production
-                                ++ parseEventsWarnings index production.events
-                        )
-                        productions
-                        |> List.foldr (++) []
-
-                Err _ ->
-                    []
-
-        nameResult =
-            Decode.decodeValue nameDecoder jsonValue
-
-        nameWarnings =
-            case nameResult of
-                Ok name ->
-                    [ validateRequiredTextField { path = "/name", value = name }
-                    ]
-                        |> List.filterMap identity
+        warnings =
+            case decodingResult of
+                Ok data ->
+                    checkAll data
 
                 Err _ ->
                     []
     in
-    nameWarnings ++ productionWarnings
-
-
-parseProductionWarnings : Int -> Production -> List ValidationIssue
-parseProductionWarnings index production =
-    let
-        basePath =
-            "/productions/" ++ String.fromInt index ++ "/"
-    in
-    [ validateRequiredTextField { path = basePath ++ "title", value = production.title }
-    ]
-        |> List.filterMap identity
-
-
-validateRequiredTextField : { path : String, value : String } -> Maybe ValidationIssue
-validateRequiredTextField { path, value } =
-    if String.trim value == "" then
-        Just
-            { path = path
-            , message = "is a required text field, but you provided an empty value"
-            , kind = ValidationWarning
-            }
-
-    else
-        Nothing
-
-
-parseEventsWarnings : Int -> List Event -> List ValidationIssue
-parseEventsWarnings productionIndex events =
-    List.indexedMap (validateEventDuration productionIndex) events
-        |> List.filterMap identity
-
-
-validateEventDuration : Int -> Int -> Event -> Maybe ValidationIssue
-validateEventDuration productionId eventId event =
-    event.duration
-        |> Maybe.andThen
-            (\minutes ->
-                if minutes > 900 then
-                    Just
-                        { path = "/productions/" ++ String.fromInt productionId ++ "/events/" ++ String.fromInt eventId ++ "/duration"
-                        , message = "seems to be very long. The duration field is supposed to contain the event's duration in minutes. Are you sure you didn't accidentally use seconds instead?"
-                        , kind = ValidationWarning
-                        }
-
-                else if minutes >= 0 && minutes < 10 then
-                    -- the duration being negative is already a validation error, so we don't need to cover this case here
-                    Just
-                        { path = "/productions/" ++ String.fromInt productionId ++ "/events/" ++ String.fromInt eventId ++ "/duration"
-                        , message = "seems to be very short. The duration field is supposed to contain the event's duration in minutes. Are you sure you didn't accidentally use hours instead?"
-                        , kind = ValidationWarning
-                        }
-
-                else
-                    Nothing
-            )
+    List.map (\{ path, message } -> ValidationIssue path message ValidationWarning) warnings
 
 
 
@@ -717,28 +634,3 @@ issueTypeDecoder =
             (\info ->
                 Decode.succeed (ValidationError info)
             )
-
-
-nameDecoder : Decoder String
-nameDecoder =
-    Decode.field "name" Decode.string
-
-
-productionsDecoder : Decoder (List Production)
-productionsDecoder =
-    Decode.field "productions"
-        (Decode.list
-            (Decode.map3 Production
-                (Decode.field "title" Decode.string)
-                (Decode.field "description" Decode.string)
-                (Decode.field "events" eventsDecoder)
-            )
-        )
-
-
-eventsDecoder : Decoder (List Event)
-eventsDecoder =
-    Decode.list
-        (Decode.map Event
-            (Decode.maybe (Decode.field "duration" Decode.int))
-        )

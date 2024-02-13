@@ -4,3 +4,4 @@ validate/elm-stuff
 .DS_Store
 tmp/
 .direnv
+js2e_output/
