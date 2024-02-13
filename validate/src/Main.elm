@@ -1,7 +1,8 @@
 port module Main exposing (main)
 
 import Browser
-import Data.Root exposing (Event, Production)
+import Data.Root
+import Helper.CustomValidations exposing (checkAll)
 import Html exposing (Html, button, div, h1, h3, input, p, span, table, tbody, td, text, textarea, th, thead, tr)
 import Html.Attributes exposing (class, classList, disabled, style, type_, value)
 import Html.Events exposing (onClick, onInput)
@@ -579,90 +580,15 @@ parseWarnings jsonValue =
         decodingResult =
             Decode.decodeValue Data.Root.rootDecoder jsonValue
 
-        productionWarnings =
+        warnings =
             case decodingResult of
                 Ok data ->
-                    List.indexedMap
-                        (\index production ->
-                            parseProductionWarnings index production
-                                ++ parseEventsWarnings index production.events
-                        )
-                        data.productions
-                        |> List.foldr (++) []
-
-                Err _ ->
-                    []
-
-        nameResult =
-            Decode.decodeValue nameDecoder jsonValue
-
-        nameWarnings =
-            case nameResult of
-                Ok name ->
-                    [ validateRequiredTextField { path = "/name", value = name }
-                    ]
-                        |> List.filterMap identity
+                    checkAll data
 
                 Err _ ->
                     []
     in
-    nameWarnings ++ productionWarnings
-
-
-parseProductionWarnings : Int -> Production -> List ValidationIssue
-parseProductionWarnings index production =
-    let
-        basePath =
-            "/productions/" ++ String.fromInt index ++ "/"
-    in
-    [ validateRequiredTextField { path = basePath ++ "title", value = production.title }
-    , Maybe.andThen (\value -> validateRequiredTextField { path = basePath ++ "description", value = value }) production.description
-    ]
-        |> List.filterMap identity
-
-
-validateRequiredTextField : { path : String, value : String } -> Maybe ValidationIssue
-validateRequiredTextField { path, value } =
-    if String.trim value == "" then
-        Just
-            { path = path
-            , message = "is a required text field, but you provided an empty value"
-            , kind = ValidationWarning
-            }
-
-    else
-        Nothing
-
-
-parseEventsWarnings : Int -> List Event -> List ValidationIssue
-parseEventsWarnings productionIndex events =
-    List.indexedMap (validateEventDuration productionIndex) events
-        |> List.filterMap identity
-
-
-validateEventDuration : Int -> Int -> Event -> Maybe ValidationIssue
-validateEventDuration productionId eventId event =
-    event.duration
-        |> Maybe.andThen
-            (\minutes ->
-                if minutes > 900 then
-                    Just
-                        { path = "/productions/" ++ String.fromInt productionId ++ "/events/" ++ String.fromInt eventId ++ "/duration"
-                        , message = "seems to be very long. The duration field is supposed to contain the event's duration in minutes. Are you sure you didn't accidentally use seconds instead?"
-                        , kind = ValidationWarning
-                        }
-
-                else if minutes >= 0 && minutes < 10 then
-                    -- the duration being negative is already a validation error, so we don't need to cover this case here
-                    Just
-                        { path = "/productions/" ++ String.fromInt productionId ++ "/events/" ++ String.fromInt eventId ++ "/duration"
-                        , message = "seems to be very short. The duration field is supposed to contain the event's duration in minutes. Are you sure you didn't accidentally use hours instead?"
-                        , kind = ValidationWarning
-                        }
-
-                else
-                    Nothing
-            )
+    List.map (\{ path, message } -> ValidationIssue path message ValidationWarning) warnings
 
 
 
@@ -708,8 +634,3 @@ issueTypeDecoder =
             (\info ->
                 Decode.succeed (ValidationError info)
             )
-
-
-nameDecoder : Decoder String
-nameDecoder =
-    Decode.field "name" Decode.string
