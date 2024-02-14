@@ -175,6 +175,8 @@ type Genre
 
 type alias Location =
     { city : Maybe String
+    , latitude : Maybe Float
+    , longitude : Maybe Float
     , name : Maybe String
     , postalCode : Maybe String
     , streetAddress : Maybe String
@@ -591,6 +593,8 @@ locationDecoder : Decoder Location
 locationDecoder =
     Decode.succeed Location
         |> optional "city" (Decode.nullable Decode.string) Nothing
+        |> optional "latitude" (Decode.nullable Decode.float) Nothing
+        |> optional "longitude" (Decode.nullable Decode.float) Nothing
         |> optional "name" (Decode.nullable Decode.string) Nothing
         |> optional "postalCode" (Decode.nullable Decode.string) Nothing
         |> optional "streetAddress" (Decode.nullable Decode.string) Nothing
@@ -1036,6 +1040,8 @@ encodeLocation : Location -> Value
 encodeLocation location =
     []
         |> Encode.optional "city" location.city Encode.string
+        |> Encode.optional "latitude" location.latitude Encode.float
+        |> Encode.optional "longitude" location.longitude Encode.float
         |> Encode.optional "name" location.name Encode.string
         |> Encode.optional "postalCode" location.postalCode Encode.string
         |> Encode.optional "streetAddress" location.streetAddress Encode.string

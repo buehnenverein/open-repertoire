@@ -117,6 +117,19 @@ duration path minutes =
         []
 
 
+geocoordinates : Validator Location
+geocoordinates path data =
+    case ( data.latitude, data.longitude ) of
+        ( Nothing, Just _ ) ->
+            [ ValidationMessage path "has a longitude but no latitude" ]
+
+        ( Just _, Nothing ) ->
+            [ ValidationMessage path "has a latitude but no longitude" ]
+
+        _ ->
+            []
+
+
 
 -- MODEL VALIDATORS
 
@@ -185,4 +198,5 @@ location =
         , field "/name" .name optional
         , field "/postalCode" .postalCode optional
         , field "/streetAddress" .streetAddress optional
+        , geocoordinates
         ]

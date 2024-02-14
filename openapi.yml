@@ -309,6 +309,16 @@ components:
           type: object
           description: Describes the presence of reserved spots for wheelchairs in this location, as defined by [a11yjson](https://sozialhelden.github.io/a11yjson/describing-objects/interfaces/#wheelchairplaces).
           $ref: "#/components/schemas/WheelChairPlace"
+        latitude:
+          type: number
+          description: "The location's latitude."
+          minimum: -90
+          maximum: 90
+        longitude:
+          type: number
+          description: "The location's longitude."
+          minimum: -180
+          maximum: 180
 
     Accessibility:
       type: object
