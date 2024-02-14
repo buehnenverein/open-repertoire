@@ -155,10 +155,8 @@ production =
     object
         [ field "/accessibility" .accessibility (maybe accessibility)
         , field "/additionalInfo" .additionalInfo optional
-        , field "/branch" .branch optional
         , field "/description" .description optional
         , field "/events" .events (list event)
-        , field "/genre" .genre optional
         , field "/participants" .participants (maybe (list participant))
         , field "/subtitle" .subtitle optional
         , field "/teaser" .teaser optional

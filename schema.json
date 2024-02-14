@@ -170,13 +170,41 @@
               }
             }
           },
-          "branch": {
-            "type": "string",
-            "description": "The branch of theatre this production belongs to, e.g. \"Schauspiel\", \"Musiktheater\", \"Oper\", etc."
-          },
           "genre": {
             "type": "string",
-            "description": "The genre of this production."
+            "description": "The genre of this production. Must use one of the pre-defined values.",
+            "enum": [
+              "sprechtheater",
+              "performance",
+              "lecture-performance",
+              "tanz",
+              "ballett",
+              "zeitgenoessischer-tanz",
+              "musiktheater",
+              "oper",
+              "operette",
+              "musical",
+              "szenisches-konzert",
+              "konzert",
+              "sinfoniekonzert",
+              "kammerkonzert",
+              "figurentheater",
+              "puppentheater",
+              "objekttheater",
+              "theater-im-oeffentlichen-raum",
+              "game-theater",
+              "installation",
+              "audiowalk",
+              "hoerspiel",
+              "podcast",
+              "lesung",
+              "szenische-lesung",
+              "digitaltheater",
+              "physical-theatre",
+              "kabarett-comedy",
+              "improtheater",
+              "workshop"
+            ]
           },
           "accessibility": {
             "type": "object",
@@ -232,7 +260,7 @@
               "properties": {
                 "function": {
                   "type": "string",
-                  "description": "This participant's function in the production. Can take one of the pre-defined values.",
+                  "description": "This participant's function in the production. Must use one of the pre-defined values.",
                   "enum": [
                     "akrobatik",
                     "alles",
