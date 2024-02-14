@@ -130,6 +130,16 @@ geocoordinates path data =
             []
 
 
+teaserOrDescription : Validator Production
+teaserOrDescription path data =
+    case ( data.teaser, data.description ) of
+        ( Nothing, Nothing ) ->
+            [ ValidationMessage path "has neither a description nor a teaser. You should set at least one of these fields." ]
+
+        _ ->
+            []
+
+
 
 -- MODEL VALIDATORS
 
@@ -174,6 +184,7 @@ production =
         , field "/subtitle" .subtitle optional
         , field "/teaser" .teaser optional
         , field "/title" .title required
+        , teaserOrDescription
         ]
 
 
