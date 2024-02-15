@@ -168,7 +168,7 @@ offer : Validator Offer
 offer =
     object
         [ field "/name" .name optional
-        , field "/priceCurrency" .priceCurrency optional
+        , field "/priceCurrency" .priceCurrency required
         , field "/url" .url optional
         ]
 

@@ -52,9 +52,10 @@ type AccessMode
 
 
 type alias Offer =
-    { name : Maybe String
-    , price : Maybe Float
-    , priceCurrency : Maybe String
+    { maxPrice : Maybe Float
+    , minPrice : Float
+    , name : Maybe String
+    , priceCurrency : String
     , url : Maybe String
     }
 
@@ -108,6 +109,7 @@ type Function
     | Gebaerdensprache
     | Gesang
     | Grafik
+    | Inszenierung
     | Jonglage
     | KameraVideo
     | Komposition
@@ -286,9 +288,10 @@ parseAccessMode accessMode =
 offerDecoder : Decoder Offer
 offerDecoder =
     Decode.succeed Offer
+        |> optional "maxPrice" (Decode.nullable Decode.float) Nothing
+        |> required "minPrice" Decode.float
         |> optional "name" (Decode.nullable Decode.string) Nothing
-        |> optional "price" (Decode.nullable Decode.float) Nothing
-        |> optional "priceCurrency" (Decode.nullable Decode.string) Nothing
+        |> required "priceCurrency" Decode.string
         |> optional "url" (Decode.nullable Decode.string) Nothing
 
 
@@ -392,6 +395,9 @@ parseFunction function =
 
         "grafik" ->
             Ok Grafik
+
+        "inszenierung" ->
+            Ok Inszenierung
 
         "jonglage" ->
             Ok Jonglage
@@ -731,9 +737,10 @@ accessModeToString accessMode =
 encodeOffer : Offer -> Value
 encodeOffer offer =
     []
+        |> Encode.optional "maxPrice" offer.maxPrice Encode.float
+        |> Encode.required "minPrice" offer.minPrice Encode.float
         |> Encode.optional "name" offer.name Encode.string
-        |> Encode.optional "price" offer.price Encode.float
-        |> Encode.optional "priceCurrency" offer.priceCurrency Encode.string
+        |> Encode.required "priceCurrency" offer.priceCurrency Encode.string
         |> Encode.optional "url" offer.url Encode.string
         |> Encode.object
 
@@ -845,6 +852,9 @@ functionToString function =
 
         Grafik ->
             "grafik"
+
+        Inszenierung ->
+            "inszenierung"
 
         Jonglage ->
             "jonglage"

@@ -156,13 +156,25 @@
                   "items": {
                     "type": "object",
                     "additionalProperties": false,
+                    "required": [
+                      "minPrice",
+                      "priceCurrency"
+                    ],
                     "properties": {
                       "name": {
                         "type": "string",
                         "description": "A descriptive name for this offer, e.g. \"Normalpreis\", \"Ermäßigt\", \"Preisgruppe A\", usw."
                       },
-                      "price": {
+                      "minPrice": {
                         "type": "number",
+                        "description": "The minimum price of this offer.",
+                        "format": "float",
+                        "minimum": 0,
+                        "maximum": 3.402823669209385E+38
+                      },
+                      "maxPrice": {
+                        "type": "number",
+                        "description": "The maximum price of this offer.",
                         "format": "float",
                         "minimum": 0,
                         "maximum": 3.402823669209385E+38
@@ -173,7 +185,7 @@
                       },
                       "url": {
                         "type": "string",
-                        "description": "Ticketing link of the event",
+                        "description": "Ticketing link for this offer",
                         "format": "uri"
                       }
                     }
@@ -287,6 +299,7 @@
                     "gebaerdensprache",
                     "gesang",
                     "grafik",
+                    "inszenierung",
                     "jonglage",
                     "kamera-video",
                     "komposition",
