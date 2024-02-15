@@ -202,15 +202,25 @@ components:
     Offer:
       type: object
       additionalProperties: false
+      required:
+        - minPrice
+        - priceCurrency
       properties:
         name:
           type: string
           example: Normalpreis
           description: 'A descriptive name for this offer, e.g. "Normalpreis", "Ermäßigt", "Preisgruppe A", usw.'
-        price:
+        minPrice:
           type: number
+          description: The minimum price of this offer.
           format: float
           example: 25.50
+          minimum: 0
+        maxPrice:
+          type: number
+          description: The maximum price of this offer.
+          format: float
+          example: 45.50
           minimum: 0
         priceCurrency:
           type: string
@@ -218,7 +228,7 @@ components:
           example: EUR
         url:
           type: string
-          description: Ticketing link of the event
+          description: Ticketing link for this offer
           format: uri
           example: "https://webshop-tickets.staatstheater-augsburg.de/de/tickets/hedwig-and-the-angry-inch/brechtbuehne-im-gaswerk-14-12-2023-19-30"
 
