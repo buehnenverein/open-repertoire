@@ -62,10 +62,9 @@ type alias Offer =
 type alias Production =
     { accessibility : Maybe Accessibility
     , additionalInfo : Maybe String
-    , branch : Maybe String
     , description : Maybe String
     , events : List Event
-    , genre : Maybe String
+    , genre : Maybe Genre
     , participants : Maybe (List Participant)
     , subtitle : Maybe String
     , teaser : Maybe String
@@ -122,7 +121,7 @@ type Function
     | Moderation
     | Musik
     | MusikalischeLeitung
-    | Performance
+    | PerformanceFunction
     | Produktion
     | Programmierung
     | Puppenbau
@@ -131,7 +130,7 @@ type Function
     | Rigging
     | Schauspiel
     | Sound
-    | Tanz
+    | TanzFunction
     | Technik
     | TechnischeLeitung
     | Text
@@ -141,8 +140,43 @@ type Function
     | VirtualRealityDesign
 
 
+type Genre
+    = Sprechtheater
+    | Performance
+    | LecturePerformance
+    | Tanz
+    | Ballett
+    | ZeitgenoessischerTanz
+    | Musiktheater
+    | Oper
+    | Operette
+    | Musical
+    | SzenischesKonzert
+    | Konzert
+    | Sinfoniekonzert
+    | Kammerkonzert
+    | Figurentheater
+    | Puppentheater
+    | Objekttheater
+    | TheaterImOeffentlichenRaum
+    | GameTheater
+    | Installation
+    | Audiowalk
+    | Hoerspiel
+    | Podcast
+    | Lesung
+    | SzenischeLesung
+    | Digitaltheater
+    | PhysicalTheatre
+    | KabarettComedy
+    | Improtheater
+    | Workshop
+
+
 type alias Location =
     { city : Maybe String
+    , latitude : Maybe Float
+    , longitude : Maybe Float
     , name : Maybe String
     , postalCode : Maybe String
     , streetAddress : Maybe String
@@ -263,10 +297,9 @@ productionDecoder =
     Decode.succeed Production
         |> optional "accessibility" (Decode.nullable accessibilityDecoder) Nothing
         |> optional "additionalInfo" (Decode.nullable Decode.string) Nothing
-        |> optional "branch" (Decode.nullable Decode.string) Nothing
         |> optional "description" (Decode.nullable Decode.string) Nothing
         |> required "events" eventsDecoder
-        |> optional "genre" (Decode.nullable Decode.string) Nothing
+        |> optional "genre" (Decode.nullable genreDecoder) Nothing
         |> optional "participants" (Decode.nullable participantsDecoder) Nothing
         |> optional "subtitle" (Decode.nullable Decode.string) Nothing
         |> optional "teaser" (Decode.nullable Decode.string) Nothing
@@ -400,7 +433,7 @@ parseFunction function =
             Ok MusikalischeLeitung
 
         "performance" ->
-            Ok Performance
+            Ok PerformanceFunction
 
         "produktion" ->
             Ok Produktion
@@ -427,7 +460,7 @@ parseFunction function =
             Ok Sound
 
         "tanz" ->
-            Ok Tanz
+            Ok TanzFunction
 
         "technik" ->
             Ok Technik
@@ -454,10 +487,114 @@ parseFunction function =
             Err <| "Unknown function type: " ++ function
 
 
+genreDecoder : Decoder Genre
+genreDecoder =
+    Decode.string |> Decode.andThen (parseGenre >> Decode.fromResult)
+
+
+parseGenre : String -> Result String Genre
+parseGenre genre =
+    case genre of
+        "sprechtheater" ->
+            Ok Sprechtheater
+
+        "performance" ->
+            Ok Performance
+
+        "lecture-performance" ->
+            Ok LecturePerformance
+
+        "tanz" ->
+            Ok Tanz
+
+        "ballett" ->
+            Ok Ballett
+
+        "zeitgenoessischer-tanz" ->
+            Ok ZeitgenoessischerTanz
+
+        "musiktheater" ->
+            Ok Musiktheater
+
+        "oper" ->
+            Ok Oper
+
+        "operette" ->
+            Ok Operette
+
+        "musical" ->
+            Ok Musical
+
+        "szenisches-konzert" ->
+            Ok SzenischesKonzert
+
+        "konzert" ->
+            Ok Konzert
+
+        "sinfoniekonzert" ->
+            Ok Sinfoniekonzert
+
+        "kammerkonzert" ->
+            Ok Kammerkonzert
+
+        "figurentheater" ->
+            Ok Figurentheater
+
+        "puppentheater" ->
+            Ok Puppentheater
+
+        "objekttheater" ->
+            Ok Objekttheater
+
+        "theater-im-oeffentlichen-raum" ->
+            Ok TheaterImOeffentlichenRaum
+
+        "game-theater" ->
+            Ok GameTheater
+
+        "installation" ->
+            Ok Installation
+
+        "audiowalk" ->
+            Ok Audiowalk
+
+        "hoerspiel" ->
+            Ok Hoerspiel
+
+        "podcast" ->
+            Ok Podcast
+
+        "lesung" ->
+            Ok Lesung
+
+        "szenische-lesung" ->
+            Ok SzenischeLesung
+
+        "digitaltheater" ->
+            Ok Digitaltheater
+
+        "physical-theatre" ->
+            Ok PhysicalTheatre
+
+        "kabarett-comedy" ->
+            Ok KabarettComedy
+
+        "improtheater" ->
+            Ok Improtheater
+
+        "workshop" ->
+            Ok Workshop
+
+        _ ->
+            Err <| "Unknown genre type: " ++ genre
+
+
 locationDecoder : Decoder Location
 locationDecoder =
     Decode.succeed Location
         |> optional "city" (Decode.nullable Decode.string) Nothing
+        |> optional "latitude" (Decode.nullable Decode.float) Nothing
+        |> optional "longitude" (Decode.nullable Decode.float) Nothing
         |> optional "name" (Decode.nullable Decode.string) Nothing
         |> optional "postalCode" (Decode.nullable Decode.string) Nothing
         |> optional "streetAddress" (Decode.nullable Decode.string) Nothing
@@ -606,10 +743,9 @@ encodeProduction production =
     []
         |> Encode.optional "accessibility" production.accessibility encodeAccessibility
         |> Encode.optional "additionalInfo" production.additionalInfo Encode.string
-        |> Encode.optional "branch" production.branch Encode.string
         |> Encode.optional "description" production.description Encode.string
         |> Encode.required "events" production.events encodeEvents
-        |> Encode.optional "genre" production.genre Encode.string
+        |> Encode.optional "genre" production.genre encodeGenre
         |> Encode.optional "participants" production.participants encodeParticipants
         |> Encode.optional "subtitle" production.subtitle Encode.string
         |> Encode.optional "teaser" production.teaser Encode.string
@@ -749,7 +885,7 @@ functionToString function =
         MusikalischeLeitung ->
             "musikalische-leitung"
 
-        Performance ->
+        PerformanceFunction ->
             "performance"
 
         Produktion ->
@@ -776,7 +912,7 @@ functionToString function =
         Sound ->
             "sound"
 
-        Tanz ->
+        TanzFunction ->
             "tanz"
 
         Technik ->
@@ -801,10 +937,111 @@ functionToString function =
             "virtual-reality-design"
 
 
+encodeGenre : Genre -> Value
+encodeGenre genre =
+    genre |> genreToString |> Encode.string
+
+
+genreToString : Genre -> String
+genreToString genre =
+    case genre of
+        Sprechtheater ->
+            "sprechtheater"
+
+        Performance ->
+            "performance"
+
+        LecturePerformance ->
+            "lecture-performance"
+
+        Tanz ->
+            "tanz"
+
+        Ballett ->
+            "ballett"
+
+        ZeitgenoessischerTanz ->
+            "zeitgenoessischer-tanz"
+
+        Musiktheater ->
+            "musiktheater"
+
+        Oper ->
+            "oper"
+
+        Operette ->
+            "operette"
+
+        Musical ->
+            "musical"
+
+        SzenischesKonzert ->
+            "szenisches-konzert"
+
+        Konzert ->
+            "konzert"
+
+        Sinfoniekonzert ->
+            "sinfoniekonzert"
+
+        Kammerkonzert ->
+            "kammerkonzert"
+
+        Figurentheater ->
+            "figurentheater"
+
+        Puppentheater ->
+            "puppentheater"
+
+        Objekttheater ->
+            "objekttheater"
+
+        TheaterImOeffentlichenRaum ->
+            "theater-im-oeffentlichen-raum"
+
+        GameTheater ->
+            "game-theater"
+
+        Installation ->
+            "installation"
+
+        Audiowalk ->
+            "audiowalk"
+
+        Hoerspiel ->
+            "hoerspiel"
+
+        Podcast ->
+            "podcast"
+
+        Lesung ->
+            "lesung"
+
+        SzenischeLesung ->
+            "szenische-lesung"
+
+        Digitaltheater ->
+            "digitaltheater"
+
+        PhysicalTheatre ->
+            "physical-theatre"
+
+        KabarettComedy ->
+            "kabarett-comedy"
+
+        Improtheater ->
+            "improtheater"
+
+        Workshop ->
+            "workshop"
+
+
 encodeLocation : Location -> Value
 encodeLocation location =
     []
         |> Encode.optional "city" location.city Encode.string
+        |> Encode.optional "latitude" location.latitude Encode.float
+        |> Encode.optional "longitude" location.longitude Encode.float
         |> Encode.optional "name" location.name Encode.string
         |> Encode.optional "postalCode" location.postalCode Encode.string
         |> Encode.optional "streetAddress" location.streetAddress Encode.string

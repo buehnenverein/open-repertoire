@@ -110,13 +110,40 @@ components:
           description: "List of current events offered by the organization"
           items:
             $ref: "#/components/schemas/Event"
-        branch:
-          type: string
-          description: The branch of theatre this production belongs to, e.g. "Schauspiel", "Musiktheater", "Oper", etc.
-          example: "Musiktheater"
         genre:
           type: string
-          description: The genre of this production.
+          description: The genre of this production. Must use one of the pre-defined values.
+          enum:
+            - sprechtheater
+            - performance
+            - lecture-performance
+            - tanz
+            - ballett
+            - zeitgenoessischer-tanz
+            - musiktheater
+            - oper
+            - operette
+            - musical
+            - szenisches-konzert
+            - konzert
+            - sinfoniekonzert
+            - kammerkonzert
+            - figurentheater
+            - puppentheater
+            - objekttheater
+            - theater-im-oeffentlichen-raum
+            - game-theater
+            - installation
+            - audiowalk
+            - hoerspiel
+            - podcast
+            - lesung
+            - szenische-lesung
+            - digitaltheater
+            - physical-theatre
+            - kabarett-comedy
+            - improtheater
+            - workshop
           example: "Rock-Musical"
         accessibility:
           $ref: "#/components/schemas/Accessibility"
@@ -175,15 +202,25 @@ components:
     Offer:
       type: object
       additionalProperties: false
+      required:
+        - minPrice
+        - priceCurrency
       properties:
         name:
           type: string
           example: Normalpreis
           description: 'A descriptive name for this offer, e.g. "Normalpreis", "Ermäßigt", "Preisgruppe A", usw.'
-        price:
+        minPrice:
           type: number
+          description: The minimum price of this offer.
           format: float
           example: 25.50
+          minimum: 0
+        maxPrice:
+          type: number
+          description: The maximum price of this offer.
+          format: float
+          example: 45.50
           minimum: 0
         priceCurrency:
           type: string
@@ -191,7 +228,7 @@ components:
           example: EUR
         url:
           type: string
-          description: Ticketing link of the event
+          description: Ticketing link for this offer
           format: uri
           example: "https://webshop-tickets.staatstheater-augsburg.de/de/tickets/hedwig-and-the-angry-inch/brechtbuehne-im-gaswerk-14-12-2023-19-30"
 
@@ -204,7 +241,7 @@ components:
         function:
           type: string
           description:
-            'This participant''s function in the production. Can take one of the pre-defined values.'
+            'This participant''s function in the production. Must use one of the pre-defined values.'
           enum:
             - akrobatik
             - alles
@@ -219,6 +256,7 @@ components:
             - gebaerdensprache
             - gesang
             - grafik
+            - inszenierung
             - jonglage
             - kamera-video
             - komposition
@@ -282,6 +320,16 @@ components:
           type: object
           description: Describes the presence of reserved spots for wheelchairs in this location, as defined by [a11yjson](https://sozialhelden.github.io/a11yjson/describing-objects/interfaces/#wheelchairplaces).
           $ref: "#/components/schemas/WheelChairPlace"
+        latitude:
+          type: number
+          description: "The location's latitude."
+          minimum: -90
+          maximum: 90
+        longitude:
+          type: number
+          description: "The location's longitude."
+          minimum: -180
+          maximum: 180
 
     Accessibility:
       type: object

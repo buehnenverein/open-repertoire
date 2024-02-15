@@ -117,6 +117,29 @@ duration path minutes =
         []
 
 
+geocoordinates : Validator Location
+geocoordinates path data =
+    case ( data.latitude, data.longitude ) of
+        ( Nothing, Just _ ) ->
+            [ ValidationMessage path "has a longitude but no latitude" ]
+
+        ( Just _, Nothing ) ->
+            [ ValidationMessage path "has a latitude but no longitude" ]
+
+        _ ->
+            []
+
+
+teaserOrDescription : Validator Production
+teaserOrDescription path data =
+    case ( data.teaser, data.description ) of
+        ( Nothing, Nothing ) ->
+            [ ValidationMessage path "has neither a description nor a teaser. You should set at least one of these fields." ]
+
+        _ ->
+            []
+
+
 
 -- MODEL VALIDATORS
 
@@ -155,14 +178,13 @@ production =
     object
         [ field "/accessibility" .accessibility (maybe accessibility)
         , field "/additionalInfo" .additionalInfo optional
-        , field "/branch" .branch optional
         , field "/description" .description optional
         , field "/events" .events (list event)
-        , field "/genre" .genre optional
         , field "/participants" .participants (maybe (list participant))
         , field "/subtitle" .subtitle optional
         , field "/teaser" .teaser optional
         , field "/title" .title required
+        , teaserOrDescription
         ]
 
 
@@ -187,4 +209,5 @@ location =
         , field "/name" .name optional
         , field "/postalCode" .postalCode optional
         , field "/streetAddress" .streetAddress optional
+        , geocoordinates
         ]
