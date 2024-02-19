@@ -191,9 +191,14 @@ components:
         #   description: Primary language of the event
         #   format: can/should we make this an enum of language codes?
         
-        location:
-          description: Location where this event is happening.
-          $ref: "#/components/schemas/Location"    
+        locations:
+          description: The location of this event. An event can take place at one or more physical locations,
+             one or more virtual locations, or both, if it's a hybrid event.
+          type: array
+          items:
+            anyOf:
+              - $ref: "#/components/schemas/Location"    
+              - $ref: "#/components/schemas/VirtualLocation"    
         offers:
           type: array
           items:
@@ -302,23 +307,34 @@ components:
     Location:
       type: object
       additionalProperties: false
+      required:
+        - type
       properties:
+        type:
+          type: string
+          enum:
+            - Address
+          description: The type of this location object. Must be "Address" for physical locations.
         name:
           type: string
           example: brechtbühne im Gaswerk
+          description: The location's name
         postalCode:
           type: string
           example: 86156
           # pattern: "\d{5}"
+          description: The location's postal code
         streetAddress:
           type: string
           example: Am Alten Gaswerk 7
+          description: The location's street address
         city:
           type: string
           example: Augsburg
+          description: The city the location is in
         wheelChairPlaces:
           type: object
-          description: Describes the presence of reserved spots for wheelchairs in this location, as defined by [a11yjson](https://sozialhelden.github.io/a11yjson/describing-objects/interfaces/#wheelchairplaces).
+          description: Describes the presence of reserved spots for wheelchairs in the location, as defined by [a11yjson](https://sozialhelden.github.io/a11yjson/describing-objects/interfaces/#wheelchairplaces).
           $ref: "#/components/schemas/WheelChairPlace"
         latitude:
           type: number
@@ -331,6 +347,27 @@ components:
           minimum: -180
           maximum: 180
 
+    VirtualLocation:
+      type: object
+      additionalProperties: false
+      description: The virtual location of an online or hybrid event
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum:
+            - VirtualLocation
+          description: The type of this location object. Must be "VirtualLocation" for virtual locations.
+        name:
+          type: string
+          description:
+            The virtual location's name
+          example: Zoom
+        url:
+          type: string
+          format: uri
+          description: The event's URL, if this is an online or hybrid event
     Accessibility:
       type: object
       additionalProperties: false
