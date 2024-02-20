@@ -1,6 +1,6 @@
 module Helper.CustomValidations exposing (checkAll)
 
-import Data.Root exposing (Accessibility, Address, Event, Location, Offer, Participant, Production, Root)
+import Data.Root exposing (Accessibility, Address, AddressLocation, Event, Location(..), Offer, Participant, Production, Root, VirtualLocation)
 
 
 type alias ValidationMessage =
@@ -117,7 +117,7 @@ duration path minutes =
         []
 
 
-geocoordinates : Validator Location
+geocoordinates : Validator AddressLocation
 geocoordinates path data =
     case ( data.latitude, data.longitude ) of
         ( Nothing, Just _ ) ->
@@ -149,7 +149,7 @@ event =
     object
         [ field "/duration" .duration (maybe duration)
         , field "/endDate" .endDate optional
-        , field "/location" .location (maybe location)
+        , field "/locations" .locations (maybe (list location))
         , field "/offers" .offers (maybe (list offer))
         , field "/startDate" .startDate required
         , field "/url" .url optional
@@ -203,11 +203,29 @@ address =
 
 
 location : Validator Location
-location =
+location path data =
+    case data of
+        Physical physical ->
+            addressLocation path physical
+
+        Virtual virtual ->
+            virtualLocation path virtual
+
+
+addressLocation : Validator AddressLocation
+addressLocation =
     object
         [ field "/city" .city optional
         , field "/name" .name optional
         , field "/postalCode" .postalCode optional
         , field "/streetAddress" .streetAddress optional
         , geocoordinates
+        ]
+
+
+virtualLocation : Validator VirtualLocation
+virtualLocation =
+    object
+        [ field "/name" .name optional
+        , field "/url" .url optional
         ]

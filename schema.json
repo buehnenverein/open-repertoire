@@ -98,57 +98,104 @@
                   "description": "Link to further information about the event",
                   "format": "uri"
                 },
-                "location": {
-                  "description": "Location where this event is happening.",
-                  "type": "object",
-                  "additionalProperties": false,
-                  "properties": {
-                    "name": {
-                      "type": "string"
-                    },
-                    "postalCode": {
-                      "type": "string"
-                    },
-                    "streetAddress": {
-                      "type": "string"
-                    },
-                    "city": {
-                      "type": "string"
-                    },
-                    "wheelChairPlaces": {
-                      "type": "object",
-                      "description": "Describes the presence of reserved spots for wheelchairs in this location, as defined by [a11yjson](https://sozialhelden.github.io/a11yjson/describing-objects/interfaces/#wheelchairplaces).",
-                      "additionalProperties": false,
-                      "required": [
-                        "count"
-                      ],
-                      "properties": {
-                        "count": {
-                          "type": "integer",
-                          "description": "The number of designated places for wheelchairs in this location."
-                        },
-                        "hasSpaceForAssistant": {
-                          "type": "boolean",
-                          "description": "Is there additional space for an assistant?"
-                        },
-                        "wheelchairUserCapacity": {
-                          "type": "integer",
-                          "description": "The number of people using a wheelchair that can be accomodated at the same time. Use this when there is no designated space for wheelchair users, but the number is known."
+                "locations": {
+                  "description": "The location of this event. An event can take place at one or more physical locations, one or more virtual locations, or both, if it's a hybrid event.",
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "type"
+                        ],
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "Address"
+                            ],
+                            "description": "The type of this location object. Must be \"Address\" for physical locations."
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "The location's name"
+                          },
+                          "postalCode": {
+                            "type": "string",
+                            "description": "The location's postal code"
+                          },
+                          "streetAddress": {
+                            "type": "string",
+                            "description": "The location's street address"
+                          },
+                          "city": {
+                            "type": "string",
+                            "description": "The city the location is in"
+                          },
+                          "wheelChairPlaces": {
+                            "type": "object",
+                            "description": "Describes the presence of reserved spots for wheelchairs in the location, as defined by [a11yjson](https://sozialhelden.github.io/a11yjson/describing-objects/interfaces/#wheelchairplaces).",
+                            "additionalProperties": false,
+                            "required": [
+                              "count"
+                            ],
+                            "properties": {
+                              "count": {
+                                "type": "integer",
+                                "description": "The number of designated places for wheelchairs in this location."
+                              },
+                              "hasSpaceForAssistant": {
+                                "type": "boolean",
+                                "description": "Is there additional space for an assistant?"
+                              },
+                              "wheelchairUserCapacity": {
+                                "type": "integer",
+                                "description": "The number of people using a wheelchair that can be accomodated at the same time. Use this when there is no designated space for wheelchair users, but the number is known."
+                              }
+                            }
+                          },
+                          "latitude": {
+                            "type": "number",
+                            "description": "The location's latitude.",
+                            "minimum": -90,
+                            "maximum": 90
+                          },
+                          "longitude": {
+                            "type": "number",
+                            "description": "The location's longitude.",
+                            "minimum": -180,
+                            "maximum": 180
+                          }
+                        }
+                      },
+                      {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "description": "The virtual location of an online or hybrid event",
+                        "required": [
+                          "type"
+                        ],
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "VirtualLocation"
+                            ],
+                            "description": "The type of this location object. Must be \"VirtualLocation\" for virtual locations."
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "The virtual location's name"
+                          },
+                          "url": {
+                            "type": "string",
+                            "format": "uri",
+                            "description": "The event's URL, if this is an online or hybrid event"
+                          }
                         }
                       }
-                    },
-                    "latitude": {
-                      "type": "number",
-                      "description": "The location's latitude.",
-                      "minimum": -90,
-                      "maximum": 90
-                    },
-                    "longitude": {
-                      "type": "number",
-                      "description": "The location's longitude.",
-                      "minimum": -180,
-                      "maximum": 180
-                    }
+                    ]
                   }
                 },
                 "offers": {

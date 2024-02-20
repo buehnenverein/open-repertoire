@@ -30,7 +30,7 @@ type AccessibilityHazard
 type alias Event =
     { duration : Maybe Int
     , endDate : Maybe String
-    , location : Maybe Location
+    , locations : Maybe (List Location)
     , offers : Maybe (List Offer)
     , startDate : String
     , url : Maybe String
@@ -70,6 +70,13 @@ type alias Production =
     , subtitle : Maybe String
     , teaser : Maybe String
     , title : String
+    }
+
+
+type alias VirtualLocation =
+    { name : Maybe String
+    , locationType : LocationType
+    , url : Maybe String
     }
 
 
@@ -175,15 +182,26 @@ type Genre
     | Workshop
 
 
-type alias Location =
+type Location
+    = Physical AddressLocation
+    | Virtual VirtualLocation
+
+
+type alias AddressLocation =
     { city : Maybe String
     , latitude : Maybe Float
     , longitude : Maybe Float
     , name : Maybe String
     , postalCode : Maybe String
     , streetAddress : Maybe String
+    , locationType : LocationType
     , wheelChairPlaces : Maybe WheelChairPlaces
     }
+
+
+type LocationType
+    = AddressType
+    | VirtualLocationType
 
 
 type Version
@@ -247,7 +265,7 @@ eventDecoder =
     Decode.succeed Event
         |> optional "duration" (Decode.nullable Decode.int) Nothing
         |> optional "endDate" (Decode.nullable Decode.string) Nothing
-        |> optional "location" (Decode.nullable locationDecoder) Nothing
+        |> optional "locations" (Decode.nullable locationsDecoder) Nothing
         |> optional "offers" (Decode.nullable offersDecoder) Nothing
         |> required "startDate" Decode.string
         |> optional "url" (Decode.nullable Decode.string) Nothing
@@ -259,6 +277,20 @@ participantDecoder =
         |> optional "function" (Decode.nullable functionDecoder) Nothing
         |> required "names" namesDecoder
         |> optional "roleName" (Decode.nullable Decode.string) Nothing
+
+
+addressLocationDecoder : Decoder Location
+addressLocationDecoder =
+    Decode.succeed AddressLocation
+        |> optional "city" (Decode.nullable Decode.string) Nothing
+        |> optional "latitude" (Decode.nullable Decode.float) Nothing
+        |> optional "longitude" (Decode.nullable Decode.float) Nothing
+        |> optional "name" (Decode.nullable Decode.string) Nothing
+        |> optional "postalCode" (Decode.nullable Decode.string) Nothing
+        |> optional "streetAddress" (Decode.nullable Decode.string) Nothing
+        |> required "type" addressTypeDecoder
+        |> optional "wheelChairPlaces" (Decode.nullable wheelChairPlacesDecoder) Nothing
+        |> Decode.map Physical
 
 
 accessModeDecoder : Decoder AccessMode
@@ -597,14 +629,51 @@ parseGenre genre =
 
 locationDecoder : Decoder Location
 locationDecoder =
-    Decode.succeed Location
-        |> optional "city" (Decode.nullable Decode.string) Nothing
-        |> optional "latitude" (Decode.nullable Decode.float) Nothing
-        |> optional "longitude" (Decode.nullable Decode.float) Nothing
+    Decode.oneOf [ addressLocationDecoder, virtualLocationDecoder ]
+
+
+virtualLocationDecoder : Decoder Location
+virtualLocationDecoder =
+    Decode.succeed VirtualLocation
         |> optional "name" (Decode.nullable Decode.string) Nothing
-        |> optional "postalCode" (Decode.nullable Decode.string) Nothing
-        |> optional "streetAddress" (Decode.nullable Decode.string) Nothing
-        |> optional "wheelChairPlaces" (Decode.nullable wheelChairPlacesDecoder) Nothing
+        |> required "type" virtualLocationTypeDecoder
+        |> optional "url" (Decode.nullable Decode.string) Nothing
+        |> Decode.map Virtual
+
+
+virtualLocationTypeDecoder : Decoder LocationType
+virtualLocationTypeDecoder =
+    Decode.string |> Decode.andThen (parseVirtualLocationType >> Decode.fromResult)
+
+
+parseVirtualLocationType : String -> Result String LocationType
+parseVirtualLocationType value =
+    case value of
+        "VirtualLocation" ->
+            Ok VirtualLocationType
+
+        _ ->
+            Err <| "Unknown type type: " ++ value
+
+
+addressTypeDecoder : Decoder LocationType
+addressTypeDecoder =
+    Decode.string |> Decode.andThen (parseAddressType >> Decode.fromResult)
+
+
+parseAddressType : String -> Result String LocationType
+parseAddressType value =
+    case value of
+        "Address" ->
+            Ok AddressType
+
+        _ ->
+            Err <| "Unknown type type: " ++ value
+
+
+locationsDecoder : Decoder (List Location)
+locationsDecoder =
+    Decode.list locationDecoder
 
 
 namesDecoder : Decoder (List String)
@@ -625,6 +694,24 @@ participantsDecoder =
 productionsDecoder : Decoder (List Production)
 productionsDecoder =
     Decode.list productionDecoder
+
+
+typeDecoder : Decoder LocationType
+typeDecoder =
+    Decode.string |> Decode.andThen (parseType >> Decode.fromResult)
+
+
+parseType : String -> Result String LocationType
+parseType value =
+    case value of
+        "Address" ->
+            Ok AddressType
+
+        "VirtualLocation" ->
+            Ok VirtualLocationType
+
+        _ ->
+            Err <| "Unknown type type: " ++ value
 
 
 versionDecoder : Decoder Version
@@ -697,7 +784,7 @@ encodeEvent event =
     []
         |> Encode.optional "duration" event.duration Encode.int
         |> Encode.optional "endDate" event.endDate Encode.string
-        |> Encode.optional "location" event.location encodeLocation
+        |> Encode.optional "locations" event.locations encodeLocations
         |> Encode.optional "offers" event.offers encodeOffers
         |> Encode.required "startDate" event.startDate Encode.string
         |> Encode.optional "url" event.url Encode.string
@@ -710,6 +797,20 @@ encodeParticipant participant =
         |> Encode.optional "function" participant.function encodeFunction
         |> Encode.required "names" participant.names encodeNames
         |> Encode.optional "roleName" participant.roleName Encode.string
+        |> Encode.object
+
+
+encodeAddressLocation : AddressLocation -> Value
+encodeAddressLocation addressLocation =
+    []
+        |> Encode.optional "city" addressLocation.city Encode.string
+        |> Encode.optional "latitude" addressLocation.latitude Encode.float
+        |> Encode.optional "longitude" addressLocation.longitude Encode.float
+        |> Encode.optional "name" addressLocation.name Encode.string
+        |> Encode.optional "postalCode" addressLocation.postalCode Encode.string
+        |> Encode.optional "streetAddress" addressLocation.streetAddress Encode.string
+        |> Encode.required "type" addressLocation.locationType encodeLocationType
+        |> Encode.optional "wheelChairPlaces" addressLocation.wheelChairPlaces encodeWheelChairPlaces
         |> Encode.object
 
 
@@ -757,6 +858,15 @@ encodeProduction production =
         |> Encode.optional "subtitle" production.subtitle Encode.string
         |> Encode.optional "teaser" production.teaser Encode.string
         |> Encode.required "title" production.title Encode.string
+        |> Encode.object
+
+
+encodeVirtualLocation : VirtualLocation -> Value
+encodeVirtualLocation virtualLocation =
+    []
+        |> Encode.optional "name" virtualLocation.name Encode.string
+        |> Encode.required "type" virtualLocation.locationType encodeLocationType
+        |> Encode.optional "url" virtualLocation.url Encode.string
         |> Encode.object
 
 
@@ -1046,17 +1156,20 @@ genreToString genre =
             "workshop"
 
 
+encodeLocations : List Location -> Value
+encodeLocations locations =
+    locations
+        |> Encode.list encodeLocation
+
+
 encodeLocation : Location -> Value
 encodeLocation location =
-    []
-        |> Encode.optional "city" location.city Encode.string
-        |> Encode.optional "latitude" location.latitude Encode.float
-        |> Encode.optional "longitude" location.longitude Encode.float
-        |> Encode.optional "name" location.name Encode.string
-        |> Encode.optional "postalCode" location.postalCode Encode.string
-        |> Encode.optional "streetAddress" location.streetAddress Encode.string
-        |> Encode.optional "wheelChairPlaces" location.wheelChairPlaces encodeWheelChairPlaces
-        |> Encode.object
+    case location of
+        Physical address ->
+            encodeAddressLocation address
+
+        Virtual virtual ->
+            encodeVirtualLocation virtual
 
 
 encodeNames : List String -> Value
@@ -1081,6 +1194,21 @@ encodeProductions : List Production -> Value
 encodeProductions productions =
     productions
         |> Encode.list encodeProduction
+
+
+encodeLocationType : LocationType -> Value
+encodeLocationType value =
+    value |> locationTypeToString |> Encode.string
+
+
+locationTypeToString : LocationType -> String
+locationTypeToString value =
+    case value of
+        AddressType ->
+            "Address"
+
+        VirtualLocationType ->
+            "VirtualLocation"
 
 
 encodeVersion : Version -> Value
