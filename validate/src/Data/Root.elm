@@ -44,6 +44,18 @@ type alias Participant =
     }
 
 
+type alias AddressLocation =
+    { city : Maybe String
+    , latitude : Maybe Float
+    , longitude : Maybe Float
+    , name : Maybe String
+    , postalCode : Maybe String
+    , streetAddress : Maybe String
+    , locationType : LocationType
+    , wheelChairPlaces : Maybe WheelChairPlaces
+    }
+
+
 type AccessMode
     = Auditory
     | Tactile
@@ -185,18 +197,6 @@ type Genre
 type Location
     = Physical AddressLocation
     | Virtual VirtualLocation
-
-
-type alias AddressLocation =
-    { city : Maybe String
-    , latitude : Maybe Float
-    , longitude : Maybe Float
-    , name : Maybe String
-    , postalCode : Maybe String
-    , streetAddress : Maybe String
-    , locationType : LocationType
-    , wheelChairPlaces : Maybe WheelChairPlaces
-    }
 
 
 type LocationType
