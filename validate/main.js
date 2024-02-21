@@ -6830,8 +6830,8 @@ var $author$project$Data$Root$Auditory = 0;
 var $author$project$Data$Root$Tactile = 1;
 var $author$project$Data$Root$Textual = 2;
 var $author$project$Data$Root$Visual = 3;
-var $author$project$Data$Root$parseAccessMode = function (accessMode) {
-	switch (accessMode) {
+var $author$project$Data$Root$parseAccessModeSufficient = function (accessModeSufficient) {
+	switch (accessModeSufficient) {
 		case 'auditory':
 			return $elm$core$Result$Ok(0);
 		case 'tactile':
@@ -6841,14 +6841,14 @@ var $author$project$Data$Root$parseAccessMode = function (accessMode) {
 		case 'visual':
 			return $elm$core$Result$Ok(3);
 		default:
-			return $elm$core$Result$Err('Unknown accessMode type: ' + accessMode);
+			return $elm$core$Result$Err('Unknown accessModeSufficient type: ' + accessModeSufficient);
 	}
 };
-var $author$project$Data$Root$accessModeDecoder = A2(
+var $author$project$Data$Root$accessModeSufficientDecoder = A2(
 	$elm$json$Json$Decode$andThen,
-	A2($elm$core$Basics$composeR, $author$project$Data$Root$parseAccessMode, $elm_community$json_extra$Json$Decode$Extra$fromResult),
+	A2($elm$core$Basics$composeR, $author$project$Data$Root$parseAccessModeSufficient, $elm_community$json_extra$Json$Decode$Extra$fromResult),
 	$elm$json$Json$Decode$string);
-var $author$project$Data$Root$accessModeSufficientDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$accessModeDecoder);
+var $author$project$Data$Root$accessModesSufficientDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$accessModeSufficientDecoder);
 var $author$project$Data$Root$FlashingHazard = 2;
 var $author$project$Data$Root$MotionSimulationHazard = 3;
 var $author$project$Data$Root$NoFlashingHazard = 5;
@@ -6906,7 +6906,7 @@ var $author$project$Data$Root$accessibilityDecoder = A4(
 		A4(
 			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 			'accessModeSufficient',
-			$elm$json$Json$Decode$nullable($author$project$Data$Root$accessModeSufficientDecoder),
+			$elm$json$Json$Decode$nullable($author$project$Data$Root$accessModesSufficientDecoder),
 			$elm$core$Maybe$Nothing,
 			$elm$json$Json$Decode$succeed($author$project$Data$Root$Accessibility))));
 var $author$project$Data$Root$Event = F6(
@@ -6921,18 +6921,6 @@ var $author$project$Data$Root$AddressLocation = F8(
 var $author$project$Data$Root$Physical = function (a) {
 	return {$: 0, a: a};
 };
-var $author$project$Data$Root$AddressType = 0;
-var $author$project$Data$Root$parseAddressType = function (value) {
-	if (value === 'Address') {
-		return $elm$core$Result$Ok(0);
-	} else {
-		return $elm$core$Result$Err('Unknown type type: ' + value);
-	}
-};
-var $author$project$Data$Root$addressTypeDecoder = A2(
-	$elm$json$Json$Decode$andThen,
-	A2($elm$core$Basics$composeR, $author$project$Data$Root$parseAddressType, $elm_community$json_extra$Json$Decode$Extra$fromResult),
-	$elm$json$Json$Decode$string);
 var $elm$json$Json$Decode$float = _Json_decodeFloat;
 var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required = F3(
 	function (key, valDecoder, decoder) {
@@ -6941,6 +6929,22 @@ var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required = F3(
 			A2($elm$json$Json$Decode$field, key, valDecoder),
 			decoder);
 	});
+var $author$project$Data$Root$AddressType = 0;
+var $author$project$Data$Root$VirtualLocationType = 1;
+var $author$project$Data$Root$parseType = function (locationType) {
+	switch (locationType) {
+		case 'Address':
+			return $elm$core$Result$Ok(0);
+		case 'VirtualLocation':
+			return $elm$core$Result$Ok(1);
+		default:
+			return $elm$core$Result$Err('Unknown type type: ' + locationType);
+	}
+};
+var $author$project$Data$Root$typeDecoder = A2(
+	$elm$json$Json$Decode$andThen,
+	A2($elm$core$Basics$composeR, $author$project$Data$Root$parseType, $elm_community$json_extra$Json$Decode$Extra$fromResult),
+	$elm$json$Json$Decode$string);
 var $author$project$Data$Root$WheelChairPlaces = F3(
 	function (count, hasSpaceForAssistant, wheelchairUserCapacity) {
 		return {ai: count, aw: hasSpaceForAssistant, bl: wheelchairUserCapacity};
@@ -6972,7 +6976,7 @@ var $author$project$Data$Root$addressLocationDecoder = A2(
 		A3(
 			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 			'type',
-			$author$project$Data$Root$addressTypeDecoder,
+			$author$project$Data$Root$typeDecoder,
 			A4(
 				$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 				'streetAddress',
@@ -7011,18 +7015,6 @@ var $author$project$Data$Root$VirtualLocation = F3(
 	function (name, locationType, url) {
 		return {M: locationType, s: name, C: url};
 	});
-var $author$project$Data$Root$VirtualLocationType = 1;
-var $author$project$Data$Root$parseVirtualLocationType = function (value) {
-	if (value === 'VirtualLocation') {
-		return $elm$core$Result$Ok(1);
-	} else {
-		return $elm$core$Result$Err('Unknown type type: ' + value);
-	}
-};
-var $author$project$Data$Root$virtualLocationTypeDecoder = A2(
-	$elm$json$Json$Decode$andThen,
-	A2($elm$core$Basics$composeR, $author$project$Data$Root$parseVirtualLocationType, $elm_community$json_extra$Json$Decode$Extra$fromResult),
-	$elm$json$Json$Decode$string);
 var $author$project$Data$Root$virtualLocationDecoder = A2(
 	$elm$json$Json$Decode$map,
 	$author$project$Data$Root$Virtual,
@@ -7034,7 +7026,7 @@ var $author$project$Data$Root$virtualLocationDecoder = A2(
 		A3(
 			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 			'type',
-			$author$project$Data$Root$virtualLocationTypeDecoder,
+			$author$project$Data$Root$typeDecoder,
 			A4(
 				$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 				'name',
