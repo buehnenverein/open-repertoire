@@ -6830,8 +6830,8 @@ var $author$project$Data$Root$Auditory = 0;
 var $author$project$Data$Root$Tactile = 1;
 var $author$project$Data$Root$Textual = 2;
 var $author$project$Data$Root$Visual = 3;
-var $author$project$Data$Root$parseAccessModeSufficient = function (accessModeSufficient) {
-	switch (accessModeSufficient) {
+var $author$project$Data$Root$parseAccessModeSufficientItem = function (accessModeSufficientItem) {
+	switch (accessModeSufficientItem) {
 		case 'auditory':
 			return $elm$core$Result$Ok(0);
 		case 'tactile':
@@ -6841,14 +6841,14 @@ var $author$project$Data$Root$parseAccessModeSufficient = function (accessModeSu
 		case 'visual':
 			return $elm$core$Result$Ok(3);
 		default:
-			return $elm$core$Result$Err('Unknown accessModeSufficient type: ' + accessModeSufficient);
+			return $elm$core$Result$Err('Unknown accessModeSufficientItem type: ' + accessModeSufficientItem);
 	}
 };
-var $author$project$Data$Root$accessModeSufficientDecoder = A2(
+var $author$project$Data$Root$accessModeSufficientItemDecoder = A2(
 	$elm$json$Json$Decode$andThen,
-	A2($elm$core$Basics$composeR, $author$project$Data$Root$parseAccessModeSufficient, $elm_community$json_extra$Json$Decode$Extra$fromResult),
+	A2($elm$core$Basics$composeR, $author$project$Data$Root$parseAccessModeSufficientItem, $elm_community$json_extra$Json$Decode$Extra$fromResult),
 	$elm$json$Json$Decode$string);
-var $author$project$Data$Root$accessModesSufficientDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$accessModeSufficientDecoder);
+var $author$project$Data$Root$accessModeSufficientDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$accessModeSufficientItemDecoder);
 var $author$project$Data$Root$FlashingHazard = 2;
 var $author$project$Data$Root$MotionSimulationHazard = 3;
 var $author$project$Data$Root$NoFlashingHazard = 5;
@@ -6860,8 +6860,8 @@ var $author$project$Data$Root$Unknown = 1;
 var $author$project$Data$Root$UnknownFlashingHazard = 8;
 var $author$project$Data$Root$UnknownMotionSimulationHazard = 9;
 var $author$project$Data$Root$UnknownSoundHazard = 10;
-var $author$project$Data$Root$parseAccessibilityHazard = function (accessibilityHazard) {
-	switch (accessibilityHazard) {
+var $author$project$Data$Root$parseAccessibilityHazardItem = function (accessibilityHazardItem) {
+	switch (accessibilityHazardItem) {
 		case 'none':
 			return $elm$core$Result$Ok(0);
 		case 'unknown':
@@ -6885,14 +6885,14 @@ var $author$project$Data$Root$parseAccessibilityHazard = function (accessibility
 		case 'unknownSoundHazard':
 			return $elm$core$Result$Ok(10);
 		default:
-			return $elm$core$Result$Err('Unknown accessibilityHazard type: ' + accessibilityHazard);
+			return $elm$core$Result$Err('Unknown accessibilityHazardItem type: ' + accessibilityHazardItem);
 	}
 };
-var $author$project$Data$Root$accessibilityHazardDecoder = A2(
+var $author$project$Data$Root$accessibilityHazardItemDecoder = A2(
 	$elm$json$Json$Decode$andThen,
-	A2($elm$core$Basics$composeR, $author$project$Data$Root$parseAccessibilityHazard, $elm_community$json_extra$Json$Decode$Extra$fromResult),
+	A2($elm$core$Basics$composeR, $author$project$Data$Root$parseAccessibilityHazardItem, $elm_community$json_extra$Json$Decode$Extra$fromResult),
 	$elm$json$Json$Decode$string);
-var $author$project$Data$Root$accessibilityHazardsDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$accessibilityHazardDecoder);
+var $author$project$Data$Root$accessibilityHazardDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$accessibilityHazardItemDecoder);
 var $author$project$Data$Root$accessibilityDecoder = A4(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 	'accessibilitySummary',
@@ -6901,12 +6901,12 @@ var $author$project$Data$Root$accessibilityDecoder = A4(
 	A4(
 		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 		'accessibilityHazard',
-		$elm$json$Json$Decode$nullable($author$project$Data$Root$accessibilityHazardsDecoder),
+		$elm$json$Json$Decode$nullable($author$project$Data$Root$accessibilityHazardDecoder),
 		$elm$core$Maybe$Nothing,
 		A4(
 			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 			'accessModeSufficient',
-			$elm$json$Json$Decode$nullable($author$project$Data$Root$accessModesSufficientDecoder),
+			$elm$json$Json$Decode$nullable($author$project$Data$Root$accessModeSufficientDecoder),
 			$elm$core$Maybe$Nothing,
 			$elm$json$Json$Decode$succeed($author$project$Data$Root$Accessibility))));
 var $author$project$Data$Root$Event = F6(

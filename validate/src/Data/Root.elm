@@ -40,7 +40,7 @@ type alias Root =
     }
 
 
-type AccessModeSufficient
+type AccessModeSufficientItem
     = Auditory
     | Tactile
     | Textual
@@ -48,13 +48,13 @@ type AccessModeSufficient
 
 
 type alias Accessibility =
-    { accessModeSufficient : Maybe (List AccessModeSufficient)
-    , accessibilityHazard : Maybe (List AccessibilityHazard)
+    { accessModeSufficient : Maybe (List AccessModeSufficientItem)
+    , accessibilityHazard : Maybe (List AccessibilityHazardItem)
     , accessibilitySummary : Maybe String
     }
 
 
-type AccessibilityHazard
+type AccessibilityHazardItem
     = None
     | Unknown
     | FlashingHazard
@@ -247,19 +247,19 @@ rootDecoder =
         |> required "version" versionDecoder
 
 
-accessModesSufficientDecoder : Decoder (List AccessModeSufficient)
-accessModesSufficientDecoder =
-    Decode.list accessModeSufficientDecoder
-
-
-accessModeSufficientDecoder : Decoder AccessModeSufficient
+accessModeSufficientDecoder : Decoder (List AccessModeSufficientItem)
 accessModeSufficientDecoder =
-    Decode.string |> Decode.andThen (parseAccessModeSufficient >> Decode.fromResult)
+    Decode.list accessModeSufficientItemDecoder
 
 
-parseAccessModeSufficient : String -> Result String AccessModeSufficient
-parseAccessModeSufficient accessModeSufficient =
-    case accessModeSufficient of
+accessModeSufficientItemDecoder : Decoder AccessModeSufficientItem
+accessModeSufficientItemDecoder =
+    Decode.string |> Decode.andThen (parseAccessModeSufficientItem >> Decode.fromResult)
+
+
+parseAccessModeSufficientItem : String -> Result String AccessModeSufficientItem
+parseAccessModeSufficientItem accessModeSufficientItem =
+    case accessModeSufficientItem of
         "auditory" ->
             Ok Auditory
 
@@ -273,25 +273,30 @@ parseAccessModeSufficient accessModeSufficient =
             Ok Visual
 
         _ ->
-            Err <| "Unknown accessModeSufficient type: " ++ accessModeSufficient
+            Err <| "Unknown accessModeSufficientItem type: " ++ accessModeSufficientItem
 
 
 accessibilityDecoder : Decoder Accessibility
 accessibilityDecoder =
     Decode.succeed Accessibility
-        |> optional "accessModeSufficient" (Decode.nullable accessModesSufficientDecoder) Nothing
-        |> optional "accessibilityHazard" (Decode.nullable accessibilityHazardsDecoder) Nothing
+        |> optional "accessModeSufficient" (Decode.nullable accessModeSufficientDecoder) Nothing
+        |> optional "accessibilityHazard" (Decode.nullable accessibilityHazardDecoder) Nothing
         |> optional "accessibilitySummary" (Decode.nullable Decode.string) Nothing
 
 
-accessibilityHazardDecoder : Decoder AccessibilityHazard
+accessibilityHazardDecoder : Decoder (List AccessibilityHazardItem)
 accessibilityHazardDecoder =
-    Decode.string |> Decode.andThen (parseAccessibilityHazard >> Decode.fromResult)
+    Decode.list accessibilityHazardItemDecoder
 
 
-parseAccessibilityHazard : String -> Result String AccessibilityHazard
-parseAccessibilityHazard accessibilityHazard =
-    case accessibilityHazard of
+accessibilityHazardItemDecoder : Decoder AccessibilityHazardItem
+accessibilityHazardItemDecoder =
+    Decode.string |> Decode.andThen (parseAccessibilityHazardItem >> Decode.fromResult)
+
+
+parseAccessibilityHazardItem : String -> Result String AccessibilityHazardItem
+parseAccessibilityHazardItem accessibilityHazardItem =
+    case accessibilityHazardItem of
         "none" ->
             Ok None
 
@@ -326,12 +331,7 @@ parseAccessibilityHazard accessibilityHazard =
             Ok UnknownSoundHazard
 
         _ ->
-            Err <| "Unknown accessibilityHazard type: " ++ accessibilityHazard
-
-
-accessibilityHazardsDecoder : Decoder (List AccessibilityHazard)
-accessibilityHazardsDecoder =
-    Decode.list accessibilityHazardDecoder
+            Err <| "Unknown accessibilityHazardItem type: " ++ accessibilityHazardItem
 
 
 addressDecoder : Decoder Address
@@ -740,20 +740,20 @@ encodeRoot root =
         |> Encode.object
 
 
-encodeAccessModesSufficient : List AccessModeSufficient -> Value
-encodeAccessModesSufficient accessModeSufficient =
-    accessModeSufficient
-        |> Encode.list encodeAccessModeSufficient
-
-
-encodeAccessModeSufficient : AccessModeSufficient -> Value
+encodeAccessModeSufficient : List AccessModeSufficientItem -> Value
 encodeAccessModeSufficient accessModeSufficient =
-    accessModeSufficient |> accessModeSufficientToString |> Encode.string
+    accessModeSufficient
+        |> Encode.list encodeAccessModeSufficientItem
 
 
-accessModeSufficientToString : AccessModeSufficient -> String
-accessModeSufficientToString accessModeSufficient =
-    case accessModeSufficient of
+encodeAccessModeSufficientItem : AccessModeSufficientItem -> Value
+encodeAccessModeSufficientItem accessModeSufficientItem =
+    accessModeSufficientItem |> accessModeSufficientItemToString |> Encode.string
+
+
+accessModeSufficientItemToString : AccessModeSufficientItem -> String
+accessModeSufficientItemToString accessModeSufficientItem =
+    case accessModeSufficientItem of
         Auditory ->
             "auditory"
 
@@ -770,20 +770,26 @@ accessModeSufficientToString accessModeSufficient =
 encodeAccessibility : Accessibility -> Value
 encodeAccessibility accessibility =
     []
-        |> Encode.optional "accessModeSufficient" accessibility.accessModeSufficient encodeAccessModesSufficient
-        |> Encode.optional "accessibilityHazard" accessibility.accessibilityHazard encodeAccessibilityHazards
+        |> Encode.optional "accessModeSufficient" accessibility.accessModeSufficient encodeAccessModeSufficient
+        |> Encode.optional "accessibilityHazard" accessibility.accessibilityHazard encodeAccessibilityHazard
         |> Encode.optional "accessibilitySummary" accessibility.accessibilitySummary Encode.string
         |> Encode.object
 
 
-encodeAccessibilityHazard : AccessibilityHazard -> Value
+encodeAccessibilityHazard : List AccessibilityHazardItem -> Value
 encodeAccessibilityHazard accessibilityHazard =
-    accessibilityHazard |> accessibilityHazardToString |> Encode.string
+    accessibilityHazard
+        |> Encode.list encodeAccessibilityHazardItem
 
 
-accessibilityHazardToString : AccessibilityHazard -> String
-accessibilityHazardToString accessibilityHazard =
-    case accessibilityHazard of
+encodeAccessibilityHazardItem : AccessibilityHazardItem -> Value
+encodeAccessibilityHazardItem accessibilityHazardItem =
+    accessibilityHazardItem |> accessibilityHazardItemToString |> Encode.string
+
+
+accessibilityHazardItemToString : AccessibilityHazardItem -> String
+accessibilityHazardItemToString accessibilityHazardItem =
+    case accessibilityHazardItem of
         None ->
             "none"
 
@@ -816,12 +822,6 @@ accessibilityHazardToString accessibilityHazard =
 
         UnknownSoundHazard ->
             "unknownSoundHazard"
-
-
-encodeAccessibilityHazards : List AccessibilityHazard -> Value
-encodeAccessibilityHazards accessibilityHazard =
-    accessibilityHazard
-        |> Encode.list encodeAccessibilityHazard
 
 
 encodeAddress : Address -> Value
