@@ -25,18 +25,18 @@ type alias AddressLocation =
     }
 
 
-type alias VirtualLocation =
-    { name : Maybe String
-    , locationType : Type
-    , url : Maybe String
-    }
-
-
 type alias Root =
     { address : Maybe Address
     , name : String
     , productions : List Production
     , version : Version
+    }
+
+
+type alias VirtualLocation =
+    { name : Maybe String
+    , locationType : Type
+    , url : Maybe String
     }
 
 
@@ -215,7 +215,7 @@ type alias WheelChairPlaces =
     }
 
 
-addressLocationDecoder : Decoder Location
+addressLocationDecoder : Decoder AddressLocation
 addressLocationDecoder =
     Decode.succeed AddressLocation
         |> optional "city" (Decode.nullable Decode.string) Nothing
@@ -226,16 +226,6 @@ addressLocationDecoder =
         |> optional "streetAddress" (Decode.nullable Decode.string) Nothing
         |> required "type" typeDecoder
         |> optional "wheelChairPlaces" (Decode.nullable wheelChairPlacesDecoder) Nothing
-        |> Decode.map Physical
-
-
-virtualLocationDecoder : Decoder Location
-virtualLocationDecoder =
-    Decode.succeed VirtualLocation
-        |> optional "name" (Decode.nullable Decode.string) Nothing
-        |> required "type" typeDecoder
-        |> optional "url" (Decode.nullable Decode.string) Nothing
-        |> Decode.map Virtual
 
 
 rootDecoder : Decoder Root
@@ -245,6 +235,14 @@ rootDecoder =
         |> required "name" Decode.string
         |> required "productions" productionsDecoder
         |> required "version" versionDecoder
+
+
+virtualLocationDecoder : Decoder VirtualLocation
+virtualLocationDecoder =
+    Decode.succeed VirtualLocation
+        |> optional "name" (Decode.nullable Decode.string) Nothing
+        |> required "type" typeDecoder
+        |> optional "url" (Decode.nullable Decode.string) Nothing
 
 
 accessModeSufficientDecoder : Decoder (List AccessModeSufficientItem)
@@ -606,7 +604,10 @@ parseGenre genre =
 
 locationDecoder : Decoder Location
 locationDecoder =
-    Decode.oneOf [ addressLocationDecoder, virtualLocationDecoder ]
+    Decode.oneOf
+        [ Decode.map Physical addressLocationDecoder
+        , Decode.map Virtual virtualLocationDecoder
+        ]
 
 
 locationsDecoder : Decoder (List Location)
@@ -721,15 +722,6 @@ encodeAddressLocation addressLocation =
         |> Encode.object
 
 
-encodeVirtualLocation : VirtualLocation -> Value
-encodeVirtualLocation virtualLocation =
-    []
-        |> Encode.optional "name" virtualLocation.name Encode.string
-        |> Encode.required "type" virtualLocation.locationType encodeType
-        |> Encode.optional "url" virtualLocation.url Encode.string
-        |> Encode.object
-
-
 encodeRoot : Root -> Value
 encodeRoot root =
     []
@@ -737,6 +729,15 @@ encodeRoot root =
         |> Encode.required "name" root.name Encode.string
         |> Encode.required "productions" root.productions encodeProductions
         |> Encode.required "version" root.version encodeVersion
+        |> Encode.object
+
+
+encodeVirtualLocation : VirtualLocation -> Value
+encodeVirtualLocation virtualLocation =
+    []
+        |> Encode.optional "name" virtualLocation.name Encode.string
+        |> Encode.required "type" virtualLocation.locationType encodeType
+        |> Encode.optional "url" virtualLocation.url Encode.string
         |> Encode.object
 
 
