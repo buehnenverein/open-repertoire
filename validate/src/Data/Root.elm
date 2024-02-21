@@ -13,6 +13,47 @@ import Json.Decode.Pipeline
 import Json.Encode as Encode exposing (Value)
 
 
+type alias AddressLocation =
+    { city : Maybe String
+    , latitude : Maybe Float
+    , longitude : Maybe Float
+    , name : Maybe String
+    , postalCode : Maybe String
+    , streetAddress : Maybe String
+    , locationType : Type
+    , wheelChairPlaces : Maybe WheelChairPlaces
+    }
+
+
+type alias VirtualLocation =
+    { name : Maybe String
+    , locationType : Type
+    , url : Maybe String
+    }
+
+
+type alias Root =
+    { address : Maybe Address
+    , name : String
+    , productions : List Production
+    , version : Version
+    }
+
+
+type AccessModeSufficient
+    = Auditory
+    | Tactile
+    | Textual
+    | Visual
+
+
+type alias Accessibility =
+    { accessModeSufficient : Maybe (List AccessModeSufficient)
+    , accessibilityHazard : Maybe (List AccessibilityHazard)
+    , accessibilitySummary : Maybe String
+    }
+
+
 type AccessibilityHazard
     = None
     | Unknown
@@ -27,6 +68,13 @@ type AccessibilityHazard
     | UnknownSoundHazard
 
 
+type alias Address =
+    { city : Maybe String
+    , postalCode : Maybe String
+    , streetAddress : Maybe String
+    }
+
+
 type alias Event =
     { duration : Maybe Int
     , endDate : Maybe String
@@ -34,83 +82,6 @@ type alias Event =
     , offers : Maybe (List Offer)
     , startDate : String
     , url : Maybe String
-    }
-
-
-type alias Participant =
-    { function : Maybe Function
-    , names : List String
-    , roleName : Maybe String
-    }
-
-
-type alias AddressLocation =
-    { city : Maybe String
-    , latitude : Maybe Float
-    , longitude : Maybe Float
-    , name : Maybe String
-    , postalCode : Maybe String
-    , streetAddress : Maybe String
-    , locationType : LocationType
-    , wheelChairPlaces : Maybe WheelChairPlaces
-    }
-
-
-type AccessMode
-    = Auditory
-    | Tactile
-    | Textual
-    | Visual
-
-
-type alias Offer =
-    { maxPrice : Maybe Float
-    , minPrice : Float
-    , name : Maybe String
-    , priceCurrency : String
-    , url : Maybe String
-    }
-
-
-type alias Production =
-    { accessibility : Maybe Accessibility
-    , additionalInfo : Maybe String
-    , description : Maybe String
-    , events : List Event
-    , genre : Maybe Genre
-    , participants : Maybe (List Participant)
-    , subtitle : Maybe String
-    , teaser : Maybe String
-    , title : String
-    }
-
-
-type alias VirtualLocation =
-    { name : Maybe String
-    , locationType : LocationType
-    , url : Maybe String
-    }
-
-
-type alias Root =
-    { address : Maybe Address
-    , name : String
-    , productions : List Production
-    , version : Version
-    }
-
-
-type alias Accessibility =
-    { accessModeSufficient : Maybe (List AccessMode)
-    , accessibilityHazard : Maybe (List AccessibilityHazard)
-    , accessibilitySummary : Maybe String
-    }
-
-
-type alias Address =
-    { city : Maybe String
-    , postalCode : Maybe String
-    , streetAddress : Maybe String
     }
 
 
@@ -199,7 +170,36 @@ type Location
     | Virtual VirtualLocation
 
 
-type LocationType
+type alias Offer =
+    { maxPrice : Maybe Float
+    , minPrice : Float
+    , name : Maybe String
+    , priceCurrency : String
+    , url : Maybe String
+    }
+
+
+type alias Participant =
+    { function : Maybe Function
+    , names : List String
+    , roleName : Maybe String
+    }
+
+
+type alias Production =
+    { accessibility : Maybe Accessibility
+    , additionalInfo : Maybe String
+    , description : Maybe String
+    , events : List Event
+    , genre : Maybe Genre
+    , participants : Maybe (List Participant)
+    , subtitle : Maybe String
+    , teaser : Maybe String
+    , title : String
+    }
+
+
+type Type
     = AddressType
     | VirtualLocationType
 
@@ -213,6 +213,75 @@ type alias WheelChairPlaces =
     , hasSpaceForAssistant : Maybe Bool
     , wheelchairUserCapacity : Maybe Int
     }
+
+
+addressLocationDecoder : Decoder Location
+addressLocationDecoder =
+    Decode.succeed AddressLocation
+        |> optional "city" (Decode.nullable Decode.string) Nothing
+        |> optional "latitude" (Decode.nullable Decode.float) Nothing
+        |> optional "longitude" (Decode.nullable Decode.float) Nothing
+        |> optional "name" (Decode.nullable Decode.string) Nothing
+        |> optional "postalCode" (Decode.nullable Decode.string) Nothing
+        |> optional "streetAddress" (Decode.nullable Decode.string) Nothing
+        |> required "type" typeDecoder
+        |> optional "wheelChairPlaces" (Decode.nullable wheelChairPlacesDecoder) Nothing
+        |> Decode.map Physical
+
+
+virtualLocationDecoder : Decoder Location
+virtualLocationDecoder =
+    Decode.succeed VirtualLocation
+        |> optional "name" (Decode.nullable Decode.string) Nothing
+        |> required "type" typeDecoder
+        |> optional "url" (Decode.nullable Decode.string) Nothing
+        |> Decode.map Virtual
+
+
+rootDecoder : Decoder Root
+rootDecoder =
+    Decode.succeed Root
+        |> optional "address" (Decode.nullable addressDecoder) Nothing
+        |> required "name" Decode.string
+        |> required "productions" productionsDecoder
+        |> required "version" versionDecoder
+
+
+accessModesSufficientDecoder : Decoder (List AccessModeSufficient)
+accessModesSufficientDecoder =
+    Decode.list accessModeSufficientDecoder
+
+
+accessModeSufficientDecoder : Decoder AccessModeSufficient
+accessModeSufficientDecoder =
+    Decode.string |> Decode.andThen (parseAccessModeSufficient >> Decode.fromResult)
+
+
+parseAccessModeSufficient : String -> Result String AccessModeSufficient
+parseAccessModeSufficient accessModeSufficient =
+    case accessModeSufficient of
+        "auditory" ->
+            Ok Auditory
+
+        "tactile" ->
+            Ok Tactile
+
+        "textual" ->
+            Ok Textual
+
+        "visual" ->
+            Ok Visual
+
+        _ ->
+            Err <| "Unknown accessModeSufficient type: " ++ accessModeSufficient
+
+
+accessibilityDecoder : Decoder Accessibility
+accessibilityDecoder =
+    Decode.succeed Accessibility
+        |> optional "accessModeSufficient" (Decode.nullable accessModesSufficientDecoder) Nothing
+        |> optional "accessibilityHazard" (Decode.nullable accessibilityHazardsDecoder) Nothing
+        |> optional "accessibilitySummary" (Decode.nullable Decode.string) Nothing
 
 
 accessibilityHazardDecoder : Decoder AccessibilityHazard
@@ -260,109 +329,6 @@ parseAccessibilityHazard accessibilityHazard =
             Err <| "Unknown accessibilityHazard type: " ++ accessibilityHazard
 
 
-eventDecoder : Decoder Event
-eventDecoder =
-    Decode.succeed Event
-        |> optional "duration" (Decode.nullable Decode.int) Nothing
-        |> optional "endDate" (Decode.nullable Decode.string) Nothing
-        |> optional "locations" (Decode.nullable locationsDecoder) Nothing
-        |> optional "offers" (Decode.nullable offersDecoder) Nothing
-        |> required "startDate" Decode.string
-        |> optional "url" (Decode.nullable Decode.string) Nothing
-
-
-participantDecoder : Decoder Participant
-participantDecoder =
-    Decode.succeed Participant
-        |> optional "function" (Decode.nullable functionDecoder) Nothing
-        |> required "names" namesDecoder
-        |> optional "roleName" (Decode.nullable Decode.string) Nothing
-
-
-addressLocationDecoder : Decoder Location
-addressLocationDecoder =
-    Decode.succeed AddressLocation
-        |> optional "city" (Decode.nullable Decode.string) Nothing
-        |> optional "latitude" (Decode.nullable Decode.float) Nothing
-        |> optional "longitude" (Decode.nullable Decode.float) Nothing
-        |> optional "name" (Decode.nullable Decode.string) Nothing
-        |> optional "postalCode" (Decode.nullable Decode.string) Nothing
-        |> optional "streetAddress" (Decode.nullable Decode.string) Nothing
-        |> required "type" addressTypeDecoder
-        |> optional "wheelChairPlaces" (Decode.nullable wheelChairPlacesDecoder) Nothing
-        |> Decode.map Physical
-
-
-accessModeDecoder : Decoder AccessMode
-accessModeDecoder =
-    Decode.string |> Decode.andThen (parseAccessMode >> Decode.fromResult)
-
-
-parseAccessMode : String -> Result String AccessMode
-parseAccessMode accessMode =
-    case accessMode of
-        "auditory" ->
-            Ok Auditory
-
-        "tactile" ->
-            Ok Tactile
-
-        "textual" ->
-            Ok Textual
-
-        "visual" ->
-            Ok Visual
-
-        _ ->
-            Err <| "Unknown accessMode type: " ++ accessMode
-
-
-offerDecoder : Decoder Offer
-offerDecoder =
-    Decode.succeed Offer
-        |> optional "maxPrice" (Decode.nullable Decode.float) Nothing
-        |> required "minPrice" Decode.float
-        |> optional "name" (Decode.nullable Decode.string) Nothing
-        |> required "priceCurrency" Decode.string
-        |> optional "url" (Decode.nullable Decode.string) Nothing
-
-
-productionDecoder : Decoder Production
-productionDecoder =
-    Decode.succeed Production
-        |> optional "accessibility" (Decode.nullable accessibilityDecoder) Nothing
-        |> optional "additionalInfo" (Decode.nullable Decode.string) Nothing
-        |> optional "description" (Decode.nullable Decode.string) Nothing
-        |> required "events" eventsDecoder
-        |> optional "genre" (Decode.nullable genreDecoder) Nothing
-        |> optional "participants" (Decode.nullable participantsDecoder) Nothing
-        |> optional "subtitle" (Decode.nullable Decode.string) Nothing
-        |> optional "teaser" (Decode.nullable Decode.string) Nothing
-        |> required "title" Decode.string
-
-
-rootDecoder : Decoder Root
-rootDecoder =
-    Decode.succeed Root
-        |> optional "address" (Decode.nullable addressDecoder) Nothing
-        |> required "name" Decode.string
-        |> required "productions" productionsDecoder
-        |> required "version" versionDecoder
-
-
-accessModeSufficientDecoder : Decoder (List AccessMode)
-accessModeSufficientDecoder =
-    Decode.list accessModeDecoder
-
-
-accessibilityDecoder : Decoder Accessibility
-accessibilityDecoder =
-    Decode.succeed Accessibility
-        |> optional "accessModeSufficient" (Decode.nullable accessModeSufficientDecoder) Nothing
-        |> optional "accessibilityHazard" (Decode.nullable accessibilityHazardsDecoder) Nothing
-        |> optional "accessibilitySummary" (Decode.nullable Decode.string) Nothing
-
-
 accessibilityHazardsDecoder : Decoder (List AccessibilityHazard)
 accessibilityHazardsDecoder =
     Decode.list accessibilityHazardDecoder
@@ -374,6 +340,17 @@ addressDecoder =
         |> optional "city" (Decode.nullable Decode.string) Nothing
         |> optional "postalCode" (Decode.nullable Decode.string) Nothing
         |> optional "streetAddress" (Decode.nullable Decode.string) Nothing
+
+
+eventDecoder : Decoder Event
+eventDecoder =
+    Decode.succeed Event
+        |> optional "duration" (Decode.nullable Decode.int) Nothing
+        |> optional "endDate" (Decode.nullable Decode.string) Nothing
+        |> optional "locations" (Decode.nullable locationsDecoder) Nothing
+        |> optional "offers" (Decode.nullable offersDecoder) Nothing
+        |> required "startDate" Decode.string
+        |> optional "url" (Decode.nullable Decode.string) Nothing
 
 
 eventsDecoder : Decoder (List Event)
@@ -632,45 +609,6 @@ locationDecoder =
     Decode.oneOf [ addressLocationDecoder, virtualLocationDecoder ]
 
 
-virtualLocationDecoder : Decoder Location
-virtualLocationDecoder =
-    Decode.succeed VirtualLocation
-        |> optional "name" (Decode.nullable Decode.string) Nothing
-        |> required "type" virtualLocationTypeDecoder
-        |> optional "url" (Decode.nullable Decode.string) Nothing
-        |> Decode.map Virtual
-
-
-virtualLocationTypeDecoder : Decoder LocationType
-virtualLocationTypeDecoder =
-    Decode.string |> Decode.andThen (parseVirtualLocationType >> Decode.fromResult)
-
-
-parseVirtualLocationType : String -> Result String LocationType
-parseVirtualLocationType value =
-    case value of
-        "VirtualLocation" ->
-            Ok VirtualLocationType
-
-        _ ->
-            Err <| "Unknown type type: " ++ value
-
-
-addressTypeDecoder : Decoder LocationType
-addressTypeDecoder =
-    Decode.string |> Decode.andThen (parseAddressType >> Decode.fromResult)
-
-
-parseAddressType : String -> Result String LocationType
-parseAddressType value =
-    case value of
-        "Address" ->
-            Ok AddressType
-
-        _ ->
-            Err <| "Unknown type type: " ++ value
-
-
 locationsDecoder : Decoder (List Location)
 locationsDecoder =
     Decode.list locationDecoder
@@ -681,9 +619,27 @@ namesDecoder =
     Decode.list Decode.string
 
 
+offerDecoder : Decoder Offer
+offerDecoder =
+    Decode.succeed Offer
+        |> optional "maxPrice" (Decode.nullable Decode.float) Nothing
+        |> required "minPrice" Decode.float
+        |> optional "name" (Decode.nullable Decode.string) Nothing
+        |> required "priceCurrency" Decode.string
+        |> optional "url" (Decode.nullable Decode.string) Nothing
+
+
 offersDecoder : Decoder (List Offer)
 offersDecoder =
     Decode.list offerDecoder
+
+
+participantDecoder : Decoder Participant
+participantDecoder =
+    Decode.succeed Participant
+        |> optional "function" (Decode.nullable functionDecoder) Nothing
+        |> required "names" namesDecoder
+        |> optional "roleName" (Decode.nullable Decode.string) Nothing
 
 
 participantsDecoder : Decoder (List Participant)
@@ -691,19 +647,33 @@ participantsDecoder =
     Decode.list participantDecoder
 
 
+productionDecoder : Decoder Production
+productionDecoder =
+    Decode.succeed Production
+        |> optional "accessibility" (Decode.nullable accessibilityDecoder) Nothing
+        |> optional "additionalInfo" (Decode.nullable Decode.string) Nothing
+        |> optional "description" (Decode.nullable Decode.string) Nothing
+        |> required "events" eventsDecoder
+        |> optional "genre" (Decode.nullable genreDecoder) Nothing
+        |> optional "participants" (Decode.nullable participantsDecoder) Nothing
+        |> optional "subtitle" (Decode.nullable Decode.string) Nothing
+        |> optional "teaser" (Decode.nullable Decode.string) Nothing
+        |> required "title" Decode.string
+
+
 productionsDecoder : Decoder (List Production)
 productionsDecoder =
     Decode.list productionDecoder
 
 
-typeDecoder : Decoder LocationType
+typeDecoder : Decoder Type
 typeDecoder =
     Decode.string |> Decode.andThen (parseType >> Decode.fromResult)
 
 
-parseType : String -> Result String LocationType
-parseType value =
-    case value of
+parseType : String -> Result String Type
+parseType locationType =
+    case locationType of
         "Address" ->
             Ok AddressType
 
@@ -711,7 +681,7 @@ parseType value =
             Ok VirtualLocationType
 
         _ ->
-            Err <| "Unknown type type: " ++ value
+            Err <| "Unknown type type: " ++ locationType
 
 
 versionDecoder : Decoder Version
@@ -735,6 +705,75 @@ wheelChairPlacesDecoder =
         |> required "count" Decode.int
         |> optional "hasSpaceForAssistant" (Decode.nullable Decode.bool) Nothing
         |> optional "wheelchairUserCapacity" (Decode.nullable Decode.int) Nothing
+
+
+encodeAddressLocation : AddressLocation -> Value
+encodeAddressLocation addressLocation =
+    []
+        |> Encode.optional "city" addressLocation.city Encode.string
+        |> Encode.optional "latitude" addressLocation.latitude Encode.float
+        |> Encode.optional "longitude" addressLocation.longitude Encode.float
+        |> Encode.optional "name" addressLocation.name Encode.string
+        |> Encode.optional "postalCode" addressLocation.postalCode Encode.string
+        |> Encode.optional "streetAddress" addressLocation.streetAddress Encode.string
+        |> Encode.required "type" addressLocation.locationType encodeType
+        |> Encode.optional "wheelChairPlaces" addressLocation.wheelChairPlaces encodeWheelChairPlaces
+        |> Encode.object
+
+
+encodeVirtualLocation : VirtualLocation -> Value
+encodeVirtualLocation virtualLocation =
+    []
+        |> Encode.optional "name" virtualLocation.name Encode.string
+        |> Encode.required "type" virtualLocation.locationType encodeType
+        |> Encode.optional "url" virtualLocation.url Encode.string
+        |> Encode.object
+
+
+encodeRoot : Root -> Value
+encodeRoot root =
+    []
+        |> Encode.optional "address" root.address encodeAddress
+        |> Encode.required "name" root.name Encode.string
+        |> Encode.required "productions" root.productions encodeProductions
+        |> Encode.required "version" root.version encodeVersion
+        |> Encode.object
+
+
+encodeAccessModesSufficient : List AccessModeSufficient -> Value
+encodeAccessModesSufficient accessModeSufficient =
+    accessModeSufficient
+        |> Encode.list encodeAccessModeSufficient
+
+
+encodeAccessModeSufficient : AccessModeSufficient -> Value
+encodeAccessModeSufficient accessModeSufficient =
+    accessModeSufficient |> accessModeSufficientToString |> Encode.string
+
+
+accessModeSufficientToString : AccessModeSufficient -> String
+accessModeSufficientToString accessModeSufficient =
+    case accessModeSufficient of
+        Auditory ->
+            "auditory"
+
+        Tactile ->
+            "tactile"
+
+        Textual ->
+            "textual"
+
+        Visual ->
+            "visual"
+
+
+encodeAccessibility : Accessibility -> Value
+encodeAccessibility accessibility =
+    []
+        |> Encode.optional "accessModeSufficient" accessibility.accessModeSufficient encodeAccessModesSufficient
+        |> Encode.optional "accessibilityHazard" accessibility.accessibilityHazard encodeAccessibilityHazards
+        |> Encode.optional "accessibilitySummary" accessibility.accessibilitySummary Encode.string
+        |> Encode.object
 
 
 encodeAccessibilityHazard : AccessibilityHazard -> Value
@@ -779,122 +818,6 @@ accessibilityHazardToString accessibilityHazard =
             "unknownSoundHazard"
 
 
-encodeEvent : Event -> Value
-encodeEvent event =
-    []
-        |> Encode.optional "duration" event.duration Encode.int
-        |> Encode.optional "endDate" event.endDate Encode.string
-        |> Encode.optional "locations" event.locations encodeLocations
-        |> Encode.optional "offers" event.offers encodeOffers
-        |> Encode.required "startDate" event.startDate Encode.string
-        |> Encode.optional "url" event.url Encode.string
-        |> Encode.object
-
-
-encodeParticipant : Participant -> Value
-encodeParticipant participant =
-    []
-        |> Encode.optional "function" participant.function encodeFunction
-        |> Encode.required "names" participant.names encodeNames
-        |> Encode.optional "roleName" participant.roleName Encode.string
-        |> Encode.object
-
-
-encodeAddressLocation : AddressLocation -> Value
-encodeAddressLocation addressLocation =
-    []
-        |> Encode.optional "city" addressLocation.city Encode.string
-        |> Encode.optional "latitude" addressLocation.latitude Encode.float
-        |> Encode.optional "longitude" addressLocation.longitude Encode.float
-        |> Encode.optional "name" addressLocation.name Encode.string
-        |> Encode.optional "postalCode" addressLocation.postalCode Encode.string
-        |> Encode.optional "streetAddress" addressLocation.streetAddress Encode.string
-        |> Encode.required "type" addressLocation.locationType encodeLocationType
-        |> Encode.optional "wheelChairPlaces" addressLocation.wheelChairPlaces encodeWheelChairPlaces
-        |> Encode.object
-
-
-encodeAccessMode : AccessMode -> Value
-encodeAccessMode accessMode =
-    accessMode |> accessModeToString |> Encode.string
-
-
-accessModeToString : AccessMode -> String
-accessModeToString accessMode =
-    case accessMode of
-        Auditory ->
-            "auditory"
-
-        Tactile ->
-            "tactile"
-
-        Textual ->
-            "textual"
-
-        Visual ->
-            "visual"
-
-
-encodeOffer : Offer -> Value
-encodeOffer offer =
-    []
-        |> Encode.optional "maxPrice" offer.maxPrice Encode.float
-        |> Encode.required "minPrice" offer.minPrice Encode.float
-        |> Encode.optional "name" offer.name Encode.string
-        |> Encode.required "priceCurrency" offer.priceCurrency Encode.string
-        |> Encode.optional "url" offer.url Encode.string
-        |> Encode.object
-
-
-encodeProduction : Production -> Value
-encodeProduction production =
-    []
-        |> Encode.optional "accessibility" production.accessibility encodeAccessibility
-        |> Encode.optional "additionalInfo" production.additionalInfo Encode.string
-        |> Encode.optional "description" production.description Encode.string
-        |> Encode.required "events" production.events encodeEvents
-        |> Encode.optional "genre" production.genre encodeGenre
-        |> Encode.optional "participants" production.participants encodeParticipants
-        |> Encode.optional "subtitle" production.subtitle Encode.string
-        |> Encode.optional "teaser" production.teaser Encode.string
-        |> Encode.required "title" production.title Encode.string
-        |> Encode.object
-
-
-encodeVirtualLocation : VirtualLocation -> Value
-encodeVirtualLocation virtualLocation =
-    []
-        |> Encode.optional "name" virtualLocation.name Encode.string
-        |> Encode.required "type" virtualLocation.locationType encodeLocationType
-        |> Encode.optional "url" virtualLocation.url Encode.string
-        |> Encode.object
-
-
-encodeRoot : Root -> Value
-encodeRoot root =
-    []
-        |> Encode.optional "address" root.address encodeAddress
-        |> Encode.required "name" root.name Encode.string
-        |> Encode.required "productions" root.productions encodeProductions
-        |> Encode.required "version" root.version encodeVersion
-        |> Encode.object
-
-
-encodeAccessModeSufficient : List AccessMode -> Value
-encodeAccessModeSufficient accessModeSufficient =
-    accessModeSufficient
-        |> Encode.list encodeAccessMode
-
-
-encodeAccessibility : Accessibility -> Value
-encodeAccessibility accessibility =
-    []
-        |> Encode.optional "accessModeSufficient" accessibility.accessModeSufficient encodeAccessModeSufficient
-        |> Encode.optional "accessibilityHazard" accessibility.accessibilityHazard encodeAccessibilityHazards
-        |> Encode.optional "accessibilitySummary" accessibility.accessibilitySummary Encode.string
-        |> Encode.object
-
-
 encodeAccessibilityHazards : List AccessibilityHazard -> Value
 encodeAccessibilityHazards accessibilityHazard =
     accessibilityHazard
@@ -907,6 +830,18 @@ encodeAddress address =
         |> Encode.optional "city" address.city Encode.string
         |> Encode.optional "postalCode" address.postalCode Encode.string
         |> Encode.optional "streetAddress" address.streetAddress Encode.string
+        |> Encode.object
+
+
+encodeEvent : Event -> Value
+encodeEvent event =
+    []
+        |> Encode.optional "duration" event.duration Encode.int
+        |> Encode.optional "endDate" event.endDate Encode.string
+        |> Encode.optional "locations" event.locations encodeLocations
+        |> Encode.optional "offers" event.offers encodeOffers
+        |> Encode.required "startDate" event.startDate Encode.string
+        |> Encode.optional "url" event.url Encode.string
         |> Encode.object
 
 
@@ -1156,12 +1091,6 @@ genreToString genre =
             "workshop"
 
 
-encodeLocations : List Location -> Value
-encodeLocations locations =
-    locations
-        |> Encode.list encodeLocation
-
-
 encodeLocation : Location -> Value
 encodeLocation location =
     case location of
@@ -1172,10 +1101,27 @@ encodeLocation location =
             encodeVirtualLocation virtual
 
 
+encodeLocations : List Location -> Value
+encodeLocations locations =
+    locations
+        |> Encode.list encodeLocation
+
+
 encodeNames : List String -> Value
 encodeNames names =
     names
         |> Encode.list Encode.string
+
+
+encodeOffer : Offer -> Value
+encodeOffer offer =
+    []
+        |> Encode.optional "maxPrice" offer.maxPrice Encode.float
+        |> Encode.required "minPrice" offer.minPrice Encode.float
+        |> Encode.optional "name" offer.name Encode.string
+        |> Encode.required "priceCurrency" offer.priceCurrency Encode.string
+        |> Encode.optional "url" offer.url Encode.string
+        |> Encode.object
 
 
 encodeOffers : List Offer -> Value
@@ -1184,10 +1130,34 @@ encodeOffers offers =
         |> Encode.list encodeOffer
 
 
+encodeParticipant : Participant -> Value
+encodeParticipant participant =
+    []
+        |> Encode.optional "function" participant.function encodeFunction
+        |> Encode.required "names" participant.names encodeNames
+        |> Encode.optional "roleName" participant.roleName Encode.string
+        |> Encode.object
+
+
 encodeParticipants : List Participant -> Value
 encodeParticipants participants =
     participants
         |> Encode.list encodeParticipant
+
+
+encodeProduction : Production -> Value
+encodeProduction production =
+    []
+        |> Encode.optional "accessibility" production.accessibility encodeAccessibility
+        |> Encode.optional "additionalInfo" production.additionalInfo Encode.string
+        |> Encode.optional "description" production.description Encode.string
+        |> Encode.required "events" production.events encodeEvents
+        |> Encode.optional "genre" production.genre encodeGenre
+        |> Encode.optional "participants" production.participants encodeParticipants
+        |> Encode.optional "subtitle" production.subtitle Encode.string
+        |> Encode.optional "teaser" production.teaser Encode.string
+        |> Encode.required "title" production.title Encode.string
+        |> Encode.object
 
 
 encodeProductions : List Production -> Value
@@ -1196,14 +1166,14 @@ encodeProductions productions =
         |> Encode.list encodeProduction
 
 
-encodeLocationType : LocationType -> Value
-encodeLocationType value =
-    value |> locationTypeToString |> Encode.string
+encodeType : Type -> Value
+encodeType locationType =
+    locationType |> typeToString |> Encode.string
 
 
-locationTypeToString : LocationType -> String
-locationTypeToString value =
-    case value of
+typeToString : Type -> String
+typeToString locationType =
+    case locationType of
         AddressType ->
             "Address"
 
