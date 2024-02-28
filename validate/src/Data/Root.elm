@@ -224,7 +224,7 @@ addressLocationDecoder =
         |> optional "name" (Decode.nullable Decode.string) Nothing
         |> optional "postalCode" (Decode.nullable Decode.string) Nothing
         |> optional "streetAddress" (Decode.nullable Decode.string) Nothing
-        |> required "type" typeDecoder
+        |> required "type" addressTypeDecoder
         |> optional "wheelChairPlaces" (Decode.nullable wheelChairPlacesDecoder) Nothing
 
 
@@ -241,7 +241,7 @@ virtualLocationDecoder : Decoder VirtualLocation
 virtualLocationDecoder =
     Decode.succeed VirtualLocation
         |> optional "name" (Decode.nullable Decode.string) Nothing
-        |> required "type" typeDecoder
+        |> required "type" virtualTypeDecoder
         |> optional "url" (Decode.nullable Decode.string) Nothing
 
 
@@ -665,6 +665,42 @@ productionDecoder =
 productionsDecoder : Decoder (List Production)
 productionsDecoder =
     Decode.list productionDecoder
+
+
+addressTypeDecoder : Decoder Type
+addressTypeDecoder =
+    Decode.string |> Decode.andThen (parseAddressType >> Decode.fromResult)
+
+
+parseAddressType : String -> Result String Type
+parseAddressType locationType =
+    case locationType of
+        "Address" ->
+            Ok AddressType
+
+        "VirtualLocation" ->
+            Err <| "Expected 'type' to be 'Address', but it is 'VirtualLocation'"
+
+        _ ->
+            Err <| "Unknown type type: " ++ locationType
+
+
+virtualTypeDecoder : Decoder Type
+virtualTypeDecoder =
+    Decode.string |> Decode.andThen (parseVirtualType >> Decode.fromResult)
+
+
+parseVirtualType : String -> Result String Type
+parseVirtualType locationType =
+    case locationType of
+        "Address" ->
+            Err <| "Expected 'type' to be 'VirtualLocation', but it is 'Address'"
+
+        "VirtualLocation" ->
+            Ok VirtualLocationType
+
+        _ ->
+            Err <| "Unknown type type: " ++ locationType
 
 
 typeDecoder : Decoder Type
