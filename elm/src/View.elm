@@ -535,7 +535,7 @@ viewInputs : Inputs -> Bool -> Html Msg
 viewInputs inputs buttonEnabled =
     div [ class "inputs grid-container" ]
         [ endpointInput inputs buttonEnabled
-        , div [ class "grid-item-centered" ] [ h3 [] [ text "- OR -" ] ]
+        , div [ class "grid-item-centered" ] [ h3 [ class "is-size-3 has-text-weight-bold" ] [ text "- OR -" ] ]
         , jsonInput inputs buttonEnabled
         ]
 
@@ -544,13 +544,13 @@ endpointInput : Inputs -> Bool -> Html Msg
 endpointInput inputs buttonEnabled =
     div [ class "grid-column field" ]
         [ div [ class "field" ]
-            [ h3 [ class "label" ] [ text "Enter the URL of your endpoint" ]
+            [ h3 [ class "label is-size-3" ] [ text "Enter the URL of your endpoint" ]
             , div [ class "control" ]
                 [ input
                     [ type_ "text"
                     , onInput UrlChange
                     , value inputs.url
-                    , class "u-full-width"
+                    , class "input"
                     ]
                     []
                 ]
@@ -568,14 +568,18 @@ endpointInput inputs buttonEnabled =
 
 jsonInput : Inputs -> Bool -> Html Msg
 jsonInput inputs buttonEnabled =
-    div [ class "grid-column" ]
-        [ h3 [] [ text "Paste your JSON output" ]
-        , textarea
-            [ onInput TextChange
-            , value inputs.text
-            , class "u-full-width"
+    div [ class "grid-column field" ]
+        [ div [ class "field" ]
+            [ h3 [ class "label is-size-3" ] [ text "Paste your JSON output" ]
+            , div [ class "control" ]
+                [ textarea
+                    [ onInput TextChange
+                    , value inputs.text
+                    , class "input"
+                    ]
+                    []
+                ]
             ]
-            []
         , div [ class "control" ]
             [ button
                 [ onClick (SubmitJson inputs.text)
