@@ -1,7 +1,7 @@
 let validator = require("./validator.js");
 
 // Start the Elm application.
-var app = Elm.Main.init({
+var app = Elm.Validate.init({
   node: document.getElementById("app"),
 });
 

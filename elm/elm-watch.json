@@ -1,0 +1,12 @@
+{
+  "targets": {
+    "validator": {
+      "inputs": ["src/Validate.elm"],
+      "output": "../validate/main.min.js"
+    },
+    "viewer": {
+      "inputs": ["src/View.elm"],
+      "output": "../view/main.min.js"
+    }
+  }
+}

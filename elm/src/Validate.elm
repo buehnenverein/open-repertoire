@@ -1,4 +1,4 @@
-port module Main exposing (main)
+port module Validate exposing (main)
 
 import Browser
 import Data.Root

@@ -1,6 +1,6 @@
 .devenv
 node_modules
-validate/elm-stuff
+elm/elm-stuff
 .DS_Store
 tmp/
 .direnv

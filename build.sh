@@ -30,7 +30,13 @@ then
 fi
 
 # Compile validator app.
-cd validate
-elm make src/Main.elm --optimize --output=main.js
-npx uglifyjs main.js --compress 'pure_funcs=[F2,F3,F4,F5,F6,F7,F8,F9,A2,A3,A4,A5,A6,A7,A8,A9],pure_getters,keep_fargs=false,unsafe_comps,unsafe' | npx uglifyjs --mangle --output main.min.js
-npx browserify ./interop.js | npx uglifyjs --mangle --compress --output ./bundle.js
+cd elm
+elm make src/Validate.elm --optimize --output=../validate/main.js
+npx uglifyjs ../validate/main.js --compress 'pure_funcs=[F2,F3,F4,F5,F6,F7,F8,F9,A2,A3,A4,A5,A6,A7,A8,A9],pure_getters,keep_fargs=false,unsafe_comps,unsafe' | npx uglifyjs --mangle --output ../validate/main.min.js
+npx browserify ../validate/interop.js | npx uglifyjs --mangle --compress --output ../validate/bundle.js
+
+elm make src/View.elm --optimize --output=../view/main.js
+npx uglifyjs ../view/main.js --compress 'pure_funcs=[F2,F3,F4,F5,F6,F7,F8,F9,A2,A3,A4,A5,A6,A7,A8,A9],pure_getters,keep_fargs=false,unsafe_comps,unsafe' | npx uglifyjs --mangle --output ../view/main.min.js
+npx browserify ../view/interop.js | npx uglifyjs --mangle --compress --output ../view/bundle.js
+
+

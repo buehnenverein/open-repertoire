@@ -45,7 +45,7 @@
 
               processes = {
                 elmwatch.exec = ''
-                  cd validate && npx elm-watch hot
+                  cd elm && npx elm-watch hot
                 '';
                 httpserver.exec = ''
                   npx http-server
