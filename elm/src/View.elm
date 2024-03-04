@@ -130,8 +130,11 @@ view model =
 
             Failure (JsonError _) ->
                 div [ class "notification is-danger", style "white-space" "pre-wrap" ]
-                    [ text
-                        "Unfortunately, it looks like the data you provided isn't correct. Please use the validator tool first to make sure your endpoint is returning data that conforms to our standards."
+                    [ span []
+                        [ text "Unfortunately, it looks like the data you provided isn't correct. Please use the "
+                        , a [ href "../validate" ] [ text "validator tool" ]
+                        , text " first to make sure your endpoint is returning data that conforms to our standards."
+                        ]
                     ]
 
             Success data ->

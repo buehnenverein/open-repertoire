@@ -7174,6 +7174,7 @@ var $author$project$View$update = F2(
 					$elm$core$Platform$Cmd$none);
 		}
 	});
+var $elm$html$Html$a = _VirtualDom_node('a');
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
@@ -7184,6 +7185,13 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 	});
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $elm$html$Html$div = _VirtualDom_node('div');
+var $elm$html$Html$Attributes$href = function (url) {
+	return A2(
+		$elm$html$Html$Attributes$stringProperty,
+		'href',
+		_VirtualDom_noJavaScriptUri(url));
+};
+var $elm$html$Html$span = _VirtualDom_node('span');
 var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
 var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
@@ -9104,13 +9112,6 @@ var $author$project$View$formatTime = F2(
 			return ($elm$core$String$trim(isoString) === '') ? '' : ('Invalid time (' + (isoString + ')'));
 		}
 	});
-var $elm$html$Html$a = _VirtualDom_node('a');
-var $elm$html$Html$Attributes$href = function (url) {
-	return A2(
-		$elm$html$Html$Attributes$stringProperty,
-		'href',
-		_VirtualDom_noJavaScriptUri(url));
-};
 var $elm$html$Html$Attributes$target = $elm$html$Html$Attributes$stringProperty('target');
 var $author$project$View$maybeLink = function (url) {
 	if (!url.$) {
@@ -9904,7 +9905,6 @@ var $author$project$View$viewIntroduction = A2(
 					$elm$html$Html$text('Use this tool to view the data returned by your repertoire endpoint.')
 				]))
 		]));
-var $elm$html$Html$span = _VirtualDom_node('span');
 var $author$project$View$viewRequestError = F2(
 	function (url, error) {
 		return A2(
@@ -9984,7 +9984,6 @@ var $author$project$View$view = function (model) {
 							var error = _v0.a.a;
 							return A2($author$project$View$viewRequestError, model.y.G, error);
 						} else {
-							var error = _v0.a.a;
 							return A2(
 								$elm$html$Html$div,
 								_List_fromArray(
@@ -9994,7 +9993,24 @@ var $author$project$View$view = function (model) {
 									]),
 								_List_fromArray(
 									[
-										$elm$html$Html$text('Unfortunately, it looks like the data you provided isn\'t correct. Please use the validator tool first to make sure your endpoint is returning data that conforms to our standards.')
+										A2(
+										$elm$html$Html$span,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Unfortunately, it looks like the data you provided isn\'t correct. Please use the '),
+												A2(
+												$elm$html$Html$a,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$href('../validate')
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text('validator tool')
+													])),
+												$elm$html$Html$text(' first to make sure your endpoint is returning data that conforms to our standards.')
+											]))
 									]));
 						}
 					default:
