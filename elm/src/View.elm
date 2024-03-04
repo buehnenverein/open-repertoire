@@ -10,6 +10,7 @@ import Http exposing (Error(..))
 import Iso8601
 import Json.Decode as Decode
 import RemoteData exposing (RemoteData(..))
+import Set exposing (Set)
 import Task
 import Time
 
@@ -27,7 +28,14 @@ main =
 type alias Model =
     { inputs : Inputs
     , localTimeZone : Maybe Time.Zone
-    , data : RemoteData Error Root
+    , data : RemoteData Error Data
+    }
+
+
+type alias Data =
+    { root : Root
+    , hiddenProductions : Set Int
+    , hiddenEvents : Set Int
     }
 
 
@@ -49,6 +57,8 @@ type Msg
     | TextChange String
     | GotTimeZone Time.Zone
     | Response (RemoteData Http.Error Root)
+    | ProductionCardClicked Int Bool
+    | EventCardClicked Int Bool
 
 
 init : () -> ( Model, Cmd Msg )
@@ -57,7 +67,20 @@ init _ =
         inputs =
             { url = "", text = "" }
     in
-    ( { inputs = inputs, localTimeZone = Nothing, data = NotAsked }, getTimeZone )
+    ( { inputs = inputs
+      , localTimeZone = Nothing
+      , data = NotAsked
+      }
+    , getTimeZone
+    )
+
+
+newData : Root -> Data
+newData value =
+    { root = value
+    , hiddenProductions = Set.empty
+    , hiddenEvents = Set.empty
+    }
 
 
 getTimeZone : Cmd Msg
@@ -78,7 +101,7 @@ update msg model =
         SubmitJson text ->
             case Decode.decodeString rootDecoder text of
                 Ok jsonValue ->
-                    ( { model | data = Success jsonValue }, Cmd.none )
+                    ( { model | data = Success (newData jsonValue) }, Cmd.none )
 
                 Err parsingError ->
                     ( { model | data = Failure (JsonError parsingError) }, Cmd.none )
@@ -101,7 +124,19 @@ update msg model =
             ( { model | localTimeZone = Just zone }, Cmd.none )
 
         Response response ->
-            ( { model | data = RemoteData.mapError HttpError response }, Cmd.none )
+            ( { model
+                | data =
+                    RemoteData.mapError HttpError response
+                        |> RemoteData.map newData
+              }
+            , Cmd.none
+            )
+
+        ProductionCardClicked index isOpen ->
+            ( { model | data = toggleProductionCard model.data index isOpen }, Cmd.none )
+
+        EventCardClicked index isOpen ->
+            ( { model | data = toggleEventCard model.data index isOpen }, Cmd.none )
 
 
 view : Model -> Html Msg
@@ -146,25 +181,39 @@ view model =
 -- VIEW HELPERS
 
 
-viewData : Root -> Time.Zone -> Html Msg
+viewData : Data -> Time.Zone -> Html Msg
 viewData data zone =
+    let
+        productionOpen index =
+            not
+                (Set.member index data.hiddenProductions)
+
+        eventOpen index =
+            not
+                (Set.member index data.hiddenEvents)
+
+        viewProduction : Int -> Production -> Html Msg
+        viewProduction index production =
+            div []
+                [ div []
+                    [ h1 [ class "is-size-1" ] [ text production.title ]
+                    ]
+                , card (text "Info")
+                    (productionTable production)
+                    (productionOpen index)
+                    (ProductionCardClicked index (not (productionOpen index)))
+                , card (text "Events")
+                    (div [] <| viewEvents production.events zone)
+                    (eventOpen index)
+                    (EventCardClicked index (not (eventOpen index)))
+                ]
+    in
     div []
-        (List.map (viewProduction zone) data.productions)
+        (List.indexedMap viewProduction data.root.productions)
 
 
 
 -- PRODUCTIONS
-
-
-viewProduction : Time.Zone -> Production -> Html Msg
-viewProduction zone production =
-    div []
-        [ div []
-            [ h1 [ class "is-size-1" ] [ text production.title ]
-            ]
-        , card (text "Info") (productionTable production)
-        , card (text "Events") (div [] <| viewEvents production.events zone)
-        ]
 
 
 productionTable : Production -> Html Msg
@@ -372,22 +421,58 @@ viewOffer offer =
 -- HELPERS
 
 
-card : Html Msg -> Html Msg -> Html Msg
-card title content =
+toggleProductionCard : RemoteData Error Data -> Int -> Bool -> RemoteData Error Data
+toggleProductionCard remoteData index isOpen =
+    case ( remoteData, isOpen ) of
+        ( Success data, True ) ->
+            Success { data | hiddenProductions = Set.remove index data.hiddenProductions }
+
+        ( Success data, False ) ->
+            Success { data | hiddenProductions = Set.insert index data.hiddenProductions }
+
+        ( _, _ ) ->
+            remoteData
+
+
+toggleEventCard : RemoteData Error Data -> Int -> Bool -> RemoteData Error Data
+toggleEventCard remoteData index isOpen =
+    case ( remoteData, isOpen ) of
+        ( Success data, True ) ->
+            Success { data | hiddenEvents = Set.remove index data.hiddenEvents }
+
+        ( Success data, False ) ->
+            Success { data | hiddenEvents = Set.insert index data.hiddenEvents }
+
+        ( _, _ ) ->
+            remoteData
+
+
+card : Html Msg -> Html Msg -> Bool -> Msg -> Html Msg
+card title content isOpen clickHandler =
     div [ class "card" ]
-        [ div [ class "card-header has-background-primary is-clickable" ]
+        [ div
+            [ class "card-header has-background-primary is-clickable"
+            , onClick clickHandler
+            ]
             [ div [ class "card-header-title has-text-white" ]
                 [ title
                 ]
             , button [ class "card-header-icon" ]
                 [ span [ class "icon" ]
-                    [ i [ class "fas fa-angle-down has-text-white" ] []
+                    [ i
+                        [ class "fas  has-text-white"
+                        , classList [ ( "fa-angle-down", isOpen ), ( "fa-angle-right", not isOpen ) ]
+                        ]
+                        []
                     ]
                 ]
             ]
-        , div [ class "card-content" ]
-            [ content
-            ]
+        , if isOpen then
+            div [ class "card-content" ]
+                [ content ]
+
+          else
+            text ""
         ]
 
 
