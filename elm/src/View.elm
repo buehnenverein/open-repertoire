@@ -375,8 +375,8 @@ viewOffer offer =
 card : Html Msg -> Html Msg -> Html Msg
 card title content =
     div [ class "card" ]
-        [ div [ class "card-header has-background-info" ]
-            [ div [ class "card-header-title has-text-light" ]
+        [ div [ class "card-header has-background-primary" ]
+            [ div [ class "card-header-title has-text-white" ]
                 [ title
                 ]
             ]
