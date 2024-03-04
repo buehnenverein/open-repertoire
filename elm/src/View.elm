@@ -375,9 +375,14 @@ viewOffer offer =
 card : Html Msg -> Html Msg -> Html Msg
 card title content =
     div [ class "card" ]
-        [ div [ class "card-header has-background-primary" ]
+        [ div [ class "card-header has-background-primary is-clickable" ]
             [ div [ class "card-header-title has-text-white" ]
                 [ title
+                ]
+            , button [ class "card-header-icon" ]
+                [ span [ class "icon" ]
+                    [ i [ class "fas fa-angle-down has-text-white" ] []
+                    ]
                 ]
             ]
         , div [ class "card-content" ]
