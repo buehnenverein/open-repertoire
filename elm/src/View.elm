@@ -195,7 +195,7 @@ viewData data zone =
         viewProduction : Int -> Production -> Html Msg
         viewProduction index production =
             div []
-                [ div []
+                [ div [ class "sticky-header" ]
                     [ h1 [ class "is-size-1" ] [ text production.title ]
                     ]
                 , card (text "Info")

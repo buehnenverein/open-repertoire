@@ -17,3 +17,10 @@
 .grid-item-centered {
 	place-self: center center;
 }
+
+.sticky-header {
+	position: sticky;
+	top: 0;
+	background: white;
+	z-index: 10;
+}
