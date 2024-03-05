@@ -218,7 +218,7 @@ viewData data zone =
                     (EventCardClicked index (not (eventOpen index)))
                 ]
     in
-    div []
+    section
         [ filterInput data.nameFilter
         , div []
             (data.root.productions
@@ -507,6 +507,13 @@ card title content isOpen clickHandler =
         ]
 
 
+section : List (Html Msg) -> Html Msg
+section content =
+    div [ class "section" ]
+        [ div [ class "container" ] content
+        ]
+
+
 formatDate : String -> Time.Zone -> String
 formatDate isoString timezone =
     case Iso8601.toTime isoString of
@@ -642,7 +649,7 @@ viewRequestError url error =
 
 viewIntroduction : Html Msg
 viewIntroduction =
-    div []
+    section
         [ h1 [ class "is-size-1" ]
             [ text "Use Case 3 - Data Viewer"
             ]
@@ -654,10 +661,12 @@ viewIntroduction =
 
 viewInputs : Inputs -> Bool -> Html Msg
 viewInputs inputs buttonEnabled =
-    div [ class "inputs grid-container" ]
-        [ endpointInput inputs buttonEnabled
-        , div [ class "grid-item-centered" ] [ h3 [ class "is-size-3 has-text-weight-bold" ] [ text "- OR -" ] ]
-        , jsonInput inputs buttonEnabled
+    section
+        [ div [ class "inputs grid-container" ]
+            [ endpointInput inputs buttonEnabled
+            , div [ class "grid-item-centered" ] [ h3 [ class "is-size-3 has-text-weight-bold" ] [ text "- OR -" ] ]
+            , jsonInput inputs buttonEnabled
+            ]
         ]
 
 
