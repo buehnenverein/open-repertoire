@@ -28,12 +28,13 @@ main =
 type alias Model =
     { inputs : Inputs
     , localTimeZone : Maybe Time.Zone
-    , data : RemoteData Error Data
+    , data : EventData
     }
 
 
 type alias Data =
     { root : Root
+    , nameFilter : String
     , hiddenProductions : Set Int
     , hiddenEvents : Set Int
     }
@@ -42,6 +43,10 @@ type alias Data =
 type Error
     = HttpError Http.Error
     | JsonError Decode.Error
+
+
+type alias EventData =
+    RemoteData Error Data
 
 
 type alias Inputs =
@@ -59,6 +64,7 @@ type Msg
     | Response (RemoteData Http.Error Root)
     | ProductionCardClicked Int Bool
     | EventCardClicked Int Bool
+    | NameFilterChanged String
 
 
 init : () -> ( Model, Cmd Msg )
@@ -78,6 +84,7 @@ init _ =
 newData : Root -> Data
 newData value =
     { root = value
+    , nameFilter = ""
     , hiddenProductions = Set.empty
     , hiddenEvents = Set.empty
     }
@@ -137,6 +144,9 @@ update msg model =
 
         EventCardClicked index isOpen ->
             ( { model | data = toggleEventCard model.data index isOpen }, Cmd.none )
+
+        NameFilterChanged filter ->
+            ( { model | data = updateNameFilter model.data filter }, Cmd.none )
 
 
 view : Model -> Html Msg
@@ -209,11 +219,22 @@ viewData data zone =
                 ]
     in
     div []
-        (List.indexedMap viewProduction data.root.productions)
+        [ filterInput data.nameFilter
+        , div []
+            (data.root.productions
+                |> List.filter (productionNameMatches data.nameFilter)
+                |> List.indexedMap viewProduction
+            )
+        ]
 
 
 
 -- PRODUCTIONS
+
+
+productionNameMatches : String -> Production -> Bool
+productionNameMatches filter production =
+    String.contains (String.toLower filter) (String.toLower production.title)
 
 
 productionTable : Production -> Html Msg
@@ -421,7 +442,17 @@ viewOffer offer =
 -- HELPERS
 
 
-toggleProductionCard : RemoteData Error Data -> Int -> Bool -> RemoteData Error Data
+updateNameFilter : EventData -> String -> EventData
+updateNameFilter remoteData filter =
+    case remoteData of
+        Success data ->
+            Success { data | nameFilter = filter }
+
+        _ ->
+            remoteData
+
+
+toggleProductionCard : EventData -> Int -> Bool -> EventData
 toggleProductionCard remoteData index isOpen =
     case ( remoteData, isOpen ) of
         ( Success data, True ) ->
@@ -434,7 +465,7 @@ toggleProductionCard remoteData index isOpen =
             remoteData
 
 
-toggleEventCard : RemoteData Error Data -> Int -> Bool -> RemoteData Error Data
+toggleEventCard : EventData -> Int -> Bool -> EventData
 toggleEventCard remoteData index isOpen =
     case ( remoteData, isOpen ) of
         ( Success data, True ) ->
@@ -677,6 +708,22 @@ jsonInput inputs buttonEnabled =
                 , class "button is-primary"
                 ]
                 [ text "View data" ]
+            ]
+        ]
+
+
+filterInput : String -> Html Msg
+filterInput filter =
+    div [ class "field" ]
+        [ div [ class "control" ]
+            [ input
+                [ type_ "text"
+                , onInput NameFilterChanged
+                , value filter
+                , placeholder "Filter results by title..."
+                , class "input"
+                ]
+                []
             ]
         ]
 
