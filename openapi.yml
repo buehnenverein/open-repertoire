@@ -43,35 +43,38 @@ components:
     Repertoire:
       $id: https://peret.github.io/uc3-openapi/schema.json
       required:
-        - name
+        - "@context"
+        - organization
         - productions
         - version
       additionalProperties: false
       type: object
       properties:
+        "@context":
+          type: string
+          enum: 
+            - "https://schema.org"
         version:
           type: string
           description: The API version that is being used. MUST be the string "v1" for now.
           enum:
             - v1
-        name:
-          type: string
-          description: "The organization's name"
-          example: "Staatstheater Augsburg"
-        address:
+        organization:
           type: object
-          additionalProperties: false
+          required:
+            - "@type"
+            - name
           properties:
-            postalCode:
+            "@type":
               type: string
-              # pattern: "\d{5}"
-              example: 86153
-            streetAddress:
+              enum:
+                - "Organization"
+            name:
               type: string
-              example: Provinostr. 52
-            city:
-              type: string
-              example: Augsburg
+              description: "The organization's name"
+              example: "Staatstheater Augsburg"
+            address:
+              $ref: "#/components/schemas/PostalAddress"
         productions:
           type: array
           description: "The collection of all productions in the repertoire."
@@ -83,10 +86,16 @@ components:
       description: "An object containing unchanging information about the production."
       additionalProperties: false
       required:
-        - title
+        - "@type"
+        - name
         - events
       properties:
-        title:
+        "@type":
+          type: string
+          enum:
+            - "CreativeWork"
+            - "Play"
+        name:
           type: string
           description: The event title
           example: Hedwig and the Angry Inch
@@ -98,9 +107,9 @@ components:
           type: string
           description: A text describing the production
           example: Hedwig, die Queen des Glamrock, kommt auf ihrer Tournee in Augsburg vorbei! Gemeinsam mit ihrer Band The Angry Inch gibt sie eines ihrer mitreißenden Konzerte. Zwischen den Songs, die – mal Rocknummer, mal Country-Ballade – von ihrem Leben und der Suche nach der eigenen Identität erzählen, kommt sie dem Publikum so nah wie nie.\nDiese Show sollten Sie nicht verpassen!
-        teaser:
+        abstract:
           type: string
-          description: A short text describing the production
+          description: A short abstract or teaser text describing the production
           example: "Das Kult-Rockmusical »Hedwig and the Angry Inch« wurde innerhalb weniger Jahre vom Off-Broadway-Geheimtipp zu einem Hit am Broadway selbst. 2023 erobert Hedwig, die »weltweit ignorierte Queen of Glamrock« endlich auch die Herzen des Augsburger Publikums – mit dem langjährigen Schauspiel-Ensemble-Mitglied Thomas Prazak in der Hauptrolle. Die Live-Musik steuern Stefan Leibold, Jonas Horche, Tilman Herpichböhm und Niklas Rehle als Band »The Angry Inch« bei."
         additionalInfo:
           type: string
@@ -145,24 +154,56 @@ components:
             - improtheater
             - workshop
           example: "Rock-Musical"
-        accessibility:
-          $ref: "#/components/schemas/Accessibility"
-        participants:
-          description: |-
-            List of all people contributing to and participating in the production, e.g. directors, stage designers, musical directors, performers, etc.
-
-            If multiple people perform the same role/function (e.g. there is multiple directors or multiple actors perform the same role on stage at the same time),
-            each person should get their own entry in the `participants` array.
+        accessModeSufficient:
           type: array
           items:
-            $ref: "#/components/schemas/Participant"
+            type: string
+            description: A list of single or combined accessModes that are sufficient to understand all the intellectual content of a resource.
+            enum: [auditory, tactile, textual, visual]
+        accessibilityHazard:
+          type: array
+          items:
+            type: string
+            example: flashingHazard,
+            enum:
+              [
+                none,
+                unknown,
+                flashingHazard,
+                motionSimulationHazard,
+                soundHazard,
+                noFlashingHazard,
+                noMotionSimulationHazard,
+                noSoundHazard,
+                unknownFlashingHazard,
+                unknownMotionSimulationHazard,
+                unknownSoundHazard,
+              ]
+        accessibilitySummary:
+          type: string
+          description: A human-readable summary of specific accessibility features or deficiencies of the production.
+          example: "Dieses Stück enthält Stroboskoplicht"
+        creator:
+          description: |-
+            List of all people contributing to the creation of this production, e.g. directors, stage designers, musical directors, etc.
+
+            If multiple people perform the same role/function (e.g. there is multiple directors or multiple actors perform the same role on stage at the same time),
+            each person should get their own entry in the `creator` array.
+          type: array
+          items:
+            $ref: "#/components/schemas/Creator"
 
     Event:
       type: object
       required:
+        - "@type"
         - startDate
       additionalProperties: false
       properties:
+        "@type":
+          type: string
+          enum:
+            - "Event"
         startDate:
           type: string
           description: "The start date and time of the event (in ISO 8601 date format)."
@@ -191,62 +232,119 @@ components:
         #   description: Primary language of the event
         #   format: can/should we make this an enum of language codes?
         
-        locations:
+        location:
           description: The location of this event. An event can take place at one or more physical locations,
              one or more virtual locations, or both, if it's a hybrid event.
           type: array
           items:
             anyOf:
-              - $ref: "#/components/schemas/Location"    
+              - $ref: "#/components/schemas/Place"    
               - $ref: "#/components/schemas/VirtualLocation"    
+        performer:
+          type: array
+          items:
+            $ref: "#/components/schemas/Performer"
+            
         offers:
           type: array
           items:
             $ref: "#/components/schemas/Offer"
+        eventStatus:
+          type: string
+          description: |-
+            The status of this event.
+
+            - `EventScheduled`: The event is taking place or has taken place on the `startDate` as scheduled. Use of this value is optional, as it is assumed by default.
+            - `EventCancelled`: The event has been cancelled. Either `startDate` or `previousStartDate` may be used to specify the event's cancelled date(s).
+            - `EventMovedOnline`: Indicates that the event was changed to allow online participation.
+            - `EventPostponed`: The event has been postponed and no new date has been set. The event's `previousStartDate` should be set.
+            - `EventRescheduled`: The event has been rescheduled. The event's `previousStartDate` should be set to the old date and the `startDate` should be set to the event's new date.
+          enum:
+            - EventScheduled
+            - EventCancelled
+            - EventMovedOnline
+            - EventPostponed
+            - EventRescheduled
+        previousStartDate:
+          type: string
+          description: "This field should contain the old `startDate`, if the `eventStatus` is either `EventPostponed` or `EventRescheduled`"
+          format: date-time
 
     Offer:
       type: object
       additionalProperties: false
       required:
-        - minPrice
-        - priceCurrency
+        - "@type"
+        - priceSpecification
       properties:
+        "@type":
+          type: string
+          enum:
+            - "Offer"
         name:
           type: string
           example: Normalpreis
           description: 'A descriptive name for this offer, e.g. "Normalpreis", "Ermäßigt", "Preisgruppe A", usw.'
-        minPrice:
-          type: number
-          description: The minimum price of this offer.
-          format: float
-          example: 25.50
-          minimum: 0
-        maxPrice:
-          type: number
-          description: The maximum price of this offer.
-          format: float
-          example: 45.50
-          minimum: 0
-        priceCurrency:
-          type: string
-          description: "The currency of the price. Use standard formats: TODO"
-          example: EUR
+        priceSpecification:
+          type: object
+          required:
+            - "@type"
+            - minPrice
+            - priceCurrency
+          properties:
+            "@type":
+              type: string
+              enum:
+                - "PriceSpecification"
+            minPrice:
+              type: number
+              description: The minimum price of this offer.
+              format: float
+              example: 25.50
+              minimum: 0
+            maxPrice:
+              type: number
+              description: The maximum price of this offer.
+              format: float
+              example: 45.50
+              minimum: 0
+            priceCurrency:
+              type: string
+              description: "The currency of the price. Use standard formats: TODO"
+              example: EUR
         url:
           type: string
           description: Ticketing link for this offer
           format: uri
           example: "https://webshop-tickets.staatstheater-augsburg.de/de/tickets/hedwig-and-the-angry-inch/brechtbuehne-im-gaswerk-14-12-2023-19-30"
 
-    Participant:
+    Creator:
       type: object
-      required:
-        - names
       additionalProperties: false
+      required:
+        - "@type"
+        - creator
       properties:
-        function:
+        "@type":
           type: string
-          description:
-            'This participant''s function in the production. Must use one of the pre-defined values.'
+          enum:
+            - Role
+        creator:
+          type: object
+          additionalProperties: false
+          required:
+            - "@type"
+            - name
+          properties:
+            "@type":
+              type: string
+              enum:
+                - Person
+            name:
+              type: string
+        roleName:
+          type: string
+          description: 'The name of the role this person played in the creation of the production.'
           enum:
             - akrobatik
             - alles
@@ -292,46 +390,52 @@ components:
             - uebersetzung
             - vermittlung
             - virtual-reality-design
-        roleName:
-          type: string
-          description: 'The name of the role(s) this participant is performing on stage, if any.'
-        names:
-          type: array
-          items:
-            type: string
-          description:
-            The name(s) of the person(s) performing this function/role. Must contain at least one name. Can contain multiple names, if multiple persons are
-            performing the same role, but not at the same time.
-          minItems: 1
 
-    Location:
+    Performer:
       type: object
       additionalProperties: false
       required:
-        - type
+        - "@type"
+        - performer
       properties:
-        type:
+        "@type":
           type: string
           enum:
-            - Address
-          description: The type of this location object. Must be "Address" for physical locations.
+            - PerformanceRole
+        characterName:
+          type: string
+        performer:
+          type: object
+          additionalProperties: false
+          required:
+            - "@type"
+            - name
+          properties:
+            "@type":
+              type: string
+              enum:
+                - Person
+            name:
+              type: string
+
+    Place:
+      type: object
+      additionalProperties: false
+      required:
+        - "@type"
+        - address
+      properties:
+        "@type":
+          type: string
+          enum:
+            - Place
+          description: The type of this location object. Must be "Place" for physical locations.
         name:
           type: string
           example: brechtbühne im Gaswerk
           description: The location's name
-        postalCode:
-          type: string
-          example: 86156
-          # pattern: "\d{5}"
-          description: The location's postal code
-        streetAddress:
-          type: string
-          example: Am Alten Gaswerk 7
-          description: The location's street address
-        city:
-          type: string
-          example: Augsburg
-          description: The city the location is in
+        address:
+          $ref: "#/components/schemas/PostalAddress"
         wheelChairPlaces:
           type: object
           description: Describes the presence of reserved spots for wheelchairs in the location, as defined by [a11yjson](https://sozialhelden.github.io/a11yjson/describing-objects/interfaces/#wheelchairplaces).
@@ -347,14 +451,38 @@ components:
           minimum: -180
           maximum: 180
 
+    PostalAddress:
+      type: object
+      additionalProperties: false
+      required:
+        - "@type"
+      properties:
+        "@type":
+          type: string
+          enum:
+            - PostalAddress
+        postalCode:
+          type: string
+          example: 86156
+          # pattern: "\d{5}"
+          description: The location's postal code
+        streetAddress:
+          type: string
+          example: Am Alten Gaswerk 7
+          description: The location's street address
+        addressLocality:
+          type: string
+          example: Augsburg
+          description: The city the location is in
+
     VirtualLocation:
       type: object
       additionalProperties: false
       description: The virtual location of an online or hybrid event
       required:
-        - type
+        - "@type"
       properties:
-        type:
+        "@type":
           type: string
           enum:
             - VirtualLocation
@@ -368,39 +496,6 @@ components:
           type: string
           format: uri
           description: The event's URL, if this is an online or hybrid event
-    Accessibility:
-      type: object
-      additionalProperties: false
-      properties:
-        accessModeSufficient:
-          type: array
-          items:
-            type: string
-            description: A list of single or combined accessModes that are sufficient to understand all the intellectual content of a resource.
-            enum: [auditory, tactile, textual, visual]
-        accessibilityHazard:
-          type: array
-          items:
-            type: string
-            example: flashingHazard,
-            enum:
-              [
-                none,
-                unknown,
-                flashingHazard,
-                motionSimulationHazard,
-                soundHazard,
-                noFlashingHazard,
-                noMotionSimulationHazard,
-                noSoundHazard,
-                unknownFlashingHazard,
-                unknownMotionSimulationHazard,
-                unknownSoundHazard,
-              ]
-        accessibilitySummary:
-          type: string
-          description: A human-readable summary of specific accessibility features or deficiencies of the production.
-          example: "Dieses Stück enthält Stroboskoplicht"
 
     WheelChairPlace:
       type: object

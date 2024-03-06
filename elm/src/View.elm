@@ -1,7 +1,7 @@
 module View exposing (main)
 
 import Browser
-import Data.Root exposing (Event, Location(..), Offer, Participant, Production, Root, rootDecoder)
+import Data.Root exposing (CreatorItem, Event, LocationItem(..), Offer, Production, Root, rootDecoder)
 import DateFormat
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -206,7 +206,7 @@ viewData data zone =
         viewProduction index production =
             div []
                 [ div [ class "sticky-header" ]
-                    [ h1 [ class "is-size-1" ] [ text production.title ]
+                    [ h1 [ class "is-size-1" ] [ text production.name ]
                     ]
                 , card (text "Info")
                     (productionTable production)
@@ -234,7 +234,7 @@ viewData data zone =
 
 productionNameMatches : String -> Production -> Bool
 productionNameMatches filter production =
-    String.contains (String.toLower filter) (String.toLower production.title)
+    String.contains (String.toLower filter) (String.toLower production.name)
 
 
 productionTable : Production -> Html Msg
@@ -242,16 +242,16 @@ productionTable production =
     table
         [ class "table is-hoverable" ]
         [ tbody []
-            [ tableRow "Title" production.title
+            [ tableRow "Title" production.name
             , maybeTableRow "Subtitle" production.subtitle
             , maybeTableRow "Description" production.description
-            , maybeTableRow "Teaser" production.teaser
+            , maybeTableRow "Teaser" production.abstract
             , maybeTableRow "Additional info" production.additionalInfo
-            , maybeTableRow "Genre" (Maybe.map Data.Root.genreToString production.genre)
+            , maybeTableRow "Genre" (Maybe.map Data.Root.productionsGenreToString production.genre)
             , tr []
                 [ th [] [ text "Participants" ]
                 , td []
-                    [ viewParticipants production.participants
+                    [ viewCreators production.creator
                     ]
                 ]
             ]
@@ -290,7 +290,7 @@ viewEvent zone event =
                         ]
                     ]
                 ]
-            , div [ class "column" ] [ viewLocations event.locations ]
+            , div [ class "column" ] [ viewLocations event.location ]
             ]
         , viewOffers event.offers
         ]
@@ -300,7 +300,7 @@ viewEvent zone event =
 -- LOCATIONS
 
 
-viewLocations : Maybe (List Location) -> Html Msg
+viewLocations : Maybe (List LocationItem) -> Html Msg
 viewLocations locations =
     case locations of
         Nothing ->
@@ -327,16 +327,16 @@ viewLocations locations =
                 ]
 
 
-locationRow : Location -> Html Msg
+locationRow : LocationItem -> Html Msg
 locationRow location =
     case location of
-        Physical address ->
+        Physical place ->
             tr []
-                [ td [] [ text <| Maybe.withDefault "" address.name ]
+                [ td [] [ text <| Maybe.withDefault "" place.name ]
                 , td [] [ text "" ]
-                , td [] [ text <| Maybe.withDefault "" address.streetAddress ]
-                , td [] [ text <| Maybe.withDefault "" address.postalCode ]
-                , td [] [ text <| Maybe.withDefault "" address.city ]
+                , td [] [ text <| Maybe.withDefault "" place.address.streetAddress ]
+                , td [] [ text <| Maybe.withDefault "" place.address.postalCode ]
+                , td [] [ text <| Maybe.withDefault "" place.address.addressLocality ]
                 ]
 
         Virtual info ->
@@ -353,23 +353,22 @@ locationRow location =
 -- PARTICIPANTS
 
 
-viewParticipants : Maybe (List Participant) -> Html Msg
-viewParticipants participants =
-    case participants of
+viewCreators : Maybe (List CreatorItem) -> Html Msg
+viewCreators creators =
+    case creators of
         Nothing ->
             text ""
 
         Just list ->
             ul []
-                (List.map viewParticipant list)
+                (List.map viewCreator list)
 
 
-viewParticipant : Participant -> Html Msg
-viewParticipant participant =
+viewCreator : CreatorItem -> Html Msg
+viewCreator creator =
     li []
-        [ [ Maybe.map Data.Root.functionToString participant.function
-          , participant.roleName
-          , Just (String.join " / " participant.names)
+        [ [ Maybe.map Data.Root.creatorRoleNameToString creator.roleName
+          , Just creator.creator.name
           ]
             |> List.filterMap identity
             |> String.join ":"
@@ -422,11 +421,11 @@ viewOffer : Offer -> Html Msg
 viewOffer offer =
     let
         formattedPrice =
-            [ Just offer.minPrice
-            , offer.maxPrice
+            [ Just offer.priceSpecification.minPrice
+            , offer.priceSpecification.maxPrice
             ]
                 |> List.filterMap identity
-                |> List.map (\price -> String.fromFloat price ++ " " ++ offer.priceCurrency)
+                |> List.map (\price -> String.fromFloat price ++ " " ++ offer.priceSpecification.priceCurrency)
                 |> String.join " - "
     in
     tr []
