@@ -304,10 +304,10 @@ viewLocations : Maybe (List Location) -> Html Msg
 viewLocations locations =
     case locations of
         Nothing ->
-            em [] [ text "No location" ]
+            em [] [ text "The data does not contain a location for this event" ]
 
         Just [] ->
-            em [] [ text "No location" ]
+            em [] [ text "The data does not contain a location for this event" ]
 
         Just list ->
             table [ class "table" ]
@@ -394,7 +394,7 @@ viewOffers offers =
                 , tbody
                     []
                     [ tr []
-                        [ td [] [ em [] [ text "No information" ] ]
+                        [ td [] [ em [] [ text "The data does not contain any ticketing information for this event" ] ]
                         ]
                     ]
                 ]
