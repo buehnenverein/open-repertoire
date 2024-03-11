@@ -487,15 +487,12 @@ card title content isOpen clickHandler =
             ]
             [ div [ class "card-header-title has-text-white" ]
                 [ title
-                ]
-            , button [ class "card-header-icon" ]
-                [ span [ class "icon" ]
-                    [ i
-                        [ class "fas  has-text-white"
-                        , classList [ ( "fa-angle-down", isOpen ), ( "fa-angle-right", not isOpen ) ]
-                        ]
-                        []
+                , span [ style "margin-left" "0.5em" ] []
+                , i
+                    [ class "fas  has-text-white"
+                    , classList [ ( "fa-angle-down", isOpen ), ( "fa-angle-right", not isOpen ) ]
                     ]
+                    []
                 ]
             ]
         , if isOpen then
