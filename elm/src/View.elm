@@ -789,12 +789,13 @@ viewInput inputString buttonEnabled =
 filterInput : String -> Html Msg
 filterInput filter =
     div [ class "field" ]
-        [ div [ class "control" ]
+        [ div [ class "label" ] [ text "Filter results by title:" ]
+        , div [ class "control" ]
             [ input
                 [ type_ "text"
                 , onInput NameFilterChanged
                 , value filter
-                , placeholder "Filter results by title..."
+                , placeholder "Title"
                 , class "input"
                 ]
                 []
