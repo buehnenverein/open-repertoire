@@ -690,33 +690,51 @@ maybeTableRow name value =
 
 viewRequestError : String -> Http.Error -> Html Msg
 viewRequestError url error =
-    div [ class "notification is-danger" ]
-        [ case error of
-            BadUrl invalidUrl ->
-                text ("Unfortunately, it looks like " ++ invalidUrl ++ " is not a valid URL.")
+    section
+        [ div [ class "notification is-danger" ]
+            [ case error of
+                BadUrl invalidUrl ->
+                    text ("Unfortunately, it looks like " ++ invalidUrl ++ " is not a valid URL.")
 
-            Timeout ->
-                text "Unfortunately, the request to your endpoint timed out."
+                Timeout ->
+                    text "Unfortunately, the request to your endpoint timed out."
 
-            NetworkError ->
-                span []
-                    [ text "Unfortunately, I encountered an issue when requesting the data from your endpoint. Alternatively, you can try to "
-                    , a [ href url, target "_blank" ] [ text "open the link in your browser" ]
-                    , text " and copy the data into the JSON output field directly"
-                    ]
+                NetworkError ->
+                    viewNetworkError url
 
-            BadStatus code ->
-                text
-                    ("Unfortunately, your endpoint returned an unsuccessful status code ("
-                        ++ String.fromInt code
-                        ++ "), so I could not check whether your JSON is valid or not. Please check your browser's console logs for more information."
-                    )
+                BadStatus code ->
+                    text
+                        ("Unfortunately, your endpoint returned an unsuccessful status code ("
+                            ++ String.fromInt code
+                            ++ "), so I could not check whether your JSON is valid or not. Please check your browser's console logs for more information."
+                        )
 
-            BadBody reason ->
-                text
-                    ("Unfortunately, I could not parse the response from your endpoint. Are you sure that it is valid JSON? Here is why I couldn't parse the response: "
-                        ++ reason
-                    )
+                BadBody reason ->
+                    text
+                        ("Unfortunately, I could not parse the response from your endpoint. Are you sure that it is valid JSON? Here is why I couldn't parse the response: "
+                            ++ reason
+                        )
+            ]
+        ]
+
+
+viewNetworkError : String -> Html Msg
+viewNetworkError url =
+    div []
+        [ text "I encountered an error while trying to fetch data from this link."
+        , h1 [ class "title is-size-5 mt-5" ] [ text "Here is what you can try:" ]
+        , ol []
+            [ li []
+                [ text "Open the link in your browser: "
+                , a [ href url, target "_blank" ] [ text url ]
+                ]
+            , li []
+                [ text "Copy the data that is displayed"
+                ]
+            , li []
+                [ text "Paste the data into the input field above"
+                ]
+            ]
         ]
 
 
