@@ -13,6 +13,7 @@ import RemoteData exposing (RemoteData(..))
 import Set exposing (Set)
 import Task
 import Time
+import Url
 
 
 main : Program () Model Msg
@@ -26,7 +27,7 @@ main =
 
 
 type alias Model =
-    { inputs : Inputs
+    { input : String
     , localTimeZone : Maybe Time.Zone
     , data : EventData
     }
@@ -49,16 +50,8 @@ type alias EventData =
     RemoteData Error Data
 
 
-type alias Inputs =
-    { url : String
-    , text : String
-    }
-
-
 type Msg
-    = SubmitUrl String
-    | SubmitJson String
-    | UrlChange String
+    = Submit String
     | TextChange String
     | GotTimeZone Time.Zone
     | Response (RemoteData Http.Error Root)
@@ -69,11 +62,7 @@ type Msg
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    let
-        inputs =
-            { url = "", text = "" }
-    in
-    ( { inputs = inputs
+    ( { input = ""
       , localTimeZone = Nothing
       , data = NotAsked
       }
@@ -97,35 +86,12 @@ getTimeZone =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    let
-        inputs =
-            model.inputs
-    in
     case msg of
-        SubmitUrl url ->
-            ( { model | data = Loading }, Http.get { url = url, expect = Http.expectJson (RemoteData.fromResult >> Response) rootDecoder } )
-
-        SubmitJson text ->
-            case Decode.decodeString rootDecoder text of
-                Ok jsonValue ->
-                    ( { model | data = Success (newData jsonValue) }, Cmd.none )
-
-                Err parsingError ->
-                    ( { model | data = Failure (JsonError parsingError) }, Cmd.none )
-
-        UrlChange url ->
-            let
-                newInputs =
-                    { inputs | url = url }
-            in
-            ( { model | inputs = newInputs }, Cmd.none )
+        Submit input ->
+            fetchData model input
 
         TextChange text ->
-            let
-                newInputs =
-                    { inputs | text = text }
-            in
-            ( { model | inputs = newInputs }, Cmd.none )
+            ( { model | input = text }, Cmd.none )
 
         GotTimeZone zone ->
             ( { model | localTimeZone = Just zone }, Cmd.none )
@@ -149,6 +115,29 @@ update msg model =
             ( { model | data = updateNameFilter model.data filter }, Cmd.none )
 
 
+fetchData : Model -> String -> ( Model, Cmd Msg )
+fetchData model inputString =
+    if isUrl inputString then
+        ( { model | data = Loading }
+        , Http.get
+            { url = inputString
+            , expect = Http.expectJson (RemoteData.fromResult >> Response) rootDecoder
+            }
+        )
+
+    else
+        case Decode.decodeString rootDecoder inputString of
+            Ok jsonValue ->
+                ( { model | data = Success (newData jsonValue) }, Cmd.none )
+
+            Err parsingError ->
+                ( { model | data = Failure (JsonError parsingError) }, Cmd.none )
+
+
+
+-- VIEW
+
+
 view : Model -> Html Msg
 view model =
     let
@@ -162,7 +151,7 @@ view model =
     in
     div [ class "container" ]
         [ viewIntroduction
-        , viewInputs model.inputs enableButton
+        , viewInput model.input enableButton
         , case model.data of
             NotAsked ->
                 text ""
@@ -171,7 +160,7 @@ view model =
                 text ""
 
             Failure (HttpError error) ->
-                viewRequestError model.inputs.url error
+                viewRequestError model.input error
 
             Failure (JsonError _) ->
                 div [ class "notification is-danger", style "white-space" "pre-wrap" ]
@@ -226,6 +215,46 @@ viewData data zone =
                 |> List.indexedMap viewProduction
             )
         ]
+
+
+looksLikeUrl : String -> Bool
+looksLikeUrl string =
+    (String.startsWith "http" string
+        || String.startsWith "www" string
+        || not (looksLikeJson string)
+    )
+        && not (String.isEmpty string)
+
+
+looksLikeJson : String -> Bool
+looksLikeJson string =
+    (String.startsWith "{" string
+        || String.startsWith "[" string
+    )
+        && not (String.isEmpty string)
+
+
+isUrl : String -> Bool
+isUrl string =
+    case ( Url.fromString string, Url.fromString ("https://" ++ string) ) of
+        ( Just _, _ ) ->
+            True
+
+        ( _, Just _ ) ->
+            True
+
+        ( Nothing, Nothing ) ->
+            False
+
+
+isJson : String -> Bool
+isJson string =
+    case Decode.decodeString Decode.value string of
+        Ok _ ->
+            True
+
+        Err _ ->
+            False
 
 
 
@@ -707,61 +736,49 @@ viewIntroduction =
         ]
 
 
-viewInputs : Inputs -> Bool -> Html Msg
-viewInputs inputs buttonEnabled =
+viewInput : String -> Bool -> Html Msg
+viewInput inputString buttonEnabled =
+    let
+        invalidUrl =
+            looksLikeUrl inputString && not (isUrl inputString)
+
+        invalidJson =
+            looksLikeJson inputString && not (isJson inputString)
+
+        invalid =
+            invalidUrl || invalidJson
+
+        controlAttrs =
+            if invalidUrl then
+                [ attribute "data-tooltip" "Not a valid link" ]
+
+            else if invalidJson then
+                [ attribute "data-tooltip" "Not valid JSON" ]
+
+            else
+                []
+    in
     section
-        [ div [ class "inputs grid-container" ]
-            [ endpointInput inputs buttonEnabled
-            , div [ class "grid-item-centered" ] [ h3 [ class "is-size-3 has-text-weight-bold" ] [ text "- OR -" ] ]
-            , jsonInput inputs buttonEnabled
-            ]
-        ]
-
-
-endpointInput : Inputs -> Bool -> Html Msg
-endpointInput inputs buttonEnabled =
-    div [ class "grid-column field" ]
         [ div [ class "field" ]
-            [ h3 [ class "label is-size-3" ] [ text "Enter the URL of your endpoint" ]
-            , div [ class "control" ]
+            [ h3 [ class "label is-size-3" ] [ text "Enter the URL of your endpoint OR copy & paste your data" ]
+            , div (class "control has-icons-right has-tooltip-arrow" :: controlAttrs)
                 [ input
                     [ type_ "text"
-                    , onInput UrlChange
-                    , value inputs.url
+                    , onInput TextChange
+                    , value inputString
                     , class "input"
+                    , classList [ ( "is-danger", invalid ) ]
                     ]
                     []
+                , span [ class "icon is-right" ]
+                    [ i [ class "fas has-text-danger", classList [ ( "fa-xmark", invalid ) ] ] []
+                    ]
                 ]
             ]
         , div [ class "control" ]
             [ button
-                [ onClick (SubmitUrl inputs.url)
-                , disabled (not buttonEnabled || String.isEmpty inputs.url)
-                , class "button is-primary"
-                ]
-                [ text "View data" ]
-            ]
-        ]
-
-
-jsonInput : Inputs -> Bool -> Html Msg
-jsonInput inputs buttonEnabled =
-    div [ class "grid-column field" ]
-        [ div [ class "field" ]
-            [ h3 [ class "label is-size-3" ] [ text "Paste your JSON output" ]
-            , div [ class "control" ]
-                [ textarea
-                    [ onInput TextChange
-                    , value inputs.text
-                    , class "input"
-                    ]
-                    []
-                ]
-            ]
-        , div [ class "control" ]
-            [ button
-                [ onClick (SubmitJson inputs.text)
-                , disabled (not buttonEnabled || String.isEmpty inputs.text)
+                [ onClick (Submit inputString)
+                , disabled (not buttonEnabled || invalid || String.isEmpty inputString)
                 , class "button is-primary"
                 ]
                 [ text "View data" ]
