@@ -24,3 +24,7 @@
 	background: white;
 	z-index: 10;
 }
+
+span.tag[data-tooltip] {
+	border-bottom: none;
+}

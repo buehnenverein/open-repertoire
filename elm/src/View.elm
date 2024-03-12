@@ -312,7 +312,7 @@ viewLocations locations =
         Just list ->
             table [ class "table" ]
                 [ thead []
-                    [ th [ colspan 5 ] [ text "Locations" ]
+                    [ th [ colspan 5 ] [ text "Locations", locationTag list ]
                     ]
                 , tbody []
                     (tr []
@@ -325,6 +325,27 @@ viewLocations locations =
                         :: List.map locationRow list
                     )
                 ]
+
+
+locationTag : List Location -> Html Msg
+locationTag locations =
+    case ( isOnlineEvent locations, isOfflineEvent locations ) of
+        ( True, True ) ->
+            span
+                [ class "tag is-info ml-2 has-tooltip-arrow has-tooltip-multiline"
+                , attribute "data-tooltip" "This is a hybrid event that takes place both online and offline"
+                ]
+                [ text "Hybrid" ]
+
+        ( True, False ) ->
+            span
+                [ class "tag is-info ml-2 has-tooltip-arrow has-tooltip-multiline"
+                , attribute "data-tooltip" "This is an online event"
+                ]
+                [ text "Online" ]
+
+        _ ->
+            text ""
 
 
 locationRow : Location -> Html Msg
@@ -440,6 +461,36 @@ viewOffer offer =
 
 
 -- HELPERS
+
+
+isOnlineEvent : List Location -> Bool
+isOnlineEvent locations =
+    let
+        isVirtualLocation : Location -> Bool
+        isVirtualLocation location =
+            case location of
+                Physical _ ->
+                    False
+
+                Virtual _ ->
+                    True
+    in
+    List.any isVirtualLocation locations
+
+
+isOfflineEvent : List Location -> Bool
+isOfflineEvent locations =
+    let
+        isPhysicalLocation : Location -> Bool
+        isPhysicalLocation location =
+            case location of
+                Physical _ ->
+                    True
+
+                Virtual _ ->
+                    False
+    in
+    List.any isPhysicalLocation locations
 
 
 updateNameFilter : EventData -> String -> EventData
