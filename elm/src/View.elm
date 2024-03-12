@@ -91,7 +91,7 @@ update msg model =
             fetchData model input
 
         TextChange text ->
-            ( { model | input = text }, Cmd.none )
+            ( { model | data = NotAsked, input = text }, Cmd.none )
 
         GotTimeZone zone ->
             ( { model | localTimeZone = Just zone }, Cmd.none )
