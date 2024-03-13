@@ -666,7 +666,7 @@ tableRow name value =
             [ text name
             ]
         , td
-            []
+            [ class "preserve-newlines" ]
             [ text value
             ]
         ]
@@ -679,7 +679,7 @@ maybeTableRow name value =
             [ text name
             ]
         , td
-            []
+            [ class "preserve-newlines" ]
             [ text (Maybe.withDefault "" value)
             ]
         ]

@@ -32,3 +32,7 @@ span.tag[data-tooltip] {
 ol {
 	list-style-position: inside;
 }
+
+.preserve-newlines {
+	white-space: pre-line;
+}
