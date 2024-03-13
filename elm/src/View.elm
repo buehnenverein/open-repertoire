@@ -411,7 +411,7 @@ viewParticipants participants =
 viewParticipant : Participant -> Html Msg
 viewParticipant participant =
     li []
-        [ [ Maybe.map Data.Root.functionToString participant.function
+        [ [ participant.function
           , participant.roleName
           , Just (String.join " / " participant.names)
           ]

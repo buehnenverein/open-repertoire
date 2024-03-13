@@ -85,53 +85,6 @@ type alias Event =
     }
 
 
-type Function
-    = Akrobatik
-    | Alles
-    | Assistenz
-    | Beratung
-    | Buehne
-    | Choreographie
-    | Clownerie
-    | Dramaturgie
-    | ExpertinDesAlltags
-    | Fotografie
-    | Gebaerdensprache
-    | Gesang
-    | Grafik
-    | Inszenierung
-    | Jonglage
-    | KameraVideo
-    | Komposition
-    | Konzept
-    | Kostuem
-    | KuenstlerischeLeitung
-    | Licht
-    | LiveMusik
-    | Marketing
-    | Maske
-    | Moderation
-    | Musik
-    | MusikalischeLeitung
-    | PerformanceFunction
-    | Produktion
-    | Programmierung
-    | Puppenbau
-    | Puppenspiel
-    | Regie
-    | Rigging
-    | Schauspiel
-    | Sound
-    | TanzFunction
-    | Technik
-    | TechnischeLeitung
-    | Text
-    | Ton
-    | Uebersetzung
-    | Vermittlung
-    | VirtualRealityDesign
-
-
 type Genre
     = Sprechtheater
     | Performance
@@ -180,7 +133,7 @@ type alias Offer =
 
 
 type alias Participant =
-    { function : Maybe Function
+    { function : Maybe String
     , names : List String
     , roleName : Maybe String
     }
@@ -356,150 +309,6 @@ eventsDecoder =
     Decode.list eventDecoder
 
 
-functionDecoder : Decoder Function
-functionDecoder =
-    Decode.string |> Decode.andThen (parseFunction >> Decode.fromResult)
-
-
-parseFunction : String -> Result String Function
-parseFunction function =
-    case function of
-        "akrobatik" ->
-            Ok Akrobatik
-
-        "alles" ->
-            Ok Alles
-
-        "assistenz" ->
-            Ok Assistenz
-
-        "beratung" ->
-            Ok Beratung
-
-        "buehne" ->
-            Ok Buehne
-
-        "choreographie" ->
-            Ok Choreographie
-
-        "clownerie" ->
-            Ok Clownerie
-
-        "dramaturgie" ->
-            Ok Dramaturgie
-
-        "expertin-des-alltags" ->
-            Ok ExpertinDesAlltags
-
-        "fotografie" ->
-            Ok Fotografie
-
-        "gebaerdensprache" ->
-            Ok Gebaerdensprache
-
-        "gesang" ->
-            Ok Gesang
-
-        "grafik" ->
-            Ok Grafik
-
-        "inszenierung" ->
-            Ok Inszenierung
-
-        "jonglage" ->
-            Ok Jonglage
-
-        "kamera-video" ->
-            Ok KameraVideo
-
-        "komposition" ->
-            Ok Komposition
-
-        "konzept" ->
-            Ok Konzept
-
-        "kostuem" ->
-            Ok Kostuem
-
-        "kuenstlerische-leitung" ->
-            Ok KuenstlerischeLeitung
-
-        "licht" ->
-            Ok Licht
-
-        "live-musik" ->
-            Ok LiveMusik
-
-        "marketing" ->
-            Ok Marketing
-
-        "maske" ->
-            Ok Maske
-
-        "moderation" ->
-            Ok Moderation
-
-        "musik" ->
-            Ok Musik
-
-        "musikalische-leitung" ->
-            Ok MusikalischeLeitung
-
-        "performance" ->
-            Ok PerformanceFunction
-
-        "produktion" ->
-            Ok Produktion
-
-        "programmierung" ->
-            Ok Programmierung
-
-        "puppenbau" ->
-            Ok Puppenbau
-
-        "puppenspiel" ->
-            Ok Puppenspiel
-
-        "regie" ->
-            Ok Regie
-
-        "rigging" ->
-            Ok Rigging
-
-        "schauspiel" ->
-            Ok Schauspiel
-
-        "sound" ->
-            Ok Sound
-
-        "tanz" ->
-            Ok TanzFunction
-
-        "technik" ->
-            Ok Technik
-
-        "technische-leitung" ->
-            Ok TechnischeLeitung
-
-        "text" ->
-            Ok Text
-
-        "ton" ->
-            Ok Ton
-
-        "uebersetzung" ->
-            Ok Uebersetzung
-
-        "vermittlung" ->
-            Ok Vermittlung
-
-        "virtual-reality-design" ->
-            Ok VirtualRealityDesign
-
-        _ ->
-            Err <| "Unknown function type: " ++ function
-
-
 genreDecoder : Decoder Genre
 genreDecoder =
     Decode.string |> Decode.andThen (parseGenre >> Decode.fromResult)
@@ -638,7 +447,7 @@ offersDecoder =
 participantDecoder : Decoder Participant
 participantDecoder =
     Decode.succeed Participant
-        |> optional "function" (Decode.nullable functionDecoder) Nothing
+        |> optional "function" (Decode.nullable Decode.string) Nothing
         |> required "names" namesDecoder
         |> optional "roleName" (Decode.nullable Decode.string) Nothing
 
@@ -888,147 +697,6 @@ encodeEvents events =
         |> Encode.list encodeEvent
 
 
-encodeFunction : Function -> Value
-encodeFunction function =
-    function |> functionToString |> Encode.string
-
-
-functionToString : Function -> String
-functionToString function =
-    case function of
-        Akrobatik ->
-            "akrobatik"
-
-        Alles ->
-            "alles"
-
-        Assistenz ->
-            "assistenz"
-
-        Beratung ->
-            "beratung"
-
-        Buehne ->
-            "buehne"
-
-        Choreographie ->
-            "choreographie"
-
-        Clownerie ->
-            "clownerie"
-
-        Dramaturgie ->
-            "dramaturgie"
-
-        ExpertinDesAlltags ->
-            "expertin-des-alltags"
-
-        Fotografie ->
-            "fotografie"
-
-        Gebaerdensprache ->
-            "gebaerdensprache"
-
-        Gesang ->
-            "gesang"
-
-        Grafik ->
-            "grafik"
-
-        Inszenierung ->
-            "inszenierung"
-
-        Jonglage ->
-            "jonglage"
-
-        KameraVideo ->
-            "kamera-video"
-
-        Komposition ->
-            "komposition"
-
-        Konzept ->
-            "konzept"
-
-        Kostuem ->
-            "kostuem"
-
-        KuenstlerischeLeitung ->
-            "kuenstlerische-leitung"
-
-        Licht ->
-            "licht"
-
-        LiveMusik ->
-            "live-musik"
-
-        Marketing ->
-            "marketing"
-
-        Maske ->
-            "maske"
-
-        Moderation ->
-            "moderation"
-
-        Musik ->
-            "musik"
-
-        MusikalischeLeitung ->
-            "musikalische-leitung"
-
-        PerformanceFunction ->
-            "performance"
-
-        Produktion ->
-            "produktion"
-
-        Programmierung ->
-            "programmierung"
-
-        Puppenbau ->
-            "puppenbau"
-
-        Puppenspiel ->
-            "puppenspiel"
-
-        Regie ->
-            "regie"
-
-        Rigging ->
-            "rigging"
-
-        Schauspiel ->
-            "schauspiel"
-
-        Sound ->
-            "sound"
-
-        TanzFunction ->
-            "tanz"
-
-        Technik ->
-            "technik"
-
-        TechnischeLeitung ->
-            "technische-leitung"
-
-        Text ->
-            "text"
-
-        Ton ->
-            "ton"
-
-        Uebersetzung ->
-            "uebersetzung"
-
-        Vermittlung ->
-            "vermittlung"
-
-        VirtualRealityDesign ->
-            "virtual-reality-design"
-
-
 encodeGenre : Genre -> Value
 encodeGenre genre =
     genre |> genreToString |> Encode.string
@@ -1170,7 +838,7 @@ encodeOffers offers =
 encodeParticipant : Participant -> Value
 encodeParticipant participant =
     []
-        |> Encode.optional "function" participant.function encodeFunction
+        |> Encode.optional "function" participant.function Encode.string
         |> Encode.required "names" participant.names encodeNames
         |> Encode.optional "roleName" participant.roleName Encode.string
         |> Encode.object

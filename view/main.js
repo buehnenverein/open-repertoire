@@ -6863,148 +6863,6 @@ var $author$project$Data$Root$Participant = F3(
 	function (_function, names, roleName) {
 		return {aM: _function, a4: names, bn: roleName};
 	});
-var $author$project$Data$Root$Akrobatik = 0;
-var $author$project$Data$Root$Alles = 1;
-var $author$project$Data$Root$Assistenz = 2;
-var $author$project$Data$Root$Beratung = 3;
-var $author$project$Data$Root$Buehne = 4;
-var $author$project$Data$Root$Choreographie = 5;
-var $author$project$Data$Root$Clownerie = 6;
-var $author$project$Data$Root$Dramaturgie = 7;
-var $author$project$Data$Root$ExpertinDesAlltags = 8;
-var $author$project$Data$Root$Fotografie = 9;
-var $author$project$Data$Root$Gebaerdensprache = 10;
-var $author$project$Data$Root$Gesang = 11;
-var $author$project$Data$Root$Grafik = 12;
-var $author$project$Data$Root$Inszenierung = 13;
-var $author$project$Data$Root$Jonglage = 14;
-var $author$project$Data$Root$KameraVideo = 15;
-var $author$project$Data$Root$Komposition = 16;
-var $author$project$Data$Root$Konzept = 17;
-var $author$project$Data$Root$Kostuem = 18;
-var $author$project$Data$Root$KuenstlerischeLeitung = 19;
-var $author$project$Data$Root$Licht = 20;
-var $author$project$Data$Root$LiveMusik = 21;
-var $author$project$Data$Root$Marketing = 22;
-var $author$project$Data$Root$Maske = 23;
-var $author$project$Data$Root$Moderation = 24;
-var $author$project$Data$Root$Musik = 25;
-var $author$project$Data$Root$MusikalischeLeitung = 26;
-var $author$project$Data$Root$PerformanceFunction = 27;
-var $author$project$Data$Root$Produktion = 28;
-var $author$project$Data$Root$Programmierung = 29;
-var $author$project$Data$Root$Puppenbau = 30;
-var $author$project$Data$Root$Puppenspiel = 31;
-var $author$project$Data$Root$Regie = 32;
-var $author$project$Data$Root$Rigging = 33;
-var $author$project$Data$Root$Schauspiel = 34;
-var $author$project$Data$Root$Sound = 35;
-var $author$project$Data$Root$TanzFunction = 36;
-var $author$project$Data$Root$Technik = 37;
-var $author$project$Data$Root$TechnischeLeitung = 38;
-var $author$project$Data$Root$Text = 39;
-var $author$project$Data$Root$Ton = 40;
-var $author$project$Data$Root$Uebersetzung = 41;
-var $author$project$Data$Root$Vermittlung = 42;
-var $author$project$Data$Root$VirtualRealityDesign = 43;
-var $author$project$Data$Root$parseFunction = function (_function) {
-	switch (_function) {
-		case 'akrobatik':
-			return $elm$core$Result$Ok(0);
-		case 'alles':
-			return $elm$core$Result$Ok(1);
-		case 'assistenz':
-			return $elm$core$Result$Ok(2);
-		case 'beratung':
-			return $elm$core$Result$Ok(3);
-		case 'buehne':
-			return $elm$core$Result$Ok(4);
-		case 'choreographie':
-			return $elm$core$Result$Ok(5);
-		case 'clownerie':
-			return $elm$core$Result$Ok(6);
-		case 'dramaturgie':
-			return $elm$core$Result$Ok(7);
-		case 'expertin-des-alltags':
-			return $elm$core$Result$Ok(8);
-		case 'fotografie':
-			return $elm$core$Result$Ok(9);
-		case 'gebaerdensprache':
-			return $elm$core$Result$Ok(10);
-		case 'gesang':
-			return $elm$core$Result$Ok(11);
-		case 'grafik':
-			return $elm$core$Result$Ok(12);
-		case 'inszenierung':
-			return $elm$core$Result$Ok(13);
-		case 'jonglage':
-			return $elm$core$Result$Ok(14);
-		case 'kamera-video':
-			return $elm$core$Result$Ok(15);
-		case 'komposition':
-			return $elm$core$Result$Ok(16);
-		case 'konzept':
-			return $elm$core$Result$Ok(17);
-		case 'kostuem':
-			return $elm$core$Result$Ok(18);
-		case 'kuenstlerische-leitung':
-			return $elm$core$Result$Ok(19);
-		case 'licht':
-			return $elm$core$Result$Ok(20);
-		case 'live-musik':
-			return $elm$core$Result$Ok(21);
-		case 'marketing':
-			return $elm$core$Result$Ok(22);
-		case 'maske':
-			return $elm$core$Result$Ok(23);
-		case 'moderation':
-			return $elm$core$Result$Ok(24);
-		case 'musik':
-			return $elm$core$Result$Ok(25);
-		case 'musikalische-leitung':
-			return $elm$core$Result$Ok(26);
-		case 'performance':
-			return $elm$core$Result$Ok(27);
-		case 'produktion':
-			return $elm$core$Result$Ok(28);
-		case 'programmierung':
-			return $elm$core$Result$Ok(29);
-		case 'puppenbau':
-			return $elm$core$Result$Ok(30);
-		case 'puppenspiel':
-			return $elm$core$Result$Ok(31);
-		case 'regie':
-			return $elm$core$Result$Ok(32);
-		case 'rigging':
-			return $elm$core$Result$Ok(33);
-		case 'schauspiel':
-			return $elm$core$Result$Ok(34);
-		case 'sound':
-			return $elm$core$Result$Ok(35);
-		case 'tanz':
-			return $elm$core$Result$Ok(36);
-		case 'technik':
-			return $elm$core$Result$Ok(37);
-		case 'technische-leitung':
-			return $elm$core$Result$Ok(38);
-		case 'text':
-			return $elm$core$Result$Ok(39);
-		case 'ton':
-			return $elm$core$Result$Ok(40);
-		case 'uebersetzung':
-			return $elm$core$Result$Ok(41);
-		case 'vermittlung':
-			return $elm$core$Result$Ok(42);
-		case 'virtual-reality-design':
-			return $elm$core$Result$Ok(43);
-		default:
-			return $elm$core$Result$Err('Unknown function type: ' + _function);
-	}
-};
-var $author$project$Data$Root$functionDecoder = A2(
-	$elm$json$Json$Decode$andThen,
-	A2($elm$core$Basics$composeR, $author$project$Data$Root$parseFunction, $elm_community$json_extra$Json$Decode$Extra$fromResult),
-	$elm$json$Json$Decode$string);
 var $author$project$Data$Root$namesDecoder = $elm$json$Json$Decode$list($elm$json$Json$Decode$string);
 var $author$project$Data$Root$participantDecoder = A4(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
@@ -7018,7 +6876,7 @@ var $author$project$Data$Root$participantDecoder = A4(
 		A4(
 			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 			'function',
-			$elm$json$Json$Decode$nullable($author$project$Data$Root$functionDecoder),
+			$elm$json$Json$Decode$nullable($elm$json$Json$Decode$string),
 			$elm$core$Maybe$Nothing,
 			$elm$json$Json$Decode$succeed($author$project$Data$Root$Participant))));
 var $author$project$Data$Root$participantsDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$participantDecoder);
@@ -7668,98 +7526,6 @@ var $author$project$View$tableRow = F2(
 	});
 var $elm$html$Html$tbody = _VirtualDom_node('tbody');
 var $elm$html$Html$ul = _VirtualDom_node('ul');
-var $author$project$Data$Root$functionToString = function (_function) {
-	switch (_function) {
-		case 0:
-			return 'akrobatik';
-		case 1:
-			return 'alles';
-		case 2:
-			return 'assistenz';
-		case 3:
-			return 'beratung';
-		case 4:
-			return 'buehne';
-		case 5:
-			return 'choreographie';
-		case 6:
-			return 'clownerie';
-		case 7:
-			return 'dramaturgie';
-		case 8:
-			return 'expertin-des-alltags';
-		case 9:
-			return 'fotografie';
-		case 10:
-			return 'gebaerdensprache';
-		case 11:
-			return 'gesang';
-		case 12:
-			return 'grafik';
-		case 13:
-			return 'inszenierung';
-		case 14:
-			return 'jonglage';
-		case 15:
-			return 'kamera-video';
-		case 16:
-			return 'komposition';
-		case 17:
-			return 'konzept';
-		case 18:
-			return 'kostuem';
-		case 19:
-			return 'kuenstlerische-leitung';
-		case 20:
-			return 'licht';
-		case 21:
-			return 'live-musik';
-		case 22:
-			return 'marketing';
-		case 23:
-			return 'maske';
-		case 24:
-			return 'moderation';
-		case 25:
-			return 'musik';
-		case 26:
-			return 'musikalische-leitung';
-		case 27:
-			return 'performance';
-		case 28:
-			return 'produktion';
-		case 29:
-			return 'programmierung';
-		case 30:
-			return 'puppenbau';
-		case 31:
-			return 'puppenspiel';
-		case 32:
-			return 'regie';
-		case 33:
-			return 'rigging';
-		case 34:
-			return 'schauspiel';
-		case 35:
-			return 'sound';
-		case 36:
-			return 'tanz';
-		case 37:
-			return 'technik';
-		case 38:
-			return 'technische-leitung';
-		case 39:
-			return 'text';
-		case 40:
-			return 'ton';
-		case 41:
-			return 'uebersetzung';
-		case 42:
-			return 'vermittlung';
-		default:
-			return 'virtual-reality-design';
-	}
-};
 var $elm$html$Html$li = _VirtualDom_node('li');
 var $author$project$View$viewParticipant = function (participant) {
 	return A2(
@@ -7776,7 +7542,7 @@ var $author$project$View$viewParticipant = function (participant) {
 						$elm$core$Basics$identity,
 						_List_fromArray(
 							[
-								A2($elm$core$Maybe$map, $author$project$Data$Root$functionToString, participant.aM),
+								participant.aM,
 								participant.bn,
 								$elm$core$Maybe$Just(
 								A2($elm$core$String$join, ' / ', participant.a4))
