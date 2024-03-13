@@ -784,11 +784,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.an.K === region.aF.K)
+	if (region.at.N === region.aM.N)
 	{
-		return 'on line ' + region.an.K;
+		return 'on line ' + region.at.N;
 	}
-	return 'on lines ' + region.an.K + ' through ' + region.aF.K;
+	return 'on lines ' + region.at.N + ' through ' + region.aM.N;
 }
 
 
@@ -1857,9 +1857,9 @@ var _Platform_worker = F4(function(impl, flagDecoder, debugMetadata, args)
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.bX,
-		impl.ce,
-		impl.b7,
+		impl.b4,
+		impl.cn,
+		impl.cg,
 		function() { return function() {} }
 	);
 });
@@ -2719,9 +2719,9 @@ var _VirtualDom_mapEventTuple = F2(function(func, tuple)
 var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
-		t: func(record.t),
-		ao: record.ao,
-		ad: record.ad
+		v: func(record.v),
+		au: record.au,
+		ai: record.ai
 	}
 });
 
@@ -2989,11 +2989,11 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 		// 3 = Custom
 
 		var value = result.a;
-		var message = !tag ? value : tag < 3 ? value.a : value.t;
-		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.ao;
+		var message = !tag ? value : tag < 3 ? value.a : value.v;
+		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.au;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.ad) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value.ai) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -3943,11 +3943,11 @@ var _Browser_element = _Debugger_element || F4(function(impl, flagDecoder, debug
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.bX,
-		impl.ce,
-		impl.b7,
+		impl.b4,
+		impl.cn,
+		impl.cg,
 		function(sendToApp, initialModel) {
-			var view = impl.cf;
+			var view = impl.co;
 			/**/
 			var domNode = args['node'];
 			//*/
@@ -3979,12 +3979,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.bX,
-		impl.ce,
-		impl.b7,
+		impl.b4,
+		impl.cn,
+		impl.cg,
 		function(sendToApp, initialModel) {
-			var divertHrefToApp = impl.ag && impl.ag(sendToApp)
-			var view = impl.cf;
+			var divertHrefToApp = impl.al && impl.al(sendToApp)
+			var view = impl.co;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
 			var currNode = _VirtualDom_virtualize(bodyNode);
@@ -3992,12 +3992,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 			{
 				_VirtualDom_divertHrefToApp = divertHrefToApp;
 				var doc = view(model);
-				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.bN);
+				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.bW);
 				var patches = _VirtualDom_diff(currNode, nextNode);
 				bodyNode = _VirtualDom_applyPatches(bodyNode, currNode, patches, sendToApp);
 				currNode = nextNode;
 				_VirtualDom_divertHrefToApp = 0;
-				(title !== doc.bz) && (_VirtualDom_doc.title = title = doc.bz);
+				(title !== doc.bH) && (_VirtualDom_doc.title = title = doc.bH);
 			});
 		}
 	);
@@ -4053,12 +4053,12 @@ function _Browser_makeAnimator(model, draw)
 
 function _Browser_application(impl)
 {
-	var onUrlChange = impl.b_;
-	var onUrlRequest = impl.b$;
+	var onUrlChange = impl.b7;
+	var onUrlRequest = impl.b8;
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
-		ag: function(sendToApp)
+		al: function(sendToApp)
 		{
 			key.a = sendToApp;
 			_Browser_window.addEventListener('popstate', key);
@@ -4074,9 +4074,9 @@ function _Browser_application(impl)
 					var next = $elm$url$Url$fromString(href).a;
 					sendToApp(onUrlRequest(
 						(next
-							&& curr.bg === next.bg
-							&& curr.aS === next.aS
-							&& curr.ba.a === next.ba.a
+							&& curr.bo === next.bo
+							&& curr.a_ === next.a_
+							&& curr.bi.a === next.bi.a
 						)
 							? $elm$browser$Browser$Internal(next)
 							: $elm$browser$Browser$External(href)
@@ -4084,13 +4084,13 @@ function _Browser_application(impl)
 				}
 			});
 		},
-		bX: function(flags)
+		b4: function(flags)
 		{
-			return A3(impl.bX, flags, _Browser_getUrl(), key);
+			return A3(impl.b4, flags, _Browser_getUrl(), key);
 		},
-		cf: impl.cf,
-		ce: impl.ce,
-		b7: impl.b7
+		co: impl.co,
+		cn: impl.cn,
+		cg: impl.cg
 	});
 }
 
@@ -4156,17 +4156,17 @@ var _Browser_decodeEvent = F2(function(decoder, event)
 function _Browser_visibilityInfo()
 {
 	return (typeof _VirtualDom_doc.hidden !== 'undefined')
-		? { bV: 'hidden', bO: 'visibilitychange' }
+		? { b2: 'hidden', bX: 'visibilitychange' }
 		:
 	(typeof _VirtualDom_doc.mozHidden !== 'undefined')
-		? { bV: 'mozHidden', bO: 'mozvisibilitychange' }
+		? { b2: 'mozHidden', bX: 'mozvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.msHidden !== 'undefined')
-		? { bV: 'msHidden', bO: 'msvisibilitychange' }
+		? { b2: 'msHidden', bX: 'msvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.webkitHidden !== 'undefined')
-		? { bV: 'webkitHidden', bO: 'webkitvisibilitychange' }
-		: { bV: 'hidden', bO: 'visibilitychange' };
+		? { b2: 'webkitHidden', bX: 'webkitvisibilitychange' }
+		: { b2: 'hidden', bX: 'visibilitychange' };
 }
 
 
@@ -4247,12 +4247,12 @@ var _Browser_call = F2(function(functionName, id)
 function _Browser_getViewport()
 {
 	return {
-		bp: _Browser_getScene(),
-		bD: {
-			bH: _Browser_window.pageXOffset,
-			bI: _Browser_window.pageYOffset,
-			bG: _Browser_doc.documentElement.clientWidth,
-			aQ: _Browser_doc.documentElement.clientHeight
+		bx: _Browser_getScene(),
+		bM: {
+			bQ: _Browser_window.pageXOffset,
+			bR: _Browser_window.pageYOffset,
+			bP: _Browser_doc.documentElement.clientWidth,
+			aY: _Browser_doc.documentElement.clientHeight
 		}
 	};
 }
@@ -4262,8 +4262,8 @@ function _Browser_getScene()
 	var body = _Browser_doc.body;
 	var elem = _Browser_doc.documentElement;
 	return {
-		bG: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
-		aQ: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
+		bP: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
+		aY: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
 
@@ -4286,15 +4286,15 @@ function _Browser_getViewportOf(id)
 	return _Browser_withNode(id, function(node)
 	{
 		return {
-			bp: {
-				bG: node.scrollWidth,
-				aQ: node.scrollHeight
+			bx: {
+				bP: node.scrollWidth,
+				aY: node.scrollHeight
 			},
-			bD: {
-				bH: node.scrollLeft,
-				bI: node.scrollTop,
-				bG: node.clientWidth,
-				aQ: node.clientHeight
+			bM: {
+				bQ: node.scrollLeft,
+				bR: node.scrollTop,
+				bP: node.clientWidth,
+				aY: node.clientHeight
 			}
 		};
 	});
@@ -4324,18 +4324,18 @@ function _Browser_getElement(id)
 		var x = _Browser_window.pageXOffset;
 		var y = _Browser_window.pageYOffset;
 		return {
-			bp: _Browser_getScene(),
-			bD: {
-				bH: x,
-				bI: y,
-				bG: _Browser_doc.documentElement.clientWidth,
-				aQ: _Browser_doc.documentElement.clientHeight
+			bx: _Browser_getScene(),
+			bM: {
+				bQ: x,
+				bR: y,
+				bP: _Browser_doc.documentElement.clientWidth,
+				aY: _Browser_doc.documentElement.clientHeight
 			},
-			bR: {
-				bH: x + rect.left,
-				bI: y + rect.top,
-				bG: rect.width,
-				aQ: rect.height
+			b_: {
+				bQ: x + rect.left,
+				bR: y + rect.top,
+				bP: rect.width,
+				aY: rect.height
 			}
 		};
 	});
@@ -4426,25 +4426,25 @@ var _Http_toTask = F3(function(router, toTask, request)
 	return _Scheduler_binding(function(callback)
 	{
 		function done(response) {
-			callback(toTask(request.bS.a(response)));
+			callback(toTask(request.b$.a(response)));
 		}
 
 		var xhr = new XMLHttpRequest();
 		xhr.addEventListener('error', function() { done($elm$http$Http$NetworkError_); });
 		xhr.addEventListener('timeout', function() { done($elm$http$Http$Timeout_); });
-		xhr.addEventListener('load', function() { done(_Http_toResponse(request.bS.b, xhr)); });
-		$elm$core$Maybe$isJust(request.bA) && _Http_track(router, xhr, request.bA.a);
+		xhr.addEventListener('load', function() { done(_Http_toResponse(request.b$.b, xhr)); });
+		$elm$core$Maybe$isJust(request.bJ) && _Http_track(router, xhr, request.bJ.a);
 
 		try {
-			xhr.open(request.bZ, request.G, true);
+			xhr.open(request.b6, request.J, true);
 		} catch (e) {
-			return done($elm$http$Http$BadUrl_(request.G));
+			return done($elm$http$Http$BadUrl_(request.J));
 		}
 
 		_Http_configureRequest(xhr, request);
 
-		request.bN.a && xhr.setRequestHeader('Content-Type', request.bN.a);
-		xhr.send(request.bN.b);
+		request.bW.a && xhr.setRequestHeader('Content-Type', request.bW.a);
+		xhr.send(request.bW.b);
 
 		return function() { xhr.c = true; xhr.abort(); };
 	});
@@ -4455,13 +4455,13 @@ var _Http_toTask = F3(function(router, toTask, request)
 
 function _Http_configureRequest(xhr, request)
 {
-	for (var headers = request.aP; headers.b; headers = headers.b) // WHILE_CONS
+	for (var headers = request.aX; headers.b; headers = headers.b) // WHILE_CONS
 	{
 		xhr.setRequestHeader(headers.a.a, headers.a.b);
 	}
-	xhr.timeout = request.b8.a || 0;
-	xhr.responseType = request.bS.d;
-	xhr.withCredentials = request.bL;
+	xhr.timeout = request.ch.a || 0;
+	xhr.responseType = request.b$.d;
+	xhr.withCredentials = request.bU;
 }
 
 
@@ -4482,10 +4482,10 @@ function _Http_toResponse(toBody, xhr)
 function _Http_toMetadata(xhr)
 {
 	return {
-		G: xhr.responseURL,
-		b5: xhr.status,
-		b6: xhr.statusText,
-		aP: _Http_parseHeaders(xhr.getAllResponseHeaders())
+		J: xhr.responseURL,
+		ce: xhr.status,
+		cf: xhr.statusText,
+		aX: _Http_parseHeaders(xhr.getAllResponseHeaders())
 	};
 }
 
@@ -4580,15 +4580,15 @@ function _Http_track(router, xhr, tracker)
 	xhr.upload.addEventListener('progress', function(event) {
 		if (xhr.c) { return; }
 		_Scheduler_rawSpawn(A2($elm$core$Platform$sendToSelf, router, _Utils_Tuple2(tracker, $elm$http$Http$Sending({
-			b4: event.loaded,
-			bs: event.total
+			cd: event.loaded,
+			bA: event.total
 		}))));
 	});
 	xhr.addEventListener('progress', function(event) {
 		if (xhr.c) { return; }
 		_Scheduler_rawSpawn(A2($elm$core$Platform$sendToSelf, router, _Utils_Tuple2(tracker, $elm$http$Http$Receiving({
-			b1: event.loaded,
-			bs: event.lengthComputable ? $elm$core$Maybe$Just(event.total) : $elm$core$Maybe$Nothing
+			ca: event.loaded,
+			bA: event.lengthComputable ? $elm$core$Maybe$Just(event.total) : $elm$core$Maybe$Nothing
 		}))));
 	});
 }
@@ -5225,7 +5225,7 @@ var $elm$url$Url$Http = 0;
 var $elm$url$Url$Https = 1;
 var $elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
-		return {aL: fragment, aS: host, a8: path, ba: port_, bg: protocol, bh: query};
+		return {aS: fragment, a_: host, bg: path, bi: port_, bo: protocol, bp: query};
 	});
 var $elm$core$String$contains = _String_contains;
 var $elm$core$String$length = _String_length;
@@ -5508,80 +5508,11 @@ var $krisajenkins$remotedata$RemoteData$NotAsked = {$: 0};
 var $author$project$View$GotTimeZone = function (a) {
 	return {$: 2, a: a};
 };
-var $elm$time$Time$Name = function (a) {
-	return {$: 0, a: a};
-};
-var $elm$time$Time$Offset = function (a) {
+var $justinmimbs$timezone_data$TimeZone$NoDataForZoneName = function (a) {
 	return {$: 1, a: a};
 };
-var $elm$time$Time$Zone = F2(
-	function (a, b) {
-		return {$: 0, a: a, b: b};
-	});
-var $elm$time$Time$customZone = $elm$time$Time$Zone;
-var $elm$time$Time$here = _Time_here(0);
-var $author$project$View$getTimeZone = A2($elm$core$Task$perform, $author$project$View$GotTimeZone, $elm$time$Time$here);
-var $author$project$View$init = function (_v0) {
-	return _Utils_Tuple2(
-		{i: $krisajenkins$remotedata$RemoteData$NotAsked, J: '', R: $elm$core$Maybe$Nothing},
-		$author$project$View$getTimeZone);
-};
-var $elm$core$Platform$Sub$batch = _Platform_batch;
-var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
-var $author$project$View$subscriptions = function (_v0) {
-	return $elm$core$Platform$Sub$none;
-};
-var $author$project$View$HttpError = function (a) {
-	return {$: 0, a: a};
-};
-var $krisajenkins$remotedata$RemoteData$Failure = function (a) {
-	return {$: 2, a: a};
-};
-var $author$project$View$JsonError = function (a) {
-	return {$: 1, a: a};
-};
-var $krisajenkins$remotedata$RemoteData$Loading = {$: 1};
-var $author$project$View$Response = function (a) {
-	return {$: 3, a: a};
-};
-var $krisajenkins$remotedata$RemoteData$Success = function (a) {
-	return {$: 3, a: a};
-};
-var $elm$core$Basics$composeR = F3(
-	function (f, g, x) {
-		return g(
-			f(x));
-	});
-var $elm$json$Json$Decode$decodeString = _Json_runOnString;
-var $elm$http$Http$BadStatus_ = F2(
-	function (a, b) {
-		return {$: 3, a: a, b: b};
-	});
-var $elm$http$Http$BadUrl_ = function (a) {
-	return {$: 0, a: a};
-};
-var $elm$http$Http$GoodStatus_ = F2(
-	function (a, b) {
-		return {$: 4, a: a, b: b};
-	});
-var $elm$http$Http$NetworkError_ = {$: 2};
-var $elm$http$Http$Receiving = function (a) {
-	return {$: 1, a: a};
-};
-var $elm$http$Http$Sending = function (a) {
-	return {$: 0, a: a};
-};
-var $elm$http$Http$Timeout_ = {$: 1};
-var $elm$core$Dict$RBEmpty_elm_builtin = {$: -2};
-var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
-var $elm$core$Maybe$isJust = function (maybe) {
-	if (!maybe.$) {
-		return true;
-	} else {
-		return false;
-	}
-};
-var $elm$core$Platform$sendToSelf = _Platform_sendToSelf;
+var $justinmimbs$timezone_data$TimeZone$NoZoneName = {$: 0};
+var $elm$core$Task$fail = _Scheduler_fail;
 var $elm$core$Basics$compare = _Utils_compare;
 var $elm$core$Dict$get = F2(
 	function (targetKey, dict) {
@@ -5614,6 +5545,16781 @@ var $elm$core$Dict$get = F2(
 			}
 		}
 	});
+var $elm$time$Time$Name = function (a) {
+	return {$: 0, a: a};
+};
+var $elm$time$Time$Offset = function (a) {
+	return {$: 1, a: a};
+};
+var $elm$time$Time$Zone = F2(
+	function (a, b) {
+		return {$: 0, a: a, b: b};
+	});
+var $elm$time$Time$customZone = $elm$time$Time$Zone;
+var $elm$time$Time$getZoneName = _Time_getZoneName(0);
+var $justinmimbs$timezone_data$TimeZone$Specification$Save = function (a) {
+	return {$: 0, a: a};
+};
+var $justinmimbs$timezone_data$TimeZone$Specification$Zone = F2(
+	function (history, current) {
+		return {Z: current, o: history};
+	});
+var $justinmimbs$timezone_data$TimeZone$Specification$ZoneState = F2(
+	function (standardOffset, zoneRules) {
+		return {as: standardOffset, aw: zoneRules};
+	});
+var $justinmimbs$timezone_data$TimeZone$maxYear = 2037;
+var $justinmimbs$timezone_data$TimeZone$minYear = 1970;
+var $justinmimbs$timezone_data$TimeZone$Specification$DateTime = F5(
+	function (year, month, day, time, clock) {
+		return {u: clock, aI: day, ba: month, Y: time, bS: year};
+	});
+var $elm$time$Time$Jan = 0;
+var $justinmimbs$timezone_data$TimeZone$Specification$Universal = 0;
+var $justinmimbs$timezone_data$TimeZone$Specification$dropChangesBeforeEpoch = function (_v0) {
+	dropChangesBeforeEpoch:
+	while (true) {
+		var initial = _v0.a;
+		var changes = _v0.b;
+		if (changes.b) {
+			var change = changes.a;
+			var rest = changes.b;
+			if (change.at <= 0) {
+				var $temp$_v0 = _Utils_Tuple2(change.b, rest);
+				_v0 = $temp$_v0;
+				continue dropChangesBeforeEpoch;
+			} else {
+				return _Utils_Tuple2(initial, changes);
+			}
+		} else {
+			return _Utils_Tuple2(initial, _List_Nil);
+		}
+	}
+};
+var $elm$core$Tuple$second = function (_v0) {
+	var y = _v0.b;
+	return y;
+};
+var $elm$core$Basics$modBy = _Basics_modBy;
+var $justinmimbs$timezone_data$RataDie$weekdayNumber = function (rd) {
+	var _v0 = A2($elm$core$Basics$modBy, 7, rd);
+	if (!_v0) {
+		return 7;
+	} else {
+		var n = _v0;
+		return n;
+	}
+};
+var $justinmimbs$timezone_data$RataDie$weekdayToNumber = function (wd) {
+	switch (wd) {
+		case 0:
+			return 1;
+		case 1:
+			return 2;
+		case 2:
+			return 3;
+		case 3:
+			return 4;
+		case 4:
+			return 5;
+		case 5:
+			return 6;
+		default:
+			return 7;
+	}
+};
+var $justinmimbs$timezone_data$RataDie$floorWeekday = F2(
+	function (weekday, rd) {
+		var daysSincePreviousWeekday = A2(
+			$elm$core$Basics$modBy,
+			7,
+			($justinmimbs$timezone_data$RataDie$weekdayNumber(rd) + 7) - $justinmimbs$timezone_data$RataDie$weekdayToNumber(weekday));
+		return rd - daysSincePreviousWeekday;
+	});
+var $justinmimbs$timezone_data$RataDie$ceilingWeekday = F2(
+	function (weekday, rd) {
+		var floored = A2($justinmimbs$timezone_data$RataDie$floorWeekday, weekday, rd);
+		return _Utils_eq(rd, floored) ? rd : (floored + 7);
+	});
+var $elm$core$List$append = F2(
+	function (xs, ys) {
+		if (!ys.b) {
+			return xs;
+		} else {
+			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
+		}
+	});
+var $elm$core$List$concat = function (lists) {
+	return A3($elm$core$List$foldr, $elm$core$List$append, _List_Nil, lists);
+};
+var $elm$core$List$concatMap = F2(
+	function (f, list) {
+		return $elm$core$List$concat(
+			A2($elm$core$List$map, f, list));
+	});
+var $elm$core$Basics$neq = _Utils_notEqual;
+var $justinmimbs$timezone_data$RataDie$isLeapYear = function (y) {
+	return ((!A2($elm$core$Basics$modBy, 4, y)) && (!(!A2($elm$core$Basics$modBy, 100, y)))) || (!A2($elm$core$Basics$modBy, 400, y));
+};
+var $justinmimbs$timezone_data$RataDie$daysBeforeMonth = F2(
+	function (y, m) {
+		var leapDays = $justinmimbs$timezone_data$RataDie$isLeapYear(y) ? 1 : 0;
+		switch (m) {
+			case 0:
+				return 0;
+			case 1:
+				return 31;
+			case 2:
+				return 59 + leapDays;
+			case 3:
+				return 90 + leapDays;
+			case 4:
+				return 120 + leapDays;
+			case 5:
+				return 151 + leapDays;
+			case 6:
+				return 181 + leapDays;
+			case 7:
+				return 212 + leapDays;
+			case 8:
+				return 243 + leapDays;
+			case 9:
+				return 273 + leapDays;
+			case 10:
+				return 304 + leapDays;
+			default:
+				return 334 + leapDays;
+		}
+	});
+var $justinmimbs$timezone_data$RataDie$daysBeforeYear = function (y1) {
+	var y = y1 - 1;
+	var leapYears = (((y / 4) | 0) - ((y / 100) | 0)) + ((y / 400) | 0);
+	return (365 * y) + leapYears;
+};
+var $justinmimbs$timezone_data$RataDie$dayOfMonth = F3(
+	function (y, m, d) {
+		return ($justinmimbs$timezone_data$RataDie$daysBeforeYear(y) + A2($justinmimbs$timezone_data$RataDie$daysBeforeMonth, y, m)) + d;
+	});
+var $elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			$elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
+var $justinmimbs$timezone_data$RataDie$daysInMonth = F2(
+	function (y, m) {
+		switch (m) {
+			case 0:
+				return 31;
+			case 1:
+				return $justinmimbs$timezone_data$RataDie$isLeapYear(y) ? 29 : 28;
+			case 2:
+				return 31;
+			case 3:
+				return 30;
+			case 4:
+				return 31;
+			case 5:
+				return 30;
+			case 6:
+				return 31;
+			case 7:
+				return 31;
+			case 8:
+				return 30;
+			case 9:
+				return 31;
+			case 10:
+				return 30;
+			default:
+				return 31;
+		}
+	});
+var $justinmimbs$timezone_data$RataDie$lastOfMonth = F2(
+	function (y, m) {
+		return ($justinmimbs$timezone_data$RataDie$daysBeforeYear(y) + A2($justinmimbs$timezone_data$RataDie$daysBeforeMonth, y, m)) + A2($justinmimbs$timezone_data$RataDie$daysInMonth, y, m);
+	});
+var $justinmimbs$timezone_data$TimeZone$Specification$minutesFromRataDie = function (rd) {
+	return (rd - 719163) * 1440;
+};
+var $elm$core$List$sortBy = _List_sortBy;
+var $justinmimbs$timezone_data$TimeZone$Specification$utcAdjustment = F2(
+	function (clock, _v0) {
+		var save = _v0.k;
+		var standard = _v0.y;
+		switch (clock) {
+			case 0:
+				return 0;
+			case 1:
+				return 0 - standard;
+			default:
+				return 0 - (standard + save);
+		}
+	});
+var $justinmimbs$timezone_data$TimeZone$Specification$minutesFromDateTime = function (_v0) {
+	var time = _v0.Y;
+	var day = _v0.aI;
+	var month = _v0.ba;
+	var year = _v0.bS;
+	return $justinmimbs$timezone_data$TimeZone$Specification$minutesFromRataDie(
+		A3($justinmimbs$timezone_data$RataDie$dayOfMonth, year, month, day)) + time;
+};
+var $justinmimbs$timezone_data$TimeZone$Specification$utcMinutesFromDateTime = F2(
+	function (offset, datetime) {
+		return $justinmimbs$timezone_data$TimeZone$Specification$minutesFromDateTime(datetime) + A2($justinmimbs$timezone_data$TimeZone$Specification$utcAdjustment, datetime.u, offset);
+	});
+var $justinmimbs$timezone_data$TimeZone$Specification$rulesToOffsetChanges = F5(
+	function (previousOffset, start, until, standardOffset, rules) {
+		var transitions = A2(
+			$elm$core$List$concatMap,
+			function (year) {
+				return A2(
+					$elm$core$List$sortBy,
+					function ($) {
+						return $.at;
+					},
+					A2(
+						$elm$core$List$map,
+						function (rule) {
+							return {
+								u: rule.u,
+								k: rule.k,
+								at: $justinmimbs$timezone_data$TimeZone$Specification$minutesFromRataDie(
+									function () {
+										var _v2 = rule.aI;
+										switch (_v2.$) {
+											case 0:
+												var day = _v2.a;
+												return A3($justinmimbs$timezone_data$RataDie$dayOfMonth, year, rule.ba, day);
+											case 1:
+												var weekday = _v2.a;
+												var after = _v2.b;
+												return A2(
+													$justinmimbs$timezone_data$RataDie$ceilingWeekday,
+													weekday,
+													A3($justinmimbs$timezone_data$RataDie$dayOfMonth, year, rule.ba, after));
+											case 2:
+												var weekday = _v2.a;
+												var before = _v2.b;
+												return A2(
+													$justinmimbs$timezone_data$RataDie$floorWeekday,
+													weekday,
+													A3($justinmimbs$timezone_data$RataDie$dayOfMonth, year, rule.ba, before));
+											default:
+												var weekday = _v2.a;
+												return A2(
+													$justinmimbs$timezone_data$RataDie$floorWeekday,
+													weekday,
+													A2($justinmimbs$timezone_data$RataDie$lastOfMonth, year, rule.ba));
+										}
+									}()) + rule.Y
+							};
+						},
+						A2(
+							$elm$core$List$filter,
+							function (rule) {
+								return (_Utils_cmp(rule.aT, year) < 1) && (_Utils_cmp(year, rule.bI) < 1);
+							},
+							rules)));
+			},
+			A2($elm$core$List$range, start.bS - 1, until.bS));
+		var initialOffset = {k: 0, y: standardOffset};
+		var initialChange = {
+			b: standardOffset,
+			at: A2($justinmimbs$timezone_data$TimeZone$Specification$utcMinutesFromDateTime, previousOffset, start)
+		};
+		var _v0 = A3(
+			$elm$core$List$foldl,
+			F2(
+				function (transition, _v1) {
+					var currentOffset = _v1.a;
+					var changes = _v1.b;
+					var newOffset = {k: transition.k, y: standardOffset};
+					if (_Utils_cmp(
+						transition.at + A2($justinmimbs$timezone_data$TimeZone$Specification$utcAdjustment, transition.u, previousOffset),
+						initialChange.at) < 1) {
+						var updatedInitialChange = {b: standardOffset + transition.k, at: initialChange.at};
+						return _Utils_Tuple2(
+							newOffset,
+							_List_fromArray(
+								[updatedInitialChange]));
+					} else {
+						if (_Utils_cmp(
+							transition.at + A2($justinmimbs$timezone_data$TimeZone$Specification$utcAdjustment, transition.u, currentOffset),
+							A2($justinmimbs$timezone_data$TimeZone$Specification$utcMinutesFromDateTime, currentOffset, until)) < 0) {
+							var change = {
+								b: standardOffset + transition.k,
+								at: transition.at + A2($justinmimbs$timezone_data$TimeZone$Specification$utcAdjustment, transition.u, currentOffset)
+							};
+							return _Utils_Tuple2(
+								newOffset,
+								A2($elm$core$List$cons, change, changes));
+						} else {
+							return _Utils_Tuple2(currentOffset, changes);
+						}
+					}
+				}),
+			_Utils_Tuple2(
+				initialOffset,
+				_List_fromArray(
+					[initialChange])),
+			transitions);
+		var nextOffset = _v0.a;
+		var descendingChanges = _v0.b;
+		return _Utils_Tuple2(
+			$elm$core$List$reverse(descendingChanges),
+			nextOffset);
+	});
+var $justinmimbs$timezone_data$TimeZone$Specification$stateToOffsetChanges = F4(
+	function (previousOffset, start, until, _v0) {
+		var zoneRules = _v0.aw;
+		var standardOffset = _v0.as;
+		if (!zoneRules.$) {
+			var save = zoneRules.a;
+			return _Utils_Tuple2(
+				_List_fromArray(
+					[
+						{
+						b: standardOffset + save,
+						at: A2($justinmimbs$timezone_data$TimeZone$Specification$utcMinutesFromDateTime, previousOffset, start)
+					}
+					]),
+				{k: save, y: standardOffset});
+		} else {
+			var rules = zoneRules.a;
+			return A5($justinmimbs$timezone_data$TimeZone$Specification$rulesToOffsetChanges, previousOffset, start, until, standardOffset, rules);
+		}
+	});
+var $justinmimbs$timezone_data$TimeZone$Specification$stripDuplicatesByHelp = F4(
+	function (f, a, rev, list) {
+		stripDuplicatesByHelp:
+		while (true) {
+			if (!list.b) {
+				return $elm$core$List$reverse(rev);
+			} else {
+				var x = list.a;
+				var xs = list.b;
+				var b = f(x);
+				var rev_ = (!_Utils_eq(a, b)) ? A2($elm$core$List$cons, x, rev) : rev;
+				var $temp$f = f,
+					$temp$a = b,
+					$temp$rev = rev_,
+					$temp$list = xs;
+				f = $temp$f;
+				a = $temp$a;
+				rev = $temp$rev;
+				list = $temp$list;
+				continue stripDuplicatesByHelp;
+			}
+		}
+	});
+var $justinmimbs$timezone_data$TimeZone$Specification$zoneToRanges = F3(
+	function (zoneStart, zoneUntil, zone) {
+		var _v0 = A3(
+			$elm$core$List$foldl,
+			F2(
+				function (_v1, _v2) {
+					var state = _v1.a;
+					var nextStart = _v1.b;
+					var start = _v2.a;
+					var ranges = _v2.b;
+					return _Utils_Tuple2(
+						nextStart,
+						A2(
+							$elm$core$List$cons,
+							_Utils_Tuple3(start, state, nextStart),
+							ranges));
+				}),
+			_Utils_Tuple2(zoneStart, _List_Nil),
+			zone.o);
+		var currentStart = _v0.a;
+		var historyRanges = _v0.b;
+		return $elm$core$List$reverse(
+			A2(
+				$elm$core$List$cons,
+				_Utils_Tuple3(currentStart, zone.Z, zoneUntil),
+				historyRanges));
+	});
+var $justinmimbs$timezone_data$TimeZone$Specification$toOffsets = F3(
+	function (minYear, maxYear, zone) {
+		var initialState = function () {
+			var _v5 = zone.o;
+			if (_v5.b) {
+				var _v6 = _v5.a;
+				var earliest = _v6.a;
+				return earliest;
+			} else {
+				return zone.Z;
+			}
+		}();
+		var initialOffset = {
+			k: function () {
+				var _v4 = initialState.aw;
+				if (!_v4.$) {
+					var save = _v4.a;
+					return save;
+				} else {
+					return 0;
+				}
+			}(),
+			y: initialState.as
+		};
+		var ascendingChanges = A4(
+			$justinmimbs$timezone_data$TimeZone$Specification$stripDuplicatesByHelp,
+			function ($) {
+				return $.b;
+			},
+			initialOffset.y + initialOffset.k,
+			_List_Nil,
+			A3(
+				$elm$core$List$foldl,
+				F2(
+					function (_v1, _v2) {
+						var start = _v1.a;
+						var state = _v1.b;
+						var until = _v1.c;
+						var prevOffset = _v2.a;
+						var prevChanges = _v2.b;
+						var _v3 = A4($justinmimbs$timezone_data$TimeZone$Specification$stateToOffsetChanges, prevOffset, start, until, state);
+						var nextChanges = _v3.a;
+						var nextOffset = _v3.b;
+						return _Utils_Tuple2(
+							nextOffset,
+							_Utils_ap(prevChanges, nextChanges));
+					}),
+				_Utils_Tuple2(initialOffset, _List_Nil),
+				A3(
+					$justinmimbs$timezone_data$TimeZone$Specification$zoneToRanges,
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, minYear, 0, 1, 0, 0),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, maxYear + 1, 0, 1, 0, 0),
+					zone)).b);
+		var _v0 = $justinmimbs$timezone_data$TimeZone$Specification$dropChangesBeforeEpoch(
+			_Utils_Tuple2(initialOffset.y + initialOffset.k, ascendingChanges));
+		var initial = _v0.a;
+		var ascending = _v0.b;
+		return _Utils_Tuple2(
+			$elm$core$List$reverse(ascending),
+			initial);
+	});
+var $justinmimbs$timezone_data$TimeZone$fromSpecification = function (zone) {
+	var _v0 = A3($justinmimbs$timezone_data$TimeZone$Specification$toOffsets, $justinmimbs$timezone_data$TimeZone$minYear, $justinmimbs$timezone_data$TimeZone$maxYear, zone);
+	var descending = _v0.a;
+	var bottom = _v0.b;
+	return A2($elm$time$Time$customZone, bottom, descending);
+};
+var $justinmimbs$timezone_data$TimeZone$africa__abidjan = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				0,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $elm$time$Time$May = 4;
+var $elm$time$Time$Oct = 9;
+var $justinmimbs$timezone_data$TimeZone$Specification$Rules = function (a) {
+	return {$: 1, a: a};
+};
+var $justinmimbs$timezone_data$TimeZone$Specification$WallClock = 2;
+var $elm$time$Time$Apr = 3;
+var $justinmimbs$timezone_data$TimeZone$Specification$Day = function (a) {
+	return {$: 0, a: a};
+};
+var $elm$time$Time$Mar = 2;
+var $justinmimbs$timezone_data$TimeZone$Specification$Rule = F7(
+	function (from, to, month, day, time, clock, save) {
+		return {u: clock, aI: day, aT: from, ba: month, k: save, Y: time, bI: to};
+	});
+var $elm$time$Time$Sep = 8;
+var $justinmimbs$timezone_data$TimeZone$Specification$Standard = 1;
+var $justinmimbs$timezone_data$TimeZone$rules_Algeria = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1971,
+		1971,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(25),
+		1380,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1971,
+		1971,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(26),
+		1380,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1977,
+		1977,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(6),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1977,
+		1977,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(21),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1978,
+		1978,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(24),
+		60,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1978,
+		1978,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(22),
+		180,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1980,
+		1980,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(25),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1980,
+		1980,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(31),
+		120,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$africa__algiers = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						0,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Algeria)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1977, 9, 21, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						60,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Algeria)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1979, 9, 26, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						0,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Algeria)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1981, 4, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				60,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $elm$core$Basics$negate = function (n) {
+	return -n;
+};
+var $justinmimbs$timezone_data$TimeZone$africa__bissau = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-60,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1975, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				0,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $elm$time$Time$Aug = 7;
+var $elm$time$Time$Fri = 4;
+var $elm$time$Time$Jul = 6;
+var $elm$time$Time$Jun = 5;
+var $justinmimbs$timezone_data$TimeZone$Specification$Last = function (a) {
+	return {$: 3, a: a};
+};
+var $justinmimbs$timezone_data$TimeZone$Specification$Next = F2(
+	function (a, b) {
+		return {$: 1, a: a, b: b};
+	});
+var $elm$time$Time$Thu = 3;
+var $justinmimbs$timezone_data$TimeZone$rules_Egypt = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1959,
+		1981,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		60,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1966,
+		1994,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		180,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1982,
+		1982,
+		6,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(25),
+		60,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1983,
+		1983,
+		6,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(12),
+		60,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1984,
+		1988,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		60,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1989,
+		1989,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(6),
+		60,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1990,
+		1994,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		60,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1995,
+		2010,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(4),
+		0,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1995,
+		2005,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(3),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2006,
+		2006,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(21),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2007,
+		2007,
+		8,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 3, 1),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2008,
+		2008,
+		7,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(3),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2009,
+		2009,
+		7,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(20),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2010,
+		2010,
+		7,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(10),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2010,
+		2010,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(9),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2010,
+		2010,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(3),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2014,
+		2014,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(15),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2014,
+		2014,
+		5,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(26),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2014,
+		2014,
+		6,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(31),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2014,
+		2014,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(3),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2023,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(4),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2023,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(3),
+		1440,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$africa__cairo = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				120,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Egypt))));
+};
+var $elm$time$Time$Dec = 11;
+var $elm$time$Time$Feb = 1;
+var $elm$time$Time$Nov = 10;
+var $elm$time$Time$Sun = 6;
+var $justinmimbs$timezone_data$TimeZone$rules_Morocco = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1974,
+		1974,
+		5,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(24),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1974,
+		1974,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1976,
+		1977,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1976,
+		1976,
+		7,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1977,
+		1977,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(28),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1978,
+		1978,
+		5,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1978,
+		1978,
+		7,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(4),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2008,
+		2008,
+		5,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2008,
+		2008,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2009,
+		2009,
+		5,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2009,
+		2009,
+		7,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(21),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2010,
+		2010,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(2),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2010,
+		2010,
+		7,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(8),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2011,
+		2011,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(3),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2011,
+		2011,
+		6,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(31),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2012,
+		2013,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2012,
+		2012,
+		6,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(20),
+		180,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2012,
+		2012,
+		7,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(20),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2012,
+		2012,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(30),
+		180,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2013,
+		2013,
+		6,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(7),
+		180,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2013,
+		2013,
+		7,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(10),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2013,
+		2018,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		180,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2014,
+		2018,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2014,
+		2014,
+		5,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(28),
+		180,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2014,
+		2014,
+		7,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(2),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2015,
+		2015,
+		5,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(14),
+		180,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2015,
+		2015,
+		6,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(19),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2016,
+		2016,
+		5,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(5),
+		180,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2016,
+		2016,
+		6,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(10),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2017,
+		2017,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(21),
+		180,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2017,
+		2017,
+		6,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(2),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2018,
+		2018,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(13),
+		180,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2018,
+		2018,
+		5,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(17),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2019,
+		2019,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(5),
+		180,
+		2,
+		-60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2019,
+		2019,
+		5,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(9),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2020,
+		2020,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(19),
+		180,
+		2,
+		-60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2020,
+		2020,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(31),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2021,
+		2021,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(11),
+		180,
+		2,
+		-60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2021,
+		2021,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(16),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2022,
+		2022,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(27),
+		180,
+		2,
+		-60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2022,
+		2022,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(8),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2023,
+		2023,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(19),
+		180,
+		2,
+		-60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2023,
+		2023,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(23),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2024,
+		2024,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(10),
+		180,
+		2,
+		-60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2024,
+		2024,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(14),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2025,
+		2025,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(23),
+		180,
+		2,
+		-60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2025,
+		2025,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(6),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2026,
+		2026,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(15),
+		180,
+		2,
+		-60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2026,
+		2026,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(22),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2027,
+		2027,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(7),
+		180,
+		2,
+		-60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2027,
+		2027,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(14),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2028,
+		2028,
+		0,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(23),
+		180,
+		2,
+		-60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2028,
+		2028,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(5),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2029,
+		2029,
+		0,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(14),
+		180,
+		2,
+		-60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2029,
+		2029,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(18),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2029,
+		2029,
+		11,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(30),
+		180,
+		2,
+		-60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2030,
+		2030,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(10),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2030,
+		2030,
+		11,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(22),
+		180,
+		2,
+		-60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2031,
+		2031,
+		0,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(26),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2031,
+		2031,
+		11,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(14),
+		180,
+		2,
+		-60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2032,
+		2032,
+		0,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(18),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2032,
+		2032,
+		10,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(28),
+		180,
+		2,
+		-60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2033,
+		2033,
+		0,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(9),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2033,
+		2033,
+		10,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(20),
+		180,
+		2,
+		-60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2033,
+		2033,
+		11,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(25),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2034,
+		2034,
+		10,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(5),
+		180,
+		2,
+		-60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2034,
+		2034,
+		11,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(17),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2035,
+		2035,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(28),
+		180,
+		2,
+		-60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2035,
+		2035,
+		11,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(9),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2036,
+		2036,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(19),
+		180,
+		2,
+		-60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2036,
+		2036,
+		10,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(23),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2037,
+		2037,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(4),
+		180,
+		2,
+		-60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2037,
+		2037,
+		10,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(15),
+		120,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$africa__casablanca = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						0,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Morocco)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1984, 2, 16, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						60,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1986, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						0,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Morocco)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2018, 9, 28, 180, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				60,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Morocco))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_EU = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1977,
+		1980,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		60,
+		0,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1977,
+		1977,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		60,
+		0,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1978,
+		1978,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		60,
+		0,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1979,
+		1995,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		60,
+		0,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1981,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		60,
+		0,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1996,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		60,
+		0,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$rules_SpainAfrica = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1974,
+		1974,
+		5,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(24),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1974,
+		1974,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1976,
+		1977,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1976,
+		1976,
+		7,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1977,
+		1977,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(28),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1978,
+		1978,
+		5,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1978,
+		1978,
+		7,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(4),
+		0,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$africa__ceuta = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						0,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_SpainAfrica)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1984, 2, 16, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						60,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1986, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				60,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU))));
+};
+var $justinmimbs$timezone_data$TimeZone$africa__el_aaiun = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-60,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1976, 3, 14, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						0,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Morocco)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2018, 9, 28, 180, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				60,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Morocco))));
+};
+var $justinmimbs$timezone_data$TimeZone$africa__johannesburg = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				120,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Sudan = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1970,
+		1970,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1970,
+		1985,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(15),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1971,
+		1971,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(30),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1972,
+		1985,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		2,
+		60)
+	]);
+var $justinmimbs$timezone_data$TimeZone$africa__juba = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Sudan)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2000, 0, 15, 720, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2021, 1, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				120,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$africa__khartoum = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Sudan)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2000, 0, 15, 720, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2017, 10, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				120,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$africa__lagos = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				60,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$africa__maputo = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				120,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$africa__monrovia = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-45,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1972, 0, 7, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				0,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$africa__nairobi = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$africa__ndjamena = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						60,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1979, 9, 14, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						60,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(60)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1980, 2, 8, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				60,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$africa__sao_tome = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						0,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2018, 0, 1, 60, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						60,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2019, 0, 1, 120, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				0,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Libya = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1982,
+		1984,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1982,
+		1985,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1985,
+		1985,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(6),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1986,
+		1986,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(4),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1986,
+		1986,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(3),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1987,
+		1989,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1987,
+		1989,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1997,
+		1997,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(4),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1997,
+		1997,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(4),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2013,
+		2013,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(4),
+		60,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2013,
+		2013,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(4),
+		120,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$africa__tripoli = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1982, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						60,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Libya)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1990, 4, 4, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1996, 8, 30, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						60,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Libya)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1997, 9, 4, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2012, 10, 10, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						60,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Libya)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2013, 9, 25, 120, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				120,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Tunisia = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1977,
+		1977,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(30),
+		0,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1977,
+		1977,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(24),
+		0,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1978,
+		1978,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1978,
+		1978,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1988,
+		1988,
+		5,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1988,
+		1990,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1989,
+		1989,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(26),
+		0,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1990,
+		1990,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2005,
+		2005,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2005,
+		2005,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(30),
+		60,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2006,
+		2008,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2006,
+		2008,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$africa__tunis = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				60,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Tunisia))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Namibia = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1994,
+		1994,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(21),
+		0,
+		2,
+		-60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1994,
+		2017,
+		8,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1995,
+		2017,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		2,
+		-60)
+	]);
+var $justinmimbs$timezone_data$TimeZone$africa__windhoek = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1990, 2, 21, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				120,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Namibia))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_US = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1967,
+		2006,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1967,
+		1973,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1974,
+		1974,
+		0,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(6),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1975,
+		1975,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1976,
+		1986,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1987,
+		2006,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2007,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 8),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2007,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		10,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$america__adak = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-660,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1983, 9, 30, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-600,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1983, 10, 30, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-600,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__anchorage = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-600,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1983, 9, 30, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-540,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1983, 10, 30, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-540,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Brazil = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1985,
+		1985,
+		10,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(2),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1986,
+		1986,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(15),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1986,
+		1986,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(25),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1987,
+		1987,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(14),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1987,
+		1987,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(25),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1988,
+		1988,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(7),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1988,
+		1988,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(16),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1989,
+		1989,
+		0,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(29),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1989,
+		1989,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(15),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1990,
+		1990,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(11),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1990,
+		1990,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(21),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1991,
+		1991,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(17),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1991,
+		1991,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(20),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1992,
+		1992,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(9),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1992,
+		1992,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(25),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1993,
+		1993,
+		0,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(31),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1993,
+		1995,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 11),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1994,
+		1995,
+		1,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 15),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1996,
+		1996,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(11),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1996,
+		1996,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(6),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1997,
+		1997,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(16),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1997,
+		1997,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(6),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1998,
+		1998,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1998,
+		1998,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(11),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1999,
+		1999,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(21),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1999,
+		1999,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(3),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2000,
+		2000,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(27),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2000,
+		2001,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 8),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2001,
+		2006,
+		1,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 15),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2002,
+		2002,
+		10,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(3),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2003,
+		2003,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(19),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2004,
+		2004,
+		10,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(2),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2005,
+		2005,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(16),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2006,
+		2006,
+		10,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(5),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2007,
+		2007,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(25),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2007,
+		2007,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 8),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2008,
+		2017,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 15),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2008,
+		2011,
+		1,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 15),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2012,
+		2012,
+		1,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 22),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2013,
+		2014,
+		1,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 15),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2015,
+		2015,
+		1,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 22),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2016,
+		2019,
+		1,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 15),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2018,
+		2018,
+		10,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		0,
+		2,
+		60)
+	]);
+var $justinmimbs$timezone_data$TimeZone$america__araguaina = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Brazil)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1990, 8, 17, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1995, 8, 14, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Brazil)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2003, 8, 24, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2012, 9, 21, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Brazil)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2013, 8, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Arg = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1968,
+		1969,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1974,
+		1974,
+		0,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(23),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1974,
+		1974,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1988,
+		1988,
+		11,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1989,
+		1993,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1989,
+		1992,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 15),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1999,
+		1999,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2000,
+		2000,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(3),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2007,
+		2007,
+		11,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(30),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2008,
+		2009,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 15),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2008,
+		2008,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 15),
+		0,
+		2,
+		60)
+	]);
+var $justinmimbs$timezone_data$TimeZone$america__argentina__buenos_aires = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1999, 9, 3, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2000, 2, 3, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__argentina__catamarca = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 3, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 9, 20, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1999, 9, 3, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2000, 2, 3, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2004, 5, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2004, 5, 20, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2008, 9, 18, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__argentina__cordoba = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 3, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 9, 20, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1999, 9, 3, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2000, 2, 3, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__argentina__jujuy = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1990, 2, 4, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1990, 9, 28, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(60)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 17, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 9, 6, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(60)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1999, 9, 3, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2000, 2, 3, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2008, 9, 18, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__argentina__la_rioja = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 4, 7, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1999, 9, 3, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2000, 2, 3, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2004, 5, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2004, 5, 20, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2008, 9, 18, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__argentina__mendoza = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1990, 2, 4, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1990, 9, 15, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(60)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 9, 15, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(60)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 2, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 9, 18, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1999, 9, 3, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2000, 2, 3, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2004, 4, 23, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2004, 8, 26, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2008, 9, 18, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__argentina__rio_gallegos = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1999, 9, 3, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2000, 2, 3, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2004, 5, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2004, 5, 20, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2008, 9, 18, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__argentina__salta = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 3, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 9, 20, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1999, 9, 3, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2000, 2, 3, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2008, 9, 18, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__argentina__san_juan = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 4, 7, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1999, 9, 3, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2000, 2, 3, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2004, 4, 31, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2004, 6, 25, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2008, 9, 18, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_SanLuis = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2008,
+		2009,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 8),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2007,
+		2008,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 8),
+		0,
+		2,
+		60)
+	]);
+var $justinmimbs$timezone_data$TimeZone$america__argentina__san_luis = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1990, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(60)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1990, 2, 14, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1990, 9, 15, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(60)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 5, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1999, 9, 3, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(60)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2000, 2, 3, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2004, 4, 31, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2004, 6, 25, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2008, 0, 21, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_SanLuis)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2009, 9, 11, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__argentina__tucuman = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 3, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 9, 20, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1999, 9, 3, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2000, 2, 3, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2004, 5, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2004, 5, 13, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__argentina__ushuaia = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1999, 9, 3, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2000, 2, 3, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2004, 4, 30, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2004, 5, 20, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2008, 9, 18, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Para = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1975,
+		1988,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1975,
+		1978,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1979,
+		1991,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1989,
+		1989,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(22),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1990,
+		1990,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1991,
+		1991,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(6),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1992,
+		1992,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1992,
+		1992,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(5),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1993,
+		1993,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(31),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1993,
+		1995,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1994,
+		1995,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1996,
+		1996,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1996,
+		2001,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1997,
+		1997,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1998,
+		2001,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2002,
+		2004,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2002,
+		2003,
+		8,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2004,
+		2009,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 15),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2005,
+		2009,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 8),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2010,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2010,
+		2012,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 8),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2013,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 22),
+		0,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$america__asuncion = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1972, 9, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1974, 3, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-240,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Para))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__bahia = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Brazil)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2003, 8, 24, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 9, 16, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Brazil)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2012, 9, 21, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Mexico = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1996,
+		2000,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1996,
+		2000,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2001,
+		2001,
+		4,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2001,
+		2001,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2002,
+		2022,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2002,
+		2022,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$america__bahia_banderas = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1970, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Mexico)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2010, 3, 4, 120, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-360,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Mexico))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Barb = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1977,
+		1977,
+		5,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(12),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1977,
+		1978,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1978,
+		1980,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 15),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1979,
+		1979,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(30),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1980,
+		1980,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(25),
+		120,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$america__barbados = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-240,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Barb))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__belem = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Brazil)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1988, 8, 12, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Belize = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1973,
+		1973,
+		11,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(5),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1974,
+		1974,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(9),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1982,
+		1982,
+		11,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(18),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1983,
+		1983,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(12),
+		0,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$america__belize = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-360,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Belize))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__boa_vista = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Brazil)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1988, 8, 12, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1999, 8, 30, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Brazil)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2000, 9, 15, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-240,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_CO = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1992,
+		1992,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(3),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1993,
+		1993,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(6),
+		1440,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$america__bogota = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_CO))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__boise = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1974, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1974, 1, 3, 120, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-420,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Canada = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1974,
+		1986,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1974,
+		2006,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1987,
+		2006,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2007,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 8),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2007,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		10,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$rules_NT_YK = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1972,
+		1986,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1972,
+		2006,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1987,
+		2006,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		2,
+		60)
+	]);
+var $justinmimbs$timezone_data$TimeZone$america__cambridge_bay = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_NT_YK)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1999, 9, 31, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Canada)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2000, 9, 29, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2000, 10, 5, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2001, 3, 1, 180, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-420,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Canada))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__campo_grande = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-240,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Brazil))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__cancun = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1981, 11, 23, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Mexico)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1998, 7, 2, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Mexico)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2015, 1, 1, 120, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__caracas = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2007, 11, 9, 180, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-270,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2016, 4, 1, 150, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-240,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__cayenne = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__chicago = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-360,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__chihuahua = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1996, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Mexico)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1998, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1998, 3, 5, 180, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Mexico)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2022, 9, 30, 120, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-360,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__ciudad_juarez = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1996, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Mexico)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1998, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1998, 3, 5, 180, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Mexico)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2010, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2022, 9, 30, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2022, 10, 30, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-420,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US))));
+};
+var $elm$time$Time$Sat = 5;
+var $justinmimbs$timezone_data$TimeZone$rules_CR = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1979,
+		1980,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1979,
+		1980,
+		5,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1991,
+		1992,
+		0,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 5, 15),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1991,
+		1991,
+		6,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1992,
+		1992,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(15),
+		0,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$america__costa_rica = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-360,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_CR))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__cuiaba = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Brazil)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2003, 8, 24, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2004, 9, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-240,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Brazil))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__danmarkshavn = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1980, 3, 6, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1996, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				0,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__dawson = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-540,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1973, 9, 28, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1980, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Canada)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2020, 10, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-420,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Vanc = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1946,
+		1986,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1962,
+		2006,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$america__dawson_creek = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Vanc)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1972, 7, 30, 120, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-420,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__denver = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-420,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__detroit = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1973, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1975, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1975, 3, 27, 120, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Edm = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1972,
+		1986,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1972,
+		2006,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$america__edmonton = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Edm)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1987, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-420,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Canada))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__eirunepe = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Brazil)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1988, 8, 12, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1993, 8, 28, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Brazil)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1994, 8, 22, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2008, 5, 24, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2013, 10, 10, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Salv = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1987,
+		1988,
+		4,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1987,
+		1988,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$america__el_salvador = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-360,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Salv))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__fort_nelson = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Vanc)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1987, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Canada)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2015, 2, 8, 120, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-420,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__fortaleza = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Brazil)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1990, 8, 17, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1999, 8, 30, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Brazil)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2000, 9, 22, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2001, 8, 13, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Brazil)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2002, 9, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Halifax = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1962,
+		1973,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1962,
+		1973,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$america__glace_bay = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1972, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Halifax)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1974, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-240,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Canada))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_StJohns = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1951,
+		1986,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1960,
+		1986,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1987,
+		1987,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		1,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1987,
+		2006,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		1,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1988,
+		1988,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		1,
+		2,
+		120),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1989,
+		2006,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		1,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2007,
+		2011,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 8),
+		1,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2007,
+		2010,
+		10,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		1,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$america__goose_bay = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_StJohns)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 10, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-240,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Canada))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__grand_turk = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1979, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2015, 2, 8, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2018, 2, 11, 180, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Guat = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1973,
+		1973,
+		10,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(25),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1974,
+		1974,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(24),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1983,
+		1983,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(21),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1983,
+		1983,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(22),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1991,
+		1991,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(23),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1991,
+		1991,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(7),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2006,
+		2006,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(30),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2006,
+		2006,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$america__guatemala = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-360,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Guat))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Ecuador = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1992,
+		1992,
+		10,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(28),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1993,
+		1993,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(5),
+		0,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$america__guayaquil = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Ecuador))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__guyana = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-225,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1975, 7, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 2, 29, 60, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-240,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__halifax = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Halifax)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1974, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-240,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Canada))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Cuba = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1969,
+		1977,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1969,
+		1971,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1972,
+		1974,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(8),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1975,
+		1977,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1978,
+		1978,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(7),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1978,
+		1990,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 8),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1979,
+		1980,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 15),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1981,
+		1985,
+		4,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 5),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1986,
+		1989,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 14),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1990,
+		1997,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1991,
+		1995,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 8),
+		0,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1996,
+		1996,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(6),
+		0,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1997,
+		1997,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(12),
+		0,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1998,
+		1999,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1998,
+		2003,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2000,
+		2003,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		0,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2004,
+		2004,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2006,
+		2010,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2007,
+		2007,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 8),
+		0,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2008,
+		2008,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 15),
+		0,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2009,
+		2010,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 8),
+		0,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2011,
+		2011,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 15),
+		0,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2011,
+		2011,
+		10,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(13),
+		0,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2012,
+		2012,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2012,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		10,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		0,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2013,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 8),
+		0,
+		1,
+		60)
+	]);
+var $justinmimbs$timezone_data$TimeZone$america__havana = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Cuba))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__hermosillo = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1970, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Mexico)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1999, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-420,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__indiana__indianapolis = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1971, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2006, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__indiana__knox = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 9, 27, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2006, 3, 2, 120, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-360,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__indiana__marengo = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1974, 0, 6, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(60)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1974, 9, 27, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1976, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2006, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__indiana__petersburg = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1977, 9, 30, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2006, 3, 2, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2007, 10, 4, 120, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__indiana__tell_city = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1971, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2006, 3, 2, 120, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-360,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__indiana__vevay = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1973, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2006, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__indiana__vincennes = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1971, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2006, 3, 2, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2007, 10, 4, 120, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__indiana__winamac = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1971, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2006, 3, 2, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2007, 2, 11, 120, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__inuvik = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_NT_YK)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1979, 3, 29, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_NT_YK)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1980, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-420,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Canada))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__iqaluit = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_NT_YK)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1999, 9, 31, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Canada)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2000, 9, 29, 120, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Canada))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__jamaica = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1974, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1984, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__juneau = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1980, 3, 27, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-540,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1980, 9, 26, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1983, 9, 30, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-540,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1983, 10, 30, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-540,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__kentucky__louisville = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1974, 0, 6, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(60)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1974, 9, 27, 120, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__kentucky__monticello = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2000, 9, 29, 120, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__la_paz = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-240,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Peru = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1986,
+		1987,
+		0,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1986,
+		1987,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1990,
+		1990,
+		0,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1990,
+		1990,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1994,
+		1994,
+		0,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1994,
+		1994,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$america__lima = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Peru))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__los_angeles = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-480,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__maceio = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Brazil)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1990, 8, 17, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1995, 9, 13, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Brazil)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1996, 8, 4, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1999, 8, 30, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Brazil)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2000, 9, 22, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2001, 8, 13, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Brazil)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2002, 9, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $elm$time$Time$Mon = 0;
+var $justinmimbs$timezone_data$TimeZone$rules_Nic = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1979,
+		1980,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 16),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1979,
+		1980,
+		5,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 0, 23),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2005,
+		2005,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(10),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2005,
+		2005,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2006,
+		2006,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(30),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2006,
+		2006,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		60,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$america__managua = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1973, 4, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1975, 1, 16, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Nic)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 0, 1, 240, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 8, 24, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1993, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1997, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-360,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Nic))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__manaus = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Brazil)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1988, 8, 12, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1993, 8, 28, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Brazil)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1994, 8, 22, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-240,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__martinique = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1980, 3, 6, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(60)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1980, 8, 28, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-240,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__matamoros = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1988, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1989, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Mexico)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2010, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-360,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__mazatlan = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1970, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-420,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Mexico))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__menominee = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1973, 3, 29, 120, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-360,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__merida = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1981, 11, 23, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1982, 11, 2, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-360,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Mexico))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__metlakatla = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1983, 9, 30, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2015, 10, 1, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-540,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2018, 10, 4, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2019, 0, 20, 120, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-540,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__mexico_city = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Mexico)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2001, 8, 30, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2002, 1, 20, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-360,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Mexico))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__miquelon = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1980, 4, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1987, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Canada))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Moncton = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1946,
+		1972,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1957,
+		1972,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1993,
+		2006,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		1,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1993,
+		2006,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		1,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$america__moncton = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Moncton)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1973, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Canada)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1993, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Moncton)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2007, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-240,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Canada))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__monterrey = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1988, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1989, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-360,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Mexico))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Uruguay = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1970,
+		1970,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(25),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1970,
+		1970,
+		5,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(14),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1972,
+		1972,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(23),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1972,
+		1972,
+		6,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(16),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1974,
+		1974,
+		0,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(13),
+		0,
+		2,
+		90),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1974,
+		1974,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(10),
+		0,
+		2,
+		30),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1974,
+		1974,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1974,
+		1974,
+		11,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(22),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1975,
+		1975,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(30),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1976,
+		1976,
+		11,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(19),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1977,
+		1977,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(6),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1977,
+		1977,
+		11,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(4),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1978,
+		1979,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1978,
+		1978,
+		11,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(17),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1979,
+		1979,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(29),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1980,
+		1980,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(16),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1987,
+		1987,
+		11,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(14),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1988,
+		1988,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(28),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1988,
+		1988,
+		11,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(11),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1989,
+		1989,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(5),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1989,
+		1989,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(29),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1990,
+		1990,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(25),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1990,
+		1991,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 21),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1991,
+		1992,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1992,
+		1992,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(18),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1993,
+		1993,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(28),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2004,
+		2004,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(19),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2005,
+		2005,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(27),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2005,
+		2005,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(9),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2006,
+		2015,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 8),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2006,
+		2014,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		2,
+		60)
+	]);
+var $justinmimbs$timezone_data$TimeZone$america__montevideo = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Uruguay)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1970, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Uruguay)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1974, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Uruguay)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1974, 2, 10, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Uruguay)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1974, 11, 22, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Uruguay))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__new_york = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__nome = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-660,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1983, 9, 30, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-540,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1983, 10, 30, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-540,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__noronha = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Brazil)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1990, 8, 17, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1999, 8, 30, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Brazil)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2000, 9, 15, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2001, 8, 13, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Brazil)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2002, 9, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-120,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__north_dakota__beulah = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2010, 10, 7, 120, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-360,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__north_dakota__center = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 9, 25, 120, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-360,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__north_dakota__new_salem = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2003, 9, 26, 120, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-360,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__nuuk = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1980, 3, 6, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2023, 2, 26, 60, 0)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2023, 9, 29, 60, 0))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-120,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__ojinaga = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1996, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Mexico)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1998, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1998, 3, 5, 180, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Mexico)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2010, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2022, 9, 30, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2022, 10, 30, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-360,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__panama = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__paramaribo = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-210,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1984, 9, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__phoenix = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-420,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Haiti = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1983,
+		1983,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(8),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1984,
+		1987,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1983,
+		1987,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1988,
+		1997,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		60,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1988,
+		1997,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		60,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2005,
+		2006,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2005,
+		2006,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2012,
+		2015,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 8),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2012,
+		2015,
+		10,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2017,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 8),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2017,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		10,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$america__port_au_prince = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Haiti))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__porto_velho = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Brazil)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1988, 8, 12, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-240,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__puerto_rico = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-240,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Chile = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1969,
+		1969,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(30),
+		180,
+		0,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1969,
+		1969,
+		10,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(23),
+		240,
+		0,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1970,
+		1970,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(29),
+		180,
+		0,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1971,
+		1971,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(14),
+		180,
+		0,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1970,
+		1972,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 9),
+		240,
+		0,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1972,
+		1986,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 9),
+		180,
+		0,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1973,
+		1973,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(30),
+		240,
+		0,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1974,
+		1987,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 9),
+		240,
+		0,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1987,
+		1987,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(12),
+		180,
+		0,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1988,
+		1990,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 9),
+		180,
+		0,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1988,
+		1989,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 9),
+		240,
+		0,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1990,
+		1990,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(16),
+		240,
+		0,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1991,
+		1996,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 9),
+		180,
+		0,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1991,
+		1997,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 9),
+		240,
+		0,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1997,
+		1997,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(30),
+		180,
+		0,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1998,
+		1998,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 9),
+		180,
+		0,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1998,
+		1998,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(27),
+		240,
+		0,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1999,
+		1999,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(4),
+		180,
+		0,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1999,
+		2010,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 9),
+		240,
+		0,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2000,
+		2007,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 9),
+		180,
+		0,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2008,
+		2008,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(30),
+		180,
+		0,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2009,
+		2009,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 9),
+		180,
+		0,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2010,
+		2010,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		180,
+		0,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2011,
+		2011,
+		4,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 2),
+		180,
+		0,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2011,
+		2011,
+		7,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 16),
+		240,
+		0,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2012,
+		2014,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 23),
+		180,
+		0,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2012,
+		2014,
+		8,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 2),
+		240,
+		0,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2016,
+		2018,
+		4,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 9),
+		180,
+		0,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2016,
+		2018,
+		7,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 9),
+		240,
+		0,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2019,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 2),
+		180,
+		0,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2019,
+		2021,
+		8,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 2),
+		240,
+		0,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2022,
+		2022,
+		8,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 9),
+		240,
+		0,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2023,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		8,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 2),
+		240,
+		0,
+		60)
+	]);
+var $justinmimbs$timezone_data$TimeZone$america__punta_arenas = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Chile)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2016, 11, 4, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__rankin_inlet = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_NT_YK)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2000, 9, 29, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2001, 3, 1, 180, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-360,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Canada))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__recife = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Brazil)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1990, 8, 17, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1999, 8, 30, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Brazil)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2000, 9, 15, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2001, 8, 13, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Brazil)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2002, 9, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__regina = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-360,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__resolute = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_NT_YK)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2000, 9, 29, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2001, 3, 1, 180, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Canada)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2006, 9, 29, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2007, 2, 11, 180, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-360,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Canada))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__rio_branco = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Brazil)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1988, 8, 12, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2008, 5, 24, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2013, 10, 10, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__santarem = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Brazil)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1988, 8, 12, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2008, 5, 24, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__santiago = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-240,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Chile))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_DR = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1969,
+		1973,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		2,
+		30),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1970,
+		1970,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(21),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1971,
+		1971,
+		0,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(20),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1972,
+		1974,
+		0,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(21),
+		0,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$america__santo_domingo = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_DR)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1974, 9, 27, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2000, 9, 29, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2000, 11, 3, 60, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-240,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__sao_paulo = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Brazil))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_C_Eur = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1977,
+		1980,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1977,
+		1977,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1978,
+		1978,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1979,
+		1995,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1981,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1996,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$america__scoresbysund = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1980, 3, 6, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_C_Eur)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1981, 2, 29, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-60,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2024, 2, 31, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-120,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__sitka = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1983, 9, 30, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-540,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1983, 10, 30, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-540,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__st_johns = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-210,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_StJohns)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 10, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-210,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Canada))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__swift_current = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1972, 3, 30, 120, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-360,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Hond = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1987,
+		1988,
+		4,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1987,
+		1988,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2006,
+		2006,
+		4,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2006,
+		2006,
+		7,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 0, 1),
+		0,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$america__tegucigalpa = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-360,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Hond))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Thule = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1991,
+		1992,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1991,
+		1992,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1993,
+		2006,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1993,
+		2006,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2007,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 8),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2007,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		10,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$america__thule = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-240,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Thule))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__tijuana = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1976, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1996, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Mexico)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2001, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2002, 1, 20, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Mexico)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2010, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-480,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Toronto = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1946,
+		1973,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1957,
+		1973,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$america__toronto = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Toronto)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1974, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Canada))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__vancouver = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Vanc)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1987, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-480,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Canada))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__whitehorse = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1980, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Canada)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2020, 10, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-420,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Winn = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1966,
+		1986,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1966,
+		2005,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1987,
+		2005,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		1,
+		60)
+	]);
+var $justinmimbs$timezone_data$TimeZone$america__winnipeg = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Winn)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2006, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-360,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Canada))));
+};
+var $justinmimbs$timezone_data$TimeZone$america__yakutat = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-540,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1983, 10, 30, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-540,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US))));
+};
+var $justinmimbs$timezone_data$TimeZone$antarctica__casey = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2009, 9, 18, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						660,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2010, 2, 5, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 9, 28, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						660,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2012, 1, 21, 1020, 0)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2016, 9, 22, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						660,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2018, 2, 11, 240, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2018, 9, 7, 240, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						660,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2019, 2, 17, 180, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2019, 9, 4, 180, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						660,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2020, 2, 8, 180, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2020, 9, 4, 1, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						660,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2021, 2, 14, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2021, 9, 3, 1, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						660,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2022, 2, 13, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2022, 9, 2, 1, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						660,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2023, 2, 9, 180, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				480,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$antarctica__davis = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2009, 9, 18, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2010, 2, 10, 1200, 0)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 9, 28, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2012, 1, 21, 1200, 0))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				420,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_AT = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1968,
+		1985,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1969,
+		1971,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 8),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1972,
+		1972,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1973,
+		1981,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1982,
+		1983,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1984,
+		1986,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1986,
+		1986,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 15),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1987,
+		1990,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 15),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1987,
+		1987,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 22),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1988,
+		1990,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1991,
+		1999,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1991,
+		2005,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2000,
+		2000,
+		7,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2001,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2006,
+		2006,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2007,
+		2007,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2008,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		1,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$antarctica__macquarie = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						600,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_AT)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2010, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						600,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(60)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				600,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_AT))));
+};
+var $justinmimbs$timezone_data$TimeZone$antarctica__mawson = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2009, 9, 18, 120, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$antarctica__palmer = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Arg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1982, 4, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Chile)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2016, 11, 4, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$antarctica__rothera = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						0,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1976, 11, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Troll = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2005,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		60,
+		0,
+		120),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2004,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		60,
+		0,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$antarctica__troll = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						0,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2005, 1, 12, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				0,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Troll))));
+};
+var $justinmimbs$timezone_data$TimeZone$antarctica__vostok = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1994, 1, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						0,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1994, 10, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2023, 11, 18, 120, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_RussiaAsia = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1981,
+		1984,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1981,
+		1983,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1984,
+		1995,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1985,
+		2010,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1996,
+		2010,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$asia__almaty = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 0, 19, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2004, 9, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2024, 2, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Jordan = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1973,
+		1973,
+		5,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(6),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1973,
+		1975,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1974,
+		1977,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1976,
+		1976,
+		10,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1977,
+		1977,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1978,
+		1978,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(30),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1978,
+		1978,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(30),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1985,
+		1985,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1985,
+		1985,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1986,
+		1988,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 4, 1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1986,
+		1990,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 4, 1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1989,
+		1989,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(8),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1990,
+		1990,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(27),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1991,
+		1991,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(17),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1991,
+		1991,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(27),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1992,
+		1992,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(10),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1992,
+		1993,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 4, 1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1993,
+		1998,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 4, 1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1994,
+		1994,
+		8,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 4, 15),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1995,
+		1998,
+		8,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 4, 15),
+		0,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1999,
+		1999,
+		6,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1999,
+		2002,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(4),
+		0,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2000,
+		2001,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(3),
+		0,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2002,
+		2012,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(3),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2003,
+		2003,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(24),
+		0,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2004,
+		2004,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(15),
+		0,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2005,
+		2005,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(4),
+		0,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2006,
+		2011,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(4),
+		0,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2013,
+		2013,
+		11,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(20),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2014,
+		2021,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(3),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2014,
+		2022,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(4),
+		0,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2022,
+		2022,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(3),
+		1440,
+		2,
+		60)
+	]);
+var $justinmimbs$timezone_data$TimeZone$asia__amman = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Jordan)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2022, 9, 28, 0, 1))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Russia = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1981,
+		1984,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1981,
+		1983,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1984,
+		1995,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1985,
+		2010,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1996,
+		2010,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$asia__anadyr = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						780,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1982, 3, 1, 0, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						720,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						660,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 0, 19, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						720,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2010, 2, 28, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						660,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 2, 27, 120, 1))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				720,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__aqtau = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1981, 9, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1982, 3, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 0, 19, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1994, 8, 25, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2004, 9, 31, 120, 1))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__aqtobe = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1981, 3, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(60)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1981, 9, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1982, 3, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 0, 19, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2004, 9, 31, 120, 1))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__ashgabat = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 0, 19, 120, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__atyrau = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1981, 9, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1982, 3, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 0, 19, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1999, 2, 28, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2004, 9, 31, 120, 1))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Iraq = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1982,
+		1982,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1982,
+		1984,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1983,
+		1983,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(31),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1984,
+		1985,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1985,
+		1990,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		60,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1986,
+		1990,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		60,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1991,
+		2007,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		180,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1991,
+		2007,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		180,
+		1,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$asia__baghdad = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1982, 4, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Iraq))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Azer = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1997,
+		2015,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		240,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1997,
+		2015,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		300,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$rules_EUAsia = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1981,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		60,
+		0,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1979,
+		1995,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		60,
+		0,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1996,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		60,
+		0,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$asia__baku = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 8, 27, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1996, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EUAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1997, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				240,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Azer))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__bangkok = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				420,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__barnaul = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 0, 19, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1995, 4, 28, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 2, 27, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2014, 9, 26, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2016, 2, 27, 120, 1))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				420,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Lebanon = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1972,
+		1972,
+		5,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(22),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1972,
+		1977,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1973,
+		1977,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1978,
+		1978,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(30),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1978,
+		1978,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(30),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1984,
+		1987,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1984,
+		1991,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(16),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1988,
+		1988,
+		5,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1989,
+		1989,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(10),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1990,
+		1992,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1992,
+		1992,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(4),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1993,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1993,
+		1998,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1999,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$asia__beirut = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				120,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Lebanon))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Kyrgyz = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1992,
+		1996,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 7),
+		0,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1992,
+		1996,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1997,
+		2005,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		150,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1997,
+		2004,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		150,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$asia__bishkek = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 7, 31, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Kyrgyz)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2005, 7, 12, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				360,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__chita = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						540,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 0, 19, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						540,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 2, 27, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						600,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2014, 9, 26, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2016, 2, 27, 120, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				540,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Mongol = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1983,
+		1984,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1983,
+		1983,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1985,
+		1998,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1984,
+		1998,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2001,
+		2001,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(5),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2001,
+		2006,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(5),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2002,
+		2006,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(5),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2015,
+		2016,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(5),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2015,
+		2016,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(5),
+		0,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$asia__choibalsan = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1978, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1983, 3, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						540,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Mongol)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2008, 2, 31, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				480,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Mongol))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__colombo = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						330,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1996, 4, 25, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						390,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1996, 9, 26, 30, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2006, 3, 15, 30, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				330,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Syria = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1966,
+		1976,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1967,
+		1978,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1977,
+		1978,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1983,
+		1984,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(9),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1983,
+		1984,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1986,
+		1986,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(16),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1986,
+		1986,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(9),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1987,
+		1987,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1987,
+		1988,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(31),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1988,
+		1988,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(15),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1989,
+		1989,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(31),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1989,
+		1989,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1990,
+		1990,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1990,
+		1990,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(30),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1991,
+		1991,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1991,
+		1992,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1992,
+		1992,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(8),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1993,
+		1993,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(26),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1993,
+		1993,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(25),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1994,
+		1996,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1994,
+		2005,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1997,
+		1998,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(0),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1999,
+		2006,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2006,
+		2006,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(22),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2007,
+		2007,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(4),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2007,
+		2007,
+		10,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 4, 1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2008,
+		2008,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 4, 1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2008,
+		2008,
+		10,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2009,
+		2009,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(4),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2010,
+		2011,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 4, 1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2012,
+		2022,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(4),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2009,
+		2022,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(4),
+		0,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$asia__damascus = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Syria)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2022, 9, 28, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Dhaka = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2009,
+		2009,
+		5,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(19),
+		1380,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2009,
+		2009,
+		11,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(31),
+		1440,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$asia__dhaka = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2009, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				360,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Dhaka))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__dili = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						540,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1976, 4, 3, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2000, 8, 17, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				540,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__dubai = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				240,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__dushanbe = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(60)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 8, 9, 120, 1))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Cyprus = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1975,
+		1975,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(13),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1975,
+		1975,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(12),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1976,
+		1976,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(15),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1976,
+		1976,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(11),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1977,
+		1980,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1977,
+		1977,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(25),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1978,
+		1978,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(2),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1979,
+		1997,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1981,
+		1998,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		2,
+		60)
+	]);
+var $justinmimbs$timezone_data$TimeZone$asia__famagusta = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Cyprus)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1998, 8, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EUAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2016, 8, 8, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2017, 9, 29, 60, 0))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				120,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EUAsia))));
+};
+var $justinmimbs$timezone_data$TimeZone$Specification$Prev = F2(
+	function (a, b) {
+		return {$: 2, a: a, b: b};
+	});
+var $justinmimbs$timezone_data$TimeZone$rules_Palestine = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1999,
+		2005,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 4, 15),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1999,
+		2003,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 4, 15),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2004,
+		2004,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		60,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2005,
+		2005,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(4),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2006,
+		2007,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2006,
+		2006,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(22),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2007,
+		2007,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(13),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2008,
+		2009,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(4),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2008,
+		2008,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2009,
+		2009,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(4),
+		60,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2010,
+		2010,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(26),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2010,
+		2010,
+		7,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(11),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2011,
+		2011,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		1,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2011,
+		2011,
+		7,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2011,
+		2011,
+		7,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(30),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2011,
+		2011,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(30),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2012,
+		2014,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(3),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2012,
+		2012,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(21),
+		60,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2013,
+		2013,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(27),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2014,
+		2014,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(24),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2015,
+		2015,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(28),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2015,
+		2015,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(23),
+		60,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2016,
+		2018,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Prev, 5, 30),
+		60,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2016,
+		2018,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Prev, 5, 30),
+		60,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2019,
+		2019,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(29),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2019,
+		2019,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Prev, 5, 30),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2020,
+		2021,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Prev, 5, 30),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2020,
+		2020,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(24),
+		60,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2021,
+		2021,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(29),
+		60,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2022,
+		2022,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(27),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2022,
+		2035,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Prev, 5, 30),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2023,
+		2023,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(29),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2024,
+		2024,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(20),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2025,
+		2025,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(12),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2026,
+		2054,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Prev, 5, 30),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2036,
+		2036,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(18),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2037,
+		2037,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(10),
+		120,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$rules_Zion = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1974,
+		1974,
+		6,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(6),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1974,
+		1974,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(12),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1975,
+		1975,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(19),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1975,
+		1975,
+		7,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(30),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1980,
+		1980,
+		7,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(2),
+		1440,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1980,
+		1980,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(13),
+		1440,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1984,
+		1984,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(5),
+		1440,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1984,
+		1984,
+		7,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(25),
+		1440,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1985,
+		1985,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(13),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1985,
+		1985,
+		7,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(31),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1986,
+		1986,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(17),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1986,
+		1986,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(6),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1987,
+		1987,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(14),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1987,
+		1987,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(12),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1988,
+		1988,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(9),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1988,
+		1988,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(3),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1989,
+		1989,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(29),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1989,
+		1989,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(2),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1990,
+		1990,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(24),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1990,
+		1990,
+		7,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(25),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1991,
+		1991,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(23),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1991,
+		1991,
+		7,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(31),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1992,
+		1992,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(28),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1992,
+		1992,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(5),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1993,
+		1993,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(2),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1993,
+		1993,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(5),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1994,
+		1994,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1994,
+		1994,
+		7,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(28),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1995,
+		1995,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(31),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1995,
+		1995,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(3),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1996,
+		1996,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(14),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1996,
+		1996,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(15),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1997,
+		1997,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(20),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1997,
+		1997,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(13),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1998,
+		1998,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(20),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1998,
+		1998,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(6),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1999,
+		1999,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(2),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1999,
+		1999,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(3),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2000,
+		2000,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(14),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2000,
+		2000,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(6),
+		60,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2001,
+		2001,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(9),
+		60,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2001,
+		2001,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(24),
+		60,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2002,
+		2002,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(29),
+		60,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2002,
+		2002,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(7),
+		60,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2003,
+		2003,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(28),
+		60,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2003,
+		2003,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(3),
+		60,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2004,
+		2004,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(7),
+		60,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2004,
+		2004,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(22),
+		60,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2005,
+		2012,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Prev, 4, 1),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2005,
+		2005,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(9),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2006,
+		2006,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2007,
+		2007,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(16),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2008,
+		2008,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(5),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2009,
+		2009,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(27),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2010,
+		2010,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(12),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2011,
+		2011,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(2),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2012,
+		2012,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(23),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2013,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 4, 23),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2013,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$asia__gaza = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Zion)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1996, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Jordan)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1999, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Palestine)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2008, 7, 29, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2008, 8, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Palestine)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2010, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2010, 2, 27, 1, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Palestine)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 7, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2012, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				120,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Palestine))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__hebron = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Zion)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1996, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Jordan)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1999, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				120,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Palestine))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__ho_chi_minh = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1975, 5, 13, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				420,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_HK = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1965,
+		1976,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 16),
+		210,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1965,
+		1976,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 16),
+		210,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1973,
+		1973,
+		11,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(30),
+		210,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1979,
+		1979,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(13),
+		210,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1979,
+		1979,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(21),
+		210,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$asia__hong_kong = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				480,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_HK))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__hovd = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1978, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				420,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Mongol))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__irkutsk = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 0, 19, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 2, 27, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						540,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2014, 9, 26, 120, 1))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				480,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__jakarta = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				420,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__jayapura = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				540,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__jerusalem = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				120,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Zion))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__kabul = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				270,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__kamchatka = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						720,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						660,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 0, 19, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						720,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2010, 2, 28, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						660,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 2, 27, 120, 1))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				720,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Pakistan = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2002,
+		2002,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 2),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2002,
+		2002,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 2),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2008,
+		2008,
+		5,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2008,
+		2009,
+		10,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2009,
+		2009,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(15),
+		0,
+		2,
+		60)
+	]);
+var $justinmimbs$timezone_data$TimeZone$asia__karachi = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1971, 2, 26, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Pakistan))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__kathmandu = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						330,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1986, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				345,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__khandyga = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						540,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 0, 19, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						540,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2004, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						600,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 2, 27, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						660,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 8, 13, 0, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						600,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2014, 9, 26, 120, 1))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				540,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__kolkata = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				330,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__krasnoyarsk = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 0, 19, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 2, 27, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2014, 9, 26, 120, 1))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				420,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__kuching = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				480,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Macau = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1965,
+		1973,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 16),
+		210,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1967,
+		1976,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 16),
+		210,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1973,
+		1973,
+		11,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(30),
+		210,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1975,
+		1976,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 16),
+		210,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1979,
+		1979,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(13),
+		210,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1979,
+		1979,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 16),
+		210,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$asia__macau = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				480,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Macau))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__magadan = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						660,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						600,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 0, 19, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						660,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 2, 27, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						720,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2014, 9, 26, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						600,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2016, 3, 24, 120, 1))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				660,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__makassar = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				480,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Phil = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1978,
+		1978,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(22),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1978,
+		1978,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(21),
+		0,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$asia__manila = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				480,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Phil))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__nicosia = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Cyprus)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1998, 8, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				120,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EUAsia))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__novokuznetsk = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 0, 19, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2010, 2, 28, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 2, 27, 120, 1))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				420,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__novosibirsk = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 0, 19, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1993, 4, 23, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 2, 27, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2014, 9, 26, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2016, 6, 24, 120, 1))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				420,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__omsk = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 0, 19, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 2, 27, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2014, 9, 26, 120, 1))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				360,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__oral = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1981, 3, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(60)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1981, 9, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1982, 3, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1989, 2, 26, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 0, 19, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 2, 29, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2004, 9, 31, 120, 1))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__pontianak = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1988, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				420,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__pyongyang = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						540,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2015, 7, 15, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						510,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2018, 4, 4, 1410, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				540,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__qatar = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1972, 5, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__qostanay = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1981, 3, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(60)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1981, 9, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1982, 3, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 0, 19, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2004, 9, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2024, 2, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__qyzylorda = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1981, 3, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(60)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1981, 9, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1982, 3, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 8, 29, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 0, 19, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 2, 29, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2004, 9, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2018, 11, 21, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__riyadh = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__sakhalin = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						660,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						600,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 0, 19, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						660,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1997, 2, 30, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						600,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 2, 27, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						660,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2014, 9, 26, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						600,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2016, 2, 27, 120, 1))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				660,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__samarkand = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1981, 3, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(60)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1981, 9, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1982, 3, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_ROK = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1987,
+		1988,
+		4,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 8),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1987,
+		1988,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 8),
+		180,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$asia__seoul = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				540,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_ROK))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_PRC = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1986,
+		1986,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(4),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1986,
+		1991,
+		8,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 11),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1987,
+		1991,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 11),
+		120,
+		2,
+		60)
+	]);
+var $justinmimbs$timezone_data$TimeZone$asia__shanghai = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				480,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_PRC))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__singapore = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						450,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1981, 11, 31, 960, 0))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				480,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__srednekolymsk = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						660,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						600,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 0, 19, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						660,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 2, 27, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						720,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2014, 9, 26, 120, 1))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				660,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Taiwan = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1974,
+		1975,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1974,
+		1975,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1979,
+		1979,
+		6,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1979,
+		1979,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$asia__taipei = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				480,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Taiwan))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__tashkent = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_E_EurAsia = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1981,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1979,
+		1995,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1996,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$asia__tbilisi = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_E_EurAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1994, 8, 25, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_E_EurAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1996, 9, 27, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(60)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1997, 2, 30, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_E_EurAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2004, 5, 27, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2005, 2, 27, 120, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				240,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Iran = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1977,
+		1977,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(21),
+		1380,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1977,
+		1977,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(20),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1978,
+		1978,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(24),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1978,
+		1978,
+		7,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(5),
+		60,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1979,
+		1979,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(26),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1979,
+		1979,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(18),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1980,
+		1980,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(20),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1980,
+		1980,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(22),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1991,
+		1991,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(2),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1992,
+		1995,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(21),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1991,
+		1995,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(21),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1996,
+		1996,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(20),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1996,
+		1996,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(20),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1997,
+		1999,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(21),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1997,
+		1999,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(21),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2000,
+		2000,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(20),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2000,
+		2000,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(20),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2001,
+		2003,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(21),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2001,
+		2003,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(21),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2004,
+		2004,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(20),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2004,
+		2004,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(20),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2005,
+		2005,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(21),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2005,
+		2005,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(21),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2008,
+		2008,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(20),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2008,
+		2008,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(20),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2009,
+		2011,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(21),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2009,
+		2011,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(21),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2012,
+		2012,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(20),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2012,
+		2012,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(20),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2013,
+		2015,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(21),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2013,
+		2015,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(21),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2016,
+		2016,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(20),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2016,
+		2016,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(20),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2017,
+		2019,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(21),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2017,
+		2019,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(21),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2020,
+		2020,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(20),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2020,
+		2020,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(20),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2021,
+		2022,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(21),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2021,
+		2022,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(21),
+		1440,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$asia__tehran = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						210,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Iran)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1977, 9, 20, 1440, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Iran)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1979, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				210,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Iran))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__thimphu = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						330,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1987, 9, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				360,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__tokyo = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				540,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__tomsk = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 0, 19, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2002, 4, 1, 180, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 2, 27, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2014, 9, 26, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2016, 4, 29, 120, 1))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				420,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__ulaanbaatar = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1978, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				480,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Mongol))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__urumqi = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				360,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__ust_nera = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						540,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1981, 3, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						660,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						600,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 0, 19, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						660,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 2, 27, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						720,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 8, 13, 0, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						660,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2014, 9, 26, 120, 1))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				600,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__vladivostok = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						600,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						540,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 0, 19, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						600,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 2, 27, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						660,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2014, 9, 26, 120, 1))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				600,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__yakutsk = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						540,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						480,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 0, 19, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						540,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 2, 27, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						600,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2014, 9, 26, 120, 1))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				540,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__yangon = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				390,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$asia__yekaterinburg = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 0, 19, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 2, 27, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						360,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2014, 9, 26, 120, 1))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Armenia = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2011,
+		2011,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2011,
+		2011,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$asia__yerevan = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1995, 8, 24, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1997, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_RussiaAsia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				240,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Armenia))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Port = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1977,
+		1977,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(27),
+		0,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1977,
+		1977,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(25),
+		0,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1978,
+		1979,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		0,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1978,
+		1978,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1979,
+		1982,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		60,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1980,
+		1980,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1981,
+		1982,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		60,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1983,
+		1983,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		60)
+	]);
+var $justinmimbs$timezone_data$TimeZone$rules_W_Eur = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1977,
+		1980,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		60,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1977,
+		1977,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		60,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1978,
+		1978,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		60,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1979,
+		1995,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		60,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1981,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		60,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1996,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		60,
+		1,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$atlantic__azores = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-60,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Port)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1983, 8, 25, 60, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-60,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_W_Eur)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 8, 27, 60, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						0,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1993, 2, 28, 60, 0))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-60,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU))));
+};
+var $justinmimbs$timezone_data$TimeZone$atlantic__bermuda = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1974, 3, 28, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Canada)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1976, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-240,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_US))));
+};
+var $justinmimbs$timezone_data$TimeZone$atlantic__canary = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						0,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1980, 3, 6, 0, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						0,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(60)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1980, 8, 28, 60, 0))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				0,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU))));
+};
+var $justinmimbs$timezone_data$TimeZone$atlantic__cape_verde = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1975, 10, 25, 120, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-60,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$atlantic__faroe = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						0,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1981, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				0,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU))));
+};
+var $justinmimbs$timezone_data$TimeZone$atlantic__madeira = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						0,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Port)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1983, 8, 25, 60, 1))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				0,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU))));
+};
+var $justinmimbs$timezone_data$TimeZone$atlantic__south_georgia = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-120,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Falk = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1983,
+		1983,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1984,
+		1985,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1984,
+		1984,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(16),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1985,
+		2000,
+		8,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 9),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1986,
+		2000,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 16),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2001,
+		2010,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 15),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2001,
+		2010,
+		8,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		2,
+		60)
+	]);
+var $justinmimbs$timezone_data$TimeZone$atlantic__stanley = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Falk)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1983, 4, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Falk)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1985, 8, 15, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Falk)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2010, 8, 5, 120, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_AS = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1971,
+		1985,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1986,
+		1986,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(19),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1987,
+		2007,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1972,
+		1972,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(27),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1973,
+		1985,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1986,
+		1990,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 15),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1991,
+		1991,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(3),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1992,
+		1992,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(22),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1993,
+		1993,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(7),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1994,
+		1994,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(20),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1995,
+		2005,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2006,
+		2006,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(2),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2007,
+		2007,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2008,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2008,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		1,
+		60)
+	]);
+var $justinmimbs$timezone_data$TimeZone$australia__adelaide = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						570,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1971, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				570,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_AS))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_AQ = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1971,
+		1971,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1972,
+		1972,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1989,
+		1991,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1990,
+		1992,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		1,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$australia__brisbane = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						600,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1971, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				600,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_AQ))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_AN = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1971,
+		1985,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1972,
+		1972,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(27),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1973,
+		1981,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1982,
+		1982,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1983,
+		1985,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1986,
+		1989,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 15),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1986,
+		1986,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(19),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1987,
+		1999,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1990,
+		1995,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1996,
+		2005,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2000,
+		2000,
+		7,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2001,
+		2007,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2006,
+		2006,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2007,
+		2007,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2008,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2008,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		1,
+		60)
+	]);
+var $justinmimbs$timezone_data$TimeZone$australia__broken_hill = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						570,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1971, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						570,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_AN)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2000, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				570,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_AS))));
+};
+var $justinmimbs$timezone_data$TimeZone$australia__darwin = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				570,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_AW = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1974,
+		1974,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1975,
+		1975,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1983,
+		1983,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1984,
+		1984,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1991,
+		1991,
+		10,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(17),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1992,
+		1992,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2006,
+		2006,
+		11,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(3),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2007,
+		2009,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2007,
+		2008,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		60)
+	]);
+var $justinmimbs$timezone_data$TimeZone$australia__eucla = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				525,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_AW))));
+};
+var $justinmimbs$timezone_data$TimeZone$australia__hobart = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				600,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_AT))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Holiday = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1992,
+		1993,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1993,
+		1994,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		1,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$australia__lindeman = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						600,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1971, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						600,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_AQ)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 6, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				600,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Holiday))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_LH = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1981,
+		1984,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1982,
+		1985,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1985,
+		1985,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		30),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1986,
+		1989,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 15),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1986,
+		1986,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(19),
+		120,
+		2,
+		30),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1987,
+		1999,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		30),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1990,
+		1995,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1996,
+		2005,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2000,
+		2000,
+		7,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		30),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2001,
+		2007,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		30),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2006,
+		2006,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2007,
+		2007,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2008,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2008,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		2,
+		30)
+	]);
+var $justinmimbs$timezone_data$TimeZone$australia__lord_howe = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						600,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1981, 2, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						630,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_LH)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1985, 6, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				630,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_LH))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_AV = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1971,
+		1985,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1972,
+		1972,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1973,
+		1985,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1986,
+		1990,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 15),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1986,
+		1987,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 15),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1988,
+		1999,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1991,
+		1994,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1995,
+		2005,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2000,
+		2000,
+		7,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2001,
+		2007,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2006,
+		2006,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2007,
+		2007,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2008,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2008,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		1,
+		60)
+	]);
+var $justinmimbs$timezone_data$TimeZone$australia__melbourne = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						600,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1971, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				600,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_AV))));
+};
+var $justinmimbs$timezone_data$TimeZone$australia__perth = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				480,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_AW))));
+};
+var $justinmimbs$timezone_data$TimeZone$australia__sydney = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						600,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1971, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				600,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_AN))));
+};
+var $justinmimbs$timezone_data$TimeZone$europe__andorra = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						60,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1985, 2, 31, 120, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				60,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU))));
+};
+var $justinmimbs$timezone_data$TimeZone$europe__astrakhan = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1989, 2, 26, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 2, 29, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 2, 27, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2014, 9, 26, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2016, 2, 27, 120, 1))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				240,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Greece = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1975,
+		1975,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(12),
+		0,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1975,
+		1975,
+		10,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(26),
+		0,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1976,
+		1976,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(11),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1976,
+		1976,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(10),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1977,
+		1978,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1977,
+		1977,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(26),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1978,
+		1978,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(24),
+		240,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1979,
+		1979,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		540,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1979,
+		1979,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(29),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1980,
+		1980,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1980,
+		1980,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(28),
+		0,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$europe__athens = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Greece)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1981, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				120,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU))));
+};
+var $justinmimbs$timezone_data$TimeZone$europe__belgrade = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						60,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1982, 10, 27, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				60,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU))));
+};
+var $justinmimbs$timezone_data$TimeZone$europe__berlin = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						60,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1980, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				60,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU))));
+};
+var $justinmimbs$timezone_data$TimeZone$europe__brussels = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						60,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1977, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				60,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_E_Eur = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1977,
+		1980,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1977,
+		1977,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1978,
+		1978,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1979,
+		1995,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1981,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1996,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$rules_Romania = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1979,
+		1979,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(27),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1979,
+		1979,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1980,
+		1980,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(5),
+		1380,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1980,
+		1980,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		60,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1991,
+		1993,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1991,
+		1993,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		1,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$europe__bucharest = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Romania)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1981, 2, 29, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_C_Eur)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Romania)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1994, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_E_Eur)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1997, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				120,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Hungary = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1980,
+		1980,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(6),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1980,
+		1980,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(28),
+		60,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1981,
+		1983,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1981,
+		1983,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		60,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$europe__budapest = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						60,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Hungary)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1984, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				60,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Moldova = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1997,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1997,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		180,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$europe__chisinau = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1990, 4, 6, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_E_Eur)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1997, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				120,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Moldova))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Eire = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1971,
+		1971,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(31),
+		120,
+		0,
+		-60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1972,
+		1980,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 16),
+		120,
+		0,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1972,
+		1980,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 23),
+		120,
+		0,
+		-60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1981,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		60,
+		0,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1981,
+		1989,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 23),
+		60,
+		0,
+		-60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1990,
+		1995,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 22),
+		60,
+		0,
+		-60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1996,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		60,
+		0,
+		-60)
+	]);
+var $justinmimbs$timezone_data$TimeZone$europe__dublin = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				60,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Eire))));
+};
+var $justinmimbs$timezone_data$TimeZone$europe__gibraltar = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						60,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1982, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				60,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Finland = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1981,
+		1982,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1981,
+		1982,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		180,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$europe__helsinki = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Finland)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1983, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				120,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Turkey = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1973,
+		1973,
+		5,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(3),
+		60,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1973,
+		1976,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 31),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1974,
+		1974,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(31),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1975,
+		1975,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(22),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1976,
+		1976,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(21),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1977,
+		1978,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1977,
+		1978,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 15),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1978,
+		1978,
+		5,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(29),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1983,
+		1983,
+		6,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(31),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1983,
+		1983,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(2),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1985,
+		1985,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(20),
+		60,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1985,
+		1985,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(28),
+		60,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1986,
+		1993,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		60,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1986,
+		1995,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		60,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1994,
+		1994,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(20),
+		60,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1995,
+		2006,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		60,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1996,
+		2006,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		60,
+		1,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$europe__istanbul = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Turkey)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1978, 5, 29, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Turkey)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1984, 10, 1, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Turkey)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2007, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 2, 27, 60, 0)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 2, 28, 60, 0)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2014, 2, 30, 60, 0)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2014, 2, 31, 60, 0)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2015, 9, 25, 60, 0)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(60)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2015, 10, 8, 60, 0)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2016, 8, 7, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$europe__kaliningrad = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1989, 2, 26, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 2, 27, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2014, 9, 26, 120, 1))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				120,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$europe__kirov = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1989, 2, 26, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 2, 29, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 2, 27, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2014, 9, 26, 120, 1))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$europe__kyiv = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1990, 6, 1, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(60)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 8, 29, 180, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_C_Eur)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1996, 4, 13, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				120,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU))));
+};
+var $justinmimbs$timezone_data$TimeZone$europe__lisbon = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						60,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1976, 8, 26, 60, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						0,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Port)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1983, 8, 25, 60, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						0,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_W_Eur)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 8, 27, 60, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						60,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1996, 2, 31, 60, 0))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				0,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_GB_Eire = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1972,
+		1980,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 16),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1972,
+		1980,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 23),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1981,
+		1995,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		60,
+		0,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1981,
+		1989,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 23),
+		60,
+		0,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1990,
+		1995,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 22),
+		60,
+		0,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$europe__london = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						60,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1971, 9, 31, 120, 0)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						0,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_GB_Eire)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1996, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				0,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Spain = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1974,
+		1975,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 5, 12),
+		1380,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1974,
+		1975,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		60,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1976,
+		1976,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(27),
+		1380,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1976,
+		1977,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		60,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1977,
+		1977,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(2),
+		1380,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1978,
+		1978,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(2),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1978,
+		1978,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		120,
+		1,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$europe__madrid = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						60,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Spain)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1979, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				60,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Italy = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1967,
+		1969,
+		8,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 22),
+		0,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1969,
+		1969,
+		5,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1970,
+		1970,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(31),
+		0,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1970,
+		1970,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1971,
+		1972,
+		4,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 22),
+		0,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1971,
+		1971,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1972,
+		1972,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1973,
+		1973,
+		5,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(3),
+		0,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1973,
+		1974,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1974,
+		1974,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(26),
+		0,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1975,
+		1975,
+		5,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1975,
+		1977,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1976,
+		1976,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(30),
+		0,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1977,
+		1979,
+		4,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 22),
+		0,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1978,
+		1978,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1979,
+		1979,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(30),
+		0,
+		1,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$rules_Malta = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1973,
+		1973,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(31),
+		0,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1973,
+		1973,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(29),
+		0,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1974,
+		1974,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(21),
+		0,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1974,
+		1974,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(16),
+		0,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1975,
+		1979,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 15),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1975,
+		1980,
+		8,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 15),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1980,
+		1980,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(31),
+		120,
+		2,
+		60)
+	]);
+var $justinmimbs$timezone_data$TimeZone$europe__malta = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						60,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Italy)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1973, 2, 31, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						60,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Malta)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1981, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				60,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU))));
+};
+var $justinmimbs$timezone_data$TimeZone$europe__minsk = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1990, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 2, 27, 120, 1))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$europe__moscow = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 0, 19, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 2, 27, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2014, 9, 26, 120, 1))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_France = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1976,
+		1976,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(28),
+		60,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1976,
+		1976,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(26),
+		60,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$europe__paris = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						60,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_France)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1977, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				60,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU))));
+};
+var $justinmimbs$timezone_data$TimeZone$europe__prague = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						60,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1979, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				60,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Latvia = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1989,
+		1996,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1989,
+		1996,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$europe__riga = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1989, 2, 26, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(60)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1989, 8, 24, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Latvia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1997, 0, 21, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2000, 1, 29, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2001, 0, 2, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				120,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU))));
+};
+var $justinmimbs$timezone_data$TimeZone$europe__rome = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						60,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Italy)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1980, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				60,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU))));
+};
+var $justinmimbs$timezone_data$TimeZone$europe__samara = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1989, 2, 26, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 8, 29, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 9, 20, 180, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2010, 2, 28, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 2, 27, 120, 1))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				240,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$europe__saratov = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1988, 2, 27, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 2, 29, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 2, 27, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2014, 9, 26, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2016, 11, 4, 120, 1))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				240,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$europe__simferopol = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1990, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1990, 6, 1, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 2, 20, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_C_Eur)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1994, 4, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_C_Eur)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1996, 2, 31, 0, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(60)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1996, 9, 27, 180, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1997, 2, 30, 60, 0)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2014, 2, 30, 120, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2014, 9, 26, 120, 1))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Bulg = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1979,
+		1979,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(31),
+		1380,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1979,
+		1979,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		60,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1980,
+		1982,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 5, 1),
+		1380,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1980,
+		1980,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(29),
+		60,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1981,
+		1981,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(27),
+		120,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$europe__sofia = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1979, 2, 31, 1380, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Bulg)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1982, 8, 26, 180, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_C_Eur)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_E_Eur)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1997, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				120,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU))));
+};
+var $justinmimbs$timezone_data$TimeZone$europe__tallinn = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1989, 2, 26, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(60)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1989, 8, 24, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_C_Eur)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1998, 8, 22, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1999, 9, 31, 240, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2002, 1, 21, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				120,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Albania = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1974,
+		1974,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(4),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1974,
+		1974,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(2),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1975,
+		1975,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1975,
+		1975,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(2),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1976,
+		1976,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(2),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1976,
+		1976,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(3),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1977,
+		1977,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(8),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1977,
+		1977,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(2),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1978,
+		1978,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(6),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1978,
+		1978,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1979,
+		1979,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(5),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1979,
+		1979,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(30),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1980,
+		1980,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(3),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1980,
+		1980,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(4),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1981,
+		1981,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(26),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1981,
+		1981,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(27),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1982,
+		1982,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(2),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1982,
+		1982,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(3),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1983,
+		1983,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(18),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1983,
+		1983,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1984,
+		1984,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		0,
+		2,
+		60)
+	]);
+var $justinmimbs$timezone_data$TimeZone$europe__tirane = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						60,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Albania)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1984, 6, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				60,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU))));
+};
+var $justinmimbs$timezone_data$TimeZone$europe__ulyanovsk = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1989, 2, 26, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 0, 19, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 2, 27, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2014, 9, 26, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2016, 2, 27, 120, 1))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				240,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Austria = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1980,
+		1980,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(6),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1980,
+		1980,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(28),
+		0,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$europe__vienna = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						60,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Austria)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1981, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				60,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU))));
+};
+var $justinmimbs$timezone_data$TimeZone$europe__vilnius = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1989, 2, 26, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 8, 29, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_C_Eur)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1998, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1998, 2, 29, 60, 0)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						60,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1999, 9, 31, 60, 0)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						120,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2003, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				120,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU))));
+};
+var $justinmimbs$timezone_data$TimeZone$europe__volgograd = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1988, 2, 27, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1991, 2, 31, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1992, 2, 29, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Russia)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 2, 27, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2014, 9, 26, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						180,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2018, 9, 28, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						240,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2020, 11, 27, 120, 1))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				180,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$europe__warsaw = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						60,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1977, 0, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						60,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_W_Eur)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1988, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				60,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU))));
+};
+var $justinmimbs$timezone_data$TimeZone$europe__zurich = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						60,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1981, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				60,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_EU))));
+};
+var $elm$core$Dict$RBEmpty_elm_builtin = {$: -2};
+var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
 var $elm$core$Dict$Black = 1;
 var $elm$core$Dict$RBNode_elm_builtin = F5(
 	function (a, b, c, d, e) {
@@ -5722,6 +22428,1569 @@ var $elm$core$Dict$insert = F3(
 			return x;
 		}
 	});
+var $elm$core$Dict$fromList = function (assocs) {
+	return A3(
+		$elm$core$List$foldl,
+		F2(
+			function (_v0, dict) {
+				var key = _v0.a;
+				var value = _v0.b;
+				return A3($elm$core$Dict$insert, key, value, dict);
+			}),
+		$elm$core$Dict$empty,
+		assocs);
+};
+var $justinmimbs$timezone_data$TimeZone$indian__chagos = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1996, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				360,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$indian__maldives = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				300,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Mauritius = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1982,
+		1982,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(10),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1983,
+		1983,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(21),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2008,
+		2008,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2009,
+		2009,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$indian__mauritius = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				240,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Mauritius))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_WS = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2010,
+		2010,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2011,
+		2011,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 5, 1),
+		240,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2011,
+		2011,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(5),
+		180,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2012,
+		2021,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		240,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2012,
+		2020,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		180,
+		2,
+		60)
+	]);
+var $justinmimbs$timezone_data$TimeZone$pacific__apia = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-660,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_WS)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 11, 29, 1440, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				780,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_WS))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_NZ = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1974,
+		1974,
+		10,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1975,
+		1975,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1975,
+		1988,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1976,
+		1989,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1989,
+		1989,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 8),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1990,
+		2006,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1990,
+		2007,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 15),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2007,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2008,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		1,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$pacific__auckland = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				720,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_NZ))));
+};
+var $justinmimbs$timezone_data$TimeZone$pacific__bougainville = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						600,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2014, 11, 28, 120, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				660,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Chatham = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1974,
+		1974,
+		10,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		165,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1975,
+		1975,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		165,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1975,
+		1988,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		165,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1976,
+		1989,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		165,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1989,
+		1989,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 8),
+		165,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1990,
+		2006,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		165,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1990,
+		2007,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 15),
+		165,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2007,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		8,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		165,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2008,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		3,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		165,
+		1,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$pacific__chatham = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				765,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Chatham))));
+};
+var $justinmimbs$timezone_data$TimeZone$pacific__easter = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-420,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Chile)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1982, 2, 14, 180, 0))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-360,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Chile))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Vanuatu = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1973,
+		1973,
+		11,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(22),
+		720,
+		0,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1974,
+		1974,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(30),
+		720,
+		0,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1983,
+		1991,
+		8,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 5, 22),
+		1440,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1984,
+		1991,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 5, 22),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1992,
+		1993,
+		0,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 5, 22),
+		1440,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1992,
+		1992,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 5, 22),
+		1440,
+		2,
+		60)
+	]);
+var $justinmimbs$timezone_data$TimeZone$pacific__efate = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				660,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Vanuatu))));
+};
+var $justinmimbs$timezone_data$TimeZone$pacific__fakaofo = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-660,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2011, 11, 30, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				780,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Fiji = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1998,
+		1999,
+		10,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1999,
+		2000,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		180,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2009,
+		2009,
+		10,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(29),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2010,
+		2010,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		180,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2010,
+		2013,
+		9,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 21),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2011,
+		2011,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		180,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2012,
+		2013,
+		0,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 18),
+		180,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2014,
+		2014,
+		0,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 18),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2014,
+		2018,
+		10,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2015,
+		2021,
+		0,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 12),
+		180,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2019,
+		2019,
+		10,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 8),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2020,
+		2020,
+		11,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(20),
+		120,
+		2,
+		60)
+	]);
+var $justinmimbs$timezone_data$TimeZone$pacific__fiji = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				720,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Fiji))));
+};
+var $justinmimbs$timezone_data$TimeZone$pacific__galapagos = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-300,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1986, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-360,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Ecuador))));
+};
+var $justinmimbs$timezone_data$TimeZone$pacific__gambier = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-540,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$pacific__guadalcanal = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				660,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Guam = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1969,
+		1969,
+		0,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(26),
+		1,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1969,
+		1969,
+		5,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(22),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1969,
+		1969,
+		7,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(31),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1970,
+		1971,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1970,
+		1971,
+		8,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1973,
+		1973,
+		11,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(16),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1974,
+		1974,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(24),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1976,
+		1976,
+		4,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(26),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1976,
+		1976,
+		7,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(22),
+		121,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1977,
+		1977,
+		3,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(24),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1977,
+		1977,
+		7,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(28),
+		120,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$pacific__guam = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						600,
+						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Guam)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2000, 11, 23, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				600,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$pacific__honolulu = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-600,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$pacific__kanton = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-720,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1979, 9, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-660,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1994, 11, 31, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				780,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$pacific__kiritimati = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-640,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1979, 9, 1, 0, 2)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-600,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1994, 11, 31, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				840,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$pacific__kosrae = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						720,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1999, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				660,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$pacific__kwajalein = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-720,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1993, 7, 20, 1440, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				720,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$pacific__marquesas = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-570,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$pacific__nauru = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						690,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1979, 1, 10, 120, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				720,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$pacific__niue = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-660,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$pacific__norfolk = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						690,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1974, 9, 27, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						690,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(60)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1975, 2, 2, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						690,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2015, 9, 4, 120, 1)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						660,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2019, 6, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				660,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_AN))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_NC = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1977,
+		1978,
+		11,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		0,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1978,
+		1979,
+		1,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(27),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1996,
+		1996,
+		11,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1997,
+		1997,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(2),
+		120,
+		1,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$pacific__noumea = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				660,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_NC))));
+};
+var $justinmimbs$timezone_data$TimeZone$pacific__pago_pago = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-660,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$pacific__palau = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				540,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$pacific__pitcairn = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-510,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1998, 3, 27, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-480,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$pacific__port_moresby = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				600,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Cook = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1978,
+		1978,
+		10,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(12),
+		0,
+		2,
+		30),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1979,
+		1991,
+		2,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		0,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1979,
+		1990,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		0,
+		2,
+		30)
+	]);
+var $justinmimbs$timezone_data$TimeZone$pacific__rarotonga = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						-630,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1978, 10, 12, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-600,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Cook))));
+};
+var $justinmimbs$timezone_data$TimeZone$pacific__tahiti = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				-600,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$pacific__tarawa = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_Nil,
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				720,
+				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+};
+var $justinmimbs$timezone_data$TimeZone$rules_Tonga = _List_fromArray(
+	[
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1999,
+		1999,
+		9,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(7),
+		120,
+		1,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2000,
+		2000,
+		2,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(19),
+		120,
+		1,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2000,
+		2001,
+		10,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2001,
+		2002,
+		0,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last(6),
+		120,
+		2,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2016,
+		2016,
+		10,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 1),
+		120,
+		2,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2017,
+		2017,
+		0,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, 6, 15),
+		180,
+		2,
+		0)
+	]);
+var $justinmimbs$timezone_data$TimeZone$pacific__tongatapu = function (_v0) {
+	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
+		A2(
+			$justinmimbs$timezone_data$TimeZone$Specification$Zone,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						780,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1999, 0, 1, 0, 2))
+				]),
+			A2(
+				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+				780,
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Tonga))));
+};
+var $justinmimbs$timezone_data$TimeZone$zones = $elm$core$Dict$fromList(
+	_List_fromArray(
+		[
+			_Utils_Tuple2('Africa/Abidjan', $justinmimbs$timezone_data$TimeZone$africa__abidjan),
+			_Utils_Tuple2('Africa/Algiers', $justinmimbs$timezone_data$TimeZone$africa__algiers),
+			_Utils_Tuple2('Africa/Bissau', $justinmimbs$timezone_data$TimeZone$africa__bissau),
+			_Utils_Tuple2('Africa/Cairo', $justinmimbs$timezone_data$TimeZone$africa__cairo),
+			_Utils_Tuple2('Africa/Casablanca', $justinmimbs$timezone_data$TimeZone$africa__casablanca),
+			_Utils_Tuple2('Africa/Ceuta', $justinmimbs$timezone_data$TimeZone$africa__ceuta),
+			_Utils_Tuple2('Africa/El_Aaiun', $justinmimbs$timezone_data$TimeZone$africa__el_aaiun),
+			_Utils_Tuple2('Africa/Johannesburg', $justinmimbs$timezone_data$TimeZone$africa__johannesburg),
+			_Utils_Tuple2('Africa/Juba', $justinmimbs$timezone_data$TimeZone$africa__juba),
+			_Utils_Tuple2('Africa/Khartoum', $justinmimbs$timezone_data$TimeZone$africa__khartoum),
+			_Utils_Tuple2('Africa/Lagos', $justinmimbs$timezone_data$TimeZone$africa__lagos),
+			_Utils_Tuple2('Africa/Maputo', $justinmimbs$timezone_data$TimeZone$africa__maputo),
+			_Utils_Tuple2('Africa/Monrovia', $justinmimbs$timezone_data$TimeZone$africa__monrovia),
+			_Utils_Tuple2('Africa/Nairobi', $justinmimbs$timezone_data$TimeZone$africa__nairobi),
+			_Utils_Tuple2('Africa/Ndjamena', $justinmimbs$timezone_data$TimeZone$africa__ndjamena),
+			_Utils_Tuple2('Africa/Sao_Tome', $justinmimbs$timezone_data$TimeZone$africa__sao_tome),
+			_Utils_Tuple2('Africa/Tripoli', $justinmimbs$timezone_data$TimeZone$africa__tripoli),
+			_Utils_Tuple2('Africa/Tunis', $justinmimbs$timezone_data$TimeZone$africa__tunis),
+			_Utils_Tuple2('Africa/Windhoek', $justinmimbs$timezone_data$TimeZone$africa__windhoek),
+			_Utils_Tuple2('America/Adak', $justinmimbs$timezone_data$TimeZone$america__adak),
+			_Utils_Tuple2('America/Anchorage', $justinmimbs$timezone_data$TimeZone$america__anchorage),
+			_Utils_Tuple2('America/Araguaina', $justinmimbs$timezone_data$TimeZone$america__araguaina),
+			_Utils_Tuple2('America/Argentina/Buenos_Aires', $justinmimbs$timezone_data$TimeZone$america__argentina__buenos_aires),
+			_Utils_Tuple2('America/Argentina/Catamarca', $justinmimbs$timezone_data$TimeZone$america__argentina__catamarca),
+			_Utils_Tuple2('America/Argentina/Cordoba', $justinmimbs$timezone_data$TimeZone$america__argentina__cordoba),
+			_Utils_Tuple2('America/Argentina/Jujuy', $justinmimbs$timezone_data$TimeZone$america__argentina__jujuy),
+			_Utils_Tuple2('America/Argentina/La_Rioja', $justinmimbs$timezone_data$TimeZone$america__argentina__la_rioja),
+			_Utils_Tuple2('America/Argentina/Mendoza', $justinmimbs$timezone_data$TimeZone$america__argentina__mendoza),
+			_Utils_Tuple2('America/Argentina/Rio_Gallegos', $justinmimbs$timezone_data$TimeZone$america__argentina__rio_gallegos),
+			_Utils_Tuple2('America/Argentina/Salta', $justinmimbs$timezone_data$TimeZone$america__argentina__salta),
+			_Utils_Tuple2('America/Argentina/San_Juan', $justinmimbs$timezone_data$TimeZone$america__argentina__san_juan),
+			_Utils_Tuple2('America/Argentina/San_Luis', $justinmimbs$timezone_data$TimeZone$america__argentina__san_luis),
+			_Utils_Tuple2('America/Argentina/Tucuman', $justinmimbs$timezone_data$TimeZone$america__argentina__tucuman),
+			_Utils_Tuple2('America/Argentina/Ushuaia', $justinmimbs$timezone_data$TimeZone$america__argentina__ushuaia),
+			_Utils_Tuple2('America/Asuncion', $justinmimbs$timezone_data$TimeZone$america__asuncion),
+			_Utils_Tuple2('America/Bahia', $justinmimbs$timezone_data$TimeZone$america__bahia),
+			_Utils_Tuple2('America/Bahia_Banderas', $justinmimbs$timezone_data$TimeZone$america__bahia_banderas),
+			_Utils_Tuple2('America/Barbados', $justinmimbs$timezone_data$TimeZone$america__barbados),
+			_Utils_Tuple2('America/Belem', $justinmimbs$timezone_data$TimeZone$america__belem),
+			_Utils_Tuple2('America/Belize', $justinmimbs$timezone_data$TimeZone$america__belize),
+			_Utils_Tuple2('America/Boa_Vista', $justinmimbs$timezone_data$TimeZone$america__boa_vista),
+			_Utils_Tuple2('America/Bogota', $justinmimbs$timezone_data$TimeZone$america__bogota),
+			_Utils_Tuple2('America/Boise', $justinmimbs$timezone_data$TimeZone$america__boise),
+			_Utils_Tuple2('America/Cambridge_Bay', $justinmimbs$timezone_data$TimeZone$america__cambridge_bay),
+			_Utils_Tuple2('America/Campo_Grande', $justinmimbs$timezone_data$TimeZone$america__campo_grande),
+			_Utils_Tuple2('America/Cancun', $justinmimbs$timezone_data$TimeZone$america__cancun),
+			_Utils_Tuple2('America/Caracas', $justinmimbs$timezone_data$TimeZone$america__caracas),
+			_Utils_Tuple2('America/Cayenne', $justinmimbs$timezone_data$TimeZone$america__cayenne),
+			_Utils_Tuple2('America/Chicago', $justinmimbs$timezone_data$TimeZone$america__chicago),
+			_Utils_Tuple2('America/Chihuahua', $justinmimbs$timezone_data$TimeZone$america__chihuahua),
+			_Utils_Tuple2('America/Ciudad_Juarez', $justinmimbs$timezone_data$TimeZone$america__ciudad_juarez),
+			_Utils_Tuple2('America/Costa_Rica', $justinmimbs$timezone_data$TimeZone$america__costa_rica),
+			_Utils_Tuple2('America/Cuiaba', $justinmimbs$timezone_data$TimeZone$america__cuiaba),
+			_Utils_Tuple2('America/Danmarkshavn', $justinmimbs$timezone_data$TimeZone$america__danmarkshavn),
+			_Utils_Tuple2('America/Dawson', $justinmimbs$timezone_data$TimeZone$america__dawson),
+			_Utils_Tuple2('America/Dawson_Creek', $justinmimbs$timezone_data$TimeZone$america__dawson_creek),
+			_Utils_Tuple2('America/Denver', $justinmimbs$timezone_data$TimeZone$america__denver),
+			_Utils_Tuple2('America/Detroit', $justinmimbs$timezone_data$TimeZone$america__detroit),
+			_Utils_Tuple2('America/Edmonton', $justinmimbs$timezone_data$TimeZone$america__edmonton),
+			_Utils_Tuple2('America/Eirunepe', $justinmimbs$timezone_data$TimeZone$america__eirunepe),
+			_Utils_Tuple2('America/El_Salvador', $justinmimbs$timezone_data$TimeZone$america__el_salvador),
+			_Utils_Tuple2('America/Fort_Nelson', $justinmimbs$timezone_data$TimeZone$america__fort_nelson),
+			_Utils_Tuple2('America/Fortaleza', $justinmimbs$timezone_data$TimeZone$america__fortaleza),
+			_Utils_Tuple2('America/Glace_Bay', $justinmimbs$timezone_data$TimeZone$america__glace_bay),
+			_Utils_Tuple2('America/Goose_Bay', $justinmimbs$timezone_data$TimeZone$america__goose_bay),
+			_Utils_Tuple2('America/Grand_Turk', $justinmimbs$timezone_data$TimeZone$america__grand_turk),
+			_Utils_Tuple2('America/Guatemala', $justinmimbs$timezone_data$TimeZone$america__guatemala),
+			_Utils_Tuple2('America/Guayaquil', $justinmimbs$timezone_data$TimeZone$america__guayaquil),
+			_Utils_Tuple2('America/Guyana', $justinmimbs$timezone_data$TimeZone$america__guyana),
+			_Utils_Tuple2('America/Halifax', $justinmimbs$timezone_data$TimeZone$america__halifax),
+			_Utils_Tuple2('America/Havana', $justinmimbs$timezone_data$TimeZone$america__havana),
+			_Utils_Tuple2('America/Hermosillo', $justinmimbs$timezone_data$TimeZone$america__hermosillo),
+			_Utils_Tuple2('America/Indiana/Indianapolis', $justinmimbs$timezone_data$TimeZone$america__indiana__indianapolis),
+			_Utils_Tuple2('America/Indiana/Knox', $justinmimbs$timezone_data$TimeZone$america__indiana__knox),
+			_Utils_Tuple2('America/Indiana/Marengo', $justinmimbs$timezone_data$TimeZone$america__indiana__marengo),
+			_Utils_Tuple2('America/Indiana/Petersburg', $justinmimbs$timezone_data$TimeZone$america__indiana__petersburg),
+			_Utils_Tuple2('America/Indiana/Tell_City', $justinmimbs$timezone_data$TimeZone$america__indiana__tell_city),
+			_Utils_Tuple2('America/Indiana/Vevay', $justinmimbs$timezone_data$TimeZone$america__indiana__vevay),
+			_Utils_Tuple2('America/Indiana/Vincennes', $justinmimbs$timezone_data$TimeZone$america__indiana__vincennes),
+			_Utils_Tuple2('America/Indiana/Winamac', $justinmimbs$timezone_data$TimeZone$america__indiana__winamac),
+			_Utils_Tuple2('America/Inuvik', $justinmimbs$timezone_data$TimeZone$america__inuvik),
+			_Utils_Tuple2('America/Iqaluit', $justinmimbs$timezone_data$TimeZone$america__iqaluit),
+			_Utils_Tuple2('America/Jamaica', $justinmimbs$timezone_data$TimeZone$america__jamaica),
+			_Utils_Tuple2('America/Juneau', $justinmimbs$timezone_data$TimeZone$america__juneau),
+			_Utils_Tuple2('America/Kentucky/Louisville', $justinmimbs$timezone_data$TimeZone$america__kentucky__louisville),
+			_Utils_Tuple2('America/Kentucky/Monticello', $justinmimbs$timezone_data$TimeZone$america__kentucky__monticello),
+			_Utils_Tuple2('America/La_Paz', $justinmimbs$timezone_data$TimeZone$america__la_paz),
+			_Utils_Tuple2('America/Lima', $justinmimbs$timezone_data$TimeZone$america__lima),
+			_Utils_Tuple2('America/Los_Angeles', $justinmimbs$timezone_data$TimeZone$america__los_angeles),
+			_Utils_Tuple2('America/Maceio', $justinmimbs$timezone_data$TimeZone$america__maceio),
+			_Utils_Tuple2('America/Managua', $justinmimbs$timezone_data$TimeZone$america__managua),
+			_Utils_Tuple2('America/Manaus', $justinmimbs$timezone_data$TimeZone$america__manaus),
+			_Utils_Tuple2('America/Martinique', $justinmimbs$timezone_data$TimeZone$america__martinique),
+			_Utils_Tuple2('America/Matamoros', $justinmimbs$timezone_data$TimeZone$america__matamoros),
+			_Utils_Tuple2('America/Mazatlan', $justinmimbs$timezone_data$TimeZone$america__mazatlan),
+			_Utils_Tuple2('America/Menominee', $justinmimbs$timezone_data$TimeZone$america__menominee),
+			_Utils_Tuple2('America/Merida', $justinmimbs$timezone_data$TimeZone$america__merida),
+			_Utils_Tuple2('America/Metlakatla', $justinmimbs$timezone_data$TimeZone$america__metlakatla),
+			_Utils_Tuple2('America/Mexico_City', $justinmimbs$timezone_data$TimeZone$america__mexico_city),
+			_Utils_Tuple2('America/Miquelon', $justinmimbs$timezone_data$TimeZone$america__miquelon),
+			_Utils_Tuple2('America/Moncton', $justinmimbs$timezone_data$TimeZone$america__moncton),
+			_Utils_Tuple2('America/Monterrey', $justinmimbs$timezone_data$TimeZone$america__monterrey),
+			_Utils_Tuple2('America/Montevideo', $justinmimbs$timezone_data$TimeZone$america__montevideo),
+			_Utils_Tuple2('America/New_York', $justinmimbs$timezone_data$TimeZone$america__new_york),
+			_Utils_Tuple2('America/Nome', $justinmimbs$timezone_data$TimeZone$america__nome),
+			_Utils_Tuple2('America/Noronha', $justinmimbs$timezone_data$TimeZone$america__noronha),
+			_Utils_Tuple2('America/North_Dakota/Beulah', $justinmimbs$timezone_data$TimeZone$america__north_dakota__beulah),
+			_Utils_Tuple2('America/North_Dakota/Center', $justinmimbs$timezone_data$TimeZone$america__north_dakota__center),
+			_Utils_Tuple2('America/North_Dakota/New_Salem', $justinmimbs$timezone_data$TimeZone$america__north_dakota__new_salem),
+			_Utils_Tuple2('America/Nuuk', $justinmimbs$timezone_data$TimeZone$america__nuuk),
+			_Utils_Tuple2('America/Ojinaga', $justinmimbs$timezone_data$TimeZone$america__ojinaga),
+			_Utils_Tuple2('America/Panama', $justinmimbs$timezone_data$TimeZone$america__panama),
+			_Utils_Tuple2('America/Paramaribo', $justinmimbs$timezone_data$TimeZone$america__paramaribo),
+			_Utils_Tuple2('America/Phoenix', $justinmimbs$timezone_data$TimeZone$america__phoenix),
+			_Utils_Tuple2('America/Port-au-Prince', $justinmimbs$timezone_data$TimeZone$america__port_au_prince),
+			_Utils_Tuple2('America/Porto_Velho', $justinmimbs$timezone_data$TimeZone$america__porto_velho),
+			_Utils_Tuple2('America/Puerto_Rico', $justinmimbs$timezone_data$TimeZone$america__puerto_rico),
+			_Utils_Tuple2('America/Punta_Arenas', $justinmimbs$timezone_data$TimeZone$america__punta_arenas),
+			_Utils_Tuple2('America/Rankin_Inlet', $justinmimbs$timezone_data$TimeZone$america__rankin_inlet),
+			_Utils_Tuple2('America/Recife', $justinmimbs$timezone_data$TimeZone$america__recife),
+			_Utils_Tuple2('America/Regina', $justinmimbs$timezone_data$TimeZone$america__regina),
+			_Utils_Tuple2('America/Resolute', $justinmimbs$timezone_data$TimeZone$america__resolute),
+			_Utils_Tuple2('America/Rio_Branco', $justinmimbs$timezone_data$TimeZone$america__rio_branco),
+			_Utils_Tuple2('America/Santarem', $justinmimbs$timezone_data$TimeZone$america__santarem),
+			_Utils_Tuple2('America/Santiago', $justinmimbs$timezone_data$TimeZone$america__santiago),
+			_Utils_Tuple2('America/Santo_Domingo', $justinmimbs$timezone_data$TimeZone$america__santo_domingo),
+			_Utils_Tuple2('America/Sao_Paulo', $justinmimbs$timezone_data$TimeZone$america__sao_paulo),
+			_Utils_Tuple2('America/Scoresbysund', $justinmimbs$timezone_data$TimeZone$america__scoresbysund),
+			_Utils_Tuple2('America/Sitka', $justinmimbs$timezone_data$TimeZone$america__sitka),
+			_Utils_Tuple2('America/St_Johns', $justinmimbs$timezone_data$TimeZone$america__st_johns),
+			_Utils_Tuple2('America/Swift_Current', $justinmimbs$timezone_data$TimeZone$america__swift_current),
+			_Utils_Tuple2('America/Tegucigalpa', $justinmimbs$timezone_data$TimeZone$america__tegucigalpa),
+			_Utils_Tuple2('America/Thule', $justinmimbs$timezone_data$TimeZone$america__thule),
+			_Utils_Tuple2('America/Tijuana', $justinmimbs$timezone_data$TimeZone$america__tijuana),
+			_Utils_Tuple2('America/Toronto', $justinmimbs$timezone_data$TimeZone$america__toronto),
+			_Utils_Tuple2('America/Vancouver', $justinmimbs$timezone_data$TimeZone$america__vancouver),
+			_Utils_Tuple2('America/Whitehorse', $justinmimbs$timezone_data$TimeZone$america__whitehorse),
+			_Utils_Tuple2('America/Winnipeg', $justinmimbs$timezone_data$TimeZone$america__winnipeg),
+			_Utils_Tuple2('America/Yakutat', $justinmimbs$timezone_data$TimeZone$america__yakutat),
+			_Utils_Tuple2('Antarctica/Casey', $justinmimbs$timezone_data$TimeZone$antarctica__casey),
+			_Utils_Tuple2('Antarctica/Davis', $justinmimbs$timezone_data$TimeZone$antarctica__davis),
+			_Utils_Tuple2('Antarctica/Macquarie', $justinmimbs$timezone_data$TimeZone$antarctica__macquarie),
+			_Utils_Tuple2('Antarctica/Mawson', $justinmimbs$timezone_data$TimeZone$antarctica__mawson),
+			_Utils_Tuple2('Antarctica/Palmer', $justinmimbs$timezone_data$TimeZone$antarctica__palmer),
+			_Utils_Tuple2('Antarctica/Rothera', $justinmimbs$timezone_data$TimeZone$antarctica__rothera),
+			_Utils_Tuple2('Antarctica/Troll', $justinmimbs$timezone_data$TimeZone$antarctica__troll),
+			_Utils_Tuple2('Antarctica/Vostok', $justinmimbs$timezone_data$TimeZone$antarctica__vostok),
+			_Utils_Tuple2('Asia/Almaty', $justinmimbs$timezone_data$TimeZone$asia__almaty),
+			_Utils_Tuple2('Asia/Amman', $justinmimbs$timezone_data$TimeZone$asia__amman),
+			_Utils_Tuple2('Asia/Anadyr', $justinmimbs$timezone_data$TimeZone$asia__anadyr),
+			_Utils_Tuple2('Asia/Aqtau', $justinmimbs$timezone_data$TimeZone$asia__aqtau),
+			_Utils_Tuple2('Asia/Aqtobe', $justinmimbs$timezone_data$TimeZone$asia__aqtobe),
+			_Utils_Tuple2('Asia/Ashgabat', $justinmimbs$timezone_data$TimeZone$asia__ashgabat),
+			_Utils_Tuple2('Asia/Atyrau', $justinmimbs$timezone_data$TimeZone$asia__atyrau),
+			_Utils_Tuple2('Asia/Baghdad', $justinmimbs$timezone_data$TimeZone$asia__baghdad),
+			_Utils_Tuple2('Asia/Baku', $justinmimbs$timezone_data$TimeZone$asia__baku),
+			_Utils_Tuple2('Asia/Bangkok', $justinmimbs$timezone_data$TimeZone$asia__bangkok),
+			_Utils_Tuple2('Asia/Barnaul', $justinmimbs$timezone_data$TimeZone$asia__barnaul),
+			_Utils_Tuple2('Asia/Beirut', $justinmimbs$timezone_data$TimeZone$asia__beirut),
+			_Utils_Tuple2('Asia/Bishkek', $justinmimbs$timezone_data$TimeZone$asia__bishkek),
+			_Utils_Tuple2('Asia/Chita', $justinmimbs$timezone_data$TimeZone$asia__chita),
+			_Utils_Tuple2('Asia/Choibalsan', $justinmimbs$timezone_data$TimeZone$asia__choibalsan),
+			_Utils_Tuple2('Asia/Colombo', $justinmimbs$timezone_data$TimeZone$asia__colombo),
+			_Utils_Tuple2('Asia/Damascus', $justinmimbs$timezone_data$TimeZone$asia__damascus),
+			_Utils_Tuple2('Asia/Dhaka', $justinmimbs$timezone_data$TimeZone$asia__dhaka),
+			_Utils_Tuple2('Asia/Dili', $justinmimbs$timezone_data$TimeZone$asia__dili),
+			_Utils_Tuple2('Asia/Dubai', $justinmimbs$timezone_data$TimeZone$asia__dubai),
+			_Utils_Tuple2('Asia/Dushanbe', $justinmimbs$timezone_data$TimeZone$asia__dushanbe),
+			_Utils_Tuple2('Asia/Famagusta', $justinmimbs$timezone_data$TimeZone$asia__famagusta),
+			_Utils_Tuple2('Asia/Gaza', $justinmimbs$timezone_data$TimeZone$asia__gaza),
+			_Utils_Tuple2('Asia/Hebron', $justinmimbs$timezone_data$TimeZone$asia__hebron),
+			_Utils_Tuple2('Asia/Ho_Chi_Minh', $justinmimbs$timezone_data$TimeZone$asia__ho_chi_minh),
+			_Utils_Tuple2('Asia/Hong_Kong', $justinmimbs$timezone_data$TimeZone$asia__hong_kong),
+			_Utils_Tuple2('Asia/Hovd', $justinmimbs$timezone_data$TimeZone$asia__hovd),
+			_Utils_Tuple2('Asia/Irkutsk', $justinmimbs$timezone_data$TimeZone$asia__irkutsk),
+			_Utils_Tuple2('Asia/Jakarta', $justinmimbs$timezone_data$TimeZone$asia__jakarta),
+			_Utils_Tuple2('Asia/Jayapura', $justinmimbs$timezone_data$TimeZone$asia__jayapura),
+			_Utils_Tuple2('Asia/Jerusalem', $justinmimbs$timezone_data$TimeZone$asia__jerusalem),
+			_Utils_Tuple2('Asia/Kabul', $justinmimbs$timezone_data$TimeZone$asia__kabul),
+			_Utils_Tuple2('Asia/Kamchatka', $justinmimbs$timezone_data$TimeZone$asia__kamchatka),
+			_Utils_Tuple2('Asia/Karachi', $justinmimbs$timezone_data$TimeZone$asia__karachi),
+			_Utils_Tuple2('Asia/Kathmandu', $justinmimbs$timezone_data$TimeZone$asia__kathmandu),
+			_Utils_Tuple2('Asia/Khandyga', $justinmimbs$timezone_data$TimeZone$asia__khandyga),
+			_Utils_Tuple2('Asia/Kolkata', $justinmimbs$timezone_data$TimeZone$asia__kolkata),
+			_Utils_Tuple2('Asia/Krasnoyarsk', $justinmimbs$timezone_data$TimeZone$asia__krasnoyarsk),
+			_Utils_Tuple2('Asia/Kuching', $justinmimbs$timezone_data$TimeZone$asia__kuching),
+			_Utils_Tuple2('Asia/Macau', $justinmimbs$timezone_data$TimeZone$asia__macau),
+			_Utils_Tuple2('Asia/Magadan', $justinmimbs$timezone_data$TimeZone$asia__magadan),
+			_Utils_Tuple2('Asia/Makassar', $justinmimbs$timezone_data$TimeZone$asia__makassar),
+			_Utils_Tuple2('Asia/Manila', $justinmimbs$timezone_data$TimeZone$asia__manila),
+			_Utils_Tuple2('Asia/Nicosia', $justinmimbs$timezone_data$TimeZone$asia__nicosia),
+			_Utils_Tuple2('Asia/Novokuznetsk', $justinmimbs$timezone_data$TimeZone$asia__novokuznetsk),
+			_Utils_Tuple2('Asia/Novosibirsk', $justinmimbs$timezone_data$TimeZone$asia__novosibirsk),
+			_Utils_Tuple2('Asia/Omsk', $justinmimbs$timezone_data$TimeZone$asia__omsk),
+			_Utils_Tuple2('Asia/Oral', $justinmimbs$timezone_data$TimeZone$asia__oral),
+			_Utils_Tuple2('Asia/Pontianak', $justinmimbs$timezone_data$TimeZone$asia__pontianak),
+			_Utils_Tuple2('Asia/Pyongyang', $justinmimbs$timezone_data$TimeZone$asia__pyongyang),
+			_Utils_Tuple2('Asia/Qatar', $justinmimbs$timezone_data$TimeZone$asia__qatar),
+			_Utils_Tuple2('Asia/Qostanay', $justinmimbs$timezone_data$TimeZone$asia__qostanay),
+			_Utils_Tuple2('Asia/Qyzylorda', $justinmimbs$timezone_data$TimeZone$asia__qyzylorda),
+			_Utils_Tuple2('Asia/Riyadh', $justinmimbs$timezone_data$TimeZone$asia__riyadh),
+			_Utils_Tuple2('Asia/Sakhalin', $justinmimbs$timezone_data$TimeZone$asia__sakhalin),
+			_Utils_Tuple2('Asia/Samarkand', $justinmimbs$timezone_data$TimeZone$asia__samarkand),
+			_Utils_Tuple2('Asia/Seoul', $justinmimbs$timezone_data$TimeZone$asia__seoul),
+			_Utils_Tuple2('Asia/Shanghai', $justinmimbs$timezone_data$TimeZone$asia__shanghai),
+			_Utils_Tuple2('Asia/Singapore', $justinmimbs$timezone_data$TimeZone$asia__singapore),
+			_Utils_Tuple2('Asia/Srednekolymsk', $justinmimbs$timezone_data$TimeZone$asia__srednekolymsk),
+			_Utils_Tuple2('Asia/Taipei', $justinmimbs$timezone_data$TimeZone$asia__taipei),
+			_Utils_Tuple2('Asia/Tashkent', $justinmimbs$timezone_data$TimeZone$asia__tashkent),
+			_Utils_Tuple2('Asia/Tbilisi', $justinmimbs$timezone_data$TimeZone$asia__tbilisi),
+			_Utils_Tuple2('Asia/Tehran', $justinmimbs$timezone_data$TimeZone$asia__tehran),
+			_Utils_Tuple2('Asia/Thimphu', $justinmimbs$timezone_data$TimeZone$asia__thimphu),
+			_Utils_Tuple2('Asia/Tokyo', $justinmimbs$timezone_data$TimeZone$asia__tokyo),
+			_Utils_Tuple2('Asia/Tomsk', $justinmimbs$timezone_data$TimeZone$asia__tomsk),
+			_Utils_Tuple2('Asia/Ulaanbaatar', $justinmimbs$timezone_data$TimeZone$asia__ulaanbaatar),
+			_Utils_Tuple2('Asia/Urumqi', $justinmimbs$timezone_data$TimeZone$asia__urumqi),
+			_Utils_Tuple2('Asia/Ust-Nera', $justinmimbs$timezone_data$TimeZone$asia__ust_nera),
+			_Utils_Tuple2('Asia/Vladivostok', $justinmimbs$timezone_data$TimeZone$asia__vladivostok),
+			_Utils_Tuple2('Asia/Yakutsk', $justinmimbs$timezone_data$TimeZone$asia__yakutsk),
+			_Utils_Tuple2('Asia/Yangon', $justinmimbs$timezone_data$TimeZone$asia__yangon),
+			_Utils_Tuple2('Asia/Yekaterinburg', $justinmimbs$timezone_data$TimeZone$asia__yekaterinburg),
+			_Utils_Tuple2('Asia/Yerevan', $justinmimbs$timezone_data$TimeZone$asia__yerevan),
+			_Utils_Tuple2('Atlantic/Azores', $justinmimbs$timezone_data$TimeZone$atlantic__azores),
+			_Utils_Tuple2('Atlantic/Bermuda', $justinmimbs$timezone_data$TimeZone$atlantic__bermuda),
+			_Utils_Tuple2('Atlantic/Canary', $justinmimbs$timezone_data$TimeZone$atlantic__canary),
+			_Utils_Tuple2('Atlantic/Cape_Verde', $justinmimbs$timezone_data$TimeZone$atlantic__cape_verde),
+			_Utils_Tuple2('Atlantic/Faroe', $justinmimbs$timezone_data$TimeZone$atlantic__faroe),
+			_Utils_Tuple2('Atlantic/Madeira', $justinmimbs$timezone_data$TimeZone$atlantic__madeira),
+			_Utils_Tuple2('Atlantic/South_Georgia', $justinmimbs$timezone_data$TimeZone$atlantic__south_georgia),
+			_Utils_Tuple2('Atlantic/Stanley', $justinmimbs$timezone_data$TimeZone$atlantic__stanley),
+			_Utils_Tuple2('Australia/Adelaide', $justinmimbs$timezone_data$TimeZone$australia__adelaide),
+			_Utils_Tuple2('Australia/Brisbane', $justinmimbs$timezone_data$TimeZone$australia__brisbane),
+			_Utils_Tuple2('Australia/Broken_Hill', $justinmimbs$timezone_data$TimeZone$australia__broken_hill),
+			_Utils_Tuple2('Australia/Darwin', $justinmimbs$timezone_data$TimeZone$australia__darwin),
+			_Utils_Tuple2('Australia/Eucla', $justinmimbs$timezone_data$TimeZone$australia__eucla),
+			_Utils_Tuple2('Australia/Hobart', $justinmimbs$timezone_data$TimeZone$australia__hobart),
+			_Utils_Tuple2('Australia/Lindeman', $justinmimbs$timezone_data$TimeZone$australia__lindeman),
+			_Utils_Tuple2('Australia/Lord_Howe', $justinmimbs$timezone_data$TimeZone$australia__lord_howe),
+			_Utils_Tuple2('Australia/Melbourne', $justinmimbs$timezone_data$TimeZone$australia__melbourne),
+			_Utils_Tuple2('Australia/Perth', $justinmimbs$timezone_data$TimeZone$australia__perth),
+			_Utils_Tuple2('Australia/Sydney', $justinmimbs$timezone_data$TimeZone$australia__sydney),
+			_Utils_Tuple2('Europe/Andorra', $justinmimbs$timezone_data$TimeZone$europe__andorra),
+			_Utils_Tuple2('Europe/Astrakhan', $justinmimbs$timezone_data$TimeZone$europe__astrakhan),
+			_Utils_Tuple2('Europe/Athens', $justinmimbs$timezone_data$TimeZone$europe__athens),
+			_Utils_Tuple2('Europe/Belgrade', $justinmimbs$timezone_data$TimeZone$europe__belgrade),
+			_Utils_Tuple2('Europe/Berlin', $justinmimbs$timezone_data$TimeZone$europe__berlin),
+			_Utils_Tuple2('Europe/Brussels', $justinmimbs$timezone_data$TimeZone$europe__brussels),
+			_Utils_Tuple2('Europe/Bucharest', $justinmimbs$timezone_data$TimeZone$europe__bucharest),
+			_Utils_Tuple2('Europe/Budapest', $justinmimbs$timezone_data$TimeZone$europe__budapest),
+			_Utils_Tuple2('Europe/Chisinau', $justinmimbs$timezone_data$TimeZone$europe__chisinau),
+			_Utils_Tuple2('Europe/Dublin', $justinmimbs$timezone_data$TimeZone$europe__dublin),
+			_Utils_Tuple2('Europe/Gibraltar', $justinmimbs$timezone_data$TimeZone$europe__gibraltar),
+			_Utils_Tuple2('Europe/Helsinki', $justinmimbs$timezone_data$TimeZone$europe__helsinki),
+			_Utils_Tuple2('Europe/Istanbul', $justinmimbs$timezone_data$TimeZone$europe__istanbul),
+			_Utils_Tuple2('Europe/Kaliningrad', $justinmimbs$timezone_data$TimeZone$europe__kaliningrad),
+			_Utils_Tuple2('Europe/Kirov', $justinmimbs$timezone_data$TimeZone$europe__kirov),
+			_Utils_Tuple2('Europe/Kyiv', $justinmimbs$timezone_data$TimeZone$europe__kyiv),
+			_Utils_Tuple2('Europe/Lisbon', $justinmimbs$timezone_data$TimeZone$europe__lisbon),
+			_Utils_Tuple2('Europe/London', $justinmimbs$timezone_data$TimeZone$europe__london),
+			_Utils_Tuple2('Europe/Madrid', $justinmimbs$timezone_data$TimeZone$europe__madrid),
+			_Utils_Tuple2('Europe/Malta', $justinmimbs$timezone_data$TimeZone$europe__malta),
+			_Utils_Tuple2('Europe/Minsk', $justinmimbs$timezone_data$TimeZone$europe__minsk),
+			_Utils_Tuple2('Europe/Moscow', $justinmimbs$timezone_data$TimeZone$europe__moscow),
+			_Utils_Tuple2('Europe/Paris', $justinmimbs$timezone_data$TimeZone$europe__paris),
+			_Utils_Tuple2('Europe/Prague', $justinmimbs$timezone_data$TimeZone$europe__prague),
+			_Utils_Tuple2('Europe/Riga', $justinmimbs$timezone_data$TimeZone$europe__riga),
+			_Utils_Tuple2('Europe/Rome', $justinmimbs$timezone_data$TimeZone$europe__rome),
+			_Utils_Tuple2('Europe/Samara', $justinmimbs$timezone_data$TimeZone$europe__samara),
+			_Utils_Tuple2('Europe/Saratov', $justinmimbs$timezone_data$TimeZone$europe__saratov),
+			_Utils_Tuple2('Europe/Simferopol', $justinmimbs$timezone_data$TimeZone$europe__simferopol),
+			_Utils_Tuple2('Europe/Sofia', $justinmimbs$timezone_data$TimeZone$europe__sofia),
+			_Utils_Tuple2('Europe/Tallinn', $justinmimbs$timezone_data$TimeZone$europe__tallinn),
+			_Utils_Tuple2('Europe/Tirane', $justinmimbs$timezone_data$TimeZone$europe__tirane),
+			_Utils_Tuple2('Europe/Ulyanovsk', $justinmimbs$timezone_data$TimeZone$europe__ulyanovsk),
+			_Utils_Tuple2('Europe/Vienna', $justinmimbs$timezone_data$TimeZone$europe__vienna),
+			_Utils_Tuple2('Europe/Vilnius', $justinmimbs$timezone_data$TimeZone$europe__vilnius),
+			_Utils_Tuple2('Europe/Volgograd', $justinmimbs$timezone_data$TimeZone$europe__volgograd),
+			_Utils_Tuple2('Europe/Warsaw', $justinmimbs$timezone_data$TimeZone$europe__warsaw),
+			_Utils_Tuple2('Europe/Zurich', $justinmimbs$timezone_data$TimeZone$europe__zurich),
+			_Utils_Tuple2('Indian/Chagos', $justinmimbs$timezone_data$TimeZone$indian__chagos),
+			_Utils_Tuple2('Indian/Maldives', $justinmimbs$timezone_data$TimeZone$indian__maldives),
+			_Utils_Tuple2('Indian/Mauritius', $justinmimbs$timezone_data$TimeZone$indian__mauritius),
+			_Utils_Tuple2('Pacific/Apia', $justinmimbs$timezone_data$TimeZone$pacific__apia),
+			_Utils_Tuple2('Pacific/Auckland', $justinmimbs$timezone_data$TimeZone$pacific__auckland),
+			_Utils_Tuple2('Pacific/Bougainville', $justinmimbs$timezone_data$TimeZone$pacific__bougainville),
+			_Utils_Tuple2('Pacific/Chatham', $justinmimbs$timezone_data$TimeZone$pacific__chatham),
+			_Utils_Tuple2('Pacific/Easter', $justinmimbs$timezone_data$TimeZone$pacific__easter),
+			_Utils_Tuple2('Pacific/Efate', $justinmimbs$timezone_data$TimeZone$pacific__efate),
+			_Utils_Tuple2('Pacific/Fakaofo', $justinmimbs$timezone_data$TimeZone$pacific__fakaofo),
+			_Utils_Tuple2('Pacific/Fiji', $justinmimbs$timezone_data$TimeZone$pacific__fiji),
+			_Utils_Tuple2('Pacific/Galapagos', $justinmimbs$timezone_data$TimeZone$pacific__galapagos),
+			_Utils_Tuple2('Pacific/Gambier', $justinmimbs$timezone_data$TimeZone$pacific__gambier),
+			_Utils_Tuple2('Pacific/Guadalcanal', $justinmimbs$timezone_data$TimeZone$pacific__guadalcanal),
+			_Utils_Tuple2('Pacific/Guam', $justinmimbs$timezone_data$TimeZone$pacific__guam),
+			_Utils_Tuple2('Pacific/Honolulu', $justinmimbs$timezone_data$TimeZone$pacific__honolulu),
+			_Utils_Tuple2('Pacific/Kanton', $justinmimbs$timezone_data$TimeZone$pacific__kanton),
+			_Utils_Tuple2('Pacific/Kiritimati', $justinmimbs$timezone_data$TimeZone$pacific__kiritimati),
+			_Utils_Tuple2('Pacific/Kosrae', $justinmimbs$timezone_data$TimeZone$pacific__kosrae),
+			_Utils_Tuple2('Pacific/Kwajalein', $justinmimbs$timezone_data$TimeZone$pacific__kwajalein),
+			_Utils_Tuple2('Pacific/Marquesas', $justinmimbs$timezone_data$TimeZone$pacific__marquesas),
+			_Utils_Tuple2('Pacific/Nauru', $justinmimbs$timezone_data$TimeZone$pacific__nauru),
+			_Utils_Tuple2('Pacific/Niue', $justinmimbs$timezone_data$TimeZone$pacific__niue),
+			_Utils_Tuple2('Pacific/Norfolk', $justinmimbs$timezone_data$TimeZone$pacific__norfolk),
+			_Utils_Tuple2('Pacific/Noumea', $justinmimbs$timezone_data$TimeZone$pacific__noumea),
+			_Utils_Tuple2('Pacific/Pago_Pago', $justinmimbs$timezone_data$TimeZone$pacific__pago_pago),
+			_Utils_Tuple2('Pacific/Palau', $justinmimbs$timezone_data$TimeZone$pacific__palau),
+			_Utils_Tuple2('Pacific/Pitcairn', $justinmimbs$timezone_data$TimeZone$pacific__pitcairn),
+			_Utils_Tuple2('Pacific/Port_Moresby', $justinmimbs$timezone_data$TimeZone$pacific__port_moresby),
+			_Utils_Tuple2('Pacific/Rarotonga', $justinmimbs$timezone_data$TimeZone$pacific__rarotonga),
+			_Utils_Tuple2('Pacific/Tahiti', $justinmimbs$timezone_data$TimeZone$pacific__tahiti),
+			_Utils_Tuple2('Pacific/Tarawa', $justinmimbs$timezone_data$TimeZone$pacific__tarawa),
+			_Utils_Tuple2('Pacific/Tongatapu', $justinmimbs$timezone_data$TimeZone$pacific__tongatapu)
+		]));
+var $justinmimbs$timezone_data$TimeZone$getZone = A2(
+	$elm$core$Task$andThen,
+	function (nameOrOffset) {
+		if (!nameOrOffset.$) {
+			var zoneName = nameOrOffset.a;
+			var _v1 = A2($elm$core$Dict$get, zoneName, $justinmimbs$timezone_data$TimeZone$zones);
+			if (!_v1.$) {
+				var zone = _v1.a;
+				return $elm$core$Task$succeed(
+					_Utils_Tuple2(
+						zoneName,
+						zone(0)));
+			} else {
+				return $elm$core$Task$fail(
+					$justinmimbs$timezone_data$TimeZone$NoDataForZoneName(zoneName));
+			}
+		} else {
+			return $elm$core$Task$fail($justinmimbs$timezone_data$TimeZone$NoZoneName);
+		}
+	},
+	$elm$time$Time$getZoneName);
+var $elm$core$Task$onError = _Scheduler_onError;
+var $elm$time$Time$utc = A2($elm$time$Time$Zone, 0, _List_Nil);
+var $author$project$View$getTimeZone = A2(
+	$elm$core$Task$perform,
+	$author$project$View$GotTimeZone,
+	A2(
+		$elm$core$Task$onError,
+		function (_v0) {
+			return $elm$core$Task$succeed(
+				_Utils_Tuple2('UTC', $elm$time$Time$utc));
+		},
+		$justinmimbs$timezone_data$TimeZone$getZone));
+var $author$project$View$init = function (_v0) {
+	return _Utils_Tuple2(
+		{
+			i: $krisajenkins$remotedata$RemoteData$NotAsked,
+			M: '',
+			U: _Utils_Tuple2('UTC', $elm$time$Time$utc)
+		},
+		$author$project$View$getTimeZone);
+};
+var $elm$core$Platform$Sub$batch = _Platform_batch;
+var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
+var $author$project$View$subscriptions = function (_v0) {
+	return $elm$core$Platform$Sub$none;
+};
+var $author$project$View$HttpError = function (a) {
+	return {$: 0, a: a};
+};
+var $krisajenkins$remotedata$RemoteData$Failure = function (a) {
+	return {$: 2, a: a};
+};
+var $author$project$View$JsonError = function (a) {
+	return {$: 1, a: a};
+};
+var $krisajenkins$remotedata$RemoteData$Loading = {$: 1};
+var $author$project$View$Response = function (a) {
+	return {$: 3, a: a};
+};
+var $krisajenkins$remotedata$RemoteData$Success = function (a) {
+	return {$: 3, a: a};
+};
+var $elm$core$Basics$composeR = F3(
+	function (f, g, x) {
+		return g(
+			f(x));
+	});
+var $elm$json$Json$Decode$decodeString = _Json_runOnString;
+var $elm$http$Http$BadStatus_ = F2(
+	function (a, b) {
+		return {$: 3, a: a, b: b};
+	});
+var $elm$http$Http$BadUrl_ = function (a) {
+	return {$: 0, a: a};
+};
+var $elm$http$Http$GoodStatus_ = F2(
+	function (a, b) {
+		return {$: 4, a: a, b: b};
+	});
+var $elm$http$Http$NetworkError_ = {$: 2};
+var $elm$http$Http$Receiving = function (a) {
+	return {$: 1, a: a};
+};
+var $elm$http$Http$Sending = function (a) {
+	return {$: 0, a: a};
+};
+var $elm$http$Http$Timeout_ = {$: 1};
+var $elm$core$Maybe$isJust = function (maybe) {
+	if (!maybe.$) {
+		return true;
+	} else {
+		return false;
+	}
+};
+var $elm$core$Platform$sendToSelf = _Platform_sendToSelf;
 var $elm$core$Dict$getMin = function (dict) {
 	getMin:
 	while (true) {
@@ -6139,7 +24408,7 @@ var $elm$http$Http$resolve = F2(
 			case 3:
 				var metadata = response.a;
 				return $elm$core$Result$Err(
-					$elm$http$Http$BadStatus(metadata.b5));
+					$elm$http$Http$BadStatus(metadata.ce));
 			default:
 				var body = response.b;
 				return A2(
@@ -6176,7 +24445,7 @@ var $elm$http$Http$Request = function (a) {
 };
 var $elm$http$Http$State = F2(
 	function (reqs, subs) {
-		return {bj: reqs, bv: subs};
+		return {br: reqs, bD: subs};
 	});
 var $elm$http$Http$init = $elm$core$Task$succeed(
 	A2($elm$http$Http$State, $elm$core$Dict$empty, _List_Nil));
@@ -6220,7 +24489,7 @@ var $elm$http$Http$updateReqs = F3(
 					return A2(
 						$elm$core$Task$andThen,
 						function (pid) {
-							var _v4 = req.bA;
+							var _v4 = req.bJ;
 							if (_v4.$ === 1) {
 								return A3($elm$http$Http$updateReqs, router, otherCmds, reqs);
 							} else {
@@ -6250,7 +24519,7 @@ var $elm$http$Http$onEffects = F4(
 				return $elm$core$Task$succeed(
 					A2($elm$http$Http$State, reqs, subs));
 			},
-			A3($elm$http$Http$updateReqs, router, cmds, state.bj));
+			A3($elm$http$Http$updateReqs, router, cmds, state.br));
 	});
 var $elm$core$List$maybeCons = F3(
 	function (f, mx, xs) {
@@ -6293,7 +24562,7 @@ var $elm$http$Http$onSelfMsg = F3(
 				A2(
 					$elm$core$List$filterMap,
 					A3($elm$http$Http$maybeSend, router, tracker, progress),
-					state.bv)));
+					state.bD)));
 	});
 var $elm$http$Http$Cancel = function (a) {
 	return {$: 0, a: a};
@@ -6307,14 +24576,14 @@ var $elm$http$Http$cmdMap = F2(
 			var r = cmd.a;
 			return $elm$http$Http$Request(
 				{
-					bL: r.bL,
-					bN: r.bN,
-					bS: A2(_Http_mapExpect, func, r.bS),
-					aP: r.aP,
-					bZ: r.bZ,
-					b8: r.b8,
-					bA: r.bA,
-					G: r.G
+					bU: r.bU,
+					bW: r.bW,
+					b$: A2(_Http_mapExpect, func, r.b$),
+					aX: r.aX,
+					b6: r.b6,
+					ch: r.ch,
+					bJ: r.bJ,
+					J: r.J
 				});
 		}
 	});
@@ -6337,11 +24606,11 @@ var $elm$http$Http$subscription = _Platform_leaf('Http');
 var $elm$http$Http$request = function (r) {
 	return $elm$http$Http$command(
 		$elm$http$Http$Request(
-			{bL: false, bN: r.bN, bS: r.bS, aP: r.aP, bZ: r.bZ, b8: r.b8, bA: r.bA, G: r.G}));
+			{bU: false, bW: r.bW, b$: r.b$, aX: r.aX, b6: r.b6, ch: r.ch, bJ: r.bJ, J: r.J}));
 };
 var $elm$http$Http$get = function (r) {
 	return $elm$http$Http$request(
-		{bN: $elm$http$Http$emptyBody, bS: r.bS, aP: _List_Nil, bZ: 'GET', b8: $elm$core$Maybe$Nothing, bA: $elm$core$Maybe$Nothing, G: r.G});
+		{bW: $elm$http$Http$emptyBody, b$: r.b$, aX: _List_Nil, b6: 'GET', ch: $elm$core$Maybe$Nothing, bJ: $elm$core$Maybe$Nothing, J: r.J});
 };
 var $author$project$View$isUrl = function (string) {
 	var _v0 = _Utils_Tuple2(
@@ -6362,17 +24631,17 @@ var $author$project$View$isUrl = function (string) {
 var $elm$core$Set$Set_elm_builtin = $elm$core$Basics$identity;
 var $elm$core$Set$empty = $elm$core$Dict$empty;
 var $author$project$View$newData = function (value) {
-	return {y: $elm$core$Set$empty, z: $elm$core$Set$empty, L: '', af: value};
+	return {B: $elm$core$Set$empty, C: $elm$core$Set$empty, O: '', ak: value};
 };
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Data$Root$Root = F4(
 	function (address, name, productions, version) {
-		return {aw: address, u: name, bf: productions, bC: version};
+		return {aD: address, w: name, bn: productions, bL: version};
 	});
 var $author$project$Data$Root$Address = F3(
 	function (city, postalCode, streetAddress) {
-		return {Q: city, T: postalCode, U: streetAddress};
+		return {T: city, W: postalCode, X: streetAddress};
 	});
 var $elm$json$Json$Decode$null = _Json_decodeNull;
 var $elm$json$Json$Decode$oneOf = _Json_oneOf;
@@ -6461,11 +24730,11 @@ var $author$project$Data$Root$addressDecoder = A4(
 var $elm$json$Json$Decode$list = _Json_decodeList;
 var $author$project$Data$Root$Production = F9(
 	function (accessibility, additionalInfo, description, events, genre, participants, subtitle, teaser, title) {
-		return {ar: accessibility, av: additionalInfo, aD: description, aI: events, aN: genre, a7: participants, bw: subtitle, by: teaser, bz: title};
+		return {ay: accessibility, aC: additionalInfo, aK: description, aP: events, aV: genre, bf: participants, bE: subtitle, bG: teaser, bH: title};
 	});
 var $author$project$Data$Root$Accessibility = F3(
 	function (accessModeSufficient, accessibilityHazard, accessibilitySummary) {
-		return {aq: accessModeSufficient, as: accessibilityHazard, at: accessibilitySummary};
+		return {ax: accessModeSufficient, az: accessibilityHazard, aA: accessibilitySummary};
 	});
 var $elm$json$Json$Decode$fail = _Json_fail;
 var $elm_community$json_extra$Json$Decode$Extra$fromResult = function (result) {
@@ -6562,7 +24831,7 @@ var $author$project$Data$Root$accessibilityDecoder = A4(
 			$elm$json$Json$Decode$succeed($author$project$Data$Root$Accessibility))));
 var $author$project$Data$Root$Event = F6(
 	function (duration, endDate, locations, offers, startDate, url) {
-		return {aE: duration, aG: endDate, aZ: locations, a6: offers, bu: startDate, G: url};
+		return {aL: duration, aN: endDate, a5: locations, be: offers, bC: startDate, J: url};
 	});
 var $elm$json$Json$Decode$int = _Json_decodeInt;
 var $author$project$Data$Root$Physical = function (a) {
@@ -6573,7 +24842,7 @@ var $author$project$Data$Root$Virtual = function (a) {
 };
 var $author$project$Data$Root$AddressLocation = F8(
 	function (city, latitude, longitude, name, postalCode, streetAddress, locationType, wheelChairPlaces) {
-		return {Q: city, aY: latitude, S: locationType, a_: longitude, u: name, T: postalCode, U: streetAddress, bE: wheelChairPlaces};
+		return {T: city, a4: latitude, V: locationType, a6: longitude, w: name, W: postalCode, X: streetAddress, bN: wheelChairPlaces};
 	});
 var $author$project$Data$Root$AddressType = 0;
 var $author$project$Data$Root$parseAddressType = function (locationType) {
@@ -6600,7 +24869,7 @@ var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required = F3(
 	});
 var $author$project$Data$Root$WheelChairPlaces = F3(
 	function (count, hasSpaceForAssistant, wheelchairUserCapacity) {
-		return {aA: count, aO: hasSpaceForAssistant, bF: wheelchairUserCapacity};
+		return {aH: count, aW: hasSpaceForAssistant, bO: wheelchairUserCapacity};
 	});
 var $elm$json$Json$Decode$bool = _Json_decodeBool;
 var $author$project$Data$Root$wheelChairPlacesDecoder = A4(
@@ -6660,7 +24929,7 @@ var $author$project$Data$Root$addressLocationDecoder = A4(
 								$elm$json$Json$Decode$succeed($author$project$Data$Root$AddressLocation)))))))));
 var $author$project$Data$Root$VirtualLocation = F3(
 	function (name, locationType, url) {
-		return {S: locationType, u: name, G: url};
+		return {V: locationType, w: name, J: url};
 	});
 var $author$project$Data$Root$VirtualLocationType = 1;
 var $author$project$Data$Root$parseVirtualType = function (locationType) {
@@ -6701,7 +24970,7 @@ var $author$project$Data$Root$locationDecoder = $elm$json$Json$Decode$oneOf(
 var $author$project$Data$Root$locationsDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$locationDecoder);
 var $author$project$Data$Root$Offer = F5(
 	function (maxPrice, minPrice, name, priceCurrency, url) {
-		return {a$: maxPrice, a0: minPrice, u: name, bb: priceCurrency, G: url};
+		return {a7: maxPrice, a8: minPrice, w: name, bj: priceCurrency, J: url};
 	});
 var $author$project$Data$Root$offerDecoder = A4(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
@@ -6861,7 +25130,7 @@ var $author$project$Data$Root$genreDecoder = A2(
 	$elm$json$Json$Decode$string);
 var $author$project$Data$Root$Participant = F3(
 	function (_function, names, roleName) {
-		return {aM: _function, a4: names, bn: roleName};
+		return {aU: _function, bc: names, bv: roleName};
 	});
 var $author$project$Data$Root$namesDecoder = $elm$json$Json$Decode$list($elm$json$Json$Decode$string);
 var $author$project$Data$Root$participantDecoder = A4(
@@ -6964,11 +25233,11 @@ var $author$project$View$fetchData = F2(
 					{i: $krisajenkins$remotedata$RemoteData$Loading}),
 				$elm$http$Http$get(
 					{
-						bS: A2(
+						b$: A2(
 							$elm$http$Http$expectJson,
 							A2($elm$core$Basics$composeR, $krisajenkins$remotedata$RemoteData$fromResult, $author$project$View$Response),
 							$author$project$Data$Root$rootDecoder),
-						G: inputString
+						J: inputString
 					}));
 		} else {
 			var _v0 = A2($elm$json$Json$Decode$decodeString, $author$project$Data$Root$rootDecoder, inputString);
@@ -7047,7 +25316,7 @@ var $author$project$View$toggleEventCard = F3(
 					_Utils_update(
 						data,
 						{
-							y: A2($elm$core$Set$remove, index, data.y)
+							B: A2($elm$core$Set$remove, index, data.B)
 						}));
 			} else {
 				var data = _v0.a.a;
@@ -7055,7 +25324,7 @@ var $author$project$View$toggleEventCard = F3(
 					_Utils_update(
 						data,
 						{
-							y: A2($elm$core$Set$insert, index, data.y)
+							B: A2($elm$core$Set$insert, index, data.B)
 						}));
 			}
 		} else {
@@ -7072,7 +25341,7 @@ var $author$project$View$toggleProductionCard = F3(
 					_Utils_update(
 						data,
 						{
-							z: A2($elm$core$Set$remove, index, data.z)
+							C: A2($elm$core$Set$remove, index, data.C)
 						}));
 			} else {
 				var data = _v0.a.a;
@@ -7080,7 +25349,7 @@ var $author$project$View$toggleProductionCard = F3(
 					_Utils_update(
 						data,
 						{
-							z: A2($elm$core$Set$insert, index, data.z)
+							C: A2($elm$core$Set$insert, index, data.C)
 						}));
 			}
 		} else {
@@ -7094,7 +25363,7 @@ var $author$project$View$updateNameFilter = F2(
 			return $krisajenkins$remotedata$RemoteData$Success(
 				_Utils_update(
 					data,
-					{L: filter}));
+					{O: filter}));
 		} else {
 			return remoteData;
 		}
@@ -7110,16 +25379,14 @@ var $author$project$View$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{i: $krisajenkins$remotedata$RemoteData$NotAsked, J: text}),
+						{i: $krisajenkins$remotedata$RemoteData$NotAsked, M: text}),
 					$elm$core$Platform$Cmd$none);
 			case 2:
 				var zone = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{
-							R: $elm$core$Maybe$Just(zone)
-						}),
+						{U: zone}),
 					$elm$core$Platform$Cmd$none);
 			case 3:
 				var response = msg.a;
@@ -7174,9 +25441,26 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 	});
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $elm$html$Html$div = _VirtualDom_node('div');
+var $author$project$View$section = function (content) {
+	return A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$class('section')
+			]),
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('container')
+					]),
+				content)
+			]));
+};
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $elm$time$Time$utc = A2($elm$time$Time$Zone, 0, _List_Nil);
 var $author$project$View$EventCardClicked = F2(
 	function (a, b) {
 		return {$: 5, a: a, b: b};
@@ -7185,21 +25469,6 @@ var $author$project$View$ProductionCardClicked = F2(
 	function (a, b) {
 		return {$: 4, a: a, b: b};
 	});
-var $elm$core$List$filter = F2(
-	function (isGood, list) {
-		return A3(
-			$elm$core$List$foldr,
-			F2(
-				function (x, xs) {
-					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
-				}),
-			_List_Nil,
-			list);
-	});
-var $elm$core$Tuple$second = function (_v0) {
-	var y = _v0.b;
-	return y;
-};
 var $elm$html$Html$Attributes$classList = function (classes) {
 	return $elm$html$Html$Attributes$class(
 		A2(
@@ -7388,7 +25657,7 @@ var $author$project$View$productionNameMatches = F2(
 		return A2(
 			$elm$core$String$contains,
 			$elm$core$String$toLower(filter),
-			$elm$core$String$toLower(production.bz));
+			$elm$core$String$toLower(production.bH));
 	});
 var $author$project$Data$Root$genreToString = function (genre) {
 	switch (genre) {
@@ -7492,7 +25761,10 @@ var $author$project$View$maybeTableRow = F2(
 						])),
 					A2(
 					$elm$html$Html$td,
-					_List_Nil,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('preserve-newlines')
+						]),
 					_List_fromArray(
 						[
 							$elm$html$Html$text(
@@ -7517,7 +25789,10 @@ var $author$project$View$tableRow = F2(
 						])),
 					A2(
 					$elm$html$Html$td,
-					_List_Nil,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('preserve-newlines')
+						]),
 					_List_fromArray(
 						[
 							$elm$html$Html$text(value)
@@ -7542,10 +25817,10 @@ var $author$project$View$viewParticipant = function (participant) {
 						$elm$core$Basics$identity,
 						_List_fromArray(
 							[
-								participant.aM,
-								participant.bn,
+								participant.aU,
+								participant.bv,
 								$elm$core$Maybe$Just(
-								A2($elm$core$String$join, ' / ', participant.a4))
+								A2($elm$core$String$join, ' / ', participant.bc))
 							]))))
 			]));
 };
@@ -7574,15 +25849,15 @@ var $author$project$View$productionTable = function (production) {
 				_List_Nil,
 				_List_fromArray(
 					[
-						A2($author$project$View$tableRow, 'Title', production.bz),
-						A2($author$project$View$maybeTableRow, 'Subtitle', production.bw),
-						A2($author$project$View$maybeTableRow, 'Description', production.aD),
-						A2($author$project$View$maybeTableRow, 'Teaser', production.by),
-						A2($author$project$View$maybeTableRow, 'Additional info', production.av),
+						A2($author$project$View$tableRow, 'Title', production.bH),
+						A2($author$project$View$maybeTableRow, 'Subtitle', production.bE),
+						A2($author$project$View$maybeTableRow, 'Description', production.aK),
+						A2($author$project$View$maybeTableRow, 'Teaser', production.bG),
+						A2($author$project$View$maybeTableRow, 'Additional info', production.aC),
 						A2(
 						$author$project$View$maybeTableRow,
 						'Genre',
-						A2($elm$core$Maybe$map, $author$project$Data$Root$genreToString, production.aN)),
+						A2($elm$core$Maybe$map, $author$project$Data$Root$genreToString, production.aV)),
 						A2(
 						$elm$html$Html$tr,
 						_List_Nil,
@@ -7600,35 +25875,17 @@ var $author$project$View$productionTable = function (production) {
 								_List_Nil,
 								_List_fromArray(
 									[
-										$author$project$View$viewParticipants(production.a7)
+										$author$project$View$viewParticipants(production.bf)
 									]))
 							]))
 					]))
-			]));
-};
-var $author$project$View$section = function (content) {
-	return A2(
-		$elm$html$Html$div,
-		_List_fromArray(
-			[
-				$elm$html$Html$Attributes$class('section')
-			]),
-		_List_fromArray(
-			[
-				A2(
-				$elm$html$Html$div,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$class('container')
-					]),
-				content)
 			]));
 };
 var $ryannhg$date_format$DateFormat$DayOfMonthFixed = {$: 7};
 var $ryannhg$date_format$DateFormat$dayOfMonthFixed = $ryannhg$date_format$DateFormat$DayOfMonthFixed;
 var $ryannhg$date_format$DateFormat$Language$Language = F6(
 	function (toMonthName, toMonthAbbreviation, toWeekdayName, toWeekdayAbbreviation, toAmPm, toOrdinalSuffix) {
-		return {b9: toAmPm, ca: toMonthAbbreviation, cb: toMonthName, F: toOrdinalSuffix, cc: toWeekdayAbbreviation, cd: toWeekdayName};
+		return {ci: toAmPm, cj: toMonthAbbreviation, ck: toMonthName, I: toOrdinalSuffix, cl: toWeekdayAbbreviation, cm: toWeekdayName};
 	});
 var $ryannhg$date_format$DateFormat$Language$toEnglishAmPm = function (hour) {
 	return (hour > 11) ? 'pm' : 'am';
@@ -7661,7 +25918,6 @@ var $ryannhg$date_format$DateFormat$Language$toEnglishMonthName = function (mont
 			return 'December';
 	}
 };
-var $elm$core$Basics$modBy = _Basics_modBy;
 var $ryannhg$date_format$DateFormat$Language$toEnglishSuffix = function (num) {
 	var _v0 = A2($elm$core$Basics$modBy, 100, num);
 	switch (_v0) {
@@ -7734,7 +25990,7 @@ var $elm$time$Time$toAdjustedMinutesHelp = F3(
 			} else {
 				var era = eras.a;
 				var olderEras = eras.b;
-				if (_Utils_cmp(era.an, posixMinutes) < 0) {
+				if (_Utils_cmp(era.at, posixMinutes) < 0) {
 					return posixMinutes + era.b;
 				} else {
 					var $temp$defaultOffset = defaultOffset,
@@ -7773,13 +26029,10 @@ var $elm$time$Time$toHour = F2(
 	});
 var $ryannhg$date_format$DateFormat$amPm = F3(
 	function (language, zone, posix) {
-		return language.b9(
+		return language.ci(
 			A2($elm$time$Time$toHour, zone, posix));
 	});
 var $elm$core$Basics$ge = _Utils_ge;
-var $elm$core$Basics$negate = function (n) {
-	return -n;
-};
 var $elm$time$Time$toCivil = function (minutes) {
 	var rawDay = A2($elm$time$Time$flooredDiv, minutes, 60 * 24) + 719468;
 	var era = (((rawDay >= 0) ? rawDay : (rawDay - 146096)) / 146097) | 0;
@@ -7790,22 +26043,17 @@ var $elm$time$Time$toCivil = function (minutes) {
 	var month = mp + ((mp < 10) ? 3 : (-9));
 	var year = yearOfEra + (era * 400);
 	return {
-		aB: (dayOfYear - ((((153 * mp) + 2) / 5) | 0)) + 1,
-		a2: month,
-		bJ: year + ((month <= 2) ? 1 : 0)
+		aI: (dayOfYear - ((((153 * mp) + 2) / 5) | 0)) + 1,
+		ba: month,
+		bS: year + ((month <= 2) ? 1 : 0)
 	};
 };
 var $elm$time$Time$toDay = F2(
 	function (zone, time) {
 		return $elm$time$Time$toCivil(
-			A2($elm$time$Time$toAdjustedMinutes, zone, time)).aB;
+			A2($elm$time$Time$toAdjustedMinutes, zone, time)).aI;
 	});
 var $ryannhg$date_format$DateFormat$dayOfMonth = $elm$time$Time$toDay;
-var $elm$time$Time$Sun = 6;
-var $elm$time$Time$Fri = 4;
-var $elm$time$Time$Mon = 0;
-var $elm$time$Time$Sat = 5;
-var $elm$time$Time$Thu = 3;
 var $elm$time$Time$Tue = 1;
 var $elm$time$Time$Wed = 2;
 var $ryannhg$date_format$DateFormat$days = _List_fromArray(
@@ -7871,7 +26119,6 @@ var $ryannhg$date_format$DateFormat$dayOfWeek = F2(
 								}),
 							$ryannhg$date_format$DateFormat$days)))));
 	});
-var $elm$core$Basics$neq = _Utils_notEqual;
 var $ryannhg$date_format$DateFormat$isLeapYear = function (year_) {
 	return (!(!A2($elm$core$Basics$modBy, 4, year_))) ? false : ((!(!A2($elm$core$Basics$modBy, 100, year_))) ? true : ((!(!A2($elm$core$Basics$modBy, 400, year_))) ? false : true));
 };
@@ -7904,24 +26151,12 @@ var $ryannhg$date_format$DateFormat$daysInMonth = F2(
 				return 31;
 		}
 	});
-var $elm$time$Time$Jan = 0;
-var $elm$time$Time$Apr = 3;
-var $elm$time$Time$Aug = 7;
-var $elm$time$Time$Dec = 11;
-var $elm$time$Time$Feb = 1;
-var $elm$time$Time$Jul = 6;
-var $elm$time$Time$Jun = 5;
-var $elm$time$Time$Mar = 2;
-var $elm$time$Time$May = 4;
-var $elm$time$Time$Nov = 10;
-var $elm$time$Time$Oct = 9;
-var $elm$time$Time$Sep = 8;
 var $ryannhg$date_format$DateFormat$months = _List_fromArray(
 	[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
 var $elm$time$Time$toMonth = F2(
 	function (zone, time) {
 		var _v0 = $elm$time$Time$toCivil(
-			A2($elm$time$Time$toAdjustedMinutes, zone, time)).a2;
+			A2($elm$time$Time$toAdjustedMinutes, zone, time)).ba;
 		switch (_v0) {
 			case 1:
 				return 0;
@@ -8113,7 +26348,7 @@ var $elm$core$List$take = F2(
 var $elm$time$Time$toYear = F2(
 	function (zone, time) {
 		return $elm$time$Time$toCivil(
-			A2($elm$time$Time$toAdjustedMinutes, zone, time)).bJ;
+			A2($elm$time$Time$toAdjustedMinutes, zone, time)).bS;
 	});
 var $ryannhg$date_format$DateFormat$dayOfYear = F2(
 	function (zone, posix) {
@@ -8215,7 +26450,7 @@ var $ryannhg$date_format$DateFormat$piece = F4(
 				return function (num) {
 					return _Utils_ap(
 						$elm$core$String$fromInt(num),
-						language.F(num));
+						language.I(num));
 				}(
 					A2($ryannhg$date_format$DateFormat$monthNumber_, zone, posix));
 			case 2:
@@ -8224,10 +26459,10 @@ var $ryannhg$date_format$DateFormat$piece = F4(
 					2,
 					A2($ryannhg$date_format$DateFormat$monthNumber_, zone, posix));
 			case 3:
-				return language.ca(
+				return language.cj(
 					A2($elm$time$Time$toMonth, zone, posix));
 			case 4:
-				return language.cb(
+				return language.ck(
 					A2($elm$time$Time$toMonth, zone, posix));
 			case 17:
 				return $elm$core$String$fromInt(
@@ -8236,7 +26471,7 @@ var $ryannhg$date_format$DateFormat$piece = F4(
 				return function (num) {
 					return _Utils_ap(
 						$elm$core$String$fromInt(num),
-						language.F(num));
+						language.I(num));
 				}(
 					1 + A2($ryannhg$date_format$DateFormat$quarter, zone, posix));
 			case 5:
@@ -8246,7 +26481,7 @@ var $ryannhg$date_format$DateFormat$piece = F4(
 				return function (num) {
 					return _Utils_ap(
 						$elm$core$String$fromInt(num),
-						language.F(num));
+						language.I(num));
 				}(
 					A2($ryannhg$date_format$DateFormat$dayOfMonth, zone, posix));
 			case 7:
@@ -8261,7 +26496,7 @@ var $ryannhg$date_format$DateFormat$piece = F4(
 				return function (num) {
 					return _Utils_ap(
 						$elm$core$String$fromInt(num),
-						language.F(num));
+						language.I(num));
 				}(
 					A2($ryannhg$date_format$DateFormat$dayOfYear, zone, posix));
 			case 10:
@@ -8276,14 +26511,14 @@ var $ryannhg$date_format$DateFormat$piece = F4(
 				return function (num) {
 					return _Utils_ap(
 						$elm$core$String$fromInt(num),
-						language.F(num));
+						language.I(num));
 				}(
 					A2($ryannhg$date_format$DateFormat$dayOfWeek, zone, posix));
 			case 13:
-				return language.cc(
+				return language.cl(
 					A2($elm$time$Time$toWeekday, zone, posix));
 			case 14:
-				return language.cd(
+				return language.cm(
 					A2($elm$time$Time$toWeekday, zone, posix));
 			case 19:
 				return $elm$core$String$fromInt(
@@ -8292,7 +26527,7 @@ var $ryannhg$date_format$DateFormat$piece = F4(
 				return function (num) {
 					return _Utils_ap(
 						$elm$core$String$fromInt(num),
-						language.F(num));
+						language.I(num));
 				}(
 					A2($ryannhg$date_format$DateFormat$weekOfYear, zone, posix));
 			case 21:
@@ -8431,7 +26666,7 @@ var $elm$parser$Parser$Advanced$AddRight = F2(
 	});
 var $elm$parser$Parser$Advanced$DeadEnd = F4(
 	function (row, col, problem, contextStack) {
-		return {az: col, bP: contextStack, bc: problem, bo: row};
+		return {aG: col, bY: contextStack, bk: problem, bw: row};
 	});
 var $elm$parser$Parser$Advanced$Empty = {$: 0};
 var $elm$parser$Parser$Advanced$fromState = F2(
@@ -8439,7 +26674,7 @@ var $elm$parser$Parser$Advanced$fromState = F2(
 		return A2(
 			$elm$parser$Parser$Advanced$AddRight,
 			$elm$parser$Parser$Advanced$Empty,
-			A4($elm$parser$Parser$Advanced$DeadEnd, s.bo, s.az, x, s.c));
+			A4($elm$parser$Parser$Advanced$DeadEnd, s.bw, s.aG, x, s.c));
 	});
 var $elm$parser$Parser$Advanced$end = function (x) {
 	return function (s) {
@@ -8463,7 +26698,7 @@ var $elm$parser$Parser$Advanced$chompWhileHelp = F5(
 					$elm$parser$Parser$Advanced$Good,
 					_Utils_cmp(s0.b, offset) < 0,
 					0,
-					{az: col, c: s0.c, d: s0.d, b: offset, bo: row, a: s0.a});
+					{aG: col, c: s0.c, d: s0.d, b: offset, bw: row, a: s0.a});
 			} else {
 				if (_Utils_eq(newOffset, -2)) {
 					var $temp$isGood = isGood,
@@ -8495,7 +26730,7 @@ var $elm$parser$Parser$Advanced$chompWhileHelp = F5(
 	});
 var $elm$parser$Parser$Advanced$chompWhile = function (isGood) {
 	return function (s) {
-		return A5($elm$parser$Parser$Advanced$chompWhileHelp, isGood, s.b, s.bo, s.az, s);
+		return A5($elm$parser$Parser$Advanced$chompWhileHelp, isGood, s.b, s.bw, s.aG, s);
 	};
 };
 var $elm$parser$Parser$chompWhile = $elm$parser$Parser$Advanced$chompWhile;
@@ -8680,11 +26915,11 @@ var $elm$parser$Parser$Advanced$chompIf = F2(
 				$elm$parser$Parser$Advanced$Good,
 				true,
 				0,
-				{az: 1, c: s.c, d: s.d, b: s.b + 1, bo: s.bo + 1, a: s.a}) : A3(
+				{aG: 1, c: s.c, d: s.d, b: s.b + 1, bw: s.bw + 1, a: s.a}) : A3(
 				$elm$parser$Parser$Advanced$Good,
 				true,
 				0,
-				{az: s.az + 1, c: s.c, d: s.d, b: newOffset, bo: s.bo, a: s.a}));
+				{aG: s.aG + 1, c: s.c, d: s.d, b: newOffset, bw: s.bw, a: s.a}));
 		};
 	});
 var $elm$parser$Parser$chompIf = function (isGood) {
@@ -8819,7 +27054,7 @@ var $elm$parser$Parser$Advanced$token = function (_v0) {
 	var expecting = _v0.b;
 	var progress = !$elm$core$String$isEmpty(str);
 	return function (s) {
-		var _v1 = A5($elm$parser$Parser$Advanced$isSubString, str, s.b, s.bo, s.az, s.a);
+		var _v1 = A5($elm$parser$Parser$Advanced$isSubString, str, s.b, s.bw, s.aG, s.a);
 		var newOffset = _v1.a;
 		var newRow = _v1.b;
 		var newCol = _v1.c;
@@ -8830,7 +27065,7 @@ var $elm$parser$Parser$Advanced$token = function (_v0) {
 			$elm$parser$Parser$Advanced$Good,
 			progress,
 			0,
-			{az: newCol, c: s.c, d: s.d, b: newOffset, bo: newRow, a: s.a});
+			{aG: newCol, c: s.c, d: s.d, b: newOffset, bw: newRow, a: s.a});
 	};
 };
 var $elm$parser$Parser$Advanced$symbol = $elm$parser$Parser$Advanced$token;
@@ -9068,10 +27303,10 @@ var $rtfeldman$elm_iso8601_date_strings$Iso8601$iso8601 = A2(
 	$rtfeldman$elm_iso8601_date_strings$Iso8601$monthYearDayInMs);
 var $elm$parser$Parser$DeadEnd = F3(
 	function (row, col, problem) {
-		return {az: col, bc: problem, bo: row};
+		return {aG: col, bk: problem, bw: row};
 	});
 var $elm$parser$Parser$problemToDeadEnd = function (p) {
-	return A3($elm$parser$Parser$DeadEnd, p.bo, p.az, p.bc);
+	return A3($elm$parser$Parser$DeadEnd, p.bw, p.aG, p.bk);
 };
 var $elm$parser$Parser$Advanced$bagToList = F2(
 	function (bag, list) {
@@ -9103,7 +27338,7 @@ var $elm$parser$Parser$Advanced$run = F2(
 	function (_v0, src) {
 		var parse = _v0;
 		var _v1 = parse(
-			{az: 1, c: _List_Nil, d: 1, b: 0, bo: 1, a: src});
+			{aG: 1, c: _List_Nil, d: 1, b: 0, bw: 1, a: src});
 		if (!_v1.$) {
 			var value = _v1.b;
 			return $elm$core$Result$Ok(value);
@@ -9132,10 +27367,11 @@ var $elm$core$String$trim = _String_trim;
 var $ryannhg$date_format$DateFormat$YearNumber = {$: 16};
 var $ryannhg$date_format$DateFormat$yearNumber = $ryannhg$date_format$DateFormat$YearNumber;
 var $author$project$View$formatDate = F2(
-	function (isoString, timezone) {
-		var _v0 = $rtfeldman$elm_iso8601_date_strings$Iso8601$toTime(isoString);
-		if (!_v0.$) {
-			var result = _v0.a;
+	function (isoString, _v0) {
+		var timezone = _v0.b;
+		var _v1 = $rtfeldman$elm_iso8601_date_strings$Iso8601$toTime(isoString);
+		if (!_v1.$) {
+			var result = _v1.a;
 			return A3(
 				$ryannhg$date_format$DateFormat$format,
 				_List_fromArray(
@@ -9162,17 +27398,20 @@ var $ryannhg$date_format$DateFormat$hourMilitaryFixed = $ryannhg$date_format$Dat
 var $ryannhg$date_format$DateFormat$MinuteFixed = {$: 31};
 var $ryannhg$date_format$DateFormat$minuteFixed = $ryannhg$date_format$DateFormat$MinuteFixed;
 var $author$project$View$formatTime = F2(
-	function (isoString, timezone) {
-		var _v0 = $rtfeldman$elm_iso8601_date_strings$Iso8601$toTime(isoString);
-		if (!_v0.$) {
-			var result = _v0.a;
+	function (isoString, _v0) {
+		var name = _v0.a;
+		var timezone = _v0.b;
+		var _v1 = $rtfeldman$elm_iso8601_date_strings$Iso8601$toTime(isoString);
+		if (!_v1.$) {
+			var result = _v1.a;
 			return A3(
 				$ryannhg$date_format$DateFormat$format,
 				_List_fromArray(
 					[
 						$ryannhg$date_format$DateFormat$hourMilitaryFixed,
 						$ryannhg$date_format$DateFormat$text(':'),
-						$ryannhg$date_format$DateFormat$minuteFixed
+						$ryannhg$date_format$DateFormat$minuteFixed,
+						$ryannhg$date_format$DateFormat$text(' (' + (name + ')'))
 					]),
 				timezone,
 				result);
@@ -9227,7 +27466,7 @@ var $author$project$View$locationRow = function (location) {
 					_List_fromArray(
 						[
 							$elm$html$Html$text(
-							A2($elm$core$Maybe$withDefault, '', address.u))
+							A2($elm$core$Maybe$withDefault, '', address.w))
 						])),
 					A2(
 					$elm$html$Html$td,
@@ -9242,7 +27481,15 @@ var $author$project$View$locationRow = function (location) {
 					_List_fromArray(
 						[
 							$elm$html$Html$text(
-							A2($elm$core$Maybe$withDefault, '', address.U))
+							A2($elm$core$Maybe$withDefault, '', address.X))
+						])),
+					A2(
+					$elm$html$Html$td,
+					_List_Nil,
+					_List_fromArray(
+						[
+							$elm$html$Html$text(
+							A2($elm$core$Maybe$withDefault, '', address.W))
 						])),
 					A2(
 					$elm$html$Html$td,
@@ -9251,14 +27498,6 @@ var $author$project$View$locationRow = function (location) {
 						[
 							$elm$html$Html$text(
 							A2($elm$core$Maybe$withDefault, '', address.T))
-						])),
-					A2(
-					$elm$html$Html$td,
-					_List_Nil,
-					_List_fromArray(
-						[
-							$elm$html$Html$text(
-							A2($elm$core$Maybe$withDefault, '', address.Q))
 						]))
 				]));
 	} else {
@@ -9274,14 +27513,14 @@ var $author$project$View$locationRow = function (location) {
 					_List_fromArray(
 						[
 							$elm$html$Html$text(
-							A2($elm$core$Maybe$withDefault, '', info.u))
+							A2($elm$core$Maybe$withDefault, '', info.w))
 						])),
 					A2(
 					$elm$html$Html$td,
 					_List_Nil,
 					_List_fromArray(
 						[
-							$author$project$View$maybeLink(info.G)
+							$author$project$View$maybeLink(info.J)
 						])),
 					A2(
 					$elm$html$Html$td,
@@ -9495,15 +27734,15 @@ var $author$project$View$viewOffer = function (offer) {
 		A2(
 			$elm$core$List$map,
 			function (price) {
-				return $elm$core$String$fromFloat(price) + (' ' + offer.bb);
+				return $elm$core$String$fromFloat(price) + (' ' + offer.bj);
 			},
 			A2(
 				$elm$core$List$filterMap,
 				$elm$core$Basics$identity,
 				_List_fromArray(
 					[
-						$elm$core$Maybe$Just(offer.a0),
-						offer.a$
+						$elm$core$Maybe$Just(offer.a8),
+						offer.a7
 					]))));
 	return A2(
 		$elm$html$Html$tr,
@@ -9516,7 +27755,7 @@ var $author$project$View$viewOffer = function (offer) {
 				_List_fromArray(
 					[
 						$elm$html$Html$text(
-						A2($elm$core$Maybe$withDefault, '', offer.u))
+						A2($elm$core$Maybe$withDefault, '', offer.w))
 					])),
 				A2(
 				$elm$html$Html$td,
@@ -9530,7 +27769,7 @@ var $author$project$View$viewOffer = function (offer) {
 				_List_Nil,
 				_List_fromArray(
 					[
-						$author$project$View$maybeLink(offer.G)
+						$author$project$View$maybeLink(offer.J)
 					]))
 			]));
 };
@@ -9699,24 +27938,24 @@ var $author$project$View$viewEvent = F2(
 													A2(
 													$author$project$View$tableRow,
 													'Start date',
-													A2($author$project$View$formatDate, event.bu, zone)),
+													A2($author$project$View$formatDate, event.bC, zone)),
 													A2(
 													$author$project$View$tableRow,
 													'Start time',
-													A2($author$project$View$formatTime, event.bu, zone)),
+													A2($author$project$View$formatTime, event.bC, zone)),
 													A2(
 													$author$project$View$tableRow,
 													'End date',
 													A2(
 														$author$project$View$formatDate,
-														A2($elm$core$Maybe$withDefault, '', event.aG),
+														A2($elm$core$Maybe$withDefault, '', event.aN),
 														zone)),
 													A2(
 													$author$project$View$tableRow,
 													'End time',
 													A2(
 														$author$project$View$formatTime,
-														A2($elm$core$Maybe$withDefault, '', event.aG),
+														A2($elm$core$Maybe$withDefault, '', event.aN),
 														zone)),
 													A2(
 													$author$project$View$tableRow,
@@ -9724,7 +27963,7 @@ var $author$project$View$viewEvent = F2(
 													A2(
 														$elm$core$Maybe$withDefault,
 														'',
-														A2($elm$core$Maybe$map, $author$project$View$formatDuration, event.aE))),
+														A2($elm$core$Maybe$map, $author$project$View$formatDuration, event.aL))),
 													A2(
 													$elm$html$Html$tr,
 													_List_Nil,
@@ -9742,7 +27981,7 @@ var $author$project$View$viewEvent = F2(
 															_List_Nil,
 															_List_fromArray(
 																[
-																	$author$project$View$maybeLink(event.G)
+																	$author$project$View$maybeLink(event.J)
 																]))
 														]))
 												]))
@@ -9756,10 +27995,10 @@ var $author$project$View$viewEvent = F2(
 								]),
 							_List_fromArray(
 								[
-									$author$project$View$viewLocations(event.aZ)
+									$author$project$View$viewLocations(event.a5)
 								]))
 						])),
-					$author$project$View$viewOffers(event.a6)
+					$author$project$View$viewOffers(event.be)
 				]));
 	});
 var $author$project$View$viewEvents = F2(
@@ -9772,10 +28011,10 @@ var $author$project$View$viewEvents = F2(
 var $author$project$View$viewData = F2(
 	function (data, zone) {
 		var productionOpen = function (index) {
-			return !A2($elm$core$Set$member, index, data.z);
+			return !A2($elm$core$Set$member, index, data.C);
 		};
 		var eventOpen = function (index) {
-			return !A2($elm$core$Set$member, index, data.y);
+			return !A2($elm$core$Set$member, index, data.B);
 		};
 		var viewProduction = F2(
 			function (index, production) {
@@ -9800,7 +28039,7 @@ var $author$project$View$viewData = F2(
 										]),
 									_List_fromArray(
 										[
-											$elm$html$Html$text(production.bz)
+											$elm$html$Html$text(production.bH)
 										]))
 								])),
 							A4(
@@ -9818,7 +28057,7 @@ var $author$project$View$viewData = F2(
 							A2(
 								$elm$html$Html$div,
 								_List_Nil,
-								A2($author$project$View$viewEvents, production.aI, zone)),
+								A2($author$project$View$viewEvents, production.aP, zone)),
 							eventOpen(index),
 							A2(
 								$author$project$View$EventCardClicked,
@@ -9829,7 +28068,7 @@ var $author$project$View$viewData = F2(
 		return $author$project$View$section(
 			_List_fromArray(
 				[
-					$author$project$View$filterInput(data.L),
+					$author$project$View$filterInput(data.O),
 					A2(
 					$elm$html$Html$div,
 					_List_Nil,
@@ -9838,8 +28077,8 @@ var $author$project$View$viewData = F2(
 						viewProduction,
 						A2(
 							$elm$core$List$filter,
-							$author$project$View$productionNameMatches(data.L),
-							data.af.bf)))
+							$author$project$View$productionNameMatches(data.O),
+							data.ak.bn)))
 				]));
 	});
 var $author$project$View$Submit = function (a) {
@@ -9999,65 +28238,58 @@ var $author$project$View$viewIntroduction = $author$project$View$section(
 					$elm$html$Html$text('Use this tool to view the data returned by your repertoire endpoint.')
 				]))
 		]));
-var $author$project$View$viewJsonError = $author$project$View$section(
+var $author$project$View$viewJsonError = A2(
+	$elm$html$Html$div,
+	_List_Nil,
 	_List_fromArray(
 		[
+			$elm$html$Html$text('Unfortunately, it looks like your data is not valid.'),
 			A2(
-			$elm$html$Html$div,
+			$elm$html$Html$h1,
 			_List_fromArray(
 				[
-					$elm$html$Html$Attributes$class('notification is-danger')
+					$elm$html$Html$Attributes$class('title is-size-5 mt-5')
 				]),
 			_List_fromArray(
 				[
-					$elm$html$Html$text('Unfortunately, it looks like your data is not valid.'),
+					$elm$html$Html$text('Here is what you can do:')
+				])),
+			A2(
+			$elm$html$Html$ul,
+			_List_Nil,
+			_List_fromArray(
+				[
 					A2(
-					$elm$html$Html$h1,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$class('title is-size-5 mt-5')
-						]),
-					_List_fromArray(
-						[
-							$elm$html$Html$text('Here is what you can do:')
-						])),
-					A2(
-					$elm$html$Html$ul,
+					$elm$html$Html$li,
 					_List_Nil,
 					_List_fromArray(
 						[
+							$elm$html$Html$text('This error likely means that something needs to be changed in your endpoint.')
+						])),
+					A2(
+					$elm$html$Html$li,
+					_List_Nil,
+					_List_fromArray(
+						[
+							$elm$html$Html$text('Please contact the maintainer of your endpoint and ask them to make sure that the endpoint returns valid data.')
+						])),
+					A2(
+					$elm$html$Html$li,
+					_List_Nil,
+					_List_fromArray(
+						[
+							$elm$html$Html$text('They can use the '),
 							A2(
-							$elm$html$Html$li,
-							_List_Nil,
+							$elm$html$Html$a,
 							_List_fromArray(
 								[
-									$elm$html$Html$text('This error likely means that something needs to be changed in your endpoint.')
+									$elm$html$Html$Attributes$href('../validate')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Validator Tool')
 								])),
-							A2(
-							$elm$html$Html$li,
-							_List_Nil,
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Please contact the maintainer of your endpoint and ask them to make sure that the endpoint returns valid data.')
-								])),
-							A2(
-							$elm$html$Html$li,
-							_List_Nil,
-							_List_fromArray(
-								[
-									$elm$html$Html$text('They can use the '),
-									A2(
-									$elm$html$Html$a,
-									_List_fromArray(
-										[
-											$elm$html$Html$Attributes$href('../validate')
-										]),
-									_List_fromArray(
-										[
-											$elm$html$Html$text('Validator Tool')
-										])),
-									$elm$html$Html$text(' to make sure the data is valid.')
-								]))
+							$elm$html$Html$text(' to make sure the data is valid.')
 						]))
 				]))
 		]));
@@ -10146,8 +28378,7 @@ var $author$project$View$viewRequestError = F2(
 									return $elm$html$Html$text(
 										'Unfortunately, your endpoint returned an unsuccessful status code (' + ($elm$core$String$fromInt(code) + '), so I could not check whether your JSON is valid or not. Please check your browser\'s console logs for more information.'));
 								default:
-									var reason = error.a;
-									return $elm$html$Html$text('Unfortunately, I could not parse the response from your endpoint. Are you sure that it is valid JSON? Here is why I couldn\'t parse the response: ' + reason);
+									return $author$project$View$viewJsonError;
 							}
 						}()
 						]))
@@ -10171,7 +28402,7 @@ var $author$project$View$view = function (model) {
 		_List_fromArray(
 			[
 				$author$project$View$viewIntroduction,
-				A2($author$project$View$viewInput, model.J, enableButton),
+				A2($author$project$View$viewInput, model.M, enableButton),
 				function () {
 				var _v0 = model.i;
 				switch (_v0.$) {
@@ -10182,21 +28413,29 @@ var $author$project$View$view = function (model) {
 					case 2:
 						if (!_v0.a.$) {
 							var error = _v0.a.a;
-							return A2($author$project$View$viewRequestError, model.J, error);
+							return A2($author$project$View$viewRequestError, model.M, error);
 						} else {
-							return $author$project$View$viewJsonError;
+							return $author$project$View$section(
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('notification is-danger')
+											]),
+										_List_fromArray(
+											[$author$project$View$viewJsonError]))
+									]));
 						}
 					default:
 						var data = _v0.a;
-						return A2(
-							$author$project$View$viewData,
-							data,
-							A2($elm$core$Maybe$withDefault, $elm$time$Time$utc, model.R));
+						return A2($author$project$View$viewData, data, model.U);
 				}
 			}()
 			]));
 };
 var $author$project$View$main = $elm$browser$Browser$element(
-	{bX: $author$project$View$init, b7: $author$project$View$subscriptions, ce: $author$project$View$update, cf: $author$project$View$view});
+	{b4: $author$project$View$init, cg: $author$project$View$subscriptions, cn: $author$project$View$update, co: $author$project$View$view});
 _Platform_export({'View':{'init':$author$project$View$main(
 	$elm$json$Json$Decode$succeed(0))(0)}});}(this));
