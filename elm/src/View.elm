@@ -163,7 +163,10 @@ view model =
                 viewRequestError model.input error
 
             Failure (JsonError _) ->
-                viewJsonError
+                section
+                    [ div [ class "notification is-danger" ]
+                        [ viewJsonError ]
+                    ]
 
             Success data ->
                 viewData data (Maybe.withDefault Time.utc model.localTimeZone)
@@ -703,11 +706,8 @@ viewRequestError url error =
                             ++ "), so I could not check whether your JSON is valid or not. Please check your browser's console logs for more information."
                         )
 
-                BadBody reason ->
-                    text
-                        ("Unfortunately, I could not parse the response from your endpoint. Are you sure that it is valid JSON? Here is why I couldn't parse the response: "
-                            ++ reason
-                        )
+                BadBody _ ->
+                    viewJsonError
             ]
         ]
 
@@ -734,22 +734,20 @@ viewNetworkError url =
 
 viewJsonError : Html Msg
 viewJsonError =
-    section
-        [ div [ class "notification is-danger" ]
-            [ text "Unfortunately, it looks like your data is not valid."
-            , h1 [ class "title is-size-5 mt-5" ] [ text "Here is what you can do:" ]
-            , ul []
-                [ li []
-                    [ text "This error likely means that something needs to be changed in your endpoint."
-                    ]
-                , li []
-                    [ text "Please contact the maintainer of your endpoint and ask them to make sure that the endpoint returns valid data."
-                    ]
-                , li []
-                    [ text "They can use the "
-                    , a [ href "../validate" ] [ text "Validator Tool" ]
-                    , text " to make sure the data is valid."
-                    ]
+    div []
+        [ text "Unfortunately, it looks like your data is not valid."
+        , h1 [ class "title is-size-5 mt-5" ] [ text "Here is what you can do:" ]
+        , ul []
+            [ li []
+                [ text "This error likely means that something needs to be changed in your endpoint."
+                ]
+            , li []
+                [ text "Please contact the maintainer of your endpoint and ask them to make sure that the endpoint returns valid data."
+                ]
+            , li []
+                [ text "They can use the "
+                , a [ href "../validate" ] [ text "Validator Tool" ]
+                , text " to make sure the data is valid."
                 ]
             ]
         ]
