@@ -13,6 +13,7 @@ import RemoteData exposing (RemoteData(..))
 import Set exposing (Set)
 import Task
 import Time
+import TimeZone
 import Url
 
 
@@ -28,7 +29,7 @@ main =
 
 type alias Model =
     { input : String
-    , localTimeZone : Maybe Time.Zone
+    , localTimeZone : ZoneWithName
     , data : EventData
     }
 
@@ -50,10 +51,14 @@ type alias EventData =
     RemoteData Error Data
 
 
+type alias ZoneWithName =
+    ( String, Time.Zone )
+
+
 type Msg
     = Submit String
     | TextChange String
-    | GotTimeZone Time.Zone
+    | GotTimeZone ZoneWithName
     | Response (RemoteData Http.Error Root)
     | ProductionCardClicked Int Bool
     | EventCardClicked Int Bool
@@ -63,7 +68,7 @@ type Msg
 init : () -> ( Model, Cmd Msg )
 init _ =
     ( { input = ""
-      , localTimeZone = Nothing
+      , localTimeZone = ( "UTC", Time.utc )
       , data = NotAsked
       }
     , getTimeZone
@@ -81,7 +86,13 @@ newData value =
 
 getTimeZone : Cmd Msg
 getTimeZone =
-    Task.perform GotTimeZone Time.here
+    Task.perform GotTimeZone
+        (TimeZone.getZone
+            |> Task.onError
+                (\_ ->
+                    Task.succeed ( "UTC", Time.utc )
+                )
+        )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -94,7 +105,7 @@ update msg model =
             ( { model | data = NotAsked, input = text }, Cmd.none )
 
         GotTimeZone zone ->
-            ( { model | localTimeZone = Just zone }, Cmd.none )
+            ( { model | localTimeZone = zone }, Cmd.none )
 
         Response response ->
             ( { model
@@ -169,7 +180,7 @@ view model =
                     ]
 
             Success data ->
-                viewData data (Maybe.withDefault Time.utc model.localTimeZone)
+                viewData data model.localTimeZone
         ]
 
 
@@ -177,7 +188,7 @@ view model =
 -- VIEW HELPERS
 
 
-viewData : Data -> Time.Zone -> Html Msg
+viewData : Data -> ZoneWithName -> Html Msg
 viewData data zone =
     let
         productionOpen index =
@@ -288,12 +299,12 @@ productionTable production =
 -- EVENTS
 
 
-viewEvents : List Event -> Time.Zone -> List (Html Msg)
+viewEvents : List Event -> ZoneWithName -> List (Html Msg)
 viewEvents events zone =
     List.map (viewEvent zone) events
 
 
-viewEvent : Time.Zone -> Event -> Html Msg
+viewEvent : ZoneWithName -> Event -> Html Msg
 viewEvent zone event =
     div [ class "box" ]
         [ div [ class "columns" ]
@@ -588,8 +599,8 @@ section content =
         ]
 
 
-formatDate : String -> Time.Zone -> String
-formatDate isoString timezone =
+formatDate : String -> ZoneWithName -> String
+formatDate isoString ( _, timezone ) =
     case Iso8601.toTime isoString of
         Ok result ->
             DateFormat.format
@@ -610,14 +621,15 @@ formatDate isoString timezone =
                 "Invalid date (" ++ isoString ++ ")"
 
 
-formatTime : String -> Time.Zone -> String
-formatTime isoString timezone =
+formatTime : String -> ZoneWithName -> String
+formatTime isoString ( name, timezone ) =
     case Iso8601.toTime isoString of
         Ok result ->
             DateFormat.format
                 [ DateFormat.hourMilitaryFixed
                 , DateFormat.text ":"
                 , DateFormat.minuteFixed
+                , DateFormat.text (" (" ++ name ++ ")")
                 ]
                 timezone
                 result
