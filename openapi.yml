@@ -114,36 +114,36 @@ components:
           type: string
           description: The genre of this production. Must use one of the pre-defined values.
           enum:
-            - sprechtheater
-            - performance
-            - lecture-performance
-            - tanz
+            - audiowalk
             - ballett
-            - zeitgenoessischer-tanz
+            - digitaltheater
+            - figurentheater
+            - game-theater
+            - hoerspiel
+            - improtheater
+            - installation
+            - kabarett-comedy
+            - kammerkonzert
+            - konzert
+            - lecture-performance
+            - lesung
+            - musical
             - musiktheater
+            - objekttheater
             - oper
             - operette
-            - musical
-            - szenisches-konzert
-            - konzert
-            - sinfoniekonzert
-            - kammerkonzert
-            - figurentheater
-            - puppentheater
-            - objekttheater
-            - theater-im-oeffentlichen-raum
-            - game-theater
-            - installation
-            - audiowalk
-            - hoerspiel
-            - podcast
-            - lesung
-            - szenische-lesung
-            - digitaltheater
+            - performance
             - physical-theatre
-            - kabarett-comedy
-            - improtheater
+            - podcast
+            - puppentheater
+            - sinfoniekonzert
+            - sprechtheater
+            - szenische-lesung
+            - szenisches-konzert
+            - tanz
+            - theater-im-oeffentlichen-raum
             - workshop
+            - zeitgenoessischer-tanz
           example: "Rock-Musical"
         accessibility:
           $ref: "#/components/schemas/Accessibility"
@@ -384,19 +384,17 @@ components:
             type: string
             example: flashingHazard,
             enum:
-              [
-                none,
-                unknown,
-                flashingHazard,
-                motionSimulationHazard,
-                soundHazard,
-                noFlashingHazard,
-                noMotionSimulationHazard,
-                noSoundHazard,
-                unknownFlashingHazard,
-                unknownMotionSimulationHazard,
-                unknownSoundHazard,
-              ]
+              - none
+              - unknown
+              - flashingHazard
+              - motionSimulationHazard
+              - soundHazard
+              - noFlashingHazard
+              - noMotionSimulationHazard
+              - noSoundHazard
+              - unknownFlashingHazard
+              - unknownMotionSimulationHazard
+              - unknownSoundHazard
         accessibilitySummary:
           type: string
           description: A human-readable summary of specific accessibility features or deficiencies of the production.
