@@ -373,7 +373,7 @@ viewHighlightedJson ( err, others ) jsonValue =
             List.filterMap getAdditionalProperty errors
 
         isProperty line property =
-            String.contains ("\"" ++ property ++ "\":") line
+            String.startsWith (String.repeat jsonIndentSpaces " " ++ "\"" ++ property ++ "\":") line
 
         highlightAdditionalProperties line =
             if getKeyword err == "additionalProperties" then
@@ -478,6 +478,11 @@ getInputs model =
     model.inputs
 
 
+jsonIndentSpaces : Int
+jsonIndentSpaces =
+    4
+
+
 extractPath : String -> Encode.Value -> String
 extractPath path jsonValue =
     let
@@ -491,7 +496,7 @@ extractPath path jsonValue =
     else
         case Decode.decodeValue (decodePath components) jsonValue of
             Ok value ->
-                Encode.encode 4 value
+                Encode.encode jsonIndentSpaces value
 
             Err err ->
                 Decode.errorToString err
