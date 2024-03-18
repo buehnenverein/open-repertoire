@@ -1,6 +1,6 @@
 module Helper.CustomValidations exposing (checkAll)
 
-import Data.Root exposing (Accessibility, Address, AddressLocation, Event, Location(..), Offer, Participant, Production, Root, VirtualLocation)
+import Data.Root exposing (Address, AddressLocation, Creator, CreatorItem, Event, EventsEventStatus(..), LocationItem(..), Offer, Organization, PriceSpecification, Production, Root, VirtualLocation)
 
 
 type alias ValidationMessage =
@@ -16,11 +16,18 @@ type alias Validator value =
 checkAll : Root -> List ValidationMessage
 checkAll data =
     object
-        [ field "/address" .address (maybe address)
-        , field "/name" .name required
+        [ field "/organization" .organization organization
         , field "/productions" .productions (list production)
         ]
         |> check data
+
+
+organization : Validator Organization
+organization =
+    object
+        [ field "/address" .address (maybe address)
+        , field "/name" .name required
+        ]
 
 
 check : model -> Validator model -> List ValidationMessage
@@ -132,11 +139,31 @@ geocoordinates path data =
 
 teaserOrDescription : Validator Production
 teaserOrDescription path data =
-    case ( data.teaser, data.description ) of
+    case ( data.abstract, data.description ) of
         ( Nothing, Nothing ) ->
             [ ValidationMessage path "has neither a description nor a teaser. You should set at least one of these fields." ]
 
         _ ->
+            []
+
+
+previousStartDateIsSet : Validator Event
+previousStartDateIsSet path data =
+    case ( data.eventStatus, data.startDate, data.previousStartDate ) of
+        ( Just EventPostponedEvents, _, Nothing ) ->
+            [ ValidationMessage (path ++ "/previousStartDate") "should be set for postponed events" ]
+
+        ( Just EventRescheduledEvents, start, Just previousStart ) ->
+            if start == previousStart then
+                [ ValidationMessage (path ++ "/previousStartDate") "should be different from startDate for rescheduled events" ]
+
+            else
+                []
+
+        ( Just EventRescheduledEvents, _, Nothing ) ->
+            [ ValidationMessage (path ++ "/previousStartDate") "should be set for rescheduled events" ]
+
+        ( _, _, _ ) ->
             []
 
 
@@ -149,19 +176,26 @@ event =
     object
         [ field "/duration" .duration (maybe duration)
         , field "/endDate" .endDate optional
-        , field "/locations" .locations (maybe (list location))
+        , field "/location" .location (maybe (list location))
         , field "/offers" .offers (maybe (list offer))
+        , field "/previousStartDate" .previousStartDate optional
         , field "/startDate" .startDate required
         , field "/url" .url optional
+        , previousStartDateIsSet
         ]
 
 
-participant : Validator Participant
-participant =
+creatorItem : Validator CreatorItem
+creatorItem =
     object
-        [ field "/names" .names (list required)
-        , field "/function" .function optional
-        , field "/roleName" .roleName optional
+        [ field "/creator" .creator creator
+        ]
+
+
+creator : Validator Creator
+creator =
+    object
+        [ field "/name" .name required
         ]
 
 
@@ -169,41 +203,43 @@ offer : Validator Offer
 offer =
     object
         [ field "/name" .name optional
-        , field "/priceCurrency" .priceCurrency required
+        , field "/priceSpecification" .priceSpecification priceSpecification
         , field "/url" .url optional
+        ]
+
+
+priceSpecification : Validator PriceSpecification
+priceSpecification =
+    object
+        [ field "/priceCurrency" .priceCurrency required
         ]
 
 
 production : Validator Production
 production =
     object
-        [ field "/accessibility" .accessibility (maybe accessibility)
+        [ field "/accessibilitySummary" .accessibilitySummary optional
         , field "/additionalInfo" .additionalInfo optional
+        , field "/creator" .creator (maybe (list creatorItem))
         , field "/description" .description optional
         , field "/events" .events (list event)
-        , field "/participants" .participants (maybe (list participant))
         , field "/subtitle" .subtitle optional
-        , field "/teaser" .teaser optional
-        , field "/title" .title required
+        , field "/abstract" .abstract optional
+        , field "/name" .name required
         , teaserOrDescription
         ]
-
-
-accessibility : Validator Accessibility
-accessibility =
-    field "/accessibilitySummary" .accessibilitySummary optional
 
 
 address : Validator Address
 address =
     object
-        [ field "/city" .city optional
+        [ field "/addressLocality" .addressLocality optional
         , field "/postalCode" .postalCode optional
         , field "/streetAddress" .streetAddress optional
         ]
 
 
-location : Validator Location
+location : Validator LocationItem
 location path data =
     case data of
         Physical physical ->
@@ -216,10 +252,8 @@ location path data =
 addressLocation : Validator AddressLocation
 addressLocation =
     object
-        [ field "/city" .city optional
-        , field "/name" .name optional
-        , field "/postalCode" .postalCode optional
-        , field "/streetAddress" .streetAddress optional
+        [ field "/name" .name optional
+        , field "/address" .address address
         , geocoordinates
         ]
 

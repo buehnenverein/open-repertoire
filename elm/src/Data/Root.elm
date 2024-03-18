@@ -13,148 +13,236 @@ import Json.Decode.Pipeline
 import Json.Encode as Encode exposing (Value)
 
 
+type AtContext
+    = HttpsColonSlashSlashschemaDotorg
+
+
+type PriceSpecificationAttype
+    = PriceSpecificationType
+
+
+type OffersAttype
+    = OfferType
+
+
+type AddressLocationAttype
+    = PlaceType
+
+
+type OrganizationAttype
+    = OrganizationType
+
+
+type EventsAttype
+    = EventType
+
+
+type PerformerPersonAttype
+    = PerformerPersonType
+
+
+type VirtualLocationAttype
+    = VirtualLocationType
+
+
+type ProductionsAttype
+    = CreativeWorkType
+    | PlayType
+
+
+type AddressAttype
+    = PostalAddressType
+
+
+type PerformerAttype
+    = PerformanceRoleType
+
+
+type CreatorAttype
+    = CreatorRoleType
+
+
+type CreatorPersonAttype
+    = CreatorPersonType
+
+
 type alias AddressLocation =
-    { city : Maybe String
+    { atType : AddressLocationAttype
+    , address : Address
     , latitude : Maybe Float
     , longitude : Maybe Float
     , name : Maybe String
-    , postalCode : Maybe String
-    , streetAddress : Maybe String
-    , locationType : Type
     , wheelChairPlaces : Maybe WheelChairPlaces
     }
 
 
 type alias Root =
-    { address : Maybe Address
-    , name : String
+    { atContext : AtContext
+    , organization : Organization
     , productions : List Production
     , version : Version
     }
 
 
 type alias VirtualLocation =
-    { name : Maybe String
-    , locationType : Type
+    { atType : VirtualLocationAttype
+    , name : Maybe String
     , url : Maybe String
     }
 
 
 type AccessModeSufficientItem
-    = Auditory
-    | Tactile
-    | Textual
-    | Visual
-
-
-type alias Accessibility =
-    { accessModeSufficient : Maybe (List AccessModeSufficientItem)
-    , accessibilityHazard : Maybe (List AccessibilityHazardItem)
-    , accessibilitySummary : Maybe String
-    }
+    = AuditoryAccessModeSufficient
+    | TactileAccessModeSufficient
+    | TextualAccessModeSufficient
+    | VisualAccessModeSufficient
 
 
 type AccessibilityHazardItem
-    = None
-    | Unknown
-    | FlashingHazard
-    | MotionSimulationHazard
-    | SoundHazard
-    | NoFlashingHazard
-    | NoMotionSimulationHazard
-    | NoSoundHazard
-    | UnknownFlashingHazard
-    | UnknownMotionSimulationHazard
-    | UnknownSoundHazard
+    = NoneAccessibilityHazard
+    | UnknownAccessibilityHazard
+    | FlashingHazardAccessibilityHazard
+    | MotionSimulationHazardAccessibilityHazard
+    | SoundHazardAccessibilityHazard
+    | NoFlashingHazardAccessibilityHazard
+    | NoMotionSimulationHazardAccessibilityHazard
+    | NoSoundHazardAccessibilityHazard
+    | UnknownFlashingHazardAccessibilityHazard
+    | UnknownMotionSimulationHazardAccessibilityHazard
+    | UnknownSoundHazardAccessibilityHazard
 
 
 type alias Address =
-    { city : Maybe String
+    { atType : AddressAttype
+    , addressLocality : Maybe String
     , postalCode : Maybe String
     , streetAddress : Maybe String
     }
 
 
+type alias Creator =
+    { atType : CreatorAttype
+    , name : String
+    }
+
+
+type alias CreatorItem =
+    { atType : CreatorAttype
+    , creator : Creator
+    , roleName : Maybe String
+    }
+
+
 type alias Event =
-    { duration : Maybe Int
+    { atType : EventsAttype
+    , duration : Maybe Int
     , endDate : Maybe String
-    , locations : Maybe (List Location)
+    , eventStatus : Maybe EventsEventStatus
+    , location : Maybe (List LocationItem)
     , offers : Maybe (List Offer)
+    , performer : Maybe (List PerformerItem)
+    , previousStartDate : Maybe String
     , startDate : String
     , url : Maybe String
     }
 
 
-type Genre
-    = Sprechtheater
-    | Performance
-    | LecturePerformance
-    | Tanz
-    | Ballett
-    | ZeitgenoessischerTanz
-    | Musiktheater
-    | Oper
-    | Operette
-    | Musical
-    | SzenischesKonzert
-    | Konzert
-    | Sinfoniekonzert
-    | Kammerkonzert
-    | Figurentheater
-    | Puppentheater
-    | Objekttheater
-    | TheaterImOeffentlichenRaum
-    | GameTheater
-    | Installation
-    | Audiowalk
-    | Hoerspiel
-    | Podcast
-    | Lesung
-    | SzenischeLesung
-    | Digitaltheater
-    | PhysicalTheatre
-    | KabarettComedy
-    | Improtheater
-    | Workshop
+type EventsEventStatus
+    = EventScheduledEvents
+    | EventCancelledEvents
+    | EventMovedOnlineEvents
+    | EventPostponedEvents
+    | EventRescheduledEvents
 
 
-type Location
+type ProductionsGenre
+    = AudiowalkProductions
+    | BallettProductions
+    | DigitaltheaterProductions
+    | FigurentheaterProductions
+    | GameTheaterProductions
+    | HoerspielProductions
+    | ImprotheaterProductions
+    | InstallationProductions
+    | KabarettComedyProductions
+    | KammerkonzertProductions
+    | KonzertProductions
+    | LecturePerformanceProductions
+    | LesungProductions
+    | MusicalProductions
+    | MusiktheaterProductions
+    | ObjekttheaterProductions
+    | OperProductions
+    | OperetteProductions
+    | PerformanceProductions
+    | PhysicalTheatreProductions
+    | PodcastProductions
+    | PuppentheaterProductions
+    | SinfoniekonzertProductions
+    | SprechtheaterProductions
+    | SzenischeLesungProductions
+    | SzenischesKonzertProductions
+    | TanzProductions
+    | TheaterImOeffentlichenRaumProductions
+    | WorkshopProductions
+    | ZeitgenoessischerTanzProductions
+
+
+type LocationItem
     = Physical AddressLocation
     | Virtual VirtualLocation
 
 
 type alias Offer =
-    { maxPrice : Maybe Float
-    , minPrice : Float
+    { atType : OffersAttype
     , name : Maybe String
-    , priceCurrency : String
+    , priceSpecification : PriceSpecification
     , url : Maybe String
     }
 
 
-type alias Participant =
-    { function : Maybe String
-    , names : List String
-    , roleName : Maybe String
+type alias Organization =
+    { atType : OrganizationAttype
+    , address : Maybe Address
+    , name : String
+    }
+
+
+type alias Performer =
+    { atType : PerformerPersonAttype
+    , name : String
+    }
+
+
+type alias PerformerItem =
+    { atType : PerformerAttype
+    , characterName : Maybe String
+    , performer : Performer
+    }
+
+
+type alias PriceSpecification =
+    { atType : PriceSpecificationAttype
+    , maxPrice : Maybe Float
+    , minPrice : Float
+    , priceCurrency : String
     }
 
 
 type alias Production =
-    { accessibility : Maybe Accessibility
+    { atType : ProductionsAttype
+    , abstract : Maybe String
+    , accessModeSufficient : Maybe (List AccessModeSufficientItem)
+    , accessibilityHazard : Maybe (List AccessibilityHazardItem)
+    , accessibilitySummary : Maybe String
     , additionalInfo : Maybe String
+    , creator : Maybe (List CreatorItem)
     , description : Maybe String
     , events : List Event
-    , genre : Maybe Genre
-    , participants : Maybe (List Participant)
+    , genre : Maybe ProductionsGenre
+    , name : String
     , subtitle : Maybe String
-    , teaser : Maybe String
-    , title : String
     }
-
-
-type Type
-    = AddressType
-    | VirtualLocationType
 
 
 type Version
@@ -168,24 +256,220 @@ type alias WheelChairPlaces =
     }
 
 
+atContextDecoder : Decoder AtContext
+atContextDecoder =
+    Decode.string |> Decode.andThen (parseAtContext >> Decode.fromResult)
+
+
+parseAtContext : String -> Result String AtContext
+parseAtContext atContext =
+    case atContext of
+        "https://schema.org" ->
+            Ok HttpsColonSlashSlashschemaDotorg
+
+        _ ->
+            Err <| "Unknown atContext type: " ++ atContext
+
+
+priceSpecificationAttypeDecoder : Decoder PriceSpecificationAttype
+priceSpecificationAttypeDecoder =
+    Decode.string |> Decode.andThen (parsePriceSpecificationAttype >> Decode.fromResult)
+
+
+parsePriceSpecificationAttype : String -> Result String PriceSpecificationAttype
+parsePriceSpecificationAttype priceSpecificationAttype =
+    case priceSpecificationAttype of
+        "PriceSpecification" ->
+            Ok PriceSpecificationType
+
+        _ ->
+            Err <| "Unknown priceSpecificationAttype type: " ++ priceSpecificationAttype
+
+
+offersAttypeDecoder : Decoder OffersAttype
+offersAttypeDecoder =
+    Decode.string |> Decode.andThen (parseOffersAttype >> Decode.fromResult)
+
+
+parseOffersAttype : String -> Result String OffersAttype
+parseOffersAttype offersAttype =
+    case offersAttype of
+        "Offer" ->
+            Ok OfferType
+
+        _ ->
+            Err <| "Unknown offersAttype type: " ++ offersAttype
+
+
+addressLocationAttypeDecoder : Decoder AddressLocationAttype
+addressLocationAttypeDecoder =
+    Decode.string |> Decode.andThen (parseAddressLocationAttype >> Decode.fromResult)
+
+
+parseAddressLocationAttype : String -> Result String AddressLocationAttype
+parseAddressLocationAttype addressLocationAttype =
+    case addressLocationAttype of
+        "Place" ->
+            Ok PlaceType
+
+        _ ->
+            Err <| "Unknown addressLocationAttype type: " ++ addressLocationAttype
+
+
+organizationAttypeDecoder : Decoder OrganizationAttype
+organizationAttypeDecoder =
+    Decode.string |> Decode.andThen (parseOrganizationAttype >> Decode.fromResult)
+
+
+parseOrganizationAttype : String -> Result String OrganizationAttype
+parseOrganizationAttype organizationAttype =
+    case organizationAttype of
+        "Organization" ->
+            Ok OrganizationType
+
+        _ ->
+            Err <| "Unknown organizationAttype type: " ++ organizationAttype
+
+
+eventsAttypeDecoder : Decoder EventsAttype
+eventsAttypeDecoder =
+    Decode.string |> Decode.andThen (parseEventsAttype >> Decode.fromResult)
+
+
+parseEventsAttype : String -> Result String EventsAttype
+parseEventsAttype eventsAttype =
+    case eventsAttype of
+        "Event" ->
+            Ok EventType
+
+        _ ->
+            Err <| "Unknown eventsAttype type: " ++ eventsAttype
+
+
+performerPersonAttypeDecoder : Decoder PerformerPersonAttype
+performerPersonAttypeDecoder =
+    Decode.string |> Decode.andThen (parsePerformerPersonAttype >> Decode.fromResult)
+
+
+parsePerformerPersonAttype : String -> Result String PerformerPersonAttype
+parsePerformerPersonAttype performerAttype =
+    case performerAttype of
+        "Person" ->
+            Ok PerformerPersonType
+
+        _ ->
+            Err <| "Unknown performerAttype type: " ++ performerAttype
+
+
+virtualLocationAttypeDecoder : Decoder VirtualLocationAttype
+virtualLocationAttypeDecoder =
+    Decode.string |> Decode.andThen (parseVirtualLocationAttype >> Decode.fromResult)
+
+
+parseVirtualLocationAttype : String -> Result String VirtualLocationAttype
+parseVirtualLocationAttype virtualLocationAttype =
+    case virtualLocationAttype of
+        "VirtualLocation" ->
+            Ok VirtualLocationType
+
+        _ ->
+            Err <| "Unknown virtualLocationAttype type: " ++ virtualLocationAttype
+
+
+productionsAttypeDecoder : Decoder ProductionsAttype
+productionsAttypeDecoder =
+    Decode.string |> Decode.andThen (parseProductionsAttype >> Decode.fromResult)
+
+
+parseProductionsAttype : String -> Result String ProductionsAttype
+parseProductionsAttype productionsAttype =
+    case productionsAttype of
+        "CreativeWork" ->
+            Ok CreativeWorkType
+
+        "Play" ->
+            Ok PlayType
+
+        _ ->
+            Err <| "Unknown productionsAttype type: " ++ productionsAttype
+
+
+addressAttypeDecoder : Decoder AddressAttype
+addressAttypeDecoder =
+    Decode.string |> Decode.andThen (parseAddressAttype >> Decode.fromResult)
+
+
+parseAddressAttype : String -> Result String AddressAttype
+parseAddressAttype addressAttype =
+    case addressAttype of
+        "PostalAddress" ->
+            Ok PostalAddressType
+
+        _ ->
+            Err <| "Unknown addressAttype type: " ++ addressAttype
+
+
+performerAttypeDecoder : Decoder PerformerAttype
+performerAttypeDecoder =
+    Decode.string |> Decode.andThen (parsePerformerAttype >> Decode.fromResult)
+
+
+parsePerformerAttype : String -> Result String PerformerAttype
+parsePerformerAttype performerAttype =
+    case performerAttype of
+        "PerformanceRole" ->
+            Ok PerformanceRoleType
+
+        _ ->
+            Err <| "Unknown performerAttype type: " ++ performerAttype
+
+
+creatorAttypeDecoder : Decoder CreatorAttype
+creatorAttypeDecoder =
+    Decode.string |> Decode.andThen (parseCreatorAttype >> Decode.fromResult)
+
+
+parseCreatorAttype : String -> Result String CreatorAttype
+parseCreatorAttype creatorAttype =
+    case creatorAttype of
+        "Role" ->
+            Ok CreatorRoleType
+
+        _ ->
+            Err <| "Unknown creatorAttype type: " ++ creatorAttype
+
+
+creatorPersonAttypeDecoder : Decoder CreatorPersonAttype
+creatorPersonAttypeDecoder =
+    Decode.string |> Decode.andThen (parseCreatorPersonAttype >> Decode.fromResult)
+
+
+parseCreatorPersonAttype : String -> Result String CreatorPersonAttype
+parseCreatorPersonAttype creatorAttype =
+    case creatorAttype of
+        "Person" ->
+            Ok CreatorPersonType
+
+        _ ->
+            Err <| "Unknown creatorAttype type: " ++ creatorAttype
+
+
 addressLocationDecoder : Decoder AddressLocation
 addressLocationDecoder =
     Decode.succeed AddressLocation
-        |> optional "city" (Decode.nullable Decode.string) Nothing
+        |> required "@type" addressLocationAttypeDecoder
+        |> required "address" addressDecoder
         |> optional "latitude" (Decode.nullable Decode.float) Nothing
         |> optional "longitude" (Decode.nullable Decode.float) Nothing
         |> optional "name" (Decode.nullable Decode.string) Nothing
-        |> optional "postalCode" (Decode.nullable Decode.string) Nothing
-        |> optional "streetAddress" (Decode.nullable Decode.string) Nothing
-        |> required "type" addressTypeDecoder
         |> optional "wheelChairPlaces" (Decode.nullable wheelChairPlacesDecoder) Nothing
 
 
 rootDecoder : Decoder Root
 rootDecoder =
     Decode.succeed Root
-        |> optional "address" (Decode.nullable addressDecoder) Nothing
-        |> required "name" Decode.string
+        |> required "@context" atContextDecoder
+        |> required "organization" organizationDecoder
         |> required "productions" productionsDecoder
         |> required "version" versionDecoder
 
@@ -193,8 +477,8 @@ rootDecoder =
 virtualLocationDecoder : Decoder VirtualLocation
 virtualLocationDecoder =
     Decode.succeed VirtualLocation
+        |> required "@type" virtualLocationAttypeDecoder
         |> optional "name" (Decode.nullable Decode.string) Nothing
-        |> required "type" virtualTypeDecoder
         |> optional "url" (Decode.nullable Decode.string) Nothing
 
 
@@ -212,27 +496,19 @@ parseAccessModeSufficientItem : String -> Result String AccessModeSufficientItem
 parseAccessModeSufficientItem accessModeSufficientItem =
     case accessModeSufficientItem of
         "auditory" ->
-            Ok Auditory
+            Ok AuditoryAccessModeSufficient
 
         "tactile" ->
-            Ok Tactile
+            Ok TactileAccessModeSufficient
 
         "textual" ->
-            Ok Textual
+            Ok TextualAccessModeSufficient
 
         "visual" ->
-            Ok Visual
+            Ok VisualAccessModeSufficient
 
         _ ->
             Err <| "Unknown accessModeSufficientItem type: " ++ accessModeSufficientItem
-
-
-accessibilityDecoder : Decoder Accessibility
-accessibilityDecoder =
-    Decode.succeed Accessibility
-        |> optional "accessModeSufficient" (Decode.nullable accessModeSufficientDecoder) Nothing
-        |> optional "accessibilityHazard" (Decode.nullable accessibilityHazardDecoder) Nothing
-        |> optional "accessibilitySummary" (Decode.nullable Decode.string) Nothing
 
 
 accessibilityHazardDecoder : Decoder (List AccessibilityHazardItem)
@@ -249,37 +525,37 @@ parseAccessibilityHazardItem : String -> Result String AccessibilityHazardItem
 parseAccessibilityHazardItem accessibilityHazardItem =
     case accessibilityHazardItem of
         "none" ->
-            Ok None
+            Ok NoneAccessibilityHazard
 
         "unknown" ->
-            Ok Unknown
+            Ok UnknownAccessibilityHazard
 
         "flashingHazard" ->
-            Ok FlashingHazard
+            Ok FlashingHazardAccessibilityHazard
 
         "motionSimulationHazard" ->
-            Ok MotionSimulationHazard
+            Ok MotionSimulationHazardAccessibilityHazard
 
         "soundHazard" ->
-            Ok SoundHazard
+            Ok SoundHazardAccessibilityHazard
 
         "noFlashingHazard" ->
-            Ok NoFlashingHazard
+            Ok NoFlashingHazardAccessibilityHazard
 
         "noMotionSimulationHazard" ->
-            Ok NoMotionSimulationHazard
+            Ok NoMotionSimulationHazardAccessibilityHazard
 
         "noSoundHazard" ->
-            Ok NoSoundHazard
+            Ok NoSoundHazardAccessibilityHazard
 
         "unknownFlashingHazard" ->
-            Ok UnknownFlashingHazard
+            Ok UnknownFlashingHazardAccessibilityHazard
 
         "unknownMotionSimulationHazard" ->
-            Ok UnknownMotionSimulationHazard
+            Ok UnknownMotionSimulationHazardAccessibilityHazard
 
         "unknownSoundHazard" ->
-            Ok UnknownSoundHazard
+            Ok UnknownSoundHazardAccessibilityHazard
 
         _ ->
             Err <| "Unknown accessibilityHazardItem type: " ++ accessibilityHazardItem
@@ -288,20 +564,72 @@ parseAccessibilityHazardItem accessibilityHazardItem =
 addressDecoder : Decoder Address
 addressDecoder =
     Decode.succeed Address
-        |> optional "city" (Decode.nullable Decode.string) Nothing
+        |> required "@type" addressAttypeDecoder
+        |> optional "addressLocality" (Decode.nullable Decode.string) Nothing
         |> optional "postalCode" (Decode.nullable Decode.string) Nothing
         |> optional "streetAddress" (Decode.nullable Decode.string) Nothing
+
+
+creatorPersonDecoder : Decoder Creator
+creatorPersonDecoder =
+    Decode.succeed Creator
+        |> required "@type" creatorAttypeDecoder
+        |> required "name" Decode.string
+
+
+creatorDecoder : Decoder (List CreatorItem)
+creatorDecoder =
+    Decode.list creatorItemDecoder
+
+
+creatorItemDecoder : Decoder CreatorItem
+creatorItemDecoder =
+    Decode.succeed CreatorItem
+        |> required "@type" creatorAttypeDecoder
+        |> required "creator" creatorPersonDecoder
+        |> optional "roleName" (Decode.nullable Decode.string) Nothing
 
 
 eventDecoder : Decoder Event
 eventDecoder =
     Decode.succeed Event
+        |> required "@type" eventsAttypeDecoder
         |> optional "duration" (Decode.nullable Decode.int) Nothing
         |> optional "endDate" (Decode.nullable Decode.string) Nothing
-        |> optional "locations" (Decode.nullable locationsDecoder) Nothing
+        |> optional "eventStatus" (Decode.nullable eventsEventStatusDecoder) Nothing
+        |> optional "location" (Decode.nullable locationDecoder) Nothing
         |> optional "offers" (Decode.nullable offersDecoder) Nothing
+        |> optional "performer" (Decode.nullable performerDecoder) Nothing
+        |> optional "previousStartDate" (Decode.nullable Decode.string) Nothing
         |> required "startDate" Decode.string
         |> optional "url" (Decode.nullable Decode.string) Nothing
+
+
+eventsEventStatusDecoder : Decoder EventsEventStatus
+eventsEventStatusDecoder =
+    Decode.string |> Decode.andThen (parseEventsEventStatus >> Decode.fromResult)
+
+
+parseEventsEventStatus : String -> Result String EventsEventStatus
+parseEventsEventStatus eventsEventStatus =
+    case eventsEventStatus of
+        "EventScheduled" ->
+            Ok EventScheduledEvents
+
+        "EventCancelled" ->
+            Ok EventCancelledEvents
+
+        "EventMovedOnline" ->
+            Ok EventMovedOnlineEvents
+
+        "EventPostponed" ->
+            Ok EventPostponedEvents
+
+        "EventRescheduled" ->
+            Ok EventRescheduledEvents
+
+        _ ->
+            Err <| "Unknown eventsEventStatus type: " ++ eventsEventStatus
 
 
 eventsDecoder : Decoder (List Event)
@@ -309,133 +637,127 @@ eventsDecoder =
     Decode.list eventDecoder
 
 
-genreDecoder : Decoder Genre
-genreDecoder =
-    Decode.string |> Decode.andThen (parseGenre >> Decode.fromResult)
+productionsGenreDecoder : Decoder ProductionsGenre
+productionsGenreDecoder =
+    Decode.string |> Decode.andThen (parseProductionsGenre >> Decode.fromResult)
 
 
-parseGenre : String -> Result String Genre
-parseGenre genre =
-    case genre of
-        "sprechtheater" ->
-            Ok Sprechtheater
-
-        "performance" ->
-            Ok Performance
-
-        "lecture-performance" ->
-            Ok LecturePerformance
-
-        "tanz" ->
-            Ok Tanz
+parseProductionsGenre : String -> Result String ProductionsGenre
+parseProductionsGenre productionsGenre =
+    case productionsGenre of
+        "audiowalk" ->
+            Ok AudiowalkProductions
 
         "ballett" ->
-            Ok Ballett
-
-        "zeitgenoessischer-tanz" ->
-            Ok ZeitgenoessischerTanz
-
-        "musiktheater" ->
-            Ok Musiktheater
-
-        "oper" ->
-            Ok Oper
-
-        "operette" ->
-            Ok Operette
-
-        "musical" ->
-            Ok Musical
-
-        "szenisches-konzert" ->
-            Ok SzenischesKonzert
-
-        "konzert" ->
-            Ok Konzert
-
-        "sinfoniekonzert" ->
-            Ok Sinfoniekonzert
-
-        "kammerkonzert" ->
-            Ok Kammerkonzert
-
-        "figurentheater" ->
-            Ok Figurentheater
-
-        "puppentheater" ->
-            Ok Puppentheater
-
-        "objekttheater" ->
-            Ok Objekttheater
-
-        "theater-im-oeffentlichen-raum" ->
-            Ok TheaterImOeffentlichenRaum
-
-        "game-theater" ->
-            Ok GameTheater
-
-        "installation" ->
-            Ok Installation
-
-        "audiowalk" ->
-            Ok Audiowalk
-
-        "hoerspiel" ->
-            Ok Hoerspiel
-
-        "podcast" ->
-            Ok Podcast
-
-        "lesung" ->
-            Ok Lesung
-
-        "szenische-lesung" ->
-            Ok SzenischeLesung
+            Ok BallettProductions
 
         "digitaltheater" ->
-            Ok Digitaltheater
+            Ok DigitaltheaterProductions
 
-        "physical-theatre" ->
-            Ok PhysicalTheatre
+        "figurentheater" ->
+            Ok FigurentheaterProductions
 
-        "kabarett-comedy" ->
-            Ok KabarettComedy
+        "game-theater" ->
+            Ok GameTheaterProductions
+
+        "hoerspiel" ->
+            Ok HoerspielProductions
 
         "improtheater" ->
-            Ok Improtheater
+            Ok ImprotheaterProductions
+
+        "installation" ->
+            Ok InstallationProductions
+
+        "kabarett-comedy" ->
+            Ok KabarettComedyProductions
+
+        "kammerkonzert" ->
+            Ok KammerkonzertProductions
+
+        "konzert" ->
+            Ok KonzertProductions
+
+        "lecture-performance" ->
+            Ok LecturePerformanceProductions
+
+        "lesung" ->
+            Ok LesungProductions
+
+        "musical" ->
+            Ok MusicalProductions
+
+        "musiktheater" ->
+            Ok MusiktheaterProductions
+
+        "objekttheater" ->
+            Ok ObjekttheaterProductions
+
+        "oper" ->
+            Ok OperProductions
+
+        "operette" ->
+            Ok OperetteProductions
+
+        "performance" ->
+            Ok PerformanceProductions
+
+        "physical-theatre" ->
+            Ok PhysicalTheatreProductions
+
+        "podcast" ->
+            Ok PodcastProductions
+
+        "puppentheater" ->
+            Ok PuppentheaterProductions
+
+        "sinfoniekonzert" ->
+            Ok SinfoniekonzertProductions
+
+        "sprechtheater" ->
+            Ok SprechtheaterProductions
+
+        "szenische-lesung" ->
+            Ok SzenischeLesungProductions
+
+        "szenisches-konzert" ->
+            Ok SzenischesKonzertProductions
+
+        "tanz" ->
+            Ok TanzProductions
+
+        "theater-im-oeffentlichen-raum" ->
+            Ok TheaterImOeffentlichenRaumProductions
 
         "workshop" ->
-            Ok Workshop
+            Ok WorkshopProductions
+
+        "zeitgenoessischer-tanz" ->
+            Ok ZeitgenoessischerTanzProductions
 
         _ ->
-            Err <| "Unknown genre type: " ++ genre
+            Err <| "Unknown productionsGenre type: " ++ productionsGenre
 
 
-locationDecoder : Decoder Location
+locationDecoder : Decoder (List LocationItem)
 locationDecoder =
+    Decode.list locationItemDecoder
+
+
+locationItemDecoder : Decoder LocationItem
+locationItemDecoder =
     Decode.oneOf
         [ Decode.map Physical addressLocationDecoder
         , Decode.map Virtual virtualLocationDecoder
         ]
 
 
-locationsDecoder : Decoder (List Location)
-locationsDecoder =
-    Decode.list locationDecoder
-
-
-namesDecoder : Decoder (List String)
-namesDecoder =
-    Decode.list Decode.string
-
-
 offerDecoder : Decoder Offer
 offerDecoder =
     Decode.succeed Offer
-        |> optional "maxPrice" (Decode.nullable Decode.float) Nothing
-        |> required "minPrice" Decode.float
+        |> required "@type" offersAttypeDecoder
         |> optional "name" (Decode.nullable Decode.string) Nothing
-        |> required "priceCurrency" Decode.string
+        |> required "priceSpecification" priceSpecificationDecoder
         |> optional "url" (Decode.nullable Decode.string) Nothing
 
 
@@ -444,90 +766,63 @@ offersDecoder =
     Decode.list offerDecoder
 
 
-participantDecoder : Decoder Participant
-participantDecoder =
-    Decode.succeed Participant
-        |> optional "function" (Decode.nullable Decode.string) Nothing
-        |> required "names" namesDecoder
-        |> optional "roleName" (Decode.nullable Decode.string) Nothing
+organizationDecoder : Decoder Organization
+organizationDecoder =
+    Decode.succeed Organization
+        |> required "@type" organizationAttypeDecoder
+        |> optional "address" (Decode.nullable addressDecoder) Nothing
+        |> required "name" Decode.string
 
 
-participantsDecoder : Decoder (List Participant)
-participantsDecoder =
-    Decode.list participantDecoder
+performerDecoder : Decoder (List PerformerItem)
+performerDecoder =
+    Decode.list performerItemDecoder
+
+
+performerPersonDecoder : Decoder Performer
+performerPersonDecoder =
+    Decode.succeed Performer
+        |> required "@type" performerPersonAttypeDecoder
+        |> required "name" Decode.string
+
+
+performerItemDecoder : Decoder PerformerItem
+performerItemDecoder =
+    Decode.succeed PerformerItem
+        |> required "@type" performerAttypeDecoder
+        |> optional "characterName" (Decode.nullable Decode.string) Nothing
+        |> required "performer" performerPersonDecoder
+
+
+priceSpecificationDecoder : Decoder PriceSpecification
+priceSpecificationDecoder =
+    Decode.succeed PriceSpecification
+        |> required "@type" priceSpecificationAttypeDecoder
+        |> optional "maxPrice" (Decode.nullable Decode.float) Nothing
+        |> required "minPrice" Decode.float
+        |> required "priceCurrency" Decode.string
 
 
 productionDecoder : Decoder Production
 productionDecoder =
     Decode.succeed Production
-        |> optional "accessibility" (Decode.nullable accessibilityDecoder) Nothing
+        |> required "@type" productionsAttypeDecoder
+        |> optional "abstract" (Decode.nullable Decode.string) Nothing
+        |> optional "accessModeSufficient" (Decode.nullable accessModeSufficientDecoder) Nothing
+        |> optional "accessibilityHazard" (Decode.nullable accessibilityHazardDecoder) Nothing
+        |> optional "accessibilitySummary" (Decode.nullable Decode.string) Nothing
         |> optional "additionalInfo" (Decode.nullable Decode.string) Nothing
+        |> optional "creator" (Decode.nullable creatorDecoder) Nothing
         |> optional "description" (Decode.nullable Decode.string) Nothing
         |> required "events" eventsDecoder
-        |> optional "genre" (Decode.nullable genreDecoder) Nothing
-        |> optional "participants" (Decode.nullable participantsDecoder) Nothing
+        |> optional "genre" (Decode.nullable productionsGenreDecoder) Nothing
+        |> required "name" Decode.string
         |> optional "subtitle" (Decode.nullable Decode.string) Nothing
-        |> optional "teaser" (Decode.nullable Decode.string) Nothing
-        |> required "title" Decode.string
 
 
 productionsDecoder : Decoder (List Production)
 productionsDecoder =
     Decode.list productionDecoder
-
-
-addressTypeDecoder : Decoder Type
-addressTypeDecoder =
-    Decode.string |> Decode.andThen (parseAddressType >> Decode.fromResult)
-
-
-parseAddressType : String -> Result String Type
-parseAddressType locationType =
-    case locationType of
-        "Address" ->
-            Ok AddressType
-
-        "VirtualLocation" ->
-            Err <| "Expected 'type' to be 'Address', but it is 'VirtualLocation'"
-
-        _ ->
-            Err <| "Unknown type type: " ++ locationType
-
-
-virtualTypeDecoder : Decoder Type
-virtualTypeDecoder =
-    Decode.string |> Decode.andThen (parseVirtualType >> Decode.fromResult)
-
-
-parseVirtualType : String -> Result String Type
-parseVirtualType locationType =
-    case locationType of
-        "Address" ->
-            Err <| "Expected 'type' to be 'VirtualLocation', but it is 'Address'"
-
-        "VirtualLocation" ->
-            Ok VirtualLocationType
-
-        _ ->
-            Err <| "Unknown type type: " ++ locationType
-
-
-typeDecoder : Decoder Type
-typeDecoder =
-    Decode.string |> Decode.andThen (parseType >> Decode.fromResult)
-
-
-parseType : String -> Result String Type
-parseType locationType =
-    case locationType of
-        "Address" ->
-            Ok AddressType
-
-        "VirtualLocation" ->
-            Ok VirtualLocationType
-
-        _ ->
-            Err <| "Unknown type type: " ++ locationType
 
 
 versionDecoder : Decoder Version
@@ -553,16 +848,173 @@ wheelChairPlacesDecoder =
         |> optional "wheelchairUserCapacity" (Decode.nullable Decode.int) Nothing
 
 
+encodeAtContext : AtContext -> Value
+encodeAtContext atContext =
+    atContext |> atContextToString |> Encode.string
+
+
+atContextToString : AtContext -> String
+atContextToString atContext =
+    case atContext of
+        HttpsColonSlashSlashschemaDotorg ->
+            "https://schema.org"
+
+
+encodePriceSpecificationAttype : PriceSpecificationAttype -> Value
+encodePriceSpecificationAttype priceSpecificationAttype =
+    priceSpecificationAttype |> priceSpecificationAttypeToString |> Encode.string
+
+
+priceSpecificationAttypeToString : PriceSpecificationAttype -> String
+priceSpecificationAttypeToString priceSpecificationAttype =
+    case priceSpecificationAttype of
+        PriceSpecificationType ->
+            "PriceSpecification"
+
+
+encodeOffersAttype : OffersAttype -> Value
+encodeOffersAttype offersAttype =
+    offersAttype |> offersAttypeToString |> Encode.string
+
+
+offersAttypeToString : OffersAttype -> String
+offersAttypeToString offersAttype =
+    case offersAttype of
+        OfferType ->
+            "Offer"
+
+
+encodeAddressLocationAttype : AddressLocationAttype -> Value
+encodeAddressLocationAttype addressLocationAttype =
+    addressLocationAttype |> addressLocationAttypeToString |> Encode.string
+
+
+addressLocationAttypeToString : AddressLocationAttype -> String
+addressLocationAttypeToString addressLocationAttype =
+    case addressLocationAttype of
+        PlaceType ->
+            "Place"
+
+
+encodeOrganizationAttype : OrganizationAttype -> Value
+encodeOrganizationAttype organizationAttype =
+    organizationAttype |> organizationAttypeToString |> Encode.string
+
+
+organizationAttypeToString : OrganizationAttype -> String
+organizationAttypeToString organizationAttype =
+    case organizationAttype of
+        OrganizationType ->
+            "Organization"
+
+
+encodeEventsAttype : EventsAttype -> Value
+encodeEventsAttype eventsAttype =
+    eventsAttype |> eventsAttypeToString |> Encode.string
+
+
+eventsAttypeToString : EventsAttype -> String
+eventsAttypeToString eventsAttype =
+    case eventsAttype of
+        EventType ->
+            "Event"
+
+
+encodePerformerPersonAttype : PerformerPersonAttype -> Value
+encodePerformerPersonAttype performerAttype =
+    performerAttype |> performerPersonAttypeToString |> Encode.string
+
+
+performerPersonAttypeToString : PerformerPersonAttype -> String
+performerPersonAttypeToString performerAttype =
+    case performerAttype of
+        PerformerPersonType ->
+            "Person"
+
+
+encodeVirtualLocationAttype : VirtualLocationAttype -> Value
+encodeVirtualLocationAttype virtualLocationAttype =
+    virtualLocationAttype |> virtualLocationAttypeToString |> Encode.string
+
+
+virtualLocationAttypeToString : VirtualLocationAttype -> String
+virtualLocationAttypeToString virtualLocationAttype =
+    case virtualLocationAttype of
+        VirtualLocationType ->
+            "VirtualLocation"
+
+
+encodeProductionsAttype : ProductionsAttype -> Value
+encodeProductionsAttype productionsAttype =
+    productionsAttype |> productionsAttypeToString |> Encode.string
+
+
+productionsAttypeToString : ProductionsAttype -> String
+productionsAttypeToString productionsAttype =
+    case productionsAttype of
+        CreativeWorkType ->
+            "CreativeWork"
+
+        PlayType ->
+            "Play"
+
+
+encodeAddressAttype : AddressAttype -> Value
+encodeAddressAttype addressAttype =
+    addressAttype |> addressAttypeToString |> Encode.string
+
+
+addressAttypeToString : AddressAttype -> String
+addressAttypeToString addressAttype =
+    case addressAttype of
+        PostalAddressType ->
+            "PostalAddress"
+
+
+encodePerformerAttype : PerformerAttype -> Value
+encodePerformerAttype performerAttype =
+    performerAttype |> performerAttypeToString |> Encode.string
+
+
+performerAttypeToString : PerformerAttype -> String
+performerAttypeToString performerAttype =
+    case performerAttype of
+        PerformanceRoleType ->
+            "PerformanceRole"
+
+
+encodeCreatorAttype : CreatorAttype -> Value
+encodeCreatorAttype creatorAttype =
+    creatorAttype |> creatorAttypeToString |> Encode.string
+
+
+creatorAttypeToString : CreatorAttype -> String
+creatorAttypeToString creatorAttype =
+    case creatorAttype of
+        CreatorRoleType ->
+            "Role"
+
+
+encodeCreatorPersonAttype : CreatorPersonAttype -> Value
+encodeCreatorPersonAttype creatorPersonAttype =
+    creatorPersonAttype |> creatorPersonAttypeToString |> Encode.string
+
+
+creatorPersonAttypeToString : CreatorPersonAttype -> String
+creatorPersonAttypeToString creatorAttype =
+    case creatorAttype of
+        CreatorPersonType ->
+            "Person"
+
+
 encodeAddressLocation : AddressLocation -> Value
 encodeAddressLocation addressLocation =
     []
-        |> Encode.optional "city" addressLocation.city Encode.string
+        |> Encode.required "@type" addressLocation.atType encodeAddressLocationAttype
+        |> Encode.required "address" addressLocation.address encodeAddress
         |> Encode.optional "latitude" addressLocation.latitude Encode.float
         |> Encode.optional "longitude" addressLocation.longitude Encode.float
         |> Encode.optional "name" addressLocation.name Encode.string
-        |> Encode.optional "postalCode" addressLocation.postalCode Encode.string
-        |> Encode.optional "streetAddress" addressLocation.streetAddress Encode.string
-        |> Encode.required "type" addressLocation.locationType encodeType
         |> Encode.optional "wheelChairPlaces" addressLocation.wheelChairPlaces encodeWheelChairPlaces
         |> Encode.object
 
@@ -570,8 +1022,8 @@ encodeAddressLocation addressLocation =
 encodeRoot : Root -> Value
 encodeRoot root =
     []
-        |> Encode.optional "address" root.address encodeAddress
-        |> Encode.required "name" root.name Encode.string
+        |> Encode.required "@context" root.atContext encodeAtContext
+        |> Encode.required "organization" root.organization encodeOrganization
         |> Encode.required "productions" root.productions encodeProductions
         |> Encode.required "version" root.version encodeVersion
         |> Encode.object
@@ -580,8 +1032,8 @@ encodeRoot root =
 encodeVirtualLocation : VirtualLocation -> Value
 encodeVirtualLocation virtualLocation =
     []
+        |> Encode.required "@type" virtualLocation.atType encodeVirtualLocationAttype
         |> Encode.optional "name" virtualLocation.name Encode.string
-        |> Encode.required "type" virtualLocation.locationType encodeType
         |> Encode.optional "url" virtualLocation.url Encode.string
         |> Encode.object
 
@@ -600,26 +1052,17 @@ encodeAccessModeSufficientItem accessModeSufficientItem =
 accessModeSufficientItemToString : AccessModeSufficientItem -> String
 accessModeSufficientItemToString accessModeSufficientItem =
     case accessModeSufficientItem of
-        Auditory ->
+        AuditoryAccessModeSufficient ->
             "auditory"
 
-        Tactile ->
+        TactileAccessModeSufficient ->
             "tactile"
 
-        Textual ->
+        TextualAccessModeSufficient ->
             "textual"
 
-        Visual ->
+        VisualAccessModeSufficient ->
             "visual"
-
-
-encodeAccessibility : Accessibility -> Value
-encodeAccessibility accessibility =
-    []
-        |> Encode.optional "accessModeSufficient" accessibility.accessModeSufficient encodeAccessModeSufficient
-        |> Encode.optional "accessibilityHazard" accessibility.accessibilityHazard encodeAccessibilityHazard
-        |> Encode.optional "accessibilitySummary" accessibility.accessibilitySummary Encode.string
-        |> Encode.object
 
 
 encodeAccessibilityHazard : List AccessibilityHazardItem -> Value
@@ -636,59 +1079,111 @@ encodeAccessibilityHazardItem accessibilityHazardItem =
 accessibilityHazardItemToString : AccessibilityHazardItem -> String
 accessibilityHazardItemToString accessibilityHazardItem =
     case accessibilityHazardItem of
-        None ->
+        NoneAccessibilityHazard ->
             "none"
 
-        Unknown ->
+        UnknownAccessibilityHazard ->
             "unknown"
 
-        FlashingHazard ->
+        FlashingHazardAccessibilityHazard ->
             "flashingHazard"
 
-        MotionSimulationHazard ->
+        MotionSimulationHazardAccessibilityHazard ->
             "motionSimulationHazard"
 
-        SoundHazard ->
+        SoundHazardAccessibilityHazard ->
             "soundHazard"
 
-        NoFlashingHazard ->
+        NoFlashingHazardAccessibilityHazard ->
             "noFlashingHazard"
 
-        NoMotionSimulationHazard ->
+        NoMotionSimulationHazardAccessibilityHazard ->
             "noMotionSimulationHazard"
 
-        NoSoundHazard ->
+        NoSoundHazardAccessibilityHazard ->
             "noSoundHazard"
 
-        UnknownFlashingHazard ->
+        UnknownFlashingHazardAccessibilityHazard ->
             "unknownFlashingHazard"
 
-        UnknownMotionSimulationHazard ->
+        UnknownMotionSimulationHazardAccessibilityHazard ->
             "unknownMotionSimulationHazard"
 
-        UnknownSoundHazard ->
+        UnknownSoundHazardAccessibilityHazard ->
             "unknownSoundHazard"
 
 
 encodeAddress : Address -> Value
 encodeAddress address =
     []
-        |> Encode.optional "city" address.city Encode.string
+        |> Encode.required "@type" address.atType encodeAddressAttype
+        |> Encode.optional "addressLocality" address.addressLocality Encode.string
         |> Encode.optional "postalCode" address.postalCode Encode.string
         |> Encode.optional "streetAddress" address.streetAddress Encode.string
+        |> Encode.object
+
+
+encodeCreatorPerson : Creator -> Value
+encodeCreatorPerson creator =
+    []
+        |> Encode.required "@type" creator.atType encodeCreatorAttype
+        |> Encode.required "name" creator.name Encode.string
+        |> Encode.object
+
+
+encodeCreator : List CreatorItem -> Value
+encodeCreator creator =
+    creator
+        |> Encode.list encodeCreatorItem
+
+
+encodeCreatorItem : CreatorItem -> Value
+encodeCreatorItem creatorItem =
+    []
+        |> Encode.required "@type" creatorItem.atType encodeCreatorAttype
+        |> Encode.required "creator" creatorItem.creator encodeCreatorPerson
+        |> Encode.optional "roleName" creatorItem.roleName Encode.string
         |> Encode.object
 
 
 encodeEvent : Event -> Value
 encodeEvent event =
     []
+        |> Encode.required "@type" event.atType encodeEventsAttype
         |> Encode.optional "duration" event.duration Encode.int
         |> Encode.optional "endDate" event.endDate Encode.string
-        |> Encode.optional "locations" event.locations encodeLocations
+        |> Encode.optional "eventStatus" event.eventStatus encodeEventsEventStatus
+        |> Encode.optional "location" event.location encodeLocation
         |> Encode.optional "offers" event.offers encodeOffers
+        |> Encode.optional "performer" event.performer encodePerformer
+        |> Encode.optional "previousStartDate" event.previousStartDate Encode.string
         |> Encode.required "startDate" event.startDate Encode.string
         |> Encode.optional "url" event.url Encode.string
         |> Encode.object
+
+
+encodeEventsEventStatus : EventsEventStatus -> Value
+encodeEventsEventStatus eventsEventStatus =
+    eventsEventStatus |> eventsEventStatusToString |> Encode.string
+
+
+eventsEventStatusToString : EventsEventStatus -> String
+eventsEventStatusToString eventsEventStatus =
+    case eventsEventStatus of
+        EventScheduledEvents ->
+            "EventScheduled"
+
+        EventCancelledEvents ->
+            "EventCancelled"
+
+        EventMovedOnlineEvents ->
+            "EventMovedOnline"
+
+        EventPostponedEvents ->
+            "EventPostponed"
+
+        EventRescheduledEvents ->
+            "EventRescheduled"
 
 
 encodeEvents : List Event -> Value
@@ -697,108 +1192,114 @@ encodeEvents events =
         |> Encode.list encodeEvent
 
 
-encodeGenre : Genre -> Value
-encodeGenre genre =
-    genre |> genreToString |> Encode.string
+encodeProductionsGenre : ProductionsGenre -> Value
+encodeProductionsGenre productionsGenre =
+    productionsGenre |> productionsGenreToString |> Encode.string
 
 
-genreToString : Genre -> String
-genreToString genre =
-    case genre of
-        Sprechtheater ->
-            "sprechtheater"
-
-        Performance ->
-            "performance"
-
-        LecturePerformance ->
-            "lecture-performance"
-
-        Tanz ->
-            "tanz"
-
-        Ballett ->
-            "ballett"
-
-        ZeitgenoessischerTanz ->
-            "zeitgenoessischer-tanz"
-
-        Musiktheater ->
-            "musiktheater"
-
-        Oper ->
-            "oper"
-
-        Operette ->
-            "operette"
-
-        Musical ->
-            "musical"
-
-        SzenischesKonzert ->
-            "szenisches-konzert"
-
-        Konzert ->
-            "konzert"
-
-        Sinfoniekonzert ->
-            "sinfoniekonzert"
-
-        Kammerkonzert ->
-            "kammerkonzert"
-
-        Figurentheater ->
-            "figurentheater"
-
-        Puppentheater ->
-            "puppentheater"
-
-        Objekttheater ->
-            "objekttheater"
-
-        TheaterImOeffentlichenRaum ->
-            "theater-im-oeffentlichen-raum"
-
-        GameTheater ->
-            "game-theater"
-
-        Installation ->
-            "installation"
-
-        Audiowalk ->
+productionsGenreToString : ProductionsGenre -> String
+productionsGenreToString productionsGenre =
+    case productionsGenre of
+        AudiowalkProductions ->
             "audiowalk"
 
-        Hoerspiel ->
-            "hoerspiel"
+        BallettProductions ->
+            "ballett"
 
-        Podcast ->
-            "podcast"
-
-        Lesung ->
-            "lesung"
-
-        SzenischeLesung ->
-            "szenische-lesung"
-
-        Digitaltheater ->
+        DigitaltheaterProductions ->
             "digitaltheater"
 
-        PhysicalTheatre ->
-            "physical-theatre"
+        FigurentheaterProductions ->
+            "figurentheater"
 
-        KabarettComedy ->
-            "kabarett-comedy"
+        GameTheaterProductions ->
+            "game-theater"
 
-        Improtheater ->
+        HoerspielProductions ->
+            "hoerspiel"
+
+        ImprotheaterProductions ->
             "improtheater"
 
-        Workshop ->
+        InstallationProductions ->
+            "installation"
+
+        KabarettComedyProductions ->
+            "kabarett-comedy"
+
+        KammerkonzertProductions ->
+            "kammerkonzert"
+
+        KonzertProductions ->
+            "konzert"
+
+        LecturePerformanceProductions ->
+            "lecture-performance"
+
+        LesungProductions ->
+            "lesung"
+
+        MusicalProductions ->
+            "musical"
+
+        MusiktheaterProductions ->
+            "musiktheater"
+
+        ObjekttheaterProductions ->
+            "objekttheater"
+
+        OperProductions ->
+            "oper"
+
+        OperetteProductions ->
+            "operette"
+
+        PerformanceProductions ->
+            "performance"
+
+        PhysicalTheatreProductions ->
+            "physical-theatre"
+
+        PodcastProductions ->
+            "podcast"
+
+        PuppentheaterProductions ->
+            "puppentheater"
+
+        SinfoniekonzertProductions ->
+            "sinfoniekonzert"
+
+        SprechtheaterProductions ->
+            "sprechtheater"
+
+        SzenischeLesungProductions ->
+            "szenische-lesung"
+
+        SzenischesKonzertProductions ->
+            "szenisches-konzert"
+
+        TanzProductions ->
+            "tanz"
+
+        TheaterImOeffentlichenRaumProductions ->
+            "theater-im-oeffentlichen-raum"
+
+        WorkshopProductions ->
             "workshop"
 
+        ZeitgenoessischerTanzProductions ->
+            "zeitgenoessischer-tanz"
 
-encodeLocation : Location -> Value
+
+encodeLocation : List LocationItem -> Value
 encodeLocation location =
-    case location of
+    location
+        |> Encode.list encodeLocationItem
+
+
+encodeLocationItem : LocationItem -> Value
+encodeLocationItem locationItem =
+    case locationItem of
         Physical address ->
             encodeAddressLocation address
 
@@ -806,25 +1307,12 @@ encodeLocation location =
             encodeVirtualLocation virtual
 
 
-encodeLocations : List Location -> Value
-encodeLocations locations =
-    locations
-        |> Encode.list encodeLocation
-
-
-encodeNames : List String -> Value
-encodeNames names =
-    names
-        |> Encode.list Encode.string
-
-
 encodeOffer : Offer -> Value
 encodeOffer offer =
     []
-        |> Encode.optional "maxPrice" offer.maxPrice Encode.float
-        |> Encode.required "minPrice" offer.minPrice Encode.float
+        |> Encode.required "@type" offer.atType encodeOffersAttype
         |> Encode.optional "name" offer.name Encode.string
-        |> Encode.required "priceCurrency" offer.priceCurrency Encode.string
+        |> Encode.required "priceSpecification" offer.priceSpecification encodePriceSpecification
         |> Encode.optional "url" offer.url Encode.string
         |> Encode.object
 
@@ -835,33 +1323,63 @@ encodeOffers offers =
         |> Encode.list encodeOffer
 
 
-encodeParticipant : Participant -> Value
-encodeParticipant participant =
+encodeOrganization : Organization -> Value
+encodeOrganization organization =
     []
-        |> Encode.optional "function" participant.function Encode.string
-        |> Encode.required "names" participant.names encodeNames
-        |> Encode.optional "roleName" participant.roleName Encode.string
+        |> Encode.required "@type" organization.atType encodeOrganizationAttype
+        |> Encode.optional "address" organization.address encodeAddress
+        |> Encode.required "name" organization.name Encode.string
         |> Encode.object
 
 
-encodeParticipants : List Participant -> Value
-encodeParticipants participants =
-    participants
-        |> Encode.list encodeParticipant
+encodePerformer : List PerformerItem -> Value
+encodePerformer performer =
+    performer
+        |> Encode.list encodePerformerItem
+
+
+encodePerformerPerson : Performer -> Value
+encodePerformerPerson performer =
+    []
+        |> Encode.required "@type" performer.atType encodePerformerPersonAttype
+        |> Encode.required "name" performer.name Encode.string
+        |> Encode.object
+
+
+encodePerformerItem : PerformerItem -> Value
+encodePerformerItem performerItem =
+    []
+        |> Encode.required "@type" performerItem.atType encodePerformerAttype
+        |> Encode.optional "characterName" performerItem.characterName Encode.string
+        |> Encode.required "performer" performerItem.performer encodePerformerPerson
+        |> Encode.object
+
+
+encodePriceSpecification : PriceSpecification -> Value
+encodePriceSpecification priceSpecification =
+    []
+        |> Encode.required "@type" priceSpecification.atType encodePriceSpecificationAttype
+        |> Encode.optional "maxPrice" priceSpecification.maxPrice Encode.float
+        |> Encode.required "minPrice" priceSpecification.minPrice Encode.float
+        |> Encode.required "priceCurrency" priceSpecification.priceCurrency Encode.string
+        |> Encode.object
 
 
 encodeProduction : Production -> Value
 encodeProduction production =
     []
-        |> Encode.optional "accessibility" production.accessibility encodeAccessibility
+        |> Encode.required "@type" production.atType encodeProductionsAttype
+        |> Encode.optional "abstract" production.abstract Encode.string
+        |> Encode.optional "accessModeSufficient" production.accessModeSufficient encodeAccessModeSufficient
+        |> Encode.optional "accessibilityHazard" production.accessibilityHazard encodeAccessibilityHazard
+        |> Encode.optional "accessibilitySummary" production.accessibilitySummary Encode.string
         |> Encode.optional "additionalInfo" production.additionalInfo Encode.string
+        |> Encode.optional "creator" production.creator encodeCreator
         |> Encode.optional "description" production.description Encode.string
         |> Encode.required "events" production.events encodeEvents
-        |> Encode.optional "genre" production.genre encodeGenre
-        |> Encode.optional "participants" production.participants encodeParticipants
+        |> Encode.optional "genre" production.genre encodeProductionsGenre
+        |> Encode.required "name" production.name Encode.string
         |> Encode.optional "subtitle" production.subtitle Encode.string
-        |> Encode.optional "teaser" production.teaser Encode.string
-        |> Encode.required "title" production.title Encode.string
         |> Encode.object
 
 
@@ -869,21 +1387,6 @@ encodeProductions : List Production -> Value
 encodeProductions productions =
     productions
         |> Encode.list encodeProduction
-
-
-encodeType : Type -> Value
-encodeType locationType =
-    locationType |> typeToString |> Encode.string
-
-
-typeToString : Type -> String
-typeToString locationType =
-    case locationType of
-        AddressType ->
-            "Address"
-
-        VirtualLocationType ->
-            "VirtualLocation"
 
 
 encodeVersion : Version -> Value

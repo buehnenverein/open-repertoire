@@ -1,13 +1,20 @@
 {
   "$id": "https://peret.github.io/uc3-openapi/schema.json",
   "required": [
-    "name",
+    "@context",
+    "organization",
     "productions",
     "version"
   ],
   "additionalProperties": false,
   "type": "object",
   "properties": {
+    "@context": {
+      "type": "string",
+      "enum": [
+        "https://schema.org"
+      ]
+    },
     "version": {
       "type": "string",
       "description": "The API version that is being used. MUST be the string \"v1\" for now.",
@@ -15,22 +22,49 @@
         "v1"
       ]
     },
-    "name": {
-      "type": "string",
-      "description": "The organization's name"
-    },
-    "address": {
+    "organization": {
       "type": "object",
-      "additionalProperties": false,
+      "required": [
+        "@type",
+        "name"
+      ],
       "properties": {
-        "postalCode": {
-          "type": "string"
+        "@type": {
+          "type": "string",
+          "enum": [
+            "Organization"
+          ]
         },
-        "streetAddress": {
-          "type": "string"
+        "name": {
+          "type": "string",
+          "description": "The organization's name"
         },
-        "city": {
-          "type": "string"
+        "address": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "@type"
+          ],
+          "properties": {
+            "@type": {
+              "type": "string",
+              "enum": [
+                "PostalAddress"
+              ]
+            },
+            "postalCode": {
+              "type": "string",
+              "description": "The location's postal code"
+            },
+            "streetAddress": {
+              "type": "string",
+              "description": "The location's street address"
+            },
+            "addressLocality": {
+              "type": "string",
+              "description": "The city the location is in"
+            }
+          }
         }
       }
     },
@@ -42,11 +76,19 @@
         "description": "An object containing unchanging information about the production.",
         "additionalProperties": false,
         "required": [
-          "title",
+          "@type",
+          "name",
           "events"
         ],
         "properties": {
-          "title": {
+          "@type": {
+            "type": "string",
+            "enum": [
+              "CreativeWork",
+              "Play"
+            ]
+          },
+          "name": {
             "type": "string",
             "description": "The event title"
           },
@@ -58,9 +100,9 @@
             "type": "string",
             "description": "A text describing the production"
           },
-          "teaser": {
+          "abstract": {
             "type": "string",
-            "description": "A short text describing the production"
+            "description": "A short abstract or teaser text describing the production"
           },
           "additionalInfo": {
             "type": "string",
@@ -72,10 +114,17 @@
             "items": {
               "type": "object",
               "required": [
+                "@type",
                 "startDate"
               ],
               "additionalProperties": false,
               "properties": {
+                "@type": {
+                  "type": "string",
+                  "enum": [
+                    "Event"
+                  ]
+                },
                 "startDate": {
                   "type": "string",
                   "description": "The start date and time of the event (in ISO 8601 date format).",
@@ -98,7 +147,7 @@
                   "description": "Link to further information about the event",
                   "format": "uri"
                 },
-                "locations": {
+                "location": {
                   "description": "The location of this event. An event can take place at one or more physical locations, one or more virtual locations, or both, if it's a hybrid event.",
                   "type": "array",
                   "items": {
@@ -107,31 +156,47 @@
                         "type": "object",
                         "additionalProperties": false,
                         "required": [
-                          "type"
+                          "@type",
+                          "address"
                         ],
                         "properties": {
-                          "type": {
+                          "@type": {
                             "type": "string",
                             "enum": [
-                              "Address"
+                              "Place"
                             ],
-                            "description": "The type of this location object. Must be \"Address\" for physical locations."
+                            "description": "The type of this location object. Must be \"Place\" for physical locations."
                           },
                           "name": {
                             "type": "string",
                             "description": "The location's name"
                           },
-                          "postalCode": {
-                            "type": "string",
-                            "description": "The location's postal code"
-                          },
-                          "streetAddress": {
-                            "type": "string",
-                            "description": "The location's street address"
-                          },
-                          "city": {
-                            "type": "string",
-                            "description": "The city the location is in"
+                          "address": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                              "@type"
+                            ],
+                            "properties": {
+                              "@type": {
+                                "type": "string",
+                                "enum": [
+                                  "PostalAddress"
+                                ]
+                              },
+                              "postalCode": {
+                                "type": "string",
+                                "description": "The location's postal code"
+                              },
+                              "streetAddress": {
+                                "type": "string",
+                                "description": "The location's street address"
+                              },
+                              "addressLocality": {
+                                "type": "string",
+                                "description": "The city the location is in"
+                              }
+                            }
                           },
                           "wheelChairPlaces": {
                             "type": "object",
@@ -174,10 +239,10 @@
                         "additionalProperties": false,
                         "description": "The virtual location of an online or hybrid event",
                         "required": [
-                          "type"
+                          "@type"
                         ],
                         "properties": {
-                          "type": {
+                          "@type": {
                             "type": "string",
                             "enum": [
                               "VirtualLocation"
@@ -198,37 +263,100 @@
                     ]
                   }
                 },
+                "performer": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "@type",
+                      "performer"
+                    ],
+                    "properties": {
+                      "@type": {
+                        "type": "string",
+                        "enum": [
+                          "PerformanceRole"
+                        ]
+                      },
+                      "characterName": {
+                        "type": "string"
+                      },
+                      "performer": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "@type",
+                          "name"
+                        ],
+                        "properties": {
+                          "@type": {
+                            "type": "string",
+                            "enum": [
+                              "Person"
+                            ]
+                          },
+                          "name": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
                 "offers": {
                   "type": "array",
                   "items": {
                     "type": "object",
                     "additionalProperties": false,
                     "required": [
-                      "minPrice",
-                      "priceCurrency"
+                      "@type",
+                      "priceSpecification"
                     ],
                     "properties": {
+                      "@type": {
+                        "type": "string",
+                        "enum": [
+                          "Offer"
+                        ]
+                      },
                       "name": {
                         "type": "string",
                         "description": "A descriptive name for this offer, e.g. \"Normalpreis\", \"Ermäßigt\", \"Preisgruppe A\", usw."
                       },
-                      "minPrice": {
-                        "type": "number",
-                        "description": "The minimum price of this offer.",
-                        "format": "float",
-                        "minimum": 0,
-                        "maximum": 3.402823669209385E+38
-                      },
-                      "maxPrice": {
-                        "type": "number",
-                        "description": "The maximum price of this offer.",
-                        "format": "float",
-                        "minimum": 0,
-                        "maximum": 3.402823669209385E+38
-                      },
-                      "priceCurrency": {
-                        "type": "string",
-                        "description": "The currency of the price. Use standard formats: TODO"
+                      "priceSpecification": {
+                        "type": "object",
+                        "required": [
+                          "@type",
+                          "minPrice",
+                          "priceCurrency"
+                        ],
+                        "properties": {
+                          "@type": {
+                            "type": "string",
+                            "enum": [
+                              "PriceSpecification"
+                            ]
+                          },
+                          "minPrice": {
+                            "type": "number",
+                            "description": "The minimum price of this offer.",
+                            "format": "float",
+                            "minimum": 0,
+                            "maximum": 3.402823669209385E+38
+                          },
+                          "maxPrice": {
+                            "type": "number",
+                            "description": "The maximum price of this offer.",
+                            "format": "float",
+                            "minimum": 0,
+                            "maximum": 3.402823669209385E+38
+                          },
+                          "priceCurrency": {
+                            "type": "string",
+                            "description": "The currency of the price. Use standard formats: TODO"
+                          }
+                        }
                       },
                       "url": {
                         "type": "string",
@@ -237,6 +365,22 @@
                       }
                     }
                   }
+                },
+                "eventStatus": {
+                  "type": "string",
+                  "description": "The status of this event.\n\n- `EventScheduled`: The event is taking place or has taken place on the `startDate` as scheduled. Use of this value is optional, as it is assumed by default.\n- `EventCancelled`: The event has been cancelled. Either `startDate` or `previousStartDate` may be used to specify the event's cancelled date(s).\n- `EventMovedOnline`: Indicates that the event was changed to allow online participation.\n- `EventPostponed`: The event has been postponed and no new date has been set. The event's `previousStartDate` should be set.\n- `EventRescheduled`: The event has been rescheduled. The event's `previousStartDate` should be set to the old date and the `startDate` should be set to the event's new date.",
+                  "enum": [
+                    "EventScheduled",
+                    "EventCancelled",
+                    "EventMovedOnline",
+                    "EventPostponed",
+                    "EventRescheduled"
+                  ]
+                },
+                "previousStartDate": {
+                  "type": "string",
+                  "description": "This field should contain the old `startDate`, if the `eventStatus` is either `EventPostponed` or `EventRescheduled`",
+                  "format": "date-time"
                 }
               }
             }
@@ -245,105 +389,113 @@
             "type": "string",
             "description": "The genre of this production. Must use one of the pre-defined values.",
             "enum": [
-              "sprechtheater",
-              "performance",
-              "lecture-performance",
-              "tanz",
+              "audiowalk",
               "ballett",
-              "zeitgenoessischer-tanz",
+              "digitaltheater",
+              "figurentheater",
+              "game-theater",
+              "hoerspiel",
+              "improtheater",
+              "installation",
+              "kabarett-comedy",
+              "kammerkonzert",
+              "konzert",
+              "lecture-performance",
+              "lesung",
+              "musical",
               "musiktheater",
+              "objekttheater",
               "oper",
               "operette",
-              "musical",
-              "szenisches-konzert",
-              "konzert",
-              "sinfoniekonzert",
-              "kammerkonzert",
-              "figurentheater",
-              "puppentheater",
-              "objekttheater",
-              "theater-im-oeffentlichen-raum",
-              "game-theater",
-              "installation",
-              "audiowalk",
-              "hoerspiel",
-              "podcast",
-              "lesung",
-              "szenische-lesung",
-              "digitaltheater",
+              "performance",
               "physical-theatre",
-              "kabarett-comedy",
-              "improtheater",
-              "workshop"
+              "podcast",
+              "puppentheater",
+              "sinfoniekonzert",
+              "sprechtheater",
+              "szenische-lesung",
+              "szenisches-konzert",
+              "tanz",
+              "theater-im-oeffentlichen-raum",
+              "workshop",
+              "zeitgenoessischer-tanz"
             ]
           },
-          "accessibility": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "accessModeSufficient": {
-                "type": "array",
-                "items": {
-                  "type": "string",
-                  "description": "A list of single or combined accessModes that are sufficient to understand all the intellectual content of a resource.",
-                  "enum": [
-                    "auditory",
-                    "tactile",
-                    "textual",
-                    "visual"
-                  ]
-                }
-              },
-              "accessibilityHazard": {
-                "type": "array",
-                "items": {
-                  "type": "string",
-                  "enum": [
-                    "none",
-                    "unknown",
-                    "flashingHazard",
-                    "motionSimulationHazard",
-                    "soundHazard",
-                    "noFlashingHazard",
-                    "noMotionSimulationHazard",
-                    "noSoundHazard",
-                    "unknownFlashingHazard",
-                    "unknownMotionSimulationHazard",
-                    "unknownSoundHazard"
-                  ]
-                }
-              },
-              "accessibilitySummary": {
-                "type": "string",
-                "description": "A human-readable summary of specific accessibility features or deficiencies of the production."
-              }
+          "accessModeSufficient": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "description": "A list of single or combined accessModes that are sufficient to understand all the intellectual content of a resource.",
+              "enum": [
+                "auditory",
+                "tactile",
+                "textual",
+                "visual"
+              ]
             }
           },
-          "participants": {
-            "description": "List of all people contributing to and participating in the production, e.g. directors, stage designers, musical directors, performers, etc.\n\nIf multiple people perform the same role/function (e.g. there is multiple directors or multiple actors perform the same role on stage at the same time),\neach person should get their own entry in the `participants` array.",
+          "accessibilityHazard": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "none",
+                "unknown",
+                "flashingHazard",
+                "motionSimulationHazard",
+                "soundHazard",
+                "noFlashingHazard",
+                "noMotionSimulationHazard",
+                "noSoundHazard",
+                "unknownFlashingHazard",
+                "unknownMotionSimulationHazard",
+                "unknownSoundHazard"
+              ]
+            }
+          },
+          "accessibilitySummary": {
+            "type": "string",
+            "description": "A human-readable summary of specific accessibility features or deficiencies of the production."
+          },
+          "creator": {
+            "description": "List of all people contributing to the creation of this production, e.g. directors, stage designers, musical directors, etc.\n\nIf multiple people perform the same role/function (e.g. there is multiple directors or multiple actors perform the same role on stage at the same time),\neach person should get their own entry in the `creator` array.",
             "type": "array",
             "items": {
               "type": "object",
-              "required": [
-                "names"
-              ],
               "additionalProperties": false,
+              "required": [
+                "@type",
+                "creator"
+              ],
               "properties": {
-                "function": {
+                "@type": {
                   "type": "string",
-                  "description": "This participant's function in the production. Must use one of the pre-defined values."
+                  "enum": [
+                    "Role"
+                  ]
+                },
+                "creator": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "@type",
+                    "name"
+                  ],
+                  "properties": {
+                    "@type": {
+                      "type": "string",
+                      "enum": [
+                        "Person"
+                      ]
+                    },
+                    "name": {
+                      "type": "string"
+                    }
+                  }
                 },
                 "roleName": {
                   "type": "string",
-                  "description": "The name of the role(s) this participant is performing on stage, if any."
-                },
-                "names": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  },
-                  "description": "The name(s) of the person(s) performing this function/role. Must contain at least one name. Can contain multiple names, if multiple persons are performing the same role, but not at the same time.",
-                  "minItems": 1
+                  "description": "The name of the role this person played in the creation of the production."
                 }
               }
             }
