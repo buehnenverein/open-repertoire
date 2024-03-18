@@ -806,9 +806,8 @@ viewInput inputString buttonEnabled =
         [ div [ class "field" ]
             [ h3 [ class "label is-size-3" ] [ text "Enter the URL of your endpoint OR copy & paste your data" ]
             , div (class "control has-icons-right has-tooltip-arrow" :: controlAttrs)
-                [ input
-                    [ type_ "text"
-                    , onInput TextChange
+                [ textarea
+                    [ onInput TextChange
                     , value inputString
                     , class "input"
                     , classList [ ( "is-danger", invalid ) ]
