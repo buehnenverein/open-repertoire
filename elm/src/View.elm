@@ -369,14 +369,14 @@ locationTag locations =
     case ( isOnlineEvent locations, isOfflineEvent locations ) of
         ( True, True ) ->
             span
-                [ class "tag is-info ml-2 has-tooltip-arrow has-tooltip-multiline"
+                [ class "tag is-info is-light ml-2 has-tooltip-arrow has-tooltip-multiline"
                 , attribute "data-tooltip" "This is a hybrid event that takes place both online and offline"
                 ]
                 [ text "Hybrid" ]
 
         ( True, False ) ->
             span
-                [ class "tag is-info ml-2 has-tooltip-arrow has-tooltip-multiline"
+                [ class "tag is-info is-light ml-2 has-tooltip-arrow has-tooltip-multiline"
                 , attribute "data-tooltip" "This is an online event"
                 ]
                 [ text "Online" ]
