@@ -209,7 +209,7 @@ viewData data zone =
                     (productionTable production)
                     (productionOpen index)
                     (ProductionCardClicked index (not (productionOpen index)))
-                , card (text "Events")
+                , card (text "Veranstaltungen")
                     (div [] <| viewEvents production.events zone)
                     (eventOpen index)
                     (EventCardClicked index (not (eventOpen index)))
@@ -279,14 +279,14 @@ productionTable production =
     table
         [ class "table is-hoverable" ]
         [ tbody []
-            [ tableRow "Title" production.name
-            , maybeTableRow "Subtitle" production.subtitle
-            , maybeTableRow "Description" production.description
-            , maybeTableRow "Teaser" production.abstract
-            , maybeTableRow "Additional info" production.additionalInfo
+            [ tableRow "Titel" production.name
+            , maybeTableRow "Untertitel" production.subtitle
+            , maybeTableRow "Beschreibung" production.description
+            , maybeTableRow "Kurzbeschreibung" production.abstract
+            , maybeTableRow "Zusätzliche Informationen" production.additionalInfo
             , maybeTableRow "Genre" (Maybe.map Data.Root.productionsGenreToString production.genre)
             , tr []
-                [ th [] [ text "Participants" ]
+                [ th [] [ text "Team" ]
                 , td []
                     [ viewCreators production.creator
                     ]
@@ -311,11 +311,11 @@ viewEvent zone event =
             [ div [ class "column" ]
                 [ table [ class "table" ]
                     [ tbody []
-                        [ tableRow "Start date" (formatDate event.startDate zone)
-                        , tableRow "Start time" (formatTime event.startDate zone)
-                        , tableRow "End date" (formatDate (Maybe.withDefault "" event.endDate) zone)
-                        , tableRow "End time" (formatTime (Maybe.withDefault "" event.endDate) zone)
-                        , tableRow "Duration" (Maybe.map formatDuration event.duration |> Maybe.withDefault "")
+                        [ tableRow "Startdatum" (formatDate event.startDate zone)
+                        , tableRow "Startzeit" (formatTime event.startDate zone)
+                        , tableRow "Enddatum" (formatDate (Maybe.withDefault "" event.endDate) zone)
+                        , tableRow "Endzeit" (formatTime (Maybe.withDefault "" event.endDate) zone)
+                        , tableRow "Dauer" (Maybe.map formatDuration event.duration |> Maybe.withDefault "")
                         , tr []
                             [ th []
                                 [ text "Link"
@@ -341,23 +341,23 @@ viewLocations : Maybe (List LocationItem) -> Html Msg
 viewLocations locations =
     case locations of
         Nothing ->
-            em [] [ text "The data does not contain a location for this event" ]
+            em [] [ text "In den Daten ist kein Ort für diese Veranstaltung angegeben." ]
 
         Just [] ->
-            em [] [ text "The data does not contain a location for this event" ]
+            em [] [ text "In den Daten ist kein Ort für diese Veranstaltung angegeben." ]
 
         Just list ->
             table [ class "table" ]
                 [ thead []
-                    [ th [ colspan 5 ] [ text "Locations", locationTag list ]
+                    [ th [ colspan 5 ] [ text "Ort", locationTag list ]
                     ]
                 , tbody []
                     (tr []
                         [ th [] [ text "Name" ]
                         , th [] [ text "Link" ]
-                        , th [] [ text "Address" ]
-                        , th [] [ text "Postal code" ]
-                        , th [] [ text "City" ]
+                        , th [] [ text "Adresse" ]
+                        , th [] [ text "Postleitzahl" ]
+                        , th [] [ text "Stadt" ]
                         ]
                         :: List.map locationRow list
                     )
@@ -370,14 +370,14 @@ locationTag locations =
         ( True, True ) ->
             span
                 [ class "tag is-info is-light ml-2 has-tooltip-arrow has-tooltip-multiline"
-                , attribute "data-tooltip" "This is a hybrid event that takes place both online and offline"
+                , attribute "data-tooltip" "Es handelt sich um eine hybride Veranstaltung, die sowohl online als auch offline stattfindet"
                 ]
                 [ text "Hybrid" ]
 
         ( True, False ) ->
             span
                 [ class "tag is-info is-light ml-2 has-tooltip-arrow has-tooltip-multiline"
-                , attribute "data-tooltip" "This is an online event"
+                , attribute "data-tooltip" "Es handelt sich um eine Veranstaltung, die online stattfindet"
                 ]
                 [ text "Online" ]
 
@@ -445,13 +445,13 @@ viewOffers offers =
             table [ class "table" ]
                 [ thead []
                     [ tr []
-                        [ th [] [ text "Ticketing" ]
+                        [ th [] [ text "Ticketinformationen" ]
                         ]
                     ]
                 , tbody
                     []
                     [ tr []
-                        [ td [] [ em [] [ text "The data does not contain any ticketing information for this event" ] ]
+                        [ td [] [ em [] [ text "Die Daten enthalten keine Ticketinformationen für diese Veranstaltung" ] ]
                         ]
                     ]
                 ]
@@ -460,14 +460,14 @@ viewOffers offers =
             table [ class "table" ]
                 [ thead []
                     [ tr []
-                        [ th [ colspan 3 ] [ text "Ticketing" ]
+                        [ th [ colspan 3 ] [ text "Ticketinformationen" ]
                         ]
                     ]
                 , tbody
                     []
                     (tr []
                         [ th [] [ text "Name" ]
-                        , th [] [ text "Price" ]
+                        , th [] [ text "Preis" ]
                         , th [] [ text "Link" ]
                         ]
                         :: List.map viewOffer list
@@ -617,7 +617,7 @@ formatDate isoString ( _, timezone ) =
                 ""
 
             else
-                "Invalid date (" ++ isoString ++ ")"
+                "Ungültige Datumsangabe (" ++ isoString ++ ")"
 
 
 formatTime : String -> ZoneWithName -> String
@@ -638,7 +638,7 @@ formatTime isoString ( name, timezone ) =
                 ""
 
             else
-                "Invalid time (" ++ isoString ++ ")"
+                "Ungültige Zeitangabe (" ++ isoString ++ ")"
 
 
 formatDuration : Int -> String
@@ -702,19 +702,19 @@ viewRequestError url error =
         [ div [ class "notification is-danger" ]
             [ case error of
                 BadUrl invalidUrl ->
-                    text ("Unfortunately, it looks like " ++ invalidUrl ++ " is not a valid URL.")
+                    text ("Ich konnte " ++ invalidUrl ++ "nicht finden. Bitte stellen Sie sicher, dass der Link korrekt ist.")
 
                 Timeout ->
-                    text "Unfortunately, the request to your endpoint timed out."
+                    text "Der Server scheint zur Zeit nicht erreichbar zu sein. Bitte versuchen Sie es in ein paar Minuten noch einmal."
 
                 NetworkError ->
                     viewNetworkError url
 
                 BadStatus code ->
                     text
-                        ("Unfortunately, your endpoint returned an unsuccessful status code ("
+                        ("Der Server konnte meine Anfrage nicht verarbeiten (Status code: "
                             ++ String.fromInt code
-                            ++ "), so I could not check whether your JSON is valid or not. Please check your browser's console logs for more information."
+                            ++ "). Leider kann ich deswegen keine Daten anzeigen. Bitte stellen Sie sicher, dass der Link korrekt ist."
                         )
 
                 BadBody _ ->
@@ -726,18 +726,18 @@ viewRequestError url error =
 viewNetworkError : String -> Html Msg
 viewNetworkError url =
     div []
-        [ text "I encountered an error while trying to fetch data from this link."
-        , h1 [ class "title is-size-5 mt-5" ] [ text "Here is what you can do:" ]
+        [ text "Beim Versuch, Daten von diesem Link abzurufen, ist ein Fehler aufgetreten."
+        , h1 [ class "title is-size-5 mt-5" ] [ text "Nächste Schritte:" ]
         , ol []
             [ li []
-                [ text "Open the link in your browser: "
+                [ text "Öffnen Sie den Link in Ihrem Browser:"
                 , a [ href url, target "_blank" ] [ text url ]
                 ]
             , li []
-                [ text "Copy the data that is displayed"
+                [ text "Kopieren Sie die angezeigten Daten"
                 ]
             , li []
-                [ text "Paste the data into the input field above"
+                [ text "Fügen Sie die kopierten Daten in das Textfeld auf dieser Seite ein und versuchen Sie es erneut"
                 ]
             ]
         ]
@@ -746,19 +746,19 @@ viewNetworkError url =
 viewJsonError : Html Msg
 viewJsonError =
     div []
-        [ text "Unfortunately, it looks like your data is not valid."
-        , h1 [ class "title is-size-5 mt-5" ] [ text "Here is what you can do:" ]
+        [ text "Leider scheinen Ihre Daten ungültig zu sein."
+        , h1 [ class "title is-size-5 mt-5" ] [ text "Nächste Schritte:" ]
         , ul []
             [ li []
-                [ text "This error likely means that something needs to be changed in your endpoint."
+                [ text "Wahrscheinlich muss ihre Schnittstelle angepasst werden, um dem vorgegebenen Datenformat zu entsprechen."
                 ]
             , li []
-                [ text "Please contact the maintainer of your endpoint and ask them to make sure that the endpoint returns valid data."
+                [ text "Bitte kontaktieren Sie den Betreuer Ihrer Schnittstelle und bitten Sie ihn sicherzustellen, dass der Endpunkt gültige Daten zurückgibt."
                 ]
             , li []
-                [ text "They can use the "
-                , a [ href "../validate" ] [ text "Validator Tool" ]
-                , text " to make sure the data is valid."
+                [ text "Das "
+                , a [ href "../validate" ] [ text "Validierungs-Tool" ]
+                , text " kann benutzt werden, um sicherzustellen, dass die Daten gültig sind."
                 ]
             ]
         ]
@@ -772,10 +772,10 @@ viewIntroduction : Html Msg
 viewIntroduction =
     section
         [ h1 [ class "is-size-1" ]
-            [ text "Use Case 3 - Data Viewer"
+            [ text "Anwendungsfall 3 - Datenbetrachter"
             ]
         , p []
-            [ text "Use this tool to view the data returned by your repertoire endpoint."
+            [ text "Verwenden Sie dieses Tool, um die Daten anzuzeigen, die von Ihrem Repertoire-Endpunkt zurückgegeben werden."
             ]
         ]
 
@@ -794,17 +794,17 @@ viewInput inputString buttonEnabled =
 
         controlAttrs =
             if invalidUrl then
-                [ attribute "data-tooltip" "Not a valid link" ]
+                [ attribute "data-tooltip" "Invalider Link" ]
 
             else if invalidJson then
-                [ attribute "data-tooltip" "Not valid JSON" ]
+                [ attribute "data-tooltip" "Invalides Datenformat" ]
 
             else
                 []
     in
     section
         [ div [ class "field" ]
-            [ h3 [ class "label is-size-3" ] [ text "Enter the URL of your endpoint OR copy & paste your data" ]
+            [ h3 [ class "label is-size-3" ] [ text "Geben Sie die URL Ihres Endpunkts ein ODER kopieren & fügen Sie Ihre Daten ein" ]
             , div (class "control has-icons-right has-tooltip-arrow" :: controlAttrs)
                 [ textarea
                     [ onInput TextChange
@@ -824,7 +824,7 @@ viewInput inputString buttonEnabled =
                 , disabled (not buttonEnabled || invalid || String.isEmpty inputString)
                 , class "button is-primary"
                 ]
-                [ text "View data" ]
+                [ text "Daten anzeigen" ]
             ]
         ]
 
@@ -832,13 +832,13 @@ viewInput inputString buttonEnabled =
 filterInput : String -> Html Msg
 filterInput filter =
     div [ class "field" ]
-        [ div [ class "label" ] [ text "Filter results by title:" ]
+        [ div [ class "label" ] [ text "Ergebnisse nach Titel filtern:" ]
         , div [ class "control" ]
             [ input
                 [ type_ "text"
                 , onInput NameFilterChanged
                 , value filter
-                , placeholder "Title"
+                , placeholder "Titel"
                 , class "input"
                 ]
                 []
