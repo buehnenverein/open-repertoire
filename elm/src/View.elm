@@ -363,7 +363,7 @@ viewLocations locations =
         Just list ->
             table [ class "table" ]
                 [ thead []
-                    [ th [ colspan 5 ] [ text "Ort", locationTag list ]
+                    [ th [ colspan 6 ] [ text "Ort", locationTag list ]
                     ]
                 , tbody []
                     (tr []
@@ -372,6 +372,7 @@ viewLocations locations =
                         , th [] [ text "Adresse" ]
                         , th [] [ text "Postleitzahl" ]
                         , th [] [ text "Stadt" ]
+                        , th [] [ text "Koordinaten" ]
                         ]
                         :: List.map locationRow list
                     )
@@ -409,6 +410,7 @@ locationRow location =
                 , td [] [ text <| Maybe.withDefault "" place.address.streetAddress ]
                 , td [] [ text <| Maybe.withDefault "" place.address.postalCode ]
                 , td [] [ text <| Maybe.withDefault "" place.address.addressLocality ]
+                , td [] [ geoCoordinates place ]
                 ]
 
         Virtual info ->
@@ -418,7 +420,30 @@ locationRow location =
                 , td [] [ text "" ]
                 , td [] [ text "" ]
                 , td [] [ text "" ]
+                , td [] [ text "" ]
                 ]
+
+
+geoCoordinates : { a | latitude : Maybe Float, longitude : Maybe Float } -> Html Msg
+geoCoordinates place =
+    case ( place.latitude, place.longitude ) of
+        ( Just lat, Just lon ) ->
+            osmLink { latitude = lat, longitude = lon }
+
+        _ ->
+            text ""
+
+
+osmLink : { a | latitude : Float, longitude : Float } -> Html Msg
+osmLink place =
+    let
+        url =
+            "https://www.osm.org/?zoom=19&mlat="
+                ++ String.fromFloat place.latitude
+                ++ "&mlon="
+                ++ String.fromFloat place.longitude
+    in
+    a [ href url, target "_blank" ] [ text "Karte anzeigen" ]
 
 
 
@@ -456,7 +481,7 @@ viewOffers : Maybe (List Offer) -> Html Msg
 viewOffers offers =
     case offers of
         Nothing ->
-            table [ class "table" ]
+            table [ class "table is-fullwidth" ]
                 [ thead []
                     [ tr []
                         [ th [] [ text "Ticketinformationen" ]
@@ -471,7 +496,7 @@ viewOffers offers =
                 ]
 
         Just list ->
-            table [ class "table" ]
+            table [ class "table is-fullwidth" ]
                 [ thead []
                     [ tr []
                         [ th [ colspan 3 ] [ text "Ticketinformationen" ]
