@@ -302,34 +302,48 @@ productionTable production =
 viewEvents : List Event -> ZoneWithName -> List (Html Msg)
 viewEvents events zone =
     List.map (viewEvent zone) events
+        |> List.intersperse (hr [ class "has-background-grey-light mb-6 mt-6" ] [])
 
 
 viewEvent : ZoneWithName -> Event -> Html Msg
 viewEvent zone event =
-    div [ class "box" ]
-        [ div [ class "columns" ]
-            [ div [ class "column" ]
-                [ table [ class "table" ]
-                    [ tbody []
-                        [ tableRow "Startdatum" (formatDate event.startDate zone)
-                        , tableRow "Startzeit" (formatTime event.startDate zone)
-                        , tableRow "Enddatum" (formatDate (Maybe.withDefault "" event.endDate) zone)
-                        , tableRow "Endzeit" (formatTime (Maybe.withDefault "" event.endDate) zone)
-                        , tableRow "Dauer" (Maybe.map formatDuration event.duration |> Maybe.withDefault "")
-                        , tr []
-                            [ th []
-                                [ text "Link"
-                                ]
-                            , td []
-                                [ maybeLink event.url
-                                ]
-                            ]
-                        ]
+    div []
+        [ div [ class "tile is-ancestor" ]
+            [ div [ class "tile is-vertical is-parent" ]
+                [ div [ class "tile is-child box" ]
+                    [ viewEventTable zone event
                     ]
                 ]
-            , div [ class "column" ] [ viewLocations event.location ]
+            , div [ class "tile is-vertical is-parent" ]
+                [ div [ class "tile is-child box" ]
+                    [ viewLocations event.location
+                    ]
+                , div [ class "tile is-child box" ]
+                    [ viewOffers event.offers
+                    ]
+                ]
             ]
-        , viewOffers event.offers
+        ]
+
+
+viewEventTable : ZoneWithName -> Event -> Html Msg
+viewEventTable zone event =
+    table [ class "table" ]
+        [ tbody []
+            [ tableRow "Startdatum" (formatDate event.startDate zone)
+            , tableRow "Startzeit" (formatTime event.startDate zone)
+            , tableRow "Enddatum" (formatDate (Maybe.withDefault "" event.endDate) zone)
+            , tableRow "Endzeit" (formatTime (Maybe.withDefault "" event.endDate) zone)
+            , tableRow "Dauer" (Maybe.map formatDuration event.duration |> Maybe.withDefault "")
+            , tr []
+                [ th []
+                    [ text "Link"
+                    ]
+                , td []
+                    [ maybeLink event.url
+                    ]
+                ]
+            ]
         ]
 
 
