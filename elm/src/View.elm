@@ -361,21 +361,12 @@ viewLocations locations =
             em [] [ text "In den Daten ist kein Ort für diese Veranstaltung angegeben." ]
 
         Just list ->
-            table [ class "table" ]
-                [ thead []
-                    [ th [ colspan 6 ] [ text "Ort", locationTag list ]
+            div []
+                [ div [ class "title is-5" ]
+                    [ text "Aufführungsort"
+                    , locationTag list
                     ]
-                , tbody []
-                    (tr []
-                        [ th [] [ text "Name" ]
-                        , th [] [ text "Link" ]
-                        , th [] [ text "Adresse" ]
-                        , th [] [ text "Postleitzahl" ]
-                        , th [] [ text "Stadt" ]
-                        , th [] [ text "Koordinaten" ]
-                        ]
-                        :: List.map locationRow list
-                    )
+                , div [] (List.map locationTable list)
                 ]
 
 
@@ -400,27 +391,31 @@ locationTag locations =
             text ""
 
 
-locationRow : LocationItem -> Html Msg
-locationRow location =
+locationTable : LocationItem -> Html Msg
+locationTable location =
     case location of
         Physical place ->
-            tr []
-                [ td [] [ text <| Maybe.withDefault "" place.name ]
-                , td [] [ text "" ]
-                , td [] [ text <| Maybe.withDefault "" place.address.streetAddress ]
-                , td [] [ text <| Maybe.withDefault "" place.address.postalCode ]
-                , td [] [ text <| Maybe.withDefault "" place.address.addressLocality ]
-                , td [] [ geoCoordinates place ]
+            table [ class "table" ]
+                [ tbody []
+                    [ maybeTableRow "Name" place.name
+                    , maybeTableRow "Addresse" place.address.streetAddress
+                    , maybeTableRow "Postleitzahl" place.address.postalCode
+                    , maybeTableRow "Stadt" place.address.addressLocality
+                    , tr []
+                        [ th [] [ text "Koordinaten" ]
+                        , td []
+                            [ geoCoordinates place
+                            ]
+                        ]
+                    ]
                 ]
 
         Virtual info ->
-            tr []
-                [ td [] [ text <| Maybe.withDefault "" info.name ]
-                , td [] [ maybeLink info.url ]
-                , td [] [ text "" ]
-                , td [] [ text "" ]
-                , td [] [ text "" ]
-                , td [] [ text "" ]
+            table [ class "table" ]
+                [ tbody []
+                    [ maybeTableRow "Name" info.name
+                    , maybeTableRow "Link" info.url
+                    ]
                 ]
 
 
