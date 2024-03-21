@@ -1,7 +1,7 @@
 module View exposing (main)
 
 import Browser
-import Data.Root exposing (CreatorItem, Event, LocationItem(..), Offer, Production, Root, rootDecoder)
+import Data.Root exposing (CreatorItem, Event, LocationItem(..), Offer, Production, Root, WheelChairPlaces, rootDecoder)
 import DateFormat
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -407,6 +407,9 @@ locationTable location =
                             [ geoCoordinates place
                             ]
                         ]
+                    , maybeTableRow "Rollstuhlplätze" (wheelChairCount place.wheelChairPlaces)
+                    , tableRow "Platz für Assistent:in?" (spaceForAssistant place.wheelChairPlaces)
+                    , maybeTableRow "Rollstuhlkapazität" (wheelChairCapacity place.wheelChairPlaces)
                     ]
                 ]
 
@@ -417,6 +420,35 @@ locationTable location =
                     , maybeTableRow "Link" info.url
                     ]
                 ]
+
+
+wheelChairCapacity : Maybe WheelChairPlaces -> Maybe String
+wheelChairCapacity wheelChairPlaces =
+    case Maybe.map .wheelchairUserCapacity wheelChairPlaces of
+        Just capacity ->
+            Maybe.map String.fromInt capacity
+
+        Nothing ->
+            Just ""
+
+
+spaceForAssistant : Maybe WheelChairPlaces -> String
+spaceForAssistant wheelChairPlaces =
+    case Maybe.andThen .hasSpaceForAssistant wheelChairPlaces of
+        Just True ->
+            "Ja"
+
+        Just False ->
+            "Nein"
+
+        Nothing ->
+            ""
+
+
+wheelChairCount : Maybe WheelChairPlaces -> Maybe String
+wheelChairCount wheelChairPlaces =
+    Maybe.map .count wheelChairPlaces
+        |> Maybe.map String.fromInt
 
 
 geoCoordinates : { a | latitude : Maybe Float, longitude : Maybe Float } -> Html Msg
