@@ -1,7 +1,7 @@
 module View exposing (main)
 
 import Browser
-import Data.Root exposing (CreatorItem, Event, LocationItem(..), Offer, Production, Root, WheelChairPlaces, rootDecoder)
+import Data.Root exposing (CreatorItem, Event, LocationItem(..), Offer, PerformerItem, Production, Root, WheelChairPlaces, rootDecoder)
 import DateFormat
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -343,6 +343,10 @@ viewEventTable zone event =
                     [ maybeLink event.url
                     ]
                 ]
+            , tr []
+                [ th [] [ text "Besetzung" ]
+                , td [] [ viewPerformers event.performer ]
+                ]
             ]
         ]
 
@@ -493,6 +497,29 @@ viewCreator creator =
     li []
         [ [ creator.roleName
           , Just creator.creator.name
+          ]
+            |> List.filterMap identity
+            |> String.join ":"
+            |> text
+        ]
+
+
+viewPerformers : Maybe (List PerformerItem) -> Html Msg
+viewPerformers performers =
+    case performers of
+        Nothing ->
+            text ""
+
+        Just list ->
+            ul []
+                (List.map viewPerformer list)
+
+
+viewPerformer : PerformerItem -> Html Msg
+viewPerformer performer =
+    li []
+        [ [ performer.characterName
+          , Just performer.performer.name
           ]
             |> List.filterMap identity
             |> String.join ":"
