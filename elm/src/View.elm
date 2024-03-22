@@ -368,6 +368,9 @@ viewEvent zone event =
                 [ div [ class "tile is-child box" ]
                     [ viewEventTable zone event
                     ]
+                , div [ class "tile is-child box" ]
+                    [ viewPerformers event.performer
+                    ]
                 ]
             , div [ class "tile is-vertical is-parent" ]
                 [ div [ class "tile is-child box" ]
@@ -400,10 +403,6 @@ viewEventTable zone event =
                 , td []
                     [ maybeLink event.url
                     ]
-                ]
-            , tr []
-                [ th [] [ text "Besetzung" ]
-                , td [] [ viewPerformers event.performer ]
                 ]
             ]
         ]
@@ -588,24 +587,26 @@ viewCreator creator =
 
 viewPerformers : Maybe (List PerformerItem) -> Html Msg
 viewPerformers performers =
-    case performers of
-        Nothing ->
-            text ""
+    div []
+        [ div [ class "title is-5" ] [ text "Besetzung" ]
+        , table [ class "table" ]
+            [ tbody []
+                (case performers of
+                    Nothing ->
+                        [ em [] [ text "Die Daten enthalten keine Informationen zur Besetzung" ] ]
 
-        Just list ->
-            ul []
-                (List.map viewPerformer list)
+                    Just list ->
+                        List.map viewPerformer list
+                )
+            ]
+        ]
 
 
 viewPerformer : PerformerItem -> Html Msg
 viewPerformer performer =
-    li []
-        [ [ performer.characterName
-          , Just performer.performer.name
-          ]
-            |> List.filterMap identity
-            |> String.join ": "
-            |> text
+    tr []
+        [ td [] [ text (Maybe.withDefault "" performer.characterName) ]
+        , td [] [ text performer.performer.name ]
         ]
 
 
