@@ -1,7 +1,7 @@
 module View exposing (main)
 
 import Browser
-import Data.Root exposing (CreatorItem, Event, LocationItem(..), Offer, PerformerItem, Production, ProductionsGenre, Root, WheelChairPlaces, rootDecoder)
+import Data.Root exposing (CreatorItem, Event, EventsEventStatus(..), LocationItem(..), Offer, PerformerItem, Production, ProductionsGenre, Root, WheelChairPlaces, rootDecoder)
 import DateFormat
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -354,6 +354,9 @@ viewEventTable zone event =
             , tableRow "Enddatum" (formatDate (Maybe.withDefault "" event.endDate) zone)
             , tableRow "Endzeit" (formatTime (Maybe.withDefault "" event.endDate) zone)
             , tableRow "Dauer" (Maybe.map formatDuration event.duration |> Maybe.withDefault "")
+            , tableRow "Status" (eventStatusToString event.eventStatus)
+            , tableRow "Vorheriges Startdatum" (formatDate (Maybe.withDefault "" event.previousStartDate) zone)
+            , tableRow "Vorherige Startzeit" (formatTime (Maybe.withDefault "" event.previousStartDate) zone)
             , tr []
                 [ th []
                     [ text "Link"
@@ -368,6 +371,28 @@ viewEventTable zone event =
                 ]
             ]
         ]
+
+
+eventStatusToString : Maybe EventsEventStatus -> String
+eventStatusToString eventStatus =
+    case eventStatus of
+        Nothing ->
+            "Findet statt"
+
+        Just EventScheduledEvents ->
+            "Findet statt"
+
+        Just EventCancelledEvents ->
+            "Abgesagt"
+
+        Just EventMovedOnlineEvents ->
+            "Findet online statt"
+
+        Just EventPostponedEvents ->
+            "Verschoben"
+
+        Just EventRescheduledEvents ->
+            "Geändertes Datum"
 
 
 
