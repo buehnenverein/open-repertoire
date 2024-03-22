@@ -1,7 +1,7 @@
 module View exposing (main)
 
 import Browser
-import Data.Root exposing (CreatorItem, Event, LocationItem(..), Offer, PerformerItem, Production, Root, WheelChairPlaces, rootDecoder)
+import Data.Root exposing (CreatorItem, Event, LocationItem(..), Offer, PerformerItem, Production, ProductionsGenre, Root, WheelChairPlaces, rootDecoder)
 import DateFormat
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -284,7 +284,7 @@ productionTable production =
             , maybeTableRow "Beschreibung" production.description
             , maybeTableRow "Kurzbeschreibung" production.abstract
             , maybeTableRow "Zusätzliche Informationen" production.additionalInfo
-            , maybeTableRow "Genre" (Maybe.map Data.Root.productionsGenreToString production.genre)
+            , maybeTableRow "Genre" (Maybe.map humanReadableGenre production.genre)
             , tr []
                 [ th [] [ text "Team" ]
                 , td []
@@ -293,6 +293,25 @@ productionTable production =
                 ]
             ]
         ]
+
+
+humanReadableGenre : ProductionsGenre -> String
+humanReadableGenre genre =
+    let
+        firstToUpper string =
+            case String.toList string of
+                [] ->
+                    ""
+
+                first :: rest ->
+                    Char.toUpper first
+                        :: rest
+                        |> String.fromList
+    in
+    Data.Root.productionsGenreToString genre
+        |> String.split "-"
+        |> List.map firstToUpper
+        |> String.join " "
 
 
 
@@ -499,7 +518,7 @@ viewCreator creator =
           , Just creator.creator.name
           ]
             |> List.filterMap identity
-            |> String.join ":"
+            |> String.join ": "
             |> text
         ]
 
@@ -522,7 +541,7 @@ viewPerformer performer =
           , Just performer.performer.name
           ]
             |> List.filterMap identity
-            |> String.join ":"
+            |> String.join ": "
             |> text
         ]
 
