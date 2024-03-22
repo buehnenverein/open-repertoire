@@ -276,8 +276,24 @@ productionNameMatches filter production =
 
 productionTable : Production -> Html Msg
 productionTable production =
-    table
-        [ class "table is-hoverable" ]
+    div [ class "tile is-ancestor" ]
+        [ div [ class "tile is-8 is-parent" ]
+            [ div [ class "tile is-child box" ]
+                [ productionInfo production ]
+            ]
+        , div [ class "tile is-vertical is-parent" ]
+            [ div [ class "tile is-child box" ]
+                [ viewCreators production.creator ]
+            , div [ class "tile is-child box" ]
+                [ viewProductionAccessibility production
+                ]
+            ]
+        ]
+
+
+productionInfo : Production -> Html Msg
+productionInfo production =
+    table [ class "table is-hoverable" ]
         [ tbody []
             [ tableRow "Titel" production.name
             , maybeTableRow "Untertitel" production.subtitle
@@ -285,12 +301,6 @@ productionTable production =
             , maybeTableRow "Kurzbeschreibung" production.abstract
             , maybeTableRow "Zusätzliche Informationen" production.additionalInfo
             , maybeTableRow "Genre" (Maybe.map humanReadableGenre production.genre)
-            , tr []
-                [ th [] [ text "Team" ]
-                , td []
-                    [ viewCreators production.creator
-                    ]
-                ]
             ]
         ]
 
@@ -312,6 +322,32 @@ humanReadableGenre genre =
         |> String.split "-"
         |> List.map firstToUpper
         |> String.join " "
+
+
+viewProductionAccessibility : Production -> Html Msg
+viewProductionAccessibility production =
+    div []
+        [ div [ class "title is-5" ] [ text "Barrierefreiheit" ]
+        , table [ class "table" ]
+            [ tbody []
+                [ maybeTableRow "Zugangsmodus" (Maybe.map viewAccessMode production.accessModeSufficient)
+                , maybeTableRow "Inhaltswarnungen" (Maybe.map viewAccessibilityHazards production.accessibilityHazard)
+                , maybeTableRow "Barrierefreiheitsbeschreibung" production.accessibilitySummary
+                ]
+            ]
+        ]
+
+
+viewAccessibilityHazards : List Data.Root.AccessibilityHazardItem -> String
+viewAccessibilityHazards hazards =
+    List.map Data.Root.accessibilityHazardItemToString hazards
+        |> String.join ", "
+
+
+viewAccessMode : List Data.Root.AccessModeSufficientItem -> String
+viewAccessMode items =
+    List.map Data.Root.accessModeSufficientItemToString items
+        |> String.join ", "
 
 
 
@@ -527,24 +563,26 @@ osmLink place =
 
 viewCreators : Maybe (List CreatorItem) -> Html Msg
 viewCreators creators =
-    case creators of
-        Nothing ->
-            text ""
+    div []
+        [ div [ class "title is-5" ] [ text "Team" ]
+        , table [ class "table" ]
+            [ tbody []
+                (case creators of
+                    Nothing ->
+                        [ em [] [ text "Die Daten enthalten keine Informationen zum Produktionsteam" ] ]
 
-        Just list ->
-            ul []
-                (List.map viewCreator list)
+                    Just list ->
+                        List.map viewCreator list
+                )
+            ]
+        ]
 
 
 viewCreator : CreatorItem -> Html Msg
 viewCreator creator =
-    li []
-        [ [ creator.roleName
-          , Just creator.creator.name
-          ]
-            |> List.filterMap identity
-            |> String.join ": "
-            |> text
+    tr []
+        [ td [] [ text (Maybe.withDefault "" creator.roleName) ]
+        , td [] [ text creator.creator.name ]
         ]
 
 
@@ -577,39 +615,32 @@ viewPerformer performer =
 
 viewOffers : Maybe (List Offer) -> Html Msg
 viewOffers offers =
-    case offers of
-        Nothing ->
-            table [ class "table is-fullwidth" ]
-                [ thead []
-                    [ tr []
-                        [ th [] [ text "Ticketinformationen" ]
+    div []
+        [ div [ class "title is-5" ] [ text "Ticketinformationen" ]
+        , case offers of
+            Nothing ->
+                table [ class "table is-fullwidth" ]
+                    [ tbody
+                        []
+                        [ tr []
+                            [ td [] [ em [] [ text "Die Daten enthalten keine Ticketinformationen für diese Veranstaltung" ] ]
+                            ]
                         ]
                     ]
-                , tbody
-                    []
-                    [ tr []
-                        [ td [] [ em [] [ text "Die Daten enthalten keine Ticketinformationen für diese Veranstaltung" ] ]
-                        ]
-                    ]
-                ]
 
-        Just list ->
-            table [ class "table is-fullwidth" ]
-                [ thead []
-                    [ tr []
-                        [ th [ colspan 3 ] [ text "Ticketinformationen" ]
-                        ]
+            Just list ->
+                table [ class "table is-fullwidth" ]
+                    [ tbody
+                        []
+                        (tr []
+                            [ th [] [ text "Name" ]
+                            , th [] [ text "Preis" ]
+                            , th [] [ text "Link" ]
+                            ]
+                            :: List.map viewOffer list
+                        )
                     ]
-                , tbody
-                    []
-                    (tr []
-                        [ th [] [ text "Name" ]
-                        , th [] [ text "Preis" ]
-                        , th [] [ text "Link" ]
-                        ]
-                        :: List.map viewOffer list
-                    )
-                ]
+        ]
 
 
 viewOffer : Offer -> Html Msg
