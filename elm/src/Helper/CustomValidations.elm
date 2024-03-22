@@ -1,6 +1,6 @@
 module Helper.CustomValidations exposing (checkAll)
 
-import Data.Root exposing (Address, AddressLocation, Creator, CreatorItem, Event, EventsEventStatus(..), LocationItem(..), Offer, Organization, PriceSpecification, Production, Root, VirtualLocation)
+import Data.Root exposing (Address, AddressLocation, Creator, CreatorItem, Event, EventsEventStatus(..), LocationItem(..), Offer, Organization, Performer, PerformerItem, PriceSpecification, Production, Root, VirtualLocation)
 
 
 type alias ValidationMessage =
@@ -167,6 +167,21 @@ previousStartDateIsSet path data =
             []
 
 
+rangeValid : Validator PriceSpecification
+rangeValid path data =
+    case data.maxPrice of
+        Nothing ->
+            []
+
+        Just maxPrice ->
+            if data.minPrice > maxPrice then
+                [ ValidationMessage (path ++ "/minPrice") "should be smaller than maxPrice"
+                ]
+
+            else
+                []
+
+
 
 -- MODEL VALIDATORS
 
@@ -178,6 +193,7 @@ event =
         , field "/endDate" .endDate optional
         , field "/location" .location (maybe (list location))
         , field "/offers" .offers (maybe (list offer))
+        , field "/performer" .performer (maybe (list performerItem))
         , field "/previousStartDate" .previousStartDate optional
         , field "/startDate" .startDate required
         , field "/url" .url optional
@@ -189,11 +205,27 @@ creatorItem : Validator CreatorItem
 creatorItem =
     object
         [ field "/creator" .creator creator
+        , field "/roleName" .roleName optional
         ]
 
 
 creator : Validator Creator
 creator =
+    object
+        [ field "/name" .name required
+        ]
+
+
+performerItem : Validator PerformerItem
+performerItem =
+    object
+        [ field "/performer" .performer performer
+        , field "/characterName" .characterName optional
+        ]
+
+
+performer : Validator Performer
+performer =
     object
         [ field "/name" .name required
         ]
@@ -212,6 +244,7 @@ priceSpecification : Validator PriceSpecification
 priceSpecification =
     object
         [ field "/priceCurrency" .priceCurrency required
+        , rangeValid
         ]
 
 
