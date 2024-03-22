@@ -121,7 +121,7 @@ type alias Address =
 
 
 type alias Creator =
-    { atType : CreatorAttype
+    { atType : CreatorPersonAttype
     , name : String
     }
 
@@ -573,7 +573,7 @@ addressDecoder =
 creatorPersonDecoder : Decoder Creator
 creatorPersonDecoder =
     Decode.succeed Creator
-        |> required "@type" creatorAttypeDecoder
+        |> required "@type" creatorPersonAttypeDecoder
         |> required "name" Decode.string
 
 
@@ -1126,7 +1126,7 @@ encodeAddress address =
 encodeCreatorPerson : Creator -> Value
 encodeCreatorPerson creator =
     []
-        |> Encode.required "@type" creator.atType encodeCreatorAttype
+        |> Encode.required "@type" creator.atType encodeCreatorPersonAttype
         |> Encode.required "name" creator.name Encode.string
         |> Encode.object
 
