@@ -24915,6 +24915,18 @@ var $author$project$Data$Root$Creator = F2(
 	function (atType, name) {
 		return {e: atType, l: name};
 	});
+var $author$project$Data$Root$CreatorPersonType = 0;
+var $author$project$Data$Root$parseCreatorPersonAttype = function (creatorAttype) {
+	if (creatorAttype === 'Person') {
+		return $elm$core$Result$Ok(0);
+	} else {
+		return $elm$core$Result$Err('Unknown creatorAttype type: ' + creatorAttype);
+	}
+};
+var $author$project$Data$Root$creatorPersonAttypeDecoder = A2(
+	$elm$json$Json$Decode$andThen,
+	A2($elm$core$Basics$composeR, $author$project$Data$Root$parseCreatorPersonAttype, $elm_community$json_extra$Json$Decode$Extra$fromResult),
+	$elm$json$Json$Decode$string);
 var $author$project$Data$Root$creatorPersonDecoder = A3(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 	'name',
@@ -24922,7 +24934,7 @@ var $author$project$Data$Root$creatorPersonDecoder = A3(
 	A3(
 		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 		'@type',
-		$author$project$Data$Root$creatorAttypeDecoder,
+		$author$project$Data$Root$creatorPersonAttypeDecoder,
 		$elm$json$Json$Decode$succeed($author$project$Data$Root$Creator)));
 var $author$project$Data$Root$creatorItemDecoder = A4(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
@@ -25876,7 +25888,7 @@ var $author$project$View$filterInput = function (filter) {
 					]),
 				_List_fromArray(
 					[
-						$elm$html$Html$text('Filter results by title:')
+						$elm$html$Html$text('Ergebnisse nach Titel filtern:')
 					])),
 				A2(
 				$elm$html$Html$div,
@@ -25893,7 +25905,7 @@ var $author$project$View$filterInput = function (filter) {
 								$elm$html$Html$Attributes$type_('text'),
 								$elm$html$Html$Events$onInput($author$project$View$NameFilterChanged),
 								$elm$html$Html$Attributes$value(filter),
-								$elm$html$Html$Attributes$placeholder('Title'),
+								$elm$html$Html$Attributes$placeholder('Titel'),
 								$elm$html$Html$Attributes$class('input')
 							]),
 						_List_Nil)
@@ -25923,55 +25935,7 @@ var $author$project$View$productionNameMatches = F2(
 			$elm$core$String$toLower(filter),
 			$elm$core$String$toLower(production.l));
 	});
-var $elm$core$Maybe$map = F2(
-	function (f, maybe) {
-		if (!maybe.$) {
-			var value = maybe.a;
-			return $elm$core$Maybe$Just(
-				f(value));
-		} else {
-			return $elm$core$Maybe$Nothing;
-		}
-	});
-var $elm$html$Html$td = _VirtualDom_node('td');
-var $elm$html$Html$th = _VirtualDom_node('th');
-var $elm$html$Html$tr = _VirtualDom_node('tr');
-var $elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (!maybe.$) {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
-	});
-var $author$project$View$maybeTableRow = F2(
-	function (name, value) {
-		return A2(
-			$elm$html$Html$tr,
-			_List_Nil,
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$th,
-					_List_Nil,
-					_List_fromArray(
-						[
-							$elm$html$Html$text(name)
-						])),
-					A2(
-					$elm$html$Html$td,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$class('preserve-newlines')
-						]),
-					_List_fromArray(
-						[
-							$elm$html$Html$text(
-							A2($elm$core$Maybe$withDefault, '', value))
-						]))
-				]));
-	});
+var $elm$core$String$fromList = _String_fromList;
 var $author$project$Data$Root$productionsGenreToString = function (productionsGenre) {
 	switch (productionsGenre) {
 		case 0:
@@ -26036,6 +26000,86 @@ var $author$project$Data$Root$productionsGenreToString = function (productionsGe
 			return 'zeitgenoessischer-tanz';
 	}
 };
+var $elm$core$String$foldr = _String_foldr;
+var $elm$core$String$toList = function (string) {
+	return A3($elm$core$String$foldr, $elm$core$List$cons, _List_Nil, string);
+};
+var $elm$core$Char$toUpper = _Char_toUpper;
+var $author$project$View$humanReadableGenre = function (genre) {
+	var firstToUpper = function (string) {
+		var _v0 = $elm$core$String$toList(string);
+		if (!_v0.b) {
+			return '';
+		} else {
+			var first = _v0.a;
+			var rest = _v0.b;
+			return $elm$core$String$fromList(
+				A2(
+					$elm$core$List$cons,
+					$elm$core$Char$toUpper(first),
+					rest));
+		}
+	};
+	return A2(
+		$elm$core$String$join,
+		' ',
+		A2(
+			$elm$core$List$map,
+			firstToUpper,
+			A2(
+				$elm$core$String$split,
+				'-',
+				$author$project$Data$Root$productionsGenreToString(genre))));
+};
+var $elm$core$Maybe$map = F2(
+	function (f, maybe) {
+		if (!maybe.$) {
+			var value = maybe.a;
+			return $elm$core$Maybe$Just(
+				f(value));
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	});
+var $elm$html$Html$td = _VirtualDom_node('td');
+var $elm$html$Html$th = _VirtualDom_node('th');
+var $elm$html$Html$tr = _VirtualDom_node('tr');
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (!maybe.$) {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
+var $author$project$View$maybeTableRow = F2(
+	function (name, value) {
+		return A2(
+			$elm$html$Html$tr,
+			_List_Nil,
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$th,
+					_List_Nil,
+					_List_fromArray(
+						[
+							$elm$html$Html$text(name)
+						])),
+					A2(
+					$elm$html$Html$td,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('preserve-newlines')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text(
+							A2($elm$core$Maybe$withDefault, '', value))
+						]))
+				]));
+	});
 var $elm$html$Html$table = _VirtualDom_node('table');
 var $author$project$View$tableRow = F2(
 	function (name, value) {
@@ -26064,40 +26108,7 @@ var $author$project$View$tableRow = F2(
 				]));
 	});
 var $elm$html$Html$tbody = _VirtualDom_node('tbody');
-var $elm$html$Html$ul = _VirtualDom_node('ul');
-var $elm$html$Html$li = _VirtualDom_node('li');
-var $author$project$View$viewCreator = function (creator) {
-	return A2(
-		$elm$html$Html$li,
-		_List_Nil,
-		_List_fromArray(
-			[
-				$elm$html$Html$text(
-				A2(
-					$elm$core$String$join,
-					':',
-					A2(
-						$elm$core$List$filterMap,
-						$elm$core$Basics$identity,
-						_List_fromArray(
-							[
-								creator.bz,
-								$elm$core$Maybe$Just(creator.V.l)
-							]))))
-			]));
-};
-var $author$project$View$viewCreators = function (creators) {
-	if (creators.$ === 1) {
-		return $elm$html$Html$text('');
-	} else {
-		var list = creators.a;
-		return A2(
-			$elm$html$Html$ul,
-			_List_Nil,
-			A2($elm$core$List$map, $author$project$View$viewCreator, list));
-	}
-};
-var $author$project$View$productionTable = function (production) {
+var $author$project$View$productionInfo = function (production) {
 	return A2(
 		$elm$html$Html$table,
 		_List_fromArray(
@@ -26111,37 +26122,281 @@ var $author$project$View$productionTable = function (production) {
 				_List_Nil,
 				_List_fromArray(
 					[
-						A2($author$project$View$tableRow, 'Title', production.l),
-						A2($author$project$View$maybeTableRow, 'Subtitle', production.bJ),
-						A2($author$project$View$maybeTableRow, 'Description', production.aM),
-						A2($author$project$View$maybeTableRow, 'Teaser', production.ax),
-						A2($author$project$View$maybeTableRow, 'Additional info', production.aC),
+						A2($author$project$View$tableRow, 'Titel', production.l),
+						A2($author$project$View$maybeTableRow, 'Untertitel', production.bJ),
+						A2($author$project$View$maybeTableRow, 'Beschreibung', production.aM),
+						A2($author$project$View$maybeTableRow, 'Kurzbeschreibung', production.ax),
+						A2($author$project$View$maybeTableRow, 'Zusätzliche Informationen', production.aC),
 						A2(
 						$author$project$View$maybeTableRow,
 						'Genre',
-						A2($elm$core$Maybe$map, $author$project$Data$Root$productionsGenreToString, production.aX)),
+						A2($elm$core$Maybe$map, $author$project$View$humanReadableGenre, production.aX))
+					]))
+			]));
+};
+var $elm$html$Html$em = _VirtualDom_node('em');
+var $author$project$View$viewCreator = function (creator) {
+	return A2(
+		$elm$html$Html$tr,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$td,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text(
+						A2($elm$core$Maybe$withDefault, '', creator.bz))
+					])),
+				A2(
+				$elm$html$Html$td,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text(creator.V.l)
+					]))
+			]));
+};
+var $author$project$View$viewCreators = function (creators) {
+	return A2(
+		$elm$html$Html$div,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('title is-5')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Team')
+					])),
+				A2(
+				$elm$html$Html$table,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('table')
+					]),
+				_List_fromArray(
+					[
 						A2(
-						$elm$html$Html$tr,
+						$elm$html$Html$tbody,
+						_List_Nil,
+						function () {
+							if (creators.$ === 1) {
+								return _List_fromArray(
+									[
+										A2(
+										$elm$html$Html$em,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Die Daten enthalten keine Informationen zum Produktionsteam')
+											]))
+									]);
+							} else {
+								var list = creators.a;
+								return A2($elm$core$List$map, $author$project$View$viewCreator, list);
+							}
+						}())
+					]))
+			]));
+};
+var $author$project$Data$Root$accessModeSufficientItemToString = function (accessModeSufficientItem) {
+	switch (accessModeSufficientItem) {
+		case 0:
+			return 'auditory';
+		case 1:
+			return 'tactile';
+		case 2:
+			return 'textual';
+		default:
+			return 'visual';
+	}
+};
+var $author$project$View$viewAccessMode = function (items) {
+	return A2(
+		$elm$core$String$join,
+		', ',
+		A2($elm$core$List$map, $author$project$Data$Root$accessModeSufficientItemToString, items));
+};
+var $author$project$Data$Root$accessibilityHazardItemToString = function (accessibilityHazardItem) {
+	switch (accessibilityHazardItem) {
+		case 0:
+			return 'none';
+		case 1:
+			return 'unknown';
+		case 2:
+			return 'flashingHazard';
+		case 3:
+			return 'motionSimulationHazard';
+		case 4:
+			return 'soundHazard';
+		case 5:
+			return 'noFlashingHazard';
+		case 6:
+			return 'noMotionSimulationHazard';
+		case 7:
+			return 'noSoundHazard';
+		case 8:
+			return 'unknownFlashingHazard';
+		case 9:
+			return 'unknownMotionSimulationHazard';
+		default:
+			return 'unknownSoundHazard';
+	}
+};
+var $author$project$View$viewAccessibilityHazards = function (hazards) {
+	return A2(
+		$elm$core$String$join,
+		', ',
+		A2($elm$core$List$map, $author$project$Data$Root$accessibilityHazardItemToString, hazards));
+};
+var $author$project$View$viewProductionAccessibility = function (production) {
+	return A2(
+		$elm$html$Html$div,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('title is-5')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Barrierefreiheit')
+					])),
+				A2(
+				$elm$html$Html$table,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('table')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$tbody,
 						_List_Nil,
 						_List_fromArray(
 							[
 								A2(
-								$elm$html$Html$th,
-								_List_Nil,
-								_List_fromArray(
-									[
-										$elm$html$Html$text('Participants')
-									])),
+								$author$project$View$maybeTableRow,
+								'Zugangsmodus',
+								A2($elm$core$Maybe$map, $author$project$View$viewAccessMode, production.ay)),
 								A2(
-								$elm$html$Html$td,
-								_List_Nil,
-								_List_fromArray(
-									[
-										$author$project$View$viewCreators(production.V)
-									]))
+								$author$project$View$maybeTableRow,
+								'Inhaltswarnungen',
+								A2($elm$core$Maybe$map, $author$project$View$viewAccessibilityHazards, production.az)),
+								A2($author$project$View$maybeTableRow, 'Barrierefreiheitsbeschreibung', production.aA)
 							]))
 					]))
 			]));
+};
+var $author$project$View$productionTable = function (production) {
+	return A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$class('tile is-ancestor')
+			]),
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('tile is-8 is-parent')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('tile is-child box')
+							]),
+						_List_fromArray(
+							[
+								$author$project$View$productionInfo(production)
+							]))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('tile is-vertical is-parent')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('tile is-child box')
+							]),
+						_List_fromArray(
+							[
+								$author$project$View$viewCreators(production.V)
+							])),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('tile is-child box')
+							]),
+						_List_fromArray(
+							[
+								$author$project$View$viewProductionAccessibility(production)
+							]))
+					]))
+			]));
+};
+var $elm$html$Html$hr = _VirtualDom_node('hr');
+var $elm$core$List$intersperse = F2(
+	function (sep, xs) {
+		if (!xs.b) {
+			return _List_Nil;
+		} else {
+			var hd = xs.a;
+			var tl = xs.b;
+			var step = F2(
+				function (x, rest) {
+					return A2(
+						$elm$core$List$cons,
+						sep,
+						A2($elm$core$List$cons, x, rest));
+				});
+			var spersed = A3($elm$core$List$foldr, step, _List_Nil, tl);
+			return A2($elm$core$List$cons, hd, spersed);
+		}
+	});
+var $author$project$View$eventStatusToString = function (eventStatus) {
+	if (eventStatus.$ === 1) {
+		return 'Findet statt';
+	} else {
+		switch (eventStatus.a) {
+			case 0:
+				var _v1 = eventStatus.a;
+				return 'Findet statt';
+			case 1:
+				var _v2 = eventStatus.a;
+				return 'Abgesagt';
+			case 2:
+				var _v3 = eventStatus.a;
+				return 'Findet online statt';
+			case 3:
+				var _v4 = eventStatus.a;
+				return 'Verschoben';
+			default:
+				var _v5 = eventStatus.a;
+				return 'Geändertes Datum';
+		}
+	}
 };
 var $ryannhg$date_format$DateFormat$DayOfMonthFixed = {$: 7};
 var $ryannhg$date_format$DateFormat$dayOfMonthFixed = $ryannhg$date_format$DateFormat$DayOfMonthFixed;
@@ -27647,7 +27902,7 @@ var $author$project$View$formatDate = F2(
 				timezone,
 				result);
 		} else {
-			return ($elm$core$String$trim(isoString) === '') ? '' : ('Invalid date (' + (isoString + ')'));
+			return ($elm$core$String$trim(isoString) === '') ? '' : ('Ungültige Datumsangabe (' + (isoString + ')'));
 		}
 	});
 var $author$project$View$formatDuration = function (duration) {
@@ -27678,7 +27933,7 @@ var $author$project$View$formatTime = F2(
 				timezone,
 				result);
 		} else {
-			return ($elm$core$String$trim(isoString) === '') ? '' : ('Invalid time (' + (isoString + ')'));
+			return ($elm$core$String$trim(isoString) === '') ? '' : ('Ungültige Zeitangabe (' + (isoString + ')'));
 		}
 	});
 var $elm$html$Html$a = _VirtualDom_node('a');
@@ -27707,103 +27962,239 @@ var $author$project$View$maybeLink = function (url) {
 		return $elm$html$Html$text('');
 	}
 };
-var $elm$html$Html$Attributes$colspan = function (n) {
-	return A2(
-		_VirtualDom_attribute,
-		'colspan',
-		$elm$core$String$fromInt(n));
-};
-var $elm$html$Html$em = _VirtualDom_node('em');
-var $author$project$View$locationRow = function (location) {
-	if (!location.$) {
-		var place = location.a;
+var $author$project$View$viewEventTable = F2(
+	function (zone, event) {
 		return A2(
-			$elm$html$Html$tr,
-			_List_Nil,
+			$elm$html$Html$table,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$class('table')
+				]),
 			_List_fromArray(
 				[
 					A2(
-					$elm$html$Html$td,
+					$elm$html$Html$tbody,
 					_List_Nil,
 					_List_fromArray(
 						[
-							$elm$html$Html$text(
-							A2($elm$core$Maybe$withDefault, '', place.l))
-						])),
+							A2(
+							$author$project$View$tableRow,
+							'Startdatum',
+							A2($author$project$View$formatDate, event.bG, zone)),
+							A2(
+							$author$project$View$tableRow,
+							'Startzeit',
+							A2($author$project$View$formatTime, event.bG, zone)),
+							A2(
+							$author$project$View$tableRow,
+							'Enddatum',
+							A2(
+								$author$project$View$formatDate,
+								A2($elm$core$Maybe$withDefault, '', event.aP),
+								zone)),
+							A2(
+							$author$project$View$tableRow,
+							'Endzeit',
+							A2(
+								$author$project$View$formatTime,
+								A2($elm$core$Maybe$withDefault, '', event.aP),
+								zone)),
+							A2(
+							$author$project$View$tableRow,
+							'Dauer',
+							A2(
+								$elm$core$Maybe$withDefault,
+								'',
+								A2($elm$core$Maybe$map, $author$project$View$formatDuration, event.aN))),
+							A2(
+							$author$project$View$tableRow,
+							'Status',
+							$author$project$View$eventStatusToString(event.aR)),
+							A2(
+							$author$project$View$tableRow,
+							'Vorheriges Startdatum',
+							A2(
+								$author$project$View$formatDate,
+								A2($elm$core$Maybe$withDefault, '', event.bl),
+								zone)),
+							A2(
+							$author$project$View$tableRow,
+							'Vorherige Startzeit',
+							A2(
+								$author$project$View$formatTime,
+								A2($elm$core$Maybe$withDefault, '', event.bl),
+								zone)),
+							A2(
+							$elm$html$Html$tr,
+							_List_Nil,
+							_List_fromArray(
+								[
+									A2(
+									$elm$html$Html$th,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$elm$html$Html$text('Link')
+										])),
+									A2(
+									$elm$html$Html$td,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$author$project$View$maybeLink(event.K)
+										]))
+								]))
+						]))
+				]));
+	});
+var $elm$core$String$fromFloat = _String_fromNumber;
+var $author$project$View$osmLink = function (place) {
+	var url = 'https://www.osm.org/?zoom=19&mlat=' + ($elm$core$String$fromFloat(place.a6) + ('&mlon=' + $elm$core$String$fromFloat(place.a8)));
+	return A2(
+		$elm$html$Html$a,
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$href(url),
+				$elm$html$Html$Attributes$target('_blank')
+			]),
+		_List_fromArray(
+			[
+				$elm$html$Html$text('Karte anzeigen')
+			]));
+};
+var $author$project$View$geoCoordinates = function (place) {
+	var _v0 = _Utils_Tuple2(place.a6, place.a8);
+	if ((!_v0.a.$) && (!_v0.b.$)) {
+		var lat = _v0.a.a;
+		var lon = _v0.b.a;
+		return $author$project$View$osmLink(
+			{a6: lat, a8: lon});
+	} else {
+		return $elm$html$Html$text('');
+	}
+};
+var $elm$core$Maybe$andThen = F2(
+	function (callback, maybeValue) {
+		if (!maybeValue.$) {
+			var value = maybeValue.a;
+			return callback(value);
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	});
+var $author$project$View$spaceForAssistant = function (wheelChairPlaces) {
+	var _v0 = A2(
+		$elm$core$Maybe$andThen,
+		function ($) {
+			return $.aY;
+		},
+		wheelChairPlaces);
+	if (!_v0.$) {
+		if (_v0.a) {
+			return 'Ja';
+		} else {
+			return 'Nein';
+		}
+	} else {
+		return '';
+	}
+};
+var $author$project$View$wheelChairCapacity = function (wheelChairPlaces) {
+	var _v0 = A2(
+		$elm$core$Maybe$map,
+		function ($) {
+			return $.bR;
+		},
+		wheelChairPlaces);
+	if (!_v0.$) {
+		var capacity = _v0.a;
+		return A2($elm$core$Maybe$map, $elm$core$String$fromInt, capacity);
+	} else {
+		return $elm$core$Maybe$Just('');
+	}
+};
+var $author$project$View$wheelChairCount = function (wheelChairPlaces) {
+	return A2(
+		$elm$core$Maybe$map,
+		$elm$core$String$fromInt,
+		A2(
+			$elm$core$Maybe$map,
+			function ($) {
+				return $.aJ;
+			},
+			wheelChairPlaces));
+};
+var $author$project$View$locationTable = function (location) {
+	if (!location.$) {
+		var place = location.a;
+		return A2(
+			$elm$html$Html$table,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$class('table')
+				]),
+			_List_fromArray(
+				[
 					A2(
-					$elm$html$Html$td,
+					$elm$html$Html$tbody,
 					_List_Nil,
 					_List_fromArray(
 						[
-							$elm$html$Html$text('')
-						])),
-					A2(
-					$elm$html$Html$td,
-					_List_Nil,
-					_List_fromArray(
-						[
-							$elm$html$Html$text(
-							A2($elm$core$Maybe$withDefault, '', place.U.bH))
-						])),
-					A2(
-					$elm$html$Html$td,
-					_List_Nil,
-					_List_fromArray(
-						[
-							$elm$html$Html$text(
-							A2($elm$core$Maybe$withDefault, '', place.U.bk))
-						])),
-					A2(
-					$elm$html$Html$td,
-					_List_Nil,
-					_List_fromArray(
-						[
-							$elm$html$Html$text(
-							A2($elm$core$Maybe$withDefault, '', place.U.aD))
+							A2($author$project$View$maybeTableRow, 'Name', place.l),
+							A2($author$project$View$maybeTableRow, 'Addresse', place.U.bH),
+							A2($author$project$View$maybeTableRow, 'Postleitzahl', place.U.bk),
+							A2($author$project$View$maybeTableRow, 'Stadt', place.U.aD),
+							A2(
+							$elm$html$Html$tr,
+							_List_Nil,
+							_List_fromArray(
+								[
+									A2(
+									$elm$html$Html$th,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$elm$html$Html$text('Koordinaten')
+										])),
+									A2(
+									$elm$html$Html$td,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$author$project$View$geoCoordinates(place)
+										]))
+								])),
+							A2(
+							$author$project$View$maybeTableRow,
+							'Rollstuhlplätze',
+							$author$project$View$wheelChairCount(place.bQ)),
+							A2(
+							$author$project$View$tableRow,
+							'Platz für Assistent:in?',
+							$author$project$View$spaceForAssistant(place.bQ)),
+							A2(
+							$author$project$View$maybeTableRow,
+							'Rollstuhlkapazität',
+							$author$project$View$wheelChairCapacity(place.bQ))
 						]))
 				]));
 	} else {
 		var info = location.a;
 		return A2(
-			$elm$html$Html$tr,
-			_List_Nil,
+			$elm$html$Html$table,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$class('table')
+				]),
 			_List_fromArray(
 				[
 					A2(
-					$elm$html$Html$td,
+					$elm$html$Html$tbody,
 					_List_Nil,
 					_List_fromArray(
 						[
-							$elm$html$Html$text(
-							A2($elm$core$Maybe$withDefault, '', info.l))
-						])),
-					A2(
-					$elm$html$Html$td,
-					_List_Nil,
-					_List_fromArray(
-						[
-							$author$project$View$maybeLink(info.K)
-						])),
-					A2(
-					$elm$html$Html$td,
-					_List_Nil,
-					_List_fromArray(
-						[
-							$elm$html$Html$text('')
-						])),
-					A2(
-					$elm$html$Html$td,
-					_List_Nil,
-					_List_fromArray(
-						[
-							$elm$html$Html$text('')
-						])),
-					A2(
-					$elm$html$Html$td,
-					_List_Nil,
-					_List_fromArray(
-						[
-							$elm$html$Html$text('')
+							A2($author$project$View$maybeTableRow, 'Name', info.l),
+							A2($author$project$View$maybeTableRow, 'Link', info.K)
 						]))
 				]));
 	}
@@ -27867,8 +28258,8 @@ var $author$project$View$locationTag = function (locations) {
 				$elm$html$Html$span,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$class('tag is-info ml-2 has-tooltip-arrow has-tooltip-multiline'),
-						A2($elm$html$Html$Attributes$attribute, 'data-tooltip', 'This is a hybrid event that takes place both online and offline')
+						$elm$html$Html$Attributes$class('tag is-info is-light ml-2 has-tooltip-arrow has-tooltip-multiline'),
+						A2($elm$html$Html$Attributes$attribute, 'data-tooltip', 'Es handelt sich um eine hybride Veranstaltung, die sowohl online als auch offline stattfindet')
 					]),
 				_List_fromArray(
 					[
@@ -27879,8 +28270,8 @@ var $author$project$View$locationTag = function (locations) {
 				$elm$html$Html$span,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$class('tag is-info ml-2 has-tooltip-arrow has-tooltip-multiline'),
-						A2($elm$html$Html$Attributes$attribute, 'data-tooltip', 'This is an online event')
+						$elm$html$Html$Attributes$class('tag is-info is-light ml-2 has-tooltip-arrow has-tooltip-multiline'),
+						A2($elm$html$Html$Attributes$attribute, 'data-tooltip', 'Es handelt sich um eine Veranstaltung, die online stattfindet')
 					]),
 				_List_fromArray(
 					[
@@ -27891,7 +28282,6 @@ var $author$project$View$locationTag = function (locations) {
 		return $elm$html$Html$text('');
 	}
 };
-var $elm$html$Html$thead = _VirtualDom_node('thead');
 var $author$project$View$viewLocations = function (locations) {
 	if (locations.$ === 1) {
 		return A2(
@@ -27899,7 +28289,7 @@ var $author$project$View$viewLocations = function (locations) {
 			_List_Nil,
 			_List_fromArray(
 				[
-					$elm$html$Html$text('The data does not contain a location for this event')
+					$elm$html$Html$text('In den Daten ist kein Ort für diese Veranstaltung angegeben.')
 				]));
 	} else {
 		if (!locations.a.b) {
@@ -27908,87 +28298,34 @@ var $author$project$View$viewLocations = function (locations) {
 				_List_Nil,
 				_List_fromArray(
 					[
-						$elm$html$Html$text('The data does not contain a location for this event')
+						$elm$html$Html$text('In den Daten ist kein Ort für diese Veranstaltung angegeben.')
 					]));
 		} else {
 			var list = locations.a;
 			return A2(
-				$elm$html$Html$table,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$class('table')
-					]),
+				$elm$html$Html$div,
+				_List_Nil,
 				_List_fromArray(
 					[
 						A2(
-						$elm$html$Html$thead,
-						_List_Nil,
+						$elm$html$Html$div,
 						_List_fromArray(
 							[
-								A2(
-								$elm$html$Html$th,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$colspan(5)
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('Locations'),
-										$author$project$View$locationTag(list)
-									]))
+								$elm$html$Html$Attributes$class('title is-5')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Aufführungsort'),
+								$author$project$View$locationTag(list)
 							])),
 						A2(
-						$elm$html$Html$tbody,
+						$elm$html$Html$div,
 						_List_Nil,
-						A2(
-							$elm$core$List$cons,
-							A2(
-								$elm$html$Html$tr,
-								_List_Nil,
-								_List_fromArray(
-									[
-										A2(
-										$elm$html$Html$th,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('Name')
-											])),
-										A2(
-										$elm$html$Html$th,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('Link')
-											])),
-										A2(
-										$elm$html$Html$th,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('Address')
-											])),
-										A2(
-										$elm$html$Html$th,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('Postal code')
-											])),
-										A2(
-										$elm$html$Html$th,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('City')
-											]))
-									])),
-							A2($elm$core$List$map, $author$project$View$locationRow, list)))
+						A2($elm$core$List$map, $author$project$View$locationTable, list))
 					]));
 		}
 	}
 };
-var $elm$core$String$fromFloat = _String_fromNumber;
 var $author$project$View$viewOffer = function (offer) {
 	var formattedPrice = A2(
 		$elm$core$String$join,
@@ -28036,143 +28373,187 @@ var $author$project$View$viewOffer = function (offer) {
 			]));
 };
 var $author$project$View$viewOffers = function (offers) {
-	if (offers.$ === 1) {
-		return A2(
-			$elm$html$Html$table,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$class('table')
-				]),
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$thead,
-					_List_Nil,
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$tr,
-							_List_Nil,
-							_List_fromArray(
-								[
+	return A2(
+		$elm$html$Html$div,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('title is-5')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Ticketinformationen')
+					])),
+				function () {
+				if (offers.$ === 1) {
+					return A2(
+						$elm$html$Html$table,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('table is-fullwidth')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$tbody,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$tr,
+										_List_Nil,
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$td,
+												_List_Nil,
+												_List_fromArray(
+													[
+														A2(
+														$elm$html$Html$em,
+														_List_Nil,
+														_List_fromArray(
+															[
+																$elm$html$Html$text('Die Daten enthalten keine Ticketinformationen für diese Veranstaltung')
+															]))
+													]))
+											]))
+									]))
+							]));
+				} else {
+					var list = offers.a;
+					return A2(
+						$elm$html$Html$table,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('table is-fullwidth')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$tbody,
+								_List_Nil,
+								A2(
+									$elm$core$List$cons,
 									A2(
-									$elm$html$Html$th,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text('Ticketing')
-										]))
-								]))
-						])),
-					A2(
-					$elm$html$Html$tbody,
-					_List_Nil,
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$tr,
-							_List_Nil,
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$td,
-									_List_Nil,
-									_List_fromArray(
-										[
-											A2(
-											$elm$html$Html$em,
-											_List_Nil,
-											_List_fromArray(
-												[
-													$elm$html$Html$text('The data does not contain any ticketing information for this event')
-												]))
-										]))
-								]))
-						]))
-				]));
-	} else {
-		var list = offers.a;
-		return A2(
-			$elm$html$Html$table,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$class('table')
-				]),
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$thead,
-					_List_Nil,
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$tr,
-							_List_Nil,
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$th,
-									_List_fromArray(
-										[
-											$elm$html$Html$Attributes$colspan(3)
-										]),
-									_List_fromArray(
-										[
-											$elm$html$Html$text('Ticketing')
-										]))
-								]))
-						])),
-					A2(
-					$elm$html$Html$tbody,
-					_List_Nil,
-					A2(
-						$elm$core$List$cons,
+										$elm$html$Html$tr,
+										_List_Nil,
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$th,
+												_List_Nil,
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Name')
+													])),
+												A2(
+												$elm$html$Html$th,
+												_List_Nil,
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Preis')
+													])),
+												A2(
+												$elm$html$Html$th,
+												_List_Nil,
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Link')
+													]))
+											])),
+									A2($elm$core$List$map, $author$project$View$viewOffer, list)))
+							]));
+				}
+			}()
+			]));
+};
+var $author$project$View$viewPerformer = function (performer) {
+	return A2(
+		$elm$html$Html$tr,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$td,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text(
+						A2($elm$core$Maybe$withDefault, '', performer.aH))
+					])),
+				A2(
+				$elm$html$Html$td,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text(performer.X.l)
+					]))
+			]));
+};
+var $author$project$View$viewPerformers = function (performers) {
+	return A2(
+		$elm$html$Html$div,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('title is-5')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Besetzung')
+					])),
+				A2(
+				$elm$html$Html$table,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('table')
+					]),
+				_List_fromArray(
+					[
 						A2(
-							$elm$html$Html$tr,
-							_List_Nil,
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$th,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text('Name')
-										])),
-									A2(
-									$elm$html$Html$th,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text('Price')
-										])),
-									A2(
-									$elm$html$Html$th,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text('Link')
-										]))
-								])),
-						A2($elm$core$List$map, $author$project$View$viewOffer, list)))
-				]));
-	}
+						$elm$html$Html$tbody,
+						_List_Nil,
+						function () {
+							if (performers.$ === 1) {
+								return _List_fromArray(
+									[
+										A2(
+										$elm$html$Html$em,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Die Daten enthalten keine Informationen zur Besetzung')
+											]))
+									]);
+							} else {
+								var list = performers.a;
+								return A2($elm$core$List$map, $author$project$View$viewPerformer, list);
+							}
+						}())
+					]))
+			]));
 };
 var $author$project$View$viewEvent = F2(
 	function (zone, event) {
 		return A2(
 			$elm$html$Html$div,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$class('box')
-				]),
+			_List_Nil,
 			_List_fromArray(
 				[
 					A2(
 					$elm$html$Html$div,
 					_List_fromArray(
 						[
-							$elm$html$Html$Attributes$class('columns')
+							$elm$html$Html$Attributes$class('tile is-ancestor')
 						]),
 					_List_fromArray(
 						[
@@ -28180,95 +28561,78 @@ var $author$project$View$viewEvent = F2(
 							$elm$html$Html$div,
 							_List_fromArray(
 								[
-									$elm$html$Html$Attributes$class('column')
+									$elm$html$Html$Attributes$class('tile is-vertical is-parent')
 								]),
 							_List_fromArray(
 								[
 									A2(
-									$elm$html$Html$table,
+									$elm$html$Html$div,
 									_List_fromArray(
 										[
-											$elm$html$Html$Attributes$class('table')
+											$elm$html$Html$Attributes$class('tile is-child box')
 										]),
 									_List_fromArray(
 										[
-											A2(
-											$elm$html$Html$tbody,
-											_List_Nil,
-											_List_fromArray(
-												[
-													A2(
-													$author$project$View$tableRow,
-													'Start date',
-													A2($author$project$View$formatDate, event.bG, zone)),
-													A2(
-													$author$project$View$tableRow,
-													'Start time',
-													A2($author$project$View$formatTime, event.bG, zone)),
-													A2(
-													$author$project$View$tableRow,
-													'End date',
-													A2(
-														$author$project$View$formatDate,
-														A2($elm$core$Maybe$withDefault, '', event.aP),
-														zone)),
-													A2(
-													$author$project$View$tableRow,
-													'End time',
-													A2(
-														$author$project$View$formatTime,
-														A2($elm$core$Maybe$withDefault, '', event.aP),
-														zone)),
-													A2(
-													$author$project$View$tableRow,
-													'Duration',
-													A2(
-														$elm$core$Maybe$withDefault,
-														'',
-														A2($elm$core$Maybe$map, $author$project$View$formatDuration, event.aN))),
-													A2(
-													$elm$html$Html$tr,
-													_List_Nil,
-													_List_fromArray(
-														[
-															A2(
-															$elm$html$Html$th,
-															_List_Nil,
-															_List_fromArray(
-																[
-																	$elm$html$Html$text('Link')
-																])),
-															A2(
-															$elm$html$Html$td,
-															_List_Nil,
-															_List_fromArray(
-																[
-																	$author$project$View$maybeLink(event.K)
-																]))
-														]))
-												]))
+											A2($author$project$View$viewEventTable, zone, event)
+										])),
+									A2(
+									$elm$html$Html$div,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$class('tile is-child box')
+										]),
+									_List_fromArray(
+										[
+											$author$project$View$viewPerformers(event.X)
 										]))
 								])),
 							A2(
 							$elm$html$Html$div,
 							_List_fromArray(
 								[
-									$elm$html$Html$Attributes$class('column')
+									$elm$html$Html$Attributes$class('tile is-vertical is-parent')
 								]),
 							_List_fromArray(
 								[
-									$author$project$View$viewLocations(event.a7)
+									A2(
+									$elm$html$Html$div,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$class('tile is-child box')
+										]),
+									_List_fromArray(
+										[
+											$author$project$View$viewLocations(event.a7)
+										])),
+									A2(
+									$elm$html$Html$div,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$class('tile is-child box')
+										]),
+									_List_fromArray(
+										[
+											$author$project$View$viewOffers(event.bf)
+										]))
 								]))
-						])),
-					$author$project$View$viewOffers(event.bf)
+						]))
 				]));
 	});
 var $author$project$View$viewEvents = F2(
 	function (events, zone) {
 		return A2(
-			$elm$core$List$map,
-			$author$project$View$viewEvent(zone),
-			events);
+			$elm$core$List$intersperse,
+			A2(
+				$elm$html$Html$hr,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('has-background-grey-light mb-6 mt-6')
+					]),
+				_List_Nil),
+			A2(
+				$elm$core$List$map,
+				$author$project$View$viewEvent(zone),
+				events));
 	});
 var $author$project$View$viewData = F2(
 	function (data, zone) {
@@ -28315,7 +28679,7 @@ var $author$project$View$viewData = F2(
 								!productionOpen(index))),
 							A4(
 							$author$project$View$card,
-							$elm$html$Html$text('Events'),
+							$elm$html$Html$text('Veranstaltungen'),
 							A2(
 								$elm$html$Html$div,
 								_List_Nil,
@@ -28374,6 +28738,7 @@ var $author$project$View$looksLikeJson = function (string) {
 var $author$project$View$looksLikeUrl = function (string) {
 	return (A2($elm$core$String$startsWith, 'http', string) || (A2($elm$core$String$startsWith, 'www', string) || (!$author$project$View$looksLikeJson(string)))) && (!$elm$core$String$isEmpty(string));
 };
+var $elm$html$Html$textarea = _VirtualDom_node('textarea');
 var $author$project$View$viewInput = F2(
 	function (inputString, buttonEnabled) {
 		var invalidUrl = $author$project$View$looksLikeUrl(inputString) && (!$author$project$View$isUrl(inputString));
@@ -28381,10 +28746,10 @@ var $author$project$View$viewInput = F2(
 		var invalid = invalidUrl || invalidJson;
 		var controlAttrs = invalidUrl ? _List_fromArray(
 			[
-				A2($elm$html$Html$Attributes$attribute, 'data-tooltip', 'Not a valid link')
+				A2($elm$html$Html$Attributes$attribute, 'data-tooltip', 'Invalider Link')
 			]) : (invalidJson ? _List_fromArray(
 			[
-				A2($elm$html$Html$Attributes$attribute, 'data-tooltip', 'Not valid JSON')
+				A2($elm$html$Html$Attributes$attribute, 'data-tooltip', 'Invalides Datenformat')
 			]) : _List_Nil);
 		return $author$project$View$section(
 			_List_fromArray(
@@ -28405,7 +28770,7 @@ var $author$project$View$viewInput = F2(
 								]),
 							_List_fromArray(
 								[
-									$elm$html$Html$text('Enter the URL of your endpoint OR copy & paste your data')
+									$elm$html$Html$text('Geben Sie die URL Ihres Endpunkts ein ODER kopieren & fügen Sie Ihre Daten ein')
 								])),
 							A2(
 							$elm$html$Html$div,
@@ -28416,10 +28781,9 @@ var $author$project$View$viewInput = F2(
 							_List_fromArray(
 								[
 									A2(
-									$elm$html$Html$input,
+									$elm$html$Html$textarea,
 									_List_fromArray(
 										[
-											$elm$html$Html$Attributes$type_('text'),
 											$elm$html$Html$Events$onInput($author$project$View$TextChange),
 											$elm$html$Html$Attributes$value(inputString),
 											$elm$html$Html$Attributes$class('input'),
@@ -28473,7 +28837,7 @@ var $author$project$View$viewInput = F2(
 								]),
 							_List_fromArray(
 								[
-									$elm$html$Html$text('View data')
+									$elm$html$Html$text('Daten anzeigen')
 								]))
 						]))
 				]));
@@ -28490,22 +28854,24 @@ var $author$project$View$viewIntroduction = $author$project$View$section(
 				]),
 			_List_fromArray(
 				[
-					$elm$html$Html$text('Use Case 3 - Data Viewer')
+					$elm$html$Html$text('Anwendungsfall 3 - Datenbetrachter')
 				])),
 			A2(
 			$elm$html$Html$p,
 			_List_Nil,
 			_List_fromArray(
 				[
-					$elm$html$Html$text('Use this tool to view the data returned by your repertoire endpoint.')
+					$elm$html$Html$text('Verwenden Sie dieses Tool, um die Daten anzuzeigen, die von Ihrem Repertoire-Endpunkt zurückgegeben werden.')
 				]))
 		]));
+var $elm$html$Html$li = _VirtualDom_node('li');
+var $elm$html$Html$ul = _VirtualDom_node('ul');
 var $author$project$View$viewJsonError = A2(
 	$elm$html$Html$div,
 	_List_Nil,
 	_List_fromArray(
 		[
-			$elm$html$Html$text('Unfortunately, it looks like your data is not valid.'),
+			$elm$html$Html$text('Leider scheinen Ihre Daten ungültig zu sein.'),
 			A2(
 			$elm$html$Html$h1,
 			_List_fromArray(
@@ -28514,7 +28880,7 @@ var $author$project$View$viewJsonError = A2(
 				]),
 			_List_fromArray(
 				[
-					$elm$html$Html$text('Here is what you can do:')
+					$elm$html$Html$text('Nächste Schritte:')
 				])),
 			A2(
 			$elm$html$Html$ul,
@@ -28526,21 +28892,21 @@ var $author$project$View$viewJsonError = A2(
 					_List_Nil,
 					_List_fromArray(
 						[
-							$elm$html$Html$text('This error likely means that something needs to be changed in your endpoint.')
+							$elm$html$Html$text('Wahrscheinlich muss ihre Schnittstelle angepasst werden, um dem vorgegebenen Datenformat zu entsprechen.')
 						])),
 					A2(
 					$elm$html$Html$li,
 					_List_Nil,
 					_List_fromArray(
 						[
-							$elm$html$Html$text('Please contact the maintainer of your endpoint and ask them to make sure that the endpoint returns valid data.')
+							$elm$html$Html$text('Bitte kontaktieren Sie den Betreuer Ihrer Schnittstelle und bitten Sie ihn sicherzustellen, dass der Endpunkt gültige Daten zurückgibt.')
 						])),
 					A2(
 					$elm$html$Html$li,
 					_List_Nil,
 					_List_fromArray(
 						[
-							$elm$html$Html$text('They can use the '),
+							$elm$html$Html$text('Das '),
 							A2(
 							$elm$html$Html$a,
 							_List_fromArray(
@@ -28549,9 +28915,9 @@ var $author$project$View$viewJsonError = A2(
 								]),
 							_List_fromArray(
 								[
-									$elm$html$Html$text('Validator Tool')
+									$elm$html$Html$text('Validierungs-Tool')
 								])),
-							$elm$html$Html$text(' to make sure the data is valid.')
+							$elm$html$Html$text(' kann benutzt werden, um sicherzustellen, dass die Daten gültig sind.')
 						]))
 				]))
 		]));
@@ -28562,7 +28928,7 @@ var $author$project$View$viewNetworkError = function (url) {
 		_List_Nil,
 		_List_fromArray(
 			[
-				$elm$html$Html$text('I encountered an error while trying to fetch data from this link.'),
+				$elm$html$Html$text('Beim Versuch, Daten von diesem Link abzurufen, ist ein Fehler aufgetreten.'),
 				A2(
 				$elm$html$Html$h1,
 				_List_fromArray(
@@ -28571,7 +28937,7 @@ var $author$project$View$viewNetworkError = function (url) {
 					]),
 				_List_fromArray(
 					[
-						$elm$html$Html$text('Here is what you can do:')
+						$elm$html$Html$text('Nächste Schritte:')
 					])),
 				A2(
 				$elm$html$Html$ol,
@@ -28583,7 +28949,7 @@ var $author$project$View$viewNetworkError = function (url) {
 						_List_Nil,
 						_List_fromArray(
 							[
-								$elm$html$Html$text('Open the link in your browser: '),
+								$elm$html$Html$text('Öffnen Sie den Link in Ihrem Browser:'),
 								A2(
 								$elm$html$Html$a,
 								_List_fromArray(
@@ -28601,14 +28967,14 @@ var $author$project$View$viewNetworkError = function (url) {
 						_List_Nil,
 						_List_fromArray(
 							[
-								$elm$html$Html$text('Copy the data that is displayed')
+								$elm$html$Html$text('Kopieren Sie die angezeigten Daten')
 							])),
 						A2(
 						$elm$html$Html$li,
 						_List_Nil,
 						_List_fromArray(
 							[
-								$elm$html$Html$text('Paste the data into the input field above')
+								$elm$html$Html$text('Fügen Sie die kopierten Daten in das Textfeld auf dieser Seite ein und versuchen Sie es erneut')
 							]))
 					]))
 			]));
@@ -28630,15 +28996,15 @@ var $author$project$View$viewRequestError = F2(
 							switch (error.$) {
 								case 0:
 									var invalidUrl = error.a;
-									return $elm$html$Html$text('Unfortunately, it looks like ' + (invalidUrl + ' is not a valid URL.'));
+									return $elm$html$Html$text('Ich konnte ' + (invalidUrl + 'nicht finden. Bitte stellen Sie sicher, dass der Link korrekt ist.'));
 								case 1:
-									return $elm$html$Html$text('Unfortunately, the request to your endpoint timed out.');
+									return $elm$html$Html$text('Der Server scheint zur Zeit nicht erreichbar zu sein. Bitte versuchen Sie es in ein paar Minuten noch einmal.');
 								case 2:
 									return $author$project$View$viewNetworkError(url);
 								case 3:
 									var code = error.a;
 									return $elm$html$Html$text(
-										'Unfortunately, your endpoint returned an unsuccessful status code (' + ($elm$core$String$fromInt(code) + '), so I could not check whether your JSON is valid or not. Please check your browser\'s console logs for more information.'));
+										'Der Server konnte meine Anfrage nicht verarbeiten (Status code: ' + ($elm$core$String$fromInt(code) + '). Leider kann ich deswegen keine Daten anzeigen. Bitte stellen Sie sicher, dass der Link korrekt ist.'));
 								default:
 									return $author$project$View$viewJsonError;
 							}

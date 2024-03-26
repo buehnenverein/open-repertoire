@@ -6487,7 +6487,14 @@ var $author$project$Helper$CustomValidations$creatorItem = $author$project$Helpe
 			function ($) {
 				return $.R;
 			},
-			$author$project$Helper$CustomValidations$creator)
+			$author$project$Helper$CustomValidations$creator),
+			A3(
+			$author$project$Helper$CustomValidations$field,
+			'/roleName',
+			function ($) {
+				return $.bx;
+			},
+			$author$project$Helper$CustomValidations$optional)
 		]));
 var $elm$core$Basics$ge = _Utils_ge;
 var $author$project$Helper$CustomValidations$duration = F2(
@@ -6576,6 +6583,19 @@ var $author$project$Helper$CustomValidations$location = F2(
 			return A2($author$project$Helper$CustomValidations$virtualLocation, path, virtual);
 		}
 	});
+var $author$project$Helper$CustomValidations$rangeValid = F2(
+	function (path, data) {
+		var _v0 = data.a8;
+		if (_v0.$ === 1) {
+			return _List_Nil;
+		} else {
+			var maxPrice = _v0.a;
+			return (_Utils_cmp(data.a9, maxPrice) > 0) ? _List_fromArray(
+				[
+					A2($author$project$Helper$CustomValidations$ValidationMessage, path + '/minPrice', 'should be smaller than maxPrice')
+				]) : _List_Nil;
+		}
+	});
 var $author$project$Helper$CustomValidations$priceSpecification = $author$project$Helper$CustomValidations$object(
 	_List_fromArray(
 		[
@@ -6585,7 +6605,8 @@ var $author$project$Helper$CustomValidations$priceSpecification = $author$projec
 			function ($) {
 				return $.bk;
 			},
-			$author$project$Helper$CustomValidations$required)
+			$author$project$Helper$CustomValidations$required),
+			$author$project$Helper$CustomValidations$rangeValid
 		]));
 var $author$project$Helper$CustomValidations$offer = $author$project$Helper$CustomValidations$object(
 	_List_fromArray(
@@ -6609,6 +6630,35 @@ var $author$project$Helper$CustomValidations$offer = $author$project$Helper$Cust
 			'/url',
 			function ($) {
 				return $.H;
+			},
+			$author$project$Helper$CustomValidations$optional)
+		]));
+var $author$project$Helper$CustomValidations$performer = $author$project$Helper$CustomValidations$object(
+	_List_fromArray(
+		[
+			A3(
+			$author$project$Helper$CustomValidations$field,
+			'/name',
+			function ($) {
+				return $.j;
+			},
+			$author$project$Helper$CustomValidations$required)
+		]));
+var $author$project$Helper$CustomValidations$performerItem = $author$project$Helper$CustomValidations$object(
+	_List_fromArray(
+		[
+			A3(
+			$author$project$Helper$CustomValidations$field,
+			'/performer',
+			function ($) {
+				return $.S;
+			},
+			$author$project$Helper$CustomValidations$performer),
+			A3(
+			$author$project$Helper$CustomValidations$field,
+			'/characterName',
+			function ($) {
+				return $.aD;
 			},
 			$author$project$Helper$CustomValidations$optional)
 		]));
@@ -6689,6 +6739,14 @@ var $author$project$Helper$CustomValidations$event = $author$project$Helper$Cust
 			},
 			$author$project$Helper$CustomValidations$maybe(
 				$author$project$Helper$CustomValidations$list($author$project$Helper$CustomValidations$offer))),
+			A3(
+			$author$project$Helper$CustomValidations$field,
+			'/performer',
+			function ($) {
+				return $.S;
+			},
+			$author$project$Helper$CustomValidations$maybe(
+				$author$project$Helper$CustomValidations$list($author$project$Helper$CustomValidations$performerItem))),
 			A3(
 			$author$project$Helper$CustomValidations$field,
 			'/previousStartDate',
@@ -7089,6 +7147,18 @@ var $author$project$Data$Root$Creator = F2(
 	function (atType, name) {
 		return {e: atType, j: name};
 	});
+var $author$project$Data$Root$CreatorPersonType = 0;
+var $author$project$Data$Root$parseCreatorPersonAttype = function (creatorAttype) {
+	if (creatorAttype === 'Person') {
+		return $elm$core$Result$Ok(0);
+	} else {
+		return $elm$core$Result$Err('Unknown creatorAttype type: ' + creatorAttype);
+	}
+};
+var $author$project$Data$Root$creatorPersonAttypeDecoder = A2(
+	$elm$json$Json$Decode$andThen,
+	A2($elm$core$Basics$composeR, $author$project$Data$Root$parseCreatorPersonAttype, $elm_community$json_extra$Json$Decode$Extra$fromResult),
+	$elm$json$Json$Decode$string);
 var $author$project$Data$Root$creatorPersonDecoder = A3(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 	'name',
@@ -7096,7 +7166,7 @@ var $author$project$Data$Root$creatorPersonDecoder = A3(
 	A3(
 		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 		'@type',
-		$author$project$Data$Root$creatorAttypeDecoder,
+		$author$project$Data$Root$creatorPersonAttypeDecoder,
 		$elm$json$Json$Decode$succeed($author$project$Data$Root$Creator)));
 var $author$project$Data$Root$creatorItemDecoder = A4(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
