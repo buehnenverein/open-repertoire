@@ -227,10 +227,10 @@ components:
           description: Link to further information about the event
           format: uri
           example: "https://staatstheater-augsburg.de/hedwig_and_the_angry_inch"
-        # inLanguage:
-        #   type: string
-        #   description: Primary language of the event
-        #   format: can/should we make this an enum of language codes?
+        inLanguage:
+          type: string
+          description: Primary language of the event. Use the BCP 47 Language Tags.
+          example: de
         
         location:
           description: The location of this event. An event can take place at one or more physical locations,

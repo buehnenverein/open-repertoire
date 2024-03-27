@@ -1,6 +1,7 @@
 module Helper.CustomValidations exposing (checkAll)
 
 import Data.Root exposing (Address, AddressLocation, Creator, CreatorItem, Event, EventsEventStatus(..), LocationItem(..), Offer, Organization, Performer, PerformerItem, PriceSpecification, Production, Root, VirtualLocation)
+import LanguageTag.Parser
 
 
 type alias ValidationMessage =
@@ -167,6 +168,21 @@ previousStartDateIsSet path data =
             []
 
 
+languageTagValid : Validator Event
+languageTagValid path data =
+    case data.inLanguage of
+        Nothing ->
+            []
+
+        Just language ->
+            case LanguageTag.Parser.parseBcp47 language of
+                Just _ ->
+                    []
+
+                Nothing ->
+                    [ ValidationMessage (path ++ "/inLanguage") "doesn't sem to be a valid language code. This field should contain language codes like 'en', 'de', etc." ]
+
+
 rangeValid : Validator PriceSpecification
 rangeValid path data =
     case data.maxPrice of
@@ -198,6 +214,7 @@ event =
         , field "/startDate" .startDate required
         , field "/url" .url optional
         , previousStartDateIsSet
+        , languageTagValid
         ]
 
 
