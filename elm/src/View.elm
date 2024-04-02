@@ -392,7 +392,7 @@ viewEventTable zone event =
             , tableRow "Startzeit" (formatTime event.startDate zone)
             , tableRow "Enddatum" (formatDate (Maybe.withDefault "" event.endDate) zone)
             , tableRow "Endzeit" (formatTime (Maybe.withDefault "" event.endDate) zone)
-            , tableRow "Dauer" (Maybe.map formatDuration event.duration |> Maybe.withDefault "")
+            , maybeTableRow "Dauer" (Maybe.map formatDuration event.duration)
             , maybeTableRow "Sprache" event.inLanguage
             , maybeTableRow "Untertitel in" event.subtitleLanguage
             , tableRow "Status" (eventStatusToString event.eventStatus)
