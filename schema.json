@@ -465,6 +465,35 @@
             "type": "string",
             "description": "A human-readable summary of specific accessibility features or deficiencies of the production."
           },
+          "audience": {
+            "type": "object",
+            "description": "Object describing the intended target audience of this production",
+            "required": [
+              "@type"
+            ],
+            "properties": {
+              "@type": {
+                "type": "string",
+                "enum": [
+                  "PeopleAudience"
+                ]
+              },
+              "suggestedMinAge": {
+                "type": "integer",
+                "description": "Minimum recommended age in years",
+                "minimum": 0
+              },
+              "suggestedMaxAge": {
+                "type": "integer",
+                "description": "Maximum recommended age in years",
+                "minimum": 0
+              },
+              "audienceType": {
+                "type": "string",
+                "description": "The target group for this production"
+              }
+            }
+          },
           "creator": {
             "description": "List of all people contributing to the creation of this production, e.g. directors, stage designers, musical directors, etc.\n\nIf multiple people perform the same role/function (e.g. there is multiple directors or multiple actors perform the same role on stage at the same time),\neach person should get their own entry in the `creator` array.",
             "type": "array",

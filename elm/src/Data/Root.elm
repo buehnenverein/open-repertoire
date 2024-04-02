@@ -37,6 +37,10 @@ type EventsAttype
     = EventType
 
 
+type AudienceAttype
+    = PeopleAudienceType
+
+
 type PerformerPersonAttype
     = PerformerPersonType
 
@@ -117,6 +121,14 @@ type alias Address =
     , addressLocality : Maybe String
     , postalCode : Maybe String
     , streetAddress : Maybe String
+    }
+
+
+type alias Audience =
+    { atType : AudienceAttype
+    , audienceType : Maybe String
+    , suggestedMaxAge : Maybe Int
+    , suggestedMinAge : Maybe Int
     }
 
 
@@ -238,6 +250,7 @@ type alias Production =
     , accessibilityHazard : Maybe (List AccessibilityHazardItem)
     , accessibilitySummary : Maybe String
     , additionalInfo : Maybe String
+    , audience : Maybe Audience
     , creator : Maybe (List CreatorItem)
     , description : Maybe String
     , events : List Event
@@ -346,6 +359,21 @@ parseEventsAttype eventsAttype =
 
         _ ->
             Err <| "Unknown eventsAttype type: " ++ eventsAttype
+
+
+audienceAttypeDecoder : Decoder AudienceAttype
+audienceAttypeDecoder =
+    Decode.string |> Decode.andThen (parseAudienceAttype >> Decode.fromResult)
+
+
+parseAudienceAttype : String -> Result String AudienceAttype
+parseAudienceAttype audienceAttype =
+    case audienceAttype of
+        "PeopleAudience" ->
+            Ok PeopleAudienceType
+
+        _ ->
+            Err <| "Unknown audienceAttype type: " ++ audienceAttype
 
 
 performerPersonAttypeDecoder : Decoder PerformerPersonAttype
@@ -570,6 +598,15 @@ addressDecoder =
         |> optional "addressLocality" (Decode.nullable Decode.string) Nothing
         |> optional "postalCode" (Decode.nullable Decode.string) Nothing
         |> optional "streetAddress" (Decode.nullable Decode.string) Nothing
+
+
+audienceDecoder : Decoder Audience
+audienceDecoder =
+    Decode.succeed Audience
+        |> required "@type" audienceAttypeDecoder
+        |> optional "audienceType" (Decode.nullable Decode.string) Nothing
+        |> optional "suggestedMaxAge" (Decode.nullable Decode.int) Nothing
+        |> optional "suggestedMinAge" (Decode.nullable Decode.int) Nothing
 
 
 creatorPersonDecoder : Decoder Creator
@@ -816,6 +853,7 @@ productionDecoder =
         |> optional "accessibilityHazard" (Decode.nullable accessibilityHazardDecoder) Nothing
         |> optional "accessibilitySummary" (Decode.nullable Decode.string) Nothing
         |> optional "additionalInfo" (Decode.nullable Decode.string) Nothing
+        |> optional "audience" (Decode.nullable audienceDecoder) Nothing
         |> optional "creator" (Decode.nullable creatorDecoder) Nothing
         |> optional "description" (Decode.nullable Decode.string) Nothing
         |> required "events" eventsDecoder
@@ -922,6 +960,18 @@ eventsAttypeToString eventsAttype =
     case eventsAttype of
         EventType ->
             "Event"
+
+
+encodeAudienceAttype : AudienceAttype -> Value
+encodeAudienceAttype audienceAttype =
+    audienceAttype |> audienceAttypeToString |> Encode.string
+
+
+audienceAttypeToString : AudienceAttype -> String
+audienceAttypeToString audienceAttype =
+    case audienceAttype of
+        PeopleAudienceType ->
+            "PeopleAudience"
 
 
 encodePerformerPersonAttype : PerformerPersonAttype -> Value
@@ -1124,6 +1174,16 @@ encodeAddress address =
         |> Encode.optional "addressLocality" address.addressLocality Encode.string
         |> Encode.optional "postalCode" address.postalCode Encode.string
         |> Encode.optional "streetAddress" address.streetAddress Encode.string
+        |> Encode.object
+
+
+encodeAudience : Audience -> Value
+encodeAudience audience =
+    []
+        |> Encode.required "@type" audience.atType encodeAudienceAttype
+        |> Encode.optional "audienceType" audience.audienceType Encode.string
+        |> Encode.optional "suggestedMaxAge" audience.suggestedMaxAge Encode.int
+        |> Encode.optional "suggestedMinAge" audience.suggestedMinAge Encode.int
         |> Encode.object
 
 
@@ -1380,6 +1440,7 @@ encodeProduction production =
         |> Encode.optional "accessibilityHazard" production.accessibilityHazard encodeAccessibilityHazard
         |> Encode.optional "accessibilitySummary" production.accessibilitySummary Encode.string
         |> Encode.optional "additionalInfo" production.additionalInfo Encode.string
+        |> Encode.optional "audience" production.audience encodeAudience
         |> Encode.optional "creator" production.creator encodeCreator
         |> Encode.optional "description" production.description Encode.string
         |> Encode.required "events" production.events encodeEvents

@@ -1,6 +1,6 @@
 module Helper.CustomValidations exposing (checkAll)
 
-import Data.Root exposing (Address, AddressLocation, Creator, CreatorItem, Event, EventsEventStatus(..), LocationItem(..), Offer, Organization, Performer, PerformerItem, PriceSpecification, Production, Root, VirtualLocation)
+import Data.Root exposing (Address, AddressLocation, Audience, Creator, CreatorItem, Event, EventsEventStatus(..), LocationItem(..), Offer, Organization, Performer, PerformerItem, PriceSpecification, Production, Root, VirtualLocation)
 import Helper.LanguageCodes as LanguageCodes
 import LanguageTag.Parser
 
@@ -21,7 +21,7 @@ checkAll data =
         [ field "/organization" .organization organization
         , field "/productions" .productions (list production)
         ]
-        |> check data
+        |> check data ""
 
 
 organization : Validator Organization
@@ -32,9 +32,9 @@ organization =
         ]
 
 
-check : model -> Validator model -> List ValidationMessage
-check data validator =
-    validator "" data
+check : model -> String -> Validator model -> List ValidationMessage
+check data path validator =
+    validator path data
 
 
 field : String -> (model -> value) -> Validator value -> Validator model
@@ -187,19 +187,19 @@ languageTagValid path data =
             [ validationMsg ]
 
 
-rangeValid : Validator PriceSpecification
-rangeValid path data =
-    case data.maxPrice of
-        Nothing ->
-            []
-
-        Just maxPrice ->
-            if data.minPrice > maxPrice then
-                [ ValidationMessage (path ++ "/minPrice") "should be smaller than maxPrice"
+isLessOrEqual : ( String, Maybe number ) -> Validator number
+isLessOrEqual ( otherName, otherValue ) path data =
+    case otherValue of
+        Just other ->
+            if data > other then
+                [ ValidationMessage path ("should be smaller than " ++ otherName)
                 ]
 
             else
                 []
+
+        Nothing ->
+            []
 
 
 
@@ -263,11 +263,14 @@ offer =
 
 
 priceSpecification : Validator PriceSpecification
-priceSpecification =
+priceSpecification path data =
     object
         [ field "/priceCurrency" .priceCurrency required
-        , rangeValid
+        , field "/minPrice"
+            .minPrice
+            (isLessOrEqual ( "maxPrice", data.maxPrice ))
         ]
+        |> check data path
 
 
 production : Validator Production
@@ -275,6 +278,7 @@ production =
     object
         [ field "/accessibilitySummary" .accessibilitySummary optional
         , field "/additionalInfo" .additionalInfo optional
+        , field "/audience" .audience (maybe audience)
         , field "/creator" .creator (maybe (list creatorItem))
         , field "/description" .description optional
         , field "/events" .events (list event)
@@ -292,6 +296,19 @@ address =
         , field "/postalCode" .postalCode optional
         , field "/streetAddress" .streetAddress optional
         ]
+
+
+audience : Validator Audience
+audience path data =
+    object
+        [ field "/audienceType" .audienceType optional
+        , field "/suggestedMinAge"
+            .suggestedMinAge
+            (maybe
+                (isLessOrEqual ( "suggestedMaxAge", data.suggestedMaxAge ))
+            )
+        ]
+        |> check data path
 
 
 location : Validator LocationItem

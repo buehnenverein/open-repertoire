@@ -287,6 +287,9 @@ productionTable production =
             , div [ class "tile is-child box" ]
                 [ viewProductionAccessibility production
                 ]
+            , div [ class "tile is-child box" ]
+                [ viewProductionAudience production
+                ]
             ]
         ]
 
@@ -322,6 +325,26 @@ humanReadableGenre genre =
         |> String.split "-"
         |> List.map firstToUpper
         |> String.join " "
+
+
+viewProductionAudience : Production -> Html Msg
+viewProductionAudience production =
+    div []
+        [ div [ class "title is-5" ] [ text "Zielgruppe" ]
+        , table [ class "table" ]
+            [ tbody []
+                [ maybeTableRow "Beschreibung" (Maybe.andThen .audienceType production.audience)
+                , maybeTableRow "Mindestalter"
+                    (Maybe.andThen .suggestedMinAge production.audience
+                        |> Maybe.map String.fromInt
+                    )
+                , maybeTableRow "Höchstalter"
+                    (Maybe.andThen .suggestedMaxAge production.audience
+                        |> Maybe.map String.fromInt
+                    )
+                ]
+            ]
+        ]
 
 
 viewProductionAccessibility : Production -> Html Msg
