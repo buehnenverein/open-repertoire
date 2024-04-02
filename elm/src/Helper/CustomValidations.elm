@@ -1,6 +1,7 @@
 module Helper.CustomValidations exposing (checkAll)
 
 import Data.Root exposing (Address, AddressLocation, Creator, CreatorItem, Event, EventsEventStatus(..), LocationItem(..), Offer, Organization, Performer, PerformerItem, PriceSpecification, Production, Root, VirtualLocation)
+import Helper.LanguageCodes as LanguageCodes
 import LanguageTag.Parser
 
 
@@ -170,17 +171,25 @@ previousStartDateIsSet path data =
 
 languageTagValid : Validator Event
 languageTagValid path data =
+    let
+        validationMsg =
+            ValidationMessage (path ++ "/inLanguage") "doesn't seem to be a valid language code. This field should contain language codes like 'en', 'de', etc."
+    in
     case data.inLanguage of
         Nothing ->
             []
 
         Just language ->
             case LanguageTag.Parser.parseBcp47 language of
-                Just _ ->
-                    []
+                Just ( lang, _ ) ->
+                    if LanguageCodes.isValid lang then
+                        []
+
+                    else
+                        [ validationMsg ]
 
                 Nothing ->
-                    [ ValidationMessage (path ++ "/inLanguage") "doesn't sem to be a valid language code. This field should contain language codes like 'en', 'de', etc." ]
+                    [ validationMsg ]
 
 
 rangeValid : Validator PriceSpecification
