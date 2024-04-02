@@ -144,6 +144,7 @@ type alias Event =
     , performer : Maybe (List PerformerItem)
     , previousStartDate : Maybe String
     , startDate : String
+    , subtitleLanguage : Maybe String
     , url : Maybe String
     }
 
@@ -604,6 +605,7 @@ eventDecoder =
         |> optional "performer" (Decode.nullable performerDecoder) Nothing
         |> optional "previousStartDate" (Decode.nullable Decode.string) Nothing
         |> required "startDate" Decode.string
+        |> optional "subtitleLanguage" (Decode.nullable Decode.string) Nothing
         |> optional "url" (Decode.nullable Decode.string) Nothing
 
 
@@ -1161,6 +1163,7 @@ encodeEvent event =
         |> Encode.optional "performer" event.performer encodePerformer
         |> Encode.optional "previousStartDate" event.previousStartDate Encode.string
         |> Encode.required "startDate" event.startDate Encode.string
+        |> Encode.optional "subtitleLanguage" event.subtitleLanguage Encode.string
         |> Encode.optional "url" event.url Encode.string
         |> Encode.object
 

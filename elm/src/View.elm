@@ -394,6 +394,7 @@ viewEventTable zone event =
             , tableRow "Endzeit" (formatTime (Maybe.withDefault "" event.endDate) zone)
             , tableRow "Dauer" (Maybe.map formatDuration event.duration |> Maybe.withDefault "")
             , maybeTableRow "Sprache" event.inLanguage
+            , maybeTableRow "Untertitel in" event.subtitleLanguage
             , tableRow "Status" (eventStatusToString event.eventStatus)
             , tableRow "Vorheriges Startdatum" (formatDate (Maybe.withDefault "" event.previousStartDate) zone)
             , tableRow "Vorherige Startzeit" (formatTime (Maybe.withDefault "" event.previousStartDate) zone)

@@ -169,27 +169,22 @@ previousStartDateIsSet path data =
             []
 
 
-languageTagValid : Validator Event
+languageTagValid : Validator String
 languageTagValid path data =
     let
         validationMsg =
-            ValidationMessage (path ++ "/inLanguage") "doesn't seem to be a valid language code. This field should contain language codes like 'en', 'de', etc."
+            ValidationMessage path "doesn't seem to be a valid language code. This field should contain language codes like 'en', 'de', etc."
     in
-    case data.inLanguage of
+    case LanguageTag.Parser.parseBcp47 data of
+        Just ( lang, _ ) ->
+            if LanguageCodes.isValid lang then
+                []
+
+            else
+                [ validationMsg ]
+
         Nothing ->
-            []
-
-        Just language ->
-            case LanguageTag.Parser.parseBcp47 language of
-                Just ( lang, _ ) ->
-                    if LanguageCodes.isValid lang then
-                        []
-
-                    else
-                        [ validationMsg ]
-
-                Nothing ->
-                    [ validationMsg ]
+            [ validationMsg ]
 
 
 rangeValid : Validator PriceSpecification
@@ -216,14 +211,15 @@ event =
     object
         [ field "/duration" .duration (maybe duration)
         , field "/endDate" .endDate optional
+        , field "/inLanguage" .inLanguage (maybe languageTagValid)
         , field "/location" .location (maybe (list location))
         , field "/offers" .offers (maybe (list offer))
         , field "/performer" .performer (maybe (list performerItem))
         , field "/previousStartDate" .previousStartDate optional
         , field "/startDate" .startDate required
+        , field "/subtitleLanguage" .subtitleLanguage (maybe languageTagValid)
         , field "/url" .url optional
         , previousStartDateIsSet
-        , languageTagValid
         ]
 
 
