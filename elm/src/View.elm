@@ -1,7 +1,7 @@
 module View exposing (main)
 
 import Browser
-import Data.Root exposing (Creator, Event, EventEventStatus(..), LocationItem(..), Offer, Performer, Production, ProductionGenre, Root, WheelChairPlace, rootDecoder)
+import Data.Root exposing (CreatorRole, Event, EventEventStatus(..), LocationItem(..), Offer, PerformanceRole, Production, ProductionGenre, Root, WheelChairPlace, rootDecoder)
 import DateFormat
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -585,7 +585,7 @@ osmLink place =
 -- PARTICIPANTS
 
 
-viewCreators : Maybe (List Creator) -> Html Msg
+viewCreators : Maybe (List CreatorRole) -> Html Msg
 viewCreators creators =
     div []
         [ div [ class "title is-5" ] [ text "Team" ]
@@ -602,7 +602,7 @@ viewCreators creators =
         ]
 
 
-viewCreator : Creator -> Html Msg
+viewCreator : CreatorRole -> Html Msg
 viewCreator creator =
     tr []
         [ td [] [ text (Maybe.withDefault "" creator.roleName) ]
@@ -610,7 +610,7 @@ viewCreator creator =
         ]
 
 
-viewPerformers : Maybe (List Performer) -> Html Msg
+viewPerformers : Maybe (List PerformanceRole) -> Html Msg
 viewPerformers performers =
     div []
         [ div [ class "title is-5" ] [ text "Besetzung" ]
@@ -627,7 +627,7 @@ viewPerformers performers =
         ]
 
 
-viewPerformer : Performer -> Html Msg
+viewPerformer : PerformanceRole -> Html Msg
 viewPerformer performer =
     tr []
         [ td [] [ text (Maybe.withDefault "" performer.characterName) ]

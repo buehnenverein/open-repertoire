@@ -132,7 +132,7 @@
           "description": "List of all people contributing to the creation of this production, e.g. directors, stage designers, musical directors, etc.\n\nIf multiple people perform the same role/function (e.g. there is multiple directors or multiple actors perform the same role on stage at the same time),\neach person should get their own entry in the `creator` array.",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Creator"
+            "$ref": "#/definitions/CreatorRole"
           }
         }
       }
@@ -233,7 +233,7 @@
         "performer": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Performer"
+            "$ref": "#/definitions/PerformanceRole"
           }
         },
         "offers": {
@@ -322,7 +322,7 @@
         }
       }
     },
-    "Creator": {
+    "CreatorRole": {
       "type": "object",
       "additionalProperties": false,
       "required": [
@@ -345,7 +345,7 @@
         }
       }
     },
-    "Performer": {
+    "PerformanceRole": {
       "type": "object",
       "additionalProperties": false,
       "required": [

@@ -3,13 +3,13 @@ module Helper.CustomValidations exposing (checkAll)
 import Data.Root
     exposing
         ( Audience
-        , Creator
+        , CreatorRole
         , Event
         , EventEventStatus(..)
         , LocationItem(..)
         , Offer
         , Organization
-        , Performer
+        , PerformanceRole
         , Person
         , Place
         , PostalAddress
@@ -240,7 +240,7 @@ event =
         ]
 
 
-creator : Validator Creator
+creator : Validator CreatorRole
 creator =
     object
         [ field "/creator" .creator person
@@ -255,7 +255,7 @@ person =
         ]
 
 
-performer : Validator Performer
+performer : Validator PerformanceRole
 performer =
     object
         [ field "/performer" .performer person

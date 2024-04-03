@@ -17,10 +17,6 @@ type AtContext
     = HttpsColonSlashSlashschemaDotorg
 
 
-type CreatorAttype
-    = RoleType
-
-
 type OrganizationAttype
     = OrganizationType
 
@@ -41,10 +37,6 @@ type OfferAttype
     = OfferType
 
 
-type PerformerAttype
-    = PerformanceRoleType
-
-
 type PriceSpecificationAttype
     = PriceSpecificationType
 
@@ -62,6 +54,14 @@ type VirtualLocationAttype
     = VirtualLocationType
 
 
+type PerformanceRoleAttype
+    = PerformanceRoleType
+
+
+type CreatorRoleAttype
+    = RoleType
+
+
 type AudienceAttype
     = PeopleAudienceType
 
@@ -74,8 +74,8 @@ type alias Audience =
     }
 
 
-type alias Creator =
-    { atType : CreatorAttype
+type alias CreatorRole =
+    { atType : CreatorRoleAttype
     , creator : Person
     , roleName : Maybe String
     }
@@ -89,7 +89,7 @@ type alias Event =
     , inLanguage : Maybe String
     , location : Maybe (List LocationItem)
     , offers : Maybe (List Offer)
-    , performer : Maybe (List Performer)
+    , performer : Maybe (List PerformanceRole)
     , previousStartDate : Maybe String
     , startDate : String
     , subtitleLanguage : Maybe String
@@ -105,8 +105,8 @@ type alias Offer =
     }
 
 
-type alias Performer =
-    { atType : PerformerAttype
+type alias PerformanceRole =
+    { atType : PerformanceRoleAttype
     , characterName : Maybe String
     , performer : Person
     }
@@ -144,7 +144,7 @@ type alias Production =
     , accessibilitySummary : Maybe String
     , additionalInfo : Maybe String
     , audience : Maybe Audience
-    , creator : Maybe (List Creator)
+    , creator : Maybe (List CreatorRole)
     , description : Maybe String
     , events : List Event
     , genre : Maybe ProductionGenre
@@ -276,21 +276,6 @@ parseAtContext atContext =
             Err <| "Unknown atContext type: " ++ atContext
 
 
-creatorAttypeDecoder : Decoder CreatorAttype
-creatorAttypeDecoder =
-    Decode.string |> Decode.andThen (parseCreatorAttype >> Decode.fromResult)
-
-
-parseCreatorAttype : String -> Result String CreatorAttype
-parseCreatorAttype creatorAttype =
-    case creatorAttype of
-        "Role" ->
-            Ok RoleType
-
-        _ ->
-            Err <| "Unknown creatorAttype type: " ++ creatorAttype
-
-
 organizationAttypeDecoder : Decoder OrganizationAttype
 organizationAttypeDecoder =
     Decode.string |> Decode.andThen (parseOrganizationAttype >> Decode.fromResult)
@@ -366,21 +351,6 @@ parseOfferAttype offerAttype =
             Err <| "Unknown offerAttype type: " ++ offerAttype
 
 
-performerAttypeDecoder : Decoder PerformerAttype
-performerAttypeDecoder =
-    Decode.string |> Decode.andThen (parsePerformerAttype >> Decode.fromResult)
-
-
-parsePerformerAttype : String -> Result String PerformerAttype
-parsePerformerAttype performerAttype =
-    case performerAttype of
-        "PerformanceRole" ->
-            Ok PerformanceRoleType
-
-        _ ->
-            Err <| "Unknown performerAttype type: " ++ performerAttype
-
-
 priceSpecificationAttypeDecoder : Decoder PriceSpecificationAttype
 priceSpecificationAttypeDecoder =
     Decode.string |> Decode.andThen (parsePriceSpecificationAttype >> Decode.fromResult)
@@ -444,6 +414,36 @@ parseVirtualLocationAttype virtualLocationAttype =
             Err <| "Unknown virtualLocationAttype type: " ++ virtualLocationAttype
 
 
+performanceRoleAttypeDecoder : Decoder PerformanceRoleAttype
+performanceRoleAttypeDecoder =
+    Decode.string |> Decode.andThen (parsePerformanceRoleAttype >> Decode.fromResult)
+
+
+parsePerformanceRoleAttype : String -> Result String PerformanceRoleAttype
+parsePerformanceRoleAttype performanceRoleAttype =
+    case performanceRoleAttype of
+        "PerformanceRole" ->
+            Ok PerformanceRoleType
+
+        _ ->
+            Err <| "Unknown performanceRoleAttype type: " ++ performanceRoleAttype
+
+
+creatorRoleAttypeDecoder : Decoder CreatorRoleAttype
+creatorRoleAttypeDecoder =
+    Decode.string |> Decode.andThen (parseCreatorRoleAttype >> Decode.fromResult)
+
+
+parseCreatorRoleAttype : String -> Result String CreatorRoleAttype
+parseCreatorRoleAttype creatorRoleAttype =
+    case creatorRoleAttype of
+        "Role" ->
+            Ok RoleType
+
+        _ ->
+            Err <| "Unknown creatorRoleAttype type: " ++ creatorRoleAttype
+
+
 audienceAttypeDecoder : Decoder AudienceAttype
 audienceAttypeDecoder =
     Decode.string |> Decode.andThen (parseAudienceAttype >> Decode.fromResult)
@@ -468,10 +468,10 @@ audienceDecoder =
         |> optional "suggestedMinAge" (Decode.nullable Decode.int) Nothing
 
 
-creatorDecoder : Decoder Creator
-creatorDecoder =
-    Decode.succeed Creator
-        |> required "@type" creatorAttypeDecoder
+creatorRoleDecoder : Decoder CreatorRole
+creatorRoleDecoder =
+    Decode.succeed CreatorRole
+        |> required "@type" creatorRoleAttypeDecoder
         |> required "creator" personDecoder
         |> optional "roleName" (Decode.nullable Decode.string) Nothing
 
@@ -486,7 +486,7 @@ eventDecoder =
         |> optional "inLanguage" (Decode.nullable Decode.string) Nothing
         |> optional "location" (Decode.nullable locationDecoder) Nothing
         |> optional "offers" (Decode.nullable offersDecoder) Nothing
-        |> optional "performer" (Decode.nullable performersDecoder) Nothing
+        |> optional "performer" (Decode.nullable performerDecoder) Nothing
         |> optional "previousStartDate" (Decode.nullable Decode.string) Nothing
         |> required "startDate" Decode.string
         |> optional "subtitleLanguage" (Decode.nullable Decode.string) Nothing
@@ -502,10 +502,10 @@ offerDecoder =
         |> optional "url" (Decode.nullable Decode.string) Nothing
 
 
-performerDecoder : Decoder Performer
-performerDecoder =
-    Decode.succeed Performer
-        |> required "@type" performerAttypeDecoder
+performanceRoleDecoder : Decoder PerformanceRole
+performanceRoleDecoder =
+    Decode.succeed PerformanceRole
+        |> required "@type" performanceRoleAttypeDecoder
         |> optional "characterName" (Decode.nullable Decode.string) Nothing
         |> required "performer" personDecoder
 
@@ -547,7 +547,7 @@ productionDecoder =
         |> optional "accessibilitySummary" (Decode.nullable Decode.string) Nothing
         |> optional "additionalInfo" (Decode.nullable Decode.string) Nothing
         |> optional "audience" (Decode.nullable audienceDecoder) Nothing
-        |> optional "creator" (Decode.nullable creatorsDecoder) Nothing
+        |> optional "creator" (Decode.nullable creatorDecoder) Nothing
         |> optional "description" (Decode.nullable Decode.string) Nothing
         |> required "events" eventsDecoder
         |> optional "genre" (Decode.nullable productionGenreDecoder) Nothing
@@ -659,9 +659,9 @@ parseAccessibilityHazardItem accessibilityHazardItem =
             Err <| "Unknown accessibilityHazardItem type: " ++ accessibilityHazardItem
 
 
-creatorsDecoder : Decoder (List Creator)
-creatorsDecoder =
-    Decode.list creatorDecoder
+creatorDecoder : Decoder (List CreatorRole)
+creatorDecoder =
+    Decode.list creatorRoleDecoder
 
 
 eventEventStatusDecoder : Decoder EventEventStatus
@@ -824,9 +824,9 @@ organizationDecoder =
         |> required "name" Decode.string
 
 
-performersDecoder : Decoder (List Performer)
-performersDecoder =
-    Decode.list performerDecoder
+performerDecoder : Decoder (List PerformanceRole)
+performerDecoder =
+    Decode.list performanceRoleDecoder
 
 
 priceSpecificationDecoder : Decoder PriceSpecification
@@ -868,18 +868,6 @@ atContextToString atContext =
     case atContext of
         HttpsColonSlashSlashschemaDotorg ->
             "https://schema.org"
-
-
-encodeCreatorAttype : CreatorAttype -> Value
-encodeCreatorAttype creatorAttype =
-    creatorAttype |> creatorAttypeToString |> Encode.string
-
-
-creatorAttypeToString : CreatorAttype -> String
-creatorAttypeToString creatorAttype =
-    case creatorAttype of
-        RoleType ->
-            "Role"
 
 
 encodeOrganizationAttype : OrganizationAttype -> Value
@@ -942,18 +930,6 @@ offerAttypeToString offerAttype =
             "Offer"
 
 
-encodePerformerAttype : PerformerAttype -> Value
-encodePerformerAttype performerAttype =
-    performerAttype |> performerAttypeToString |> Encode.string
-
-
-performerAttypeToString : PerformerAttype -> String
-performerAttypeToString performerAttype =
-    case performerAttype of
-        PerformanceRoleType ->
-            "PerformanceRole"
-
-
 encodePriceSpecificationAttype : PriceSpecificationAttype -> Value
 encodePriceSpecificationAttype priceSpecificationAttype =
     priceSpecificationAttype |> priceSpecificationAttypeToString |> Encode.string
@@ -1005,6 +981,30 @@ virtualLocationAttypeToString virtualLocationAttype =
             "VirtualLocation"
 
 
+encodePerformanceRoleAttype : PerformanceRoleAttype -> Value
+encodePerformanceRoleAttype performanceRoleAttype =
+    performanceRoleAttype |> performanceRoleAttypeToString |> Encode.string
+
+
+performanceRoleAttypeToString : PerformanceRoleAttype -> String
+performanceRoleAttypeToString performanceRoleAttype =
+    case performanceRoleAttype of
+        PerformanceRoleType ->
+            "PerformanceRole"
+
+
+encodeCreatorRoleAttype : CreatorRoleAttype -> Value
+encodeCreatorRoleAttype creatorRoleAttype =
+    creatorRoleAttype |> creatorRoleAttypeToString |> Encode.string
+
+
+creatorRoleAttypeToString : CreatorRoleAttype -> String
+creatorRoleAttypeToString creatorRoleAttype =
+    case creatorRoleAttype of
+        RoleType ->
+            "Role"
+
+
 encodeAudienceAttype : AudienceAttype -> Value
 encodeAudienceAttype audienceAttype =
     audienceAttype |> audienceAttypeToString |> Encode.string
@@ -1027,12 +1027,12 @@ encodeAudience audience =
         |> Encode.object
 
 
-encodeCreator : Creator -> Value
-encodeCreator creator =
+encodeCreatorRole : CreatorRole -> Value
+encodeCreatorRole creatorRole =
     []
-        |> Encode.required "@type" creator.atType encodeCreatorAttype
-        |> Encode.required "creator" creator.creator encodePerson
-        |> Encode.optional "roleName" creator.roleName Encode.string
+        |> Encode.required "@type" creatorRole.atType encodeCreatorRoleAttype
+        |> Encode.required "creator" creatorRole.creator encodePerson
+        |> Encode.optional "roleName" creatorRole.roleName Encode.string
         |> Encode.object
 
 
@@ -1046,7 +1046,7 @@ encodeEvent event =
         |> Encode.optional "inLanguage" event.inLanguage Encode.string
         |> Encode.optional "location" event.location encodeLocation
         |> Encode.optional "offers" event.offers encodeOffers
-        |> Encode.optional "performer" event.performer encodePerformers
+        |> Encode.optional "performer" event.performer encodePerformer
         |> Encode.optional "previousStartDate" event.previousStartDate Encode.string
         |> Encode.required "startDate" event.startDate Encode.string
         |> Encode.optional "subtitleLanguage" event.subtitleLanguage Encode.string
@@ -1064,12 +1064,12 @@ encodeOffer offer =
         |> Encode.object
 
 
-encodePerformer : Performer -> Value
-encodePerformer performer =
+encodePerformanceRole : PerformanceRole -> Value
+encodePerformanceRole performanceRole =
     []
-        |> Encode.required "@type" performer.atType encodePerformerAttype
-        |> Encode.optional "characterName" performer.characterName Encode.string
-        |> Encode.required "performer" performer.performer encodePerson
+        |> Encode.required "@type" performanceRole.atType encodePerformanceRoleAttype
+        |> Encode.optional "characterName" performanceRole.characterName Encode.string
+        |> Encode.required "performer" performanceRole.performer encodePerson
         |> Encode.object
 
 
@@ -1113,7 +1113,7 @@ encodeProduction production =
         |> Encode.optional "accessibilitySummary" production.accessibilitySummary Encode.string
         |> Encode.optional "additionalInfo" production.additionalInfo Encode.string
         |> Encode.optional "audience" production.audience encodeAudience
-        |> Encode.optional "creator" production.creator encodeCreators
+        |> Encode.optional "creator" production.creator encodeCreator
         |> Encode.optional "description" production.description Encode.string
         |> Encode.required "events" production.events encodeEvents
         |> Encode.optional "genre" production.genre encodeProductionGenre
@@ -1225,10 +1225,10 @@ accessibilityHazardItemToString accessibilityHazardItem =
             "unknownSoundHazard"
 
 
-encodeCreators : List Creator -> Value
-encodeCreators creator =
+encodeCreator : List CreatorRole -> Value
+encodeCreator creator =
     creator
-        |> Encode.list encodeCreator
+        |> Encode.list encodeCreatorRole
 
 
 encodeEventEventStatus : EventEventStatus -> Value
@@ -1391,10 +1391,10 @@ encodeOrganization organization =
         |> Encode.object
 
 
-encodePerformers : List Performer -> Value
-encodePerformers performer =
+encodePerformer : List PerformanceRole -> Value
+encodePerformer performer =
     performer
-        |> Encode.list encodePerformer
+        |> Encode.list encodePerformanceRole
 
 
 encodePriceSpecification : PriceSpecification -> Value

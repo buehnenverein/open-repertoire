@@ -113,7 +113,7 @@ definitions:
             each person should get their own entry in the `creator` array.
           type: array
           items:
-            $ref: "#/definitions/Creator"
+            $ref: "#/definitions/CreatorRole"
 
     Audience:
       type: object
@@ -194,7 +194,7 @@ definitions:
         performer:
           type: array
           items:
-            $ref: "#/definitions/Performer"
+            $ref: "#/definitions/PerformanceRole"
             
         offers:
           type: array
@@ -269,7 +269,7 @@ definitions:
           format: uri
           example: "https://webshop-tickets.staatstheater-augsburg.de/de/tickets/hedwig-and-the-angry-inch/brechtbuehne-im-gaswerk-14-12-2023-19-30"
 
-    Creator:
+    CreatorRole:
       type: object
       additionalProperties: false
       required:
@@ -331,7 +331,7 @@ definitions:
           #   - vermittlung
           #   - virtual-reality-design
 
-    Performer:
+    PerformanceRole:
       type: object
       additionalProperties: false
       required:
