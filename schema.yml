@@ -1,0 +1,501 @@
+"$schema": "http://json-schema.org/draft-07/schema#"
+"$id": https://peret.github.io/uc3-openapi/schema.json
+definitions: 
+    Production:
+      type: object
+      description: "An object containing unchanging information about the production."
+      additionalProperties: false
+      required:
+        - "@type"
+        - name
+        - events
+      properties:
+        "@type":
+          type: string
+          enum:
+            - "CreativeWork"
+            - "Play"
+        name:
+          type: string
+          description: The event title
+          example: Hedwig and the Angry Inch
+        subtitle:
+          type: string
+          description: The event's optional subtitle
+          example: US-amerikanisches Off-Broadway-Rock-Musical
+        description:
+          type: string
+          description: A text describing the production
+          example: Hedwig, die Queen des Glamrock, kommt auf ihrer Tournee in Augsburg vorbei! Gemeinsam mit ihrer Band The Angry Inch gibt sie eines ihrer mitreißenden Konzerte. Zwischen den Songs, die – mal Rocknummer, mal Country-Ballade – von ihrem Leben und der Suche nach der eigenen Identität erzählen, kommt sie dem Publikum so nah wie nie.\nDiese Show sollten Sie nicht verpassen!
+        abstract:
+          type: string
+          description: A short abstract or teaser text describing the production
+          example: "Das Kult-Rockmusical »Hedwig and the Angry Inch« wurde innerhalb weniger Jahre vom Off-Broadway-Geheimtipp zu einem Hit am Broadway selbst. 2023 erobert Hedwig, die »weltweit ignorierte Queen of Glamrock« endlich auch die Herzen des Augsburger Publikums – mit dem langjährigen Schauspiel-Ensemble-Mitglied Thomas Prazak in der Hauptrolle. Die Live-Musik steuern Stefan Leibold, Jonas Horche, Tilman Herpichböhm und Niklas Rehle als Band »The Angry Inch« bei."
+        additionalInfo:
+          type: string
+          description: Additional information about the production
+        events:
+          type: array
+          description: "List of current events offered by the organization"
+          items:
+            $ref: "#/definitions/Event"
+        genre:
+          type: string
+          description: The genre of this production. Must use one of the pre-defined values.
+          enum:
+            - audiowalk
+            - ballett
+            - digitaltheater
+            - figurentheater
+            - game-theater
+            - hoerspiel
+            - improtheater
+            - installation
+            - kabarett-comedy
+            - kammerkonzert
+            - konzert
+            - lecture-performance
+            - lesung
+            - musical
+            - musiktheater
+            - objekttheater
+            - oper
+            - operette
+            - performance
+            - physical-theatre
+            - podcast
+            - puppentheater
+            - sinfoniekonzert
+            - sprechtheater
+            - szenische-lesung
+            - szenisches-konzert
+            - tanz
+            - theater-im-oeffentlichen-raum
+            - workshop
+            - zeitgenoessischer-tanz
+          example: "musical"
+        accessModeSufficient:
+          type: array
+          items:
+            type: string
+            description: A list of single or combined accessModes that are sufficient to understand all the intellectual content of a resource.
+            enum: [auditory, tactile, textual, visual]
+        accessibilityHazard:
+          type: array
+          items:
+            type: string
+            example: flashingHazard
+            enum:
+              [
+                none,
+                unknown,
+                flashingHazard,
+                motionSimulationHazard,
+                soundHazard,
+                noFlashingHazard,
+                noMotionSimulationHazard,
+                noSoundHazard,
+                unknownFlashingHazard,
+                unknownMotionSimulationHazard,
+                unknownSoundHazard,
+              ]
+        accessibilitySummary:
+          type: string
+          description: A human-readable summary of specific accessibility features or deficiencies of the production.
+          example: "Dieses Stück enthält Stroboskoplicht"
+        audience:
+          $ref: "#/definitions/Audience"
+        creator:
+          description: |-
+            List of all people contributing to the creation of this production, e.g. directors, stage designers, musical directors, etc.
+
+            If multiple people perform the same role/function (e.g. there is multiple directors or multiple actors perform the same role on stage at the same time),
+            each person should get their own entry in the `creator` array.
+          type: array
+          items:
+            $ref: "#/definitions/Creator"
+
+    Audience:
+      type: object
+      description: Object describing the intended target audience of this production
+      required:
+        - "@type"
+      properties:
+        "@type":
+          type: string
+          enum:
+            - "PeopleAudience"
+        suggestedMinAge:
+          type: integer
+          description: Minimum recommended age in years
+          example: 8
+          minimum: 0
+        suggestedMaxAge:
+          type: integer
+          description: Maximum recommended age in years
+          example: 15
+          minimum: 0
+        audienceType:
+          type: string
+          description: The target group for this production
+          example: Kinder und Jugendliche
+
+    Event:
+      type: object
+      required:
+        - "@type"
+        - startDate
+      additionalProperties: false
+      properties:
+        "@type":
+          type: string
+          enum:
+            - "Event"
+        startDate:
+          type: string
+          description: "The start date and time of the event (in ISO 8601 date format)."
+          format: date-time
+        endDate:
+          type: string
+          description: "The end date and time of the event (in ISO 8601 date format)."
+          format: date-time
+        duration:
+          type: integer
+          format: int64
+          description: The duration of the event in minutes.
+          example: 90
+          minimum: 0
+        # pause:
+        #   type: boolean
+        #   description: "TODO: Gibt es hierfür eine Entsprechung in schema.org?"
+        #   example: false
+        url:
+          type: string
+          description: Link to further information about the event
+          format: uri
+          example: "https://staatstheater-augsburg.de/hedwig_and_the_angry_inch"
+        inLanguage:
+          type: string
+          description: Primary language of the event. Use the BCP 47 Language Tags.
+          example: de
+        subtitleLanguage:
+          type: string
+          description: Language of the sub-/surtitles for this event, if any. Use the BCP 47 Language Tags.
+          example: en
+        
+        location:
+          description: The location of this event. An event can take place at one or more physical locations,
+             one or more virtual locations, or both, if it's a hybrid event.
+          type: array
+          items:
+            anyOf:
+              - $ref: "#/definitions/Place"    
+              - $ref: "#/definitions/VirtualLocation"    
+        performer:
+          type: array
+          items:
+            $ref: "#/definitions/Performer"
+            
+        offers:
+          type: array
+          items:
+            $ref: "#/definitions/Offer"
+        eventStatus:
+          type: string
+          description: |-
+            The status of this event.
+
+            - `EventScheduled`: The event is taking place or has taken place on the `startDate` as scheduled. Use of this value is optional, as it is assumed by default.
+            - `EventCancelled`: The event has been cancelled. Either `startDate` or `previousStartDate` may be used to specify the event's cancelled date(s).
+            - `EventMovedOnline`: Indicates that the event was changed to allow online participation.
+            - `EventPostponed`: The event has been postponed and no new date has been set. The event's `previousStartDate` should be set.
+            - `EventRescheduled`: The event has been rescheduled. The event's `previousStartDate` should be set to the old date and the `startDate` should be set to the event's new date.
+          enum:
+            - EventScheduled
+            - EventCancelled
+            - EventMovedOnline
+            - EventPostponed
+            - EventRescheduled
+        previousStartDate:
+          type: string
+          description: "This field should contain the old `startDate`, if the `eventStatus` is either `EventPostponed` or `EventRescheduled`"
+          format: date-time
+
+    Offer:
+      type: object
+      additionalProperties: false
+      required:
+        - "@type"
+        - priceSpecification
+      properties:
+        "@type":
+          type: string
+          enum:
+            - "Offer"
+        name:
+          type: string
+          example: Normalpreis
+          description: 'A descriptive name for this offer, e.g. "Normalpreis", "Ermäßigt", "Preisgruppe A", usw.'
+        priceSpecification:
+          type: object
+          required:
+            - "@type"
+            - minPrice
+            - priceCurrency
+          properties:
+            "@type":
+              type: string
+              enum:
+                - "PriceSpecification"
+            minPrice:
+              type: number
+              description: The minimum price of this offer.
+              format: float
+              example: 25.50
+              minimum: 0
+            maxPrice:
+              type: number
+              description: The maximum price of this offer.
+              format: float
+              example: 45.50
+              minimum: 0
+            priceCurrency:
+              type: string
+              description: "The currency of the price. Use standard formats: TODO"
+              example: EUR
+        url:
+          type: string
+          description: Ticketing link for this offer
+          format: uri
+          example: "https://webshop-tickets.staatstheater-augsburg.de/de/tickets/hedwig-and-the-angry-inch/brechtbuehne-im-gaswerk-14-12-2023-19-30"
+
+    Creator:
+      type: object
+      additionalProperties: false
+      required:
+        - "@type"
+        - creator
+      properties:
+        "@type":
+          type: string
+          enum:
+            - Role
+        creator:
+          $ref: "#/definitions/Person"
+        roleName:
+          type: string
+          description: 'The name of the role this person played in the creation of the production.'
+          # enum:
+          #   - akrobatik
+          #   - alles
+          #   - assistenz
+          #   - beratung
+          #   - buehne
+          #   - choreographie
+          #   - clownerie
+          #   - dramaturgie
+          #   - expertin-des-alltags
+          #   - fotografie
+          #   - gebaerdensprache
+          #   - gesang
+          #   - grafik
+          #   - inszenierung
+          #   - jonglage
+          #   - kamera-video
+          #   - komposition
+          #   - konzept
+          #   - kostuem
+          #   - kuenstlerische-leitung
+          #   - licht
+          #   - live-musik
+          #   - marketing
+          #   - maske
+          #   - moderation
+          #   - musik
+          #   - musikalische-leitung
+          #   - performance
+          #   - produktion
+          #   - programmierung
+          #   - puppenbau
+          #   - puppenspiel
+          #   - regie
+          #   - rigging
+          #   - schauspiel
+          #   - sound
+          #   - tanz
+          #   - technik
+          #   - technische-leitung
+          #   - text
+          #   - ton
+          #   - uebersetzung
+          #   - vermittlung
+          #   - virtual-reality-design
+
+    Performer:
+      type: object
+      additionalProperties: false
+      required:
+        - "@type"
+        - performer
+      properties:
+        "@type":
+          type: string
+          enum:
+            - PerformanceRole
+        characterName:
+          type: string
+        performer:
+          $ref: "#/definitions/Person"
+
+    Place:
+      type: object
+      additionalProperties: false
+      required:
+        - "@type"
+        - address
+      properties:
+        "@type":
+          type: string
+          enum:
+            - Place
+          description: The type of this location object. Must be "Place" for physical locations.
+        name:
+          type: string
+          example: brechtbühne im Gaswerk
+          description: The location's name
+        address:
+          $ref: "#/definitions/PostalAddress"
+        wheelChairPlaces:
+          type: object
+          description: Describes the presence of reserved spots for wheelchairs in the location, as defined by [a11yjson](https://sozialhelden.github.io/a11yjson/describing-objects/interfaces/#wheelchairplaces).
+          $ref: "#/definitions/WheelChairPlace"
+        latitude:
+          type: number
+          description: "The location's latitude."
+          minimum: -90
+          maximum: 90
+        longitude:
+          type: number
+          description: "The location's longitude."
+          minimum: -180
+          maximum: 180
+
+    PostalAddress:
+      type: object
+      additionalProperties: false
+      required:
+        - "@type"
+      properties:
+        "@type":
+          type: string
+          enum:
+            - PostalAddress
+        postalCode:
+          type: string
+          example: "86156"
+          # pattern: "\d{5}"
+          description: The location's postal code
+        streetAddress:
+          type: string
+          example: Am Alten Gaswerk 7
+          description: The location's street address
+        addressLocality:
+          type: string
+          example: Augsburg
+          description: The city the location is in
+
+    VirtualLocation:
+      type: object
+      additionalProperties: false
+      description: The virtual location of an online or hybrid event
+      required:
+        - "@type"
+      properties:
+        "@type":
+          type: string
+          enum:
+            - VirtualLocation
+          description: The type of this location object. Must be "VirtualLocation" for virtual locations.
+        name:
+          type: string
+          description:
+            The virtual location's name
+          example: Zoom
+        url:
+          type: string
+          format: uri
+          description: The event's URL, if this is an online or hybrid event
+
+    WheelChairPlace:
+      type: object
+      additionalProperties: false
+      description: Describes the presence of reserved spots for wheelchairs, as defined by [a11yjson](https://sozialhelden.github.io/a11yjson/describing-objects/interfaces/#wheelchairplaces).
+      required:
+        - count
+      properties:
+        count:
+          type: integer
+          example: 2
+          description: The number of designated places for wheelchairs in this location.
+        hasSpaceForAssistant:
+          type: boolean
+          description: Is there additional space for an assistant?
+          example: false
+        wheelchairUserCapacity:
+          type: integer
+          description: The number of people using a wheelchair that can be accomodated at the same time. Use this when there is no designated space for wheelchair users, but the number is known.
+
+    Person: 
+      type: object
+      additionalProperties: false
+      required: 
+        - "@type"
+        - name
+      properties: 
+        "@type": 
+          type: string
+          enum: 
+            - Person
+        name: 
+          type: string
+        
+        
+required:
+  - "@context"
+  - organization
+  - productions
+  - version
+additionalProperties: false
+type: object
+properties:
+  "@context":
+    type: string
+    enum: 
+      - "https://schema.org"
+  version:
+    type: string
+    description: The API version that is being used. MUST be the string "v1" for now.
+    enum:
+      - v1
+  organization:
+    type: object
+    required:
+      - "@type"
+      - name
+    properties:
+      "@type":
+        type: string
+        enum:
+          - "Organization"
+      name:
+        type: string
+        description: "The organization's name"
+        example: "Staatstheater Augsburg"
+      address:
+        $ref: "#/definitions/PostalAddress"
+  productions:
+    type: array
+    description: "The collection of all productions in the repertoire."
+    items:
+      $ref: "#/definitions/Production"
+

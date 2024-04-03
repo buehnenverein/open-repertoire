@@ -1,7 +1,7 @@
 module View exposing (main)
 
 import Browser
-import Data.Root exposing (CreatorItem, Event, EventsEventStatus(..), LocationItem(..), Offer, PerformerItem, Production, ProductionsGenre, Root, WheelChairPlaces, rootDecoder)
+import Data.Root exposing (Creator, Event, EventEventStatus(..), LocationItem(..), Offer, Performer, Production, ProductionGenre, Root, WheelChairPlace, rootDecoder)
 import DateFormat
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -308,7 +308,7 @@ productionInfo production =
         ]
 
 
-humanReadableGenre : ProductionsGenre -> String
+humanReadableGenre : ProductionGenre -> String
 humanReadableGenre genre =
     let
         firstToUpper string =
@@ -321,7 +321,7 @@ humanReadableGenre genre =
                         :: rest
                         |> String.fromList
     in
-    Data.Root.productionsGenreToString genre
+    Data.Root.productionGenreToString genre
         |> String.split "-"
         |> List.map firstToUpper
         |> String.join " "
@@ -433,25 +433,25 @@ viewEventTable zone event =
         ]
 
 
-eventStatusToString : Maybe EventsEventStatus -> String
+eventStatusToString : Maybe EventEventStatus -> String
 eventStatusToString eventStatus =
     case eventStatus of
         Nothing ->
             "Findet statt"
 
-        Just EventScheduledEvents ->
+        Just EventScheduledEvent ->
             "Findet statt"
 
-        Just EventCancelledEvents ->
+        Just EventCancelledEvent ->
             "Abgesagt"
 
-        Just EventMovedOnlineEvents ->
+        Just EventMovedOnlineEvent ->
             "Findet online statt"
 
-        Just EventPostponedEvents ->
+        Just EventPostponedEvent ->
             "Verschoben"
 
-        Just EventRescheduledEvents ->
+        Just EventRescheduledEvent ->
             "Geändertes Datum"
 
 
@@ -530,7 +530,7 @@ locationTable location =
                 ]
 
 
-wheelChairCapacity : Maybe WheelChairPlaces -> Maybe String
+wheelChairCapacity : Maybe WheelChairPlace -> Maybe String
 wheelChairCapacity wheelChairPlaces =
     case Maybe.map .wheelchairUserCapacity wheelChairPlaces of
         Just capacity ->
@@ -540,7 +540,7 @@ wheelChairCapacity wheelChairPlaces =
             Just ""
 
 
-spaceForAssistant : Maybe WheelChairPlaces -> String
+spaceForAssistant : Maybe WheelChairPlace -> String
 spaceForAssistant wheelChairPlaces =
     case Maybe.andThen .hasSpaceForAssistant wheelChairPlaces of
         Just True ->
@@ -553,7 +553,7 @@ spaceForAssistant wheelChairPlaces =
             ""
 
 
-wheelChairCount : Maybe WheelChairPlaces -> Maybe String
+wheelChairCount : Maybe WheelChairPlace -> Maybe String
 wheelChairCount wheelChairPlaces =
     Maybe.map .count wheelChairPlaces
         |> Maybe.map String.fromInt
@@ -585,7 +585,7 @@ osmLink place =
 -- PARTICIPANTS
 
 
-viewCreators : Maybe (List CreatorItem) -> Html Msg
+viewCreators : Maybe (List Creator) -> Html Msg
 viewCreators creators =
     div []
         [ div [ class "title is-5" ] [ text "Team" ]
@@ -602,7 +602,7 @@ viewCreators creators =
         ]
 
 
-viewCreator : CreatorItem -> Html Msg
+viewCreator : Creator -> Html Msg
 viewCreator creator =
     tr []
         [ td [] [ text (Maybe.withDefault "" creator.roleName) ]
@@ -610,7 +610,7 @@ viewCreator creator =
         ]
 
 
-viewPerformers : Maybe (List PerformerItem) -> Html Msg
+viewPerformers : Maybe (List Performer) -> Html Msg
 viewPerformers performers =
     div []
         [ div [ class "title is-5" ] [ text "Besetzung" ]
@@ -627,7 +627,7 @@ viewPerformers performers =
         ]
 
 
-viewPerformer : PerformerItem -> Html Msg
+viewPerformer : Performer -> Html Msg
 viewPerformer performer =
     tr []
         [ td [] [ text (Maybe.withDefault "" performer.characterName) ]

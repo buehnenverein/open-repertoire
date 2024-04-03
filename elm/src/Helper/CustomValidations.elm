@@ -1,6 +1,23 @@
 module Helper.CustomValidations exposing (checkAll)
 
-import Data.Root exposing (Address, AddressLocation, Audience, Creator, CreatorItem, Event, EventsEventStatus(..), LocationItem(..), Offer, Organization, Performer, PerformerItem, PriceSpecification, Production, Root, VirtualLocation)
+import Data.Root
+    exposing
+        ( Audience
+        , Creator
+        , Event
+        , EventEventStatus(..)
+        , LocationItem(..)
+        , Offer
+        , Organization
+        , Performer
+        , Person
+        , Place
+        , PostalAddress
+        , PriceSpecification
+        , Production
+        , Root
+        , VirtualLocation
+        )
 import Helper.LanguageCodes as LanguageCodes
 import LanguageTag.Parser
 
@@ -126,7 +143,7 @@ duration path minutes =
         []
 
 
-geocoordinates : Validator AddressLocation
+geocoordinates : Validator Place
 geocoordinates path data =
     case ( data.latitude, data.longitude ) of
         ( Nothing, Just _ ) ->
@@ -152,17 +169,17 @@ teaserOrDescription path data =
 previousStartDateIsSet : Validator Event
 previousStartDateIsSet path data =
     case ( data.eventStatus, data.startDate, data.previousStartDate ) of
-        ( Just EventPostponedEvents, _, Nothing ) ->
+        ( Just EventPostponedEvent, _, Nothing ) ->
             [ ValidationMessage (path ++ "/previousStartDate") "should be set for postponed events" ]
 
-        ( Just EventRescheduledEvents, start, Just previousStart ) ->
+        ( Just EventRescheduledEvent, start, Just previousStart ) ->
             if start == previousStart then
                 [ ValidationMessage (path ++ "/previousStartDate") "should be different from startDate for rescheduled events" ]
 
             else
                 []
 
-        ( Just EventRescheduledEvents, _, Nothing ) ->
+        ( Just EventRescheduledEvent, _, Nothing ) ->
             [ ValidationMessage (path ++ "/previousStartDate") "should be set for rescheduled events" ]
 
         ( _, _, _ ) ->
@@ -214,7 +231,7 @@ event =
         , field "/inLanguage" .inLanguage (maybe languageTagValid)
         , field "/location" .location (maybe (list location))
         , field "/offers" .offers (maybe (list offer))
-        , field "/performer" .performer (maybe (list performerItem))
+        , field "/performer" .performer (maybe (list performer))
         , field "/previousStartDate" .previousStartDate optional
         , field "/startDate" .startDate required
         , field "/subtitleLanguage" .subtitleLanguage (maybe languageTagValid)
@@ -223,33 +240,26 @@ event =
         ]
 
 
-creatorItem : Validator CreatorItem
-creatorItem =
+creator : Validator Creator
+creator =
     object
-        [ field "/creator" .creator creator
+        [ field "/creator" .creator person
         , field "/roleName" .roleName optional
         ]
 
 
-creator : Validator Creator
-creator =
+person : Validator Person
+person =
     object
         [ field "/name" .name required
-        ]
-
-
-performerItem : Validator PerformerItem
-performerItem =
-    object
-        [ field "/performer" .performer performer
-        , field "/characterName" .characterName optional
         ]
 
 
 performer : Validator Performer
 performer =
     object
-        [ field "/name" .name required
+        [ field "/performer" .performer person
+        , field "/characterName" .characterName optional
         ]
 
 
@@ -279,7 +289,7 @@ production =
         [ field "/accessibilitySummary" .accessibilitySummary optional
         , field "/additionalInfo" .additionalInfo optional
         , field "/audience" .audience (maybe audience)
-        , field "/creator" .creator (maybe (list creatorItem))
+        , field "/creator" .creator (maybe (list creator))
         , field "/description" .description optional
         , field "/events" .events (list event)
         , field "/subtitle" .subtitle optional
@@ -289,7 +299,7 @@ production =
         ]
 
 
-address : Validator Address
+address : Validator PostalAddress
 address =
     object
         [ field "/addressLocality" .addressLocality optional
@@ -315,14 +325,14 @@ location : Validator LocationItem
 location path data =
     case data of
         Physical physical ->
-            addressLocation path physical
+            place path physical
 
         Virtual virtual ->
             virtualLocation path virtual
 
 
-addressLocation : Validator AddressLocation
-addressLocation =
+place : Validator Place
+place =
     object
         [ field "/name" .name optional
         , field "/address" .address address
