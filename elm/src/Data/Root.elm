@@ -238,8 +238,8 @@ type ProductionGenre
 
 
 type LocationItem
-    = Physical Place
-    | Virtual VirtualLocation
+    = LocationItemPl Place
+    | LocationItemVi VirtualLocation
 
 
 type alias Organization =
@@ -805,10 +805,9 @@ locationDecoder =
 
 locationItemDecoder : Decoder LocationItem
 locationItemDecoder =
-    Decode.oneOf
-        [ Decode.map Physical placeDecoder
-        , Decode.map Virtual virtualLocationDecoder
-        ]
+    Decode.oneOf [ placeDecoder |> Decode.map LocationItemPl
+                 , virtualLocationDecoder |> Decode.map LocationItemVi
+                 ]
 
 
 offersDecoder : Decoder (List Offer)
@@ -1369,11 +1368,11 @@ encodeLocation location =
 encodeLocationItem : LocationItem -> Value
 encodeLocationItem locationItem =
     case locationItem of
-        Physical address ->
-            encodePlace address
+        LocationItemPl place ->
+            encodePlace place
 
-        Virtual virtual ->
-            encodeVirtualLocation virtual
+        LocationItemVi virtualLocation ->
+            encodeVirtualLocation virtualLocation
 
 
 encodeOffers : List Offer -> Value

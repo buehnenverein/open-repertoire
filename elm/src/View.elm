@@ -502,7 +502,7 @@ locationTag locations =
 locationTable : LocationItem -> Html Msg
 locationTable location =
     case location of
-        Physical place ->
+        LocationItemPl place ->
             table [ class "table" ]
                 [ tbody []
                     [ maybeTableRow "Name" place.name
@@ -521,7 +521,7 @@ locationTable location =
                     ]
                 ]
 
-        Virtual info ->
+        LocationItemVi info ->
             table [ class "table" ]
                 [ tbody []
                     [ maybeTableRow "Name" info.name
@@ -699,10 +699,10 @@ isOnlineEvent locations =
         isVirtualLocation : LocationItem -> Bool
         isVirtualLocation location =
             case location of
-                Physical _ ->
+                LocationItemPl _ ->
                     False
 
-                Virtual _ ->
+                LocationItemVi _ ->
                     True
     in
     List.any isVirtualLocation locations
@@ -714,10 +714,10 @@ isOfflineEvent locations =
         isPhysicalLocation : LocationItem -> Bool
         isPhysicalLocation location =
             case location of
-                Physical _ ->
+                LocationItemPl _ ->
                     True
 
-                Virtual _ ->
+                LocationItemVi _ ->
                     False
     in
     List.any isPhysicalLocation locations

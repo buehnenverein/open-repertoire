@@ -220,7 +220,7 @@
           "description": "The location of this event. An event can take place at one or more physical locations, one or more virtual locations, or both, if it's a hybrid event.",
           "type": "array",
           "items": {
-            "anyOf": [
+            "oneOf": [
               {
                 "$ref": "#/definitions/Place"
               },

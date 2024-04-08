@@ -6982,8 +6982,8 @@ var $author$project$Helper$CustomValidations$virtualLocation = $author$project$H
 var $author$project$Helper$CustomValidations$location = F2(
 	function (path, data) {
 		if (!data.$) {
-			var physical = data.a;
-			return A2($author$project$Helper$CustomValidations$place, path, physical);
+			var placeItem = data.a;
+			return A2($author$project$Helper$CustomValidations$place, path, placeItem);
 		} else {
 			var virtual = data.a;
 			return A2($author$project$Helper$CustomValidations$virtualLocation, path, virtual);
@@ -7702,10 +7702,10 @@ var $author$project$Data$Root$eventEventStatusDecoder = A2(
 	$elm$json$Json$Decode$andThen,
 	A2($elm$core$Basics$composeR, $author$project$Data$Root$parseEventEventStatus, $elm_community$json_extra$Json$Decode$Extra$fromResult),
 	$elm$json$Json$Decode$string);
-var $author$project$Data$Root$Physical = function (a) {
+var $author$project$Data$Root$LocationItemPl = function (a) {
 	return {$: 0, a: a};
 };
-var $author$project$Data$Root$Virtual = function (a) {
+var $author$project$Data$Root$LocationItemVi = function (a) {
 	return {$: 1, a: a};
 };
 var $author$project$Data$Root$Place = F6(
@@ -7808,8 +7808,8 @@ var $author$project$Data$Root$virtualLocationDecoder = A4(
 var $author$project$Data$Root$locationItemDecoder = $elm$json$Json$Decode$oneOf(
 	_List_fromArray(
 		[
-			A2($elm$json$Json$Decode$map, $author$project$Data$Root$Physical, $author$project$Data$Root$placeDecoder),
-			A2($elm$json$Json$Decode$map, $author$project$Data$Root$Virtual, $author$project$Data$Root$virtualLocationDecoder)
+			A2($elm$json$Json$Decode$map, $author$project$Data$Root$LocationItemPl, $author$project$Data$Root$placeDecoder),
+			A2($elm$json$Json$Decode$map, $author$project$Data$Root$LocationItemVi, $author$project$Data$Root$virtualLocationDecoder)
 		]));
 var $author$project$Data$Root$locationDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$locationItemDecoder);
 var $author$project$Data$Root$Offer = F4(

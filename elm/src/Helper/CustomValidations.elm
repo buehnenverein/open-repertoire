@@ -324,10 +324,10 @@ audience path data =
 location : Validator LocationItem
 location path data =
     case data of
-        Physical physical ->
-            place path physical
+        LocationItemPl placeItem ->
+            place path placeItem
 
-        Virtual virtual ->
+        LocationItemVi virtual ->
             virtualLocation path virtual
 
 
