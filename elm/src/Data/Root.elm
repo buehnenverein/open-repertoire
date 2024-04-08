@@ -135,7 +135,7 @@ type alias Offer =
 type alias Participant =
     { function : Maybe String
     , names : List String
-    , roleName : Maybe String
+    , role : Maybe String
     }
 
 
@@ -449,7 +449,7 @@ participantDecoder =
     Decode.succeed Participant
         |> optional "function" (Decode.nullable Decode.string) Nothing
         |> required "names" namesDecoder
-        |> optional "roleName" (Decode.nullable Decode.string) Nothing
+        |> optional "role" (Decode.nullable Decode.string) Nothing
 
 
 participantsDecoder : Decoder (List Participant)
@@ -840,7 +840,7 @@ encodeParticipant participant =
     []
         |> Encode.optional "function" participant.function Encode.string
         |> Encode.required "names" participant.names encodeNames
-        |> Encode.optional "roleName" participant.roleName Encode.string
+        |> Encode.optional "role" participant.role Encode.string
         |> Encode.object
 
 

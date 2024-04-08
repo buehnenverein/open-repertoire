@@ -426,11 +426,11 @@ viewParticipant : Participant -> Html Msg
 viewParticipant participant =
     li []
         [ [ participant.function
-          , participant.roleName
+          , participant.role
           , Just (String.join " / " participant.names)
           ]
             |> List.filterMap identity
-            |> String.join ":"
+            |> String.join ": "
             |> text
         ]
 

@@ -292,7 +292,7 @@ components:
           #   - uebersetzung
           #   - vermittlung
           #   - virtual-reality-design
-        roleName:
+        role:
           type: string
           description: 'The name of the role(s) this participant is performing on stage, if any.'
         names:

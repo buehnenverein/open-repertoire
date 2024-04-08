@@ -161,7 +161,7 @@ participant =
     object
         [ field "/names" .names (list required)
         , field "/function" .function optional
-        , field "/roleName" .roleName optional
+        , field "/role" .role optional
         ]
 
 

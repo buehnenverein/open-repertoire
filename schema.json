@@ -333,7 +333,7 @@
                   "type": "string",
                   "description": "This participant's function in the production. Must use one of the pre-defined values."
                 },
-                "roleName": {
+                "role": {
                   "type": "string",
                   "description": "The name of the role(s) this participant is performing on stage, if any."
                 },

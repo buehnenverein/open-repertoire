@@ -6612,7 +6612,7 @@ var $author$project$Helper$CustomValidations$participant = $author$project$Helpe
 			$author$project$Helper$CustomValidations$optional),
 			A3(
 			$author$project$Helper$CustomValidations$field,
-			'/roleName',
+			'/role',
 			function ($) {
 				return $.bt;
 			},
@@ -7216,13 +7216,13 @@ var $author$project$Data$Root$genreDecoder = A2(
 	A2($elm$core$Basics$composeR, $author$project$Data$Root$parseGenre, $elm_community$json_extra$Json$Decode$Extra$fromResult),
 	$elm$json$Json$Decode$string);
 var $author$project$Data$Root$Participant = F3(
-	function (_function, names, roleName) {
-		return {aR: _function, bb: names, bt: roleName};
+	function (_function, names, role) {
+		return {aR: _function, bb: names, bt: role};
 	});
 var $author$project$Data$Root$namesDecoder = $elm$json$Json$Decode$list($elm$json$Json$Decode$string);
 var $author$project$Data$Root$participantDecoder = A4(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-	'roleName',
+	'role',
 	$elm$json$Json$Decode$nullable($elm$json$Json$Decode$string),
 	$elm$core$Maybe$Nothing,
 	A3(

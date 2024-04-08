@@ -25129,13 +25129,13 @@ var $author$project$Data$Root$genreDecoder = A2(
 	A2($elm$core$Basics$composeR, $author$project$Data$Root$parseGenre, $elm_community$json_extra$Json$Decode$Extra$fromResult),
 	$elm$json$Json$Decode$string);
 var $author$project$Data$Root$Participant = F3(
-	function (_function, names, roleName) {
-		return {aU: _function, bc: names, bv: roleName};
+	function (_function, names, role) {
+		return {aU: _function, bc: names, bv: role};
 	});
 var $author$project$Data$Root$namesDecoder = $elm$json$Json$Decode$list($elm$json$Json$Decode$string);
 var $author$project$Data$Root$participantDecoder = A4(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-	'roleName',
+	'role',
 	$elm$json$Json$Decode$nullable($elm$json$Json$Decode$string),
 	$elm$core$Maybe$Nothing,
 	A3(
@@ -25811,7 +25811,7 @@ var $author$project$View$viewParticipant = function (participant) {
 				$elm$html$Html$text(
 				A2(
 					$elm$core$String$join,
-					':',
+					': ',
 					A2(
 						$elm$core$List$filterMap,
 						$elm$core$Basics$identity,
