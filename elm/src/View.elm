@@ -1,7 +1,7 @@
 module View exposing (main)
 
 import Browser
-import Data.Root exposing (CreatorRole, Event, EventEventStatus(..), LocationItem(..), Offer, PerformanceRole, Production, ProductionGenre, Root, WheelChairPlace, rootDecoder)
+import Data.Root exposing (CreatorRole, Event, EventEventStatus(..), LocationItem(..), Offer, Organization, PerformanceRole, Production, ProductionGenre, Root, WheelChairPlace, rootDecoder)
 import DateFormat
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -277,18 +277,21 @@ productionNameMatches filter production =
 productionTable : Production -> Html Msg
 productionTable production =
     div [ class "tile is-ancestor" ]
-        [ div [ class "tile is-8 is-parent" ]
+        [ div [ class "tile is-8 is-vertical is-parent" ]
             [ div [ class "tile is-child box" ]
                 [ productionInfo production ]
+            , div [ class "tile is-child box" ]
+                [ viewProductionAccessibility production
+                ]
             ]
         , div [ class "tile is-vertical is-parent" ]
             [ div [ class "tile is-child box" ]
                 [ viewCreators production.creator ]
             , div [ class "tile is-child box" ]
-                [ viewProductionAccessibility production
+                [ viewProductionAudience production
                 ]
             , div [ class "tile is-child box" ]
-                [ viewProductionAudience production
+                [ viewFunders production
                 ]
             ]
         ]
@@ -373,6 +376,35 @@ viewAccessMode items =
         |> String.join ", "
 
 
+viewFunders : Production -> Html Msg
+viewFunders production =
+    div []
+        [ div [ class "title is-5" ] [ text "Förderer" ]
+        , case production.funder of
+            Nothing ->
+                text "Die Daten enthalten keine Informationen zu Förderern"
+
+            Just list ->
+                div [] (List.map viewFunder list)
+        ]
+
+
+viewFunder : Organization -> Html Msg
+viewFunder organization =
+    table [ class "table" ]
+        [ tbody []
+            [ tableRow "Name" organization.name
+            , maybeTableRow "Addresse" (organization.address |> Maybe.andThen .streetAddress)
+            , maybeTableRow "Postleitzahl" (organization.address |> Maybe.andThen .postalCode)
+            , maybeTableRow "Stadt" (organization.address |> Maybe.andThen .addressLocality)
+            , tr []
+                [ th [] [ text "Logo" ]
+                , td [] [ maybeLink { url = organization.logo, description = Just "Link" } ]
+                ]
+            ]
+        ]
+
+
 
 -- EVENTS
 
@@ -426,7 +458,7 @@ viewEventTable zone event =
                     [ text "Link"
                     ]
                 , td []
-                    [ maybeLink event.url
+                    [ maybeLink { url = event.url, description = Nothing }
                     ]
                 ]
             ]
@@ -685,7 +717,7 @@ viewOffer offer =
             [ text (Maybe.withDefault "" offer.name)
             ]
         , td [] [ text formattedPrice ]
-        , td [] [ maybeLink offer.url ]
+        , td [] [ maybeLink { url = offer.url, description = Nothing } ]
         ]
 
 
@@ -854,11 +886,11 @@ formatDuration duration =
         String.fromInt hours ++ ":00" ++ "h"
 
 
-maybeLink : Maybe String -> Html Msg
-maybeLink url =
+maybeLink : { url : Maybe String, description : Maybe String } -> Html Msg
+maybeLink { url, description } =
     case url of
         Just link ->
-            Html.a [ href link, target "_blank" ] [ text link ]
+            Html.a [ href link, target "_blank" ] [ text (Maybe.withDefault link description) ]
 
         Nothing ->
             text ""

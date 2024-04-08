@@ -134,6 +134,13 @@
           "items": {
             "$ref": "#/definitions/CreatorRole"
           }
+        },
+        "funder": {
+          "type": "array",
+          "description": "A list of organization's that support this production through some kind of financial contribution.",
+          "items": {
+            "$ref": "#/definitions/Organization"
+          }
         }
       }
     },
@@ -508,6 +515,33 @@
           "type": "string"
         }
       }
+    },
+    "Organization": {
+      "type": "object",
+      "required": [
+        "@type",
+        "name"
+      ],
+      "properties": {
+        "@type": {
+          "type": "string",
+          "enum": [
+            "Organization"
+          ]
+        },
+        "name": {
+          "type": "string",
+          "description": "The organization's name",
+          "example": "Staatstheater Augsburg"
+        },
+        "address": {
+          "$ref": "#/definitions/PostalAddress"
+        },
+        "logo": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
     }
   },
   "required": [
@@ -533,27 +567,7 @@
       ]
     },
     "organization": {
-      "type": "object",
-      "required": [
-        "@type",
-        "name"
-      ],
-      "properties": {
-        "@type": {
-          "type": "string",
-          "enum": [
-            "Organization"
-          ]
-        },
-        "name": {
-          "type": "string",
-          "description": "The organization's name",
-          "example": "Staatstheater Augsburg"
-        },
-        "address": {
-          "$ref": "#/definitions/PostalAddress"
-        }
-      }
+      "$ref": "#/definitions/Organization"
     },
     "productions": {
       "type": "array",

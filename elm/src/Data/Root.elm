@@ -17,10 +17,6 @@ type AtContext
     = HttpsColonSlashSlashschemaDotorg
 
 
-type OrganizationAttype
-    = OrganizationType
-
-
 type PersonAttype
     = PersonType
 
@@ -48,6 +44,10 @@ type EventAttype
 type ProductionAttype
     = CreativeWorkType
     | PlayType
+
+
+type OrganizationAttype
+    = OrganizationType
 
 
 type VirtualLocationAttype
@@ -105,6 +105,14 @@ type alias Offer =
     }
 
 
+type alias Organization =
+    { atType : OrganizationAttype
+    , address : Maybe PostalAddress
+    , logo : Maybe String
+    , name : String
+    }
+
+
 type alias PerformanceRole =
     { atType : PerformanceRoleAttype
     , characterName : Maybe String
@@ -147,6 +155,7 @@ type alias Production =
     , creator : Maybe (List CreatorRole)
     , description : Maybe String
     , events : List Event
+    , funder : Maybe (List Organization)
     , genre : Maybe ProductionGenre
     , name : String
     , subtitle : Maybe String
@@ -242,13 +251,6 @@ type LocationItem
     | LocationItemVi VirtualLocation
 
 
-type alias Organization =
-    { atType : OrganizationAttype
-    , address : Maybe PostalAddress
-    , name : String
-    }
-
-
 type alias PriceSpecification =
     { atType : PriceSpecificationAttype
     , maxPrice : Maybe Float
@@ -274,21 +276,6 @@ parseAtContext atContext =
 
         _ ->
             Err <| "Unknown atContext type: " ++ atContext
-
-
-organizationAttypeDecoder : Decoder OrganizationAttype
-organizationAttypeDecoder =
-    Decode.string |> Decode.andThen (parseOrganizationAttype >> Decode.fromResult)
-
-
-parseOrganizationAttype : String -> Result String OrganizationAttype
-parseOrganizationAttype organizationAttype =
-    case organizationAttype of
-        "Organization" ->
-            Ok OrganizationType
-
-        _ ->
-            Err <| "Unknown organizationAttype type: " ++ organizationAttype
 
 
 personAttypeDecoder : Decoder PersonAttype
@@ -399,6 +386,21 @@ parseProductionAttype productionAttype =
             Err <| "Unknown productionAttype type: " ++ productionAttype
 
 
+organizationAttypeDecoder : Decoder OrganizationAttype
+organizationAttypeDecoder =
+    Decode.string |> Decode.andThen (parseOrganizationAttype >> Decode.fromResult)
+
+
+parseOrganizationAttype : String -> Result String OrganizationAttype
+parseOrganizationAttype organizationAttype =
+    case organizationAttype of
+        "Organization" ->
+            Ok OrganizationType
+
+        _ ->
+            Err <| "Unknown organizationAttype type: " ++ organizationAttype
+
+
 virtualLocationAttypeDecoder : Decoder VirtualLocationAttype
 virtualLocationAttypeDecoder =
     Decode.string |> Decode.andThen (parseVirtualLocationAttype >> Decode.fromResult)
@@ -502,6 +504,15 @@ offerDecoder =
         |> optional "url" (Decode.nullable Decode.string) Nothing
 
 
+organizationDecoder : Decoder Organization
+organizationDecoder =
+    Decode.succeed Organization
+        |> required "@type" organizationAttypeDecoder
+        |> optional "address" (Decode.nullable postalAddressDecoder) Nothing
+        |> optional "logo" (Decode.nullable Decode.string) Nothing
+        |> required "name" Decode.string
+
+
 performanceRoleDecoder : Decoder PerformanceRole
 performanceRoleDecoder =
     Decode.succeed PerformanceRole
@@ -550,6 +561,7 @@ productionDecoder =
         |> optional "creator" (Decode.nullable creatorDecoder) Nothing
         |> optional "description" (Decode.nullable Decode.string) Nothing
         |> required "events" eventsDecoder
+        |> optional "funder" (Decode.nullable funderDecoder) Nothing
         |> optional "genre" (Decode.nullable productionGenreDecoder) Nothing
         |> required "name" Decode.string
         |> optional "subtitle" (Decode.nullable Decode.string) Nothing
@@ -696,6 +708,11 @@ eventsDecoder =
     Decode.list eventDecoder
 
 
+funderDecoder : Decoder (List Organization)
+funderDecoder =
+    Decode.list organizationDecoder
+
+
 productionGenreDecoder : Decoder ProductionGenre
 productionGenreDecoder =
     Decode.string |> Decode.andThen (parseProductionGenre >> Decode.fromResult)
@@ -815,14 +832,6 @@ offersDecoder =
     Decode.list offerDecoder
 
 
-organizationDecoder : Decoder Organization
-organizationDecoder =
-    Decode.succeed Organization
-        |> required "@type" organizationAttypeDecoder
-        |> optional "address" (Decode.nullable postalAddressDecoder) Nothing
-        |> required "name" Decode.string
-
-
 performerDecoder : Decoder (List PerformanceRole)
 performerDecoder =
     Decode.list performanceRoleDecoder
@@ -867,18 +876,6 @@ atContextToString atContext =
     case atContext of
         HttpsColonSlashSlashschemaDotorg ->
             "https://schema.org"
-
-
-encodeOrganizationAttype : OrganizationAttype -> Value
-encodeOrganizationAttype organizationAttype =
-    organizationAttype |> organizationAttypeToString |> Encode.string
-
-
-organizationAttypeToString : OrganizationAttype -> String
-organizationAttypeToString organizationAttype =
-    case organizationAttype of
-        OrganizationType ->
-            "Organization"
 
 
 encodePersonAttype : PersonAttype -> Value
@@ -966,6 +963,18 @@ productionAttypeToString productionAttype =
 
         PlayType ->
             "Play"
+
+
+encodeOrganizationAttype : OrganizationAttype -> Value
+encodeOrganizationAttype organizationAttype =
+    organizationAttype |> organizationAttypeToString |> Encode.string
+
+
+organizationAttypeToString : OrganizationAttype -> String
+organizationAttypeToString organizationAttype =
+    case organizationAttype of
+        OrganizationType ->
+            "Organization"
 
 
 encodeVirtualLocationAttype : VirtualLocationAttype -> Value
@@ -1063,6 +1072,16 @@ encodeOffer offer =
         |> Encode.object
 
 
+encodeOrganization : Organization -> Value
+encodeOrganization organization =
+    []
+        |> Encode.required "@type" organization.atType encodeOrganizationAttype
+        |> Encode.optional "address" organization.address encodePostalAddress
+        |> Encode.optional "logo" organization.logo Encode.string
+        |> Encode.required "name" organization.name Encode.string
+        |> Encode.object
+
+
 encodePerformanceRole : PerformanceRole -> Value
 encodePerformanceRole performanceRole =
     []
@@ -1115,6 +1134,7 @@ encodeProduction production =
         |> Encode.optional "creator" production.creator encodeCreator
         |> Encode.optional "description" production.description Encode.string
         |> Encode.required "events" production.events encodeEvents
+        |> Encode.optional "funder" production.funder encodeFunder
         |> Encode.optional "genre" production.genre encodeProductionGenre
         |> Encode.required "name" production.name Encode.string
         |> Encode.optional "subtitle" production.subtitle Encode.string
@@ -1260,6 +1280,12 @@ encodeEvents events =
         |> Encode.list encodeEvent
 
 
+encodeFunder : List Organization -> Value
+encodeFunder funder =
+    funder
+        |> Encode.list encodeOrganization
+
+
 encodeProductionGenre : ProductionGenre -> Value
 encodeProductionGenre productionGenre =
     productionGenre |> productionGenreToString |> Encode.string
@@ -1379,15 +1405,6 @@ encodeOffers : List Offer -> Value
 encodeOffers offers =
     offers
         |> Encode.list encodeOffer
-
-
-encodeOrganization : Organization -> Value
-encodeOrganization organization =
-    []
-        |> Encode.required "@type" organization.atType encodeOrganizationAttype
-        |> Encode.optional "address" organization.address encodePostalAddress
-        |> Encode.required "name" organization.name Encode.string
-        |> Encode.object
 
 
 encodePerformer : List PerformanceRole -> Value
