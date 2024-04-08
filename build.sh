@@ -23,7 +23,6 @@ then
   cp ./js2e_output/src/Data/Root.elm ./elm/src/Data/Root.elm
   cp ./js2e_output/src/Helper/Encode.elm ./elm/src/Helper/Encode.elm
   echo "schema.json has changed and the Elm models were automatically generated. Make sure everything is correct, stage schema.json and re-run the build script"
-  exit 1
 fi
 
 # Compile validator app.
