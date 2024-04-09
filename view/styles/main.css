@@ -1,0 +1,38 @@
+.grid-container {
+	display: grid;
+	grid-template-columns: 2fr 1fr 2fr;
+}
+
+@media (max-width: 1024px) {
+	.grid-container {
+		grid-template-columns: 1fr;
+	}
+}
+
+.grid-column {
+	display: grid;
+	grid-template-rows: auto 1fr auto;
+}
+
+.grid-item-centered {
+	place-self: center center;
+}
+
+.sticky-header {
+	position: sticky;
+	top: 0;
+	background: white;
+	z-index: 10;
+}
+
+span.tag[data-tooltip] {
+	border-bottom: none;
+}
+
+ol {
+	list-style-position: inside;
+}
+
+.preserve-newlines {
+	white-space: pre-line;
+}
