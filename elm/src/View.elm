@@ -302,6 +302,7 @@ productionInfo production =
     table [ class "table is-hoverable" ]
         [ tbody []
             [ tableRow "Titel" production.name
+            , maybeTableRow "Sprache" production.inLanguage
             , maybeTableRow "Untertitel" production.subtitle
             , maybeTableRow "Beschreibung" production.description
             , maybeTableRow "Kurzbeschreibung" production.abstract
@@ -448,7 +449,6 @@ viewEventTable zone event =
             , tableRow "Enddatum" (formatDate (Maybe.withDefault "" event.endDate) zone)
             , tableRow "Endzeit" (formatTime (Maybe.withDefault "" event.endDate) zone)
             , maybeTableRow "Dauer" (Maybe.map formatDuration event.duration)
-            , maybeTableRow "Sprache" event.inLanguage
             , maybeTableRow "Untertitel in" event.subtitleLanguage
             , tableRow "Status" (eventStatusToString event.eventStatus)
             , tableRow "Vorheriges Startdatum" (formatDate (Maybe.withDefault "" event.previousStartDate) zone)

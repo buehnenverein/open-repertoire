@@ -228,7 +228,6 @@ event =
     object
         [ field "/duration" .duration (maybe duration)
         , field "/endDate" .endDate optional
-        , field "/inLanguage" .inLanguage (maybe languageTagValid)
         , field "/location" .location (maybe (list location))
         , field "/offers" .offers (maybe (list offer))
         , field "/performer" .performer (maybe (list performer))
@@ -292,6 +291,7 @@ production =
         , field "/creator" .creator (maybe (list creator))
         , field "/description" .description optional
         , field "/events" .events (list event)
+        , field "/inLanguage" .inLanguage (maybe languageTagValid)
         , field "/subtitle" .subtitle optional
         , field "/abstract" .abstract optional
         , field "/name" .name required

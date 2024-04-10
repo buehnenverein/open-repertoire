@@ -86,7 +86,6 @@ type alias Event =
     , duration : Maybe Int
     , endDate : Maybe String
     , eventStatus : Maybe EventEventStatus
-    , inLanguage : Maybe String
     , location : Maybe (List LocationItem)
     , offers : Maybe (List Offer)
     , performer : Maybe (List PerformanceRole)
@@ -157,6 +156,7 @@ type alias Production =
     , events : List Event
     , funder : Maybe (List Organization)
     , genre : Maybe ProductionGenre
+    , inLanguage : Maybe String
     , name : String
     , subtitle : Maybe String
     }
@@ -485,7 +485,6 @@ eventDecoder =
         |> optional "duration" (Decode.nullable Decode.int) Nothing
         |> optional "endDate" (Decode.nullable Decode.string) Nothing
         |> optional "eventStatus" (Decode.nullable eventEventStatusDecoder) Nothing
-        |> optional "inLanguage" (Decode.nullable Decode.string) Nothing
         |> optional "location" (Decode.nullable locationDecoder) Nothing
         |> optional "offers" (Decode.nullable offersDecoder) Nothing
         |> optional "performer" (Decode.nullable performerDecoder) Nothing
@@ -563,6 +562,7 @@ productionDecoder =
         |> required "events" eventsDecoder
         |> optional "funder" (Decode.nullable funderDecoder) Nothing
         |> optional "genre" (Decode.nullable productionGenreDecoder) Nothing
+        |> optional "inLanguage" (Decode.nullable Decode.string) Nothing
         |> required "name" Decode.string
         |> optional "subtitle" (Decode.nullable Decode.string) Nothing
 
@@ -1051,7 +1051,6 @@ encodeEvent event =
         |> Encode.optional "duration" event.duration Encode.int
         |> Encode.optional "endDate" event.endDate Encode.string
         |> Encode.optional "eventStatus" event.eventStatus encodeEventEventStatus
-        |> Encode.optional "inLanguage" event.inLanguage Encode.string
         |> Encode.optional "location" event.location encodeLocation
         |> Encode.optional "offers" event.offers encodeOffers
         |> Encode.optional "performer" event.performer encodePerformer
@@ -1136,6 +1135,7 @@ encodeProduction production =
         |> Encode.required "events" production.events encodeEvents
         |> Encode.optional "funder" production.funder encodeFunder
         |> Encode.optional "genre" production.genre encodeProductionGenre
+        |> Encode.optional "inLanguage" production.inLanguage Encode.string
         |> Encode.required "name" production.name Encode.string
         |> Encode.optional "subtitle" production.subtitle Encode.string
         |> Encode.object

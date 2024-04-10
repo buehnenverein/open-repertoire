@@ -125,6 +125,11 @@
           "description": "A human-readable summary of specific accessibility features or deficiencies of the production.",
           "example": "Dieses Stück enthält Stroboskoplicht"
         },
+        "inLanguage": {
+          "type": "string",
+          "description": "Primary language of this production. Should contain a BCP 47 Language Tag.",
+          "example": "de"
+        },
         "audience": {
           "$ref": "#/definitions/Audience"
         },
@@ -212,11 +217,6 @@
           "description": "Link to further information about the event",
           "format": "uri",
           "example": "https://staatstheater-augsburg.de/hedwig_and_the_angry_inch"
-        },
-        "inLanguage": {
-          "type": "string",
-          "description": "Primary language of the event. Use the BCP 47 Language Tags.",
-          "example": "de"
         },
         "subtitleLanguage": {
           "type": "string",
