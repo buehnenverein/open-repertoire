@@ -123,6 +123,11 @@ definitions:
           description: A list of organization's that support this production through some kind of financial contribution.
           items:
             $ref: "#/definitions/Organization"
+        sponsor:
+          type: array
+          description: A person or organization that supports this production through a pledge, promise, or financial contribution.
+          items:
+            $ref: "#/definitions/Organization"
 
     Audience:
       type: object

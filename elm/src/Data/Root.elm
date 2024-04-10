@@ -158,6 +158,7 @@ type alias Production =
     , genre : Maybe ProductionGenre
     , inLanguage : Maybe String
     , name : String
+    , sponsor : Maybe (List Organization)
     , subtitle : Maybe String
     }
 
@@ -564,6 +565,7 @@ productionDecoder =
         |> optional "genre" (Decode.nullable productionGenreDecoder) Nothing
         |> optional "inLanguage" (Decode.nullable Decode.string) Nothing
         |> required "name" Decode.string
+        |> optional "sponsor" (Decode.nullable sponsorDecoder) Nothing
         |> optional "subtitle" (Decode.nullable Decode.string) Nothing
 
 
@@ -849,6 +851,11 @@ priceSpecificationDecoder =
 productionsDecoder : Decoder (List Production)
 productionsDecoder =
     Decode.list productionDecoder
+
+
+sponsorDecoder : Decoder (List Organization)
+sponsorDecoder =
+    Decode.list organizationDecoder
 
 
 versionDecoder : Decoder Version
@@ -1137,6 +1144,7 @@ encodeProduction production =
         |> Encode.optional "genre" production.genre encodeProductionGenre
         |> Encode.optional "inLanguage" production.inLanguage Encode.string
         |> Encode.required "name" production.name Encode.string
+        |> Encode.optional "sponsor" production.sponsor encodeSponsor
         |> Encode.optional "subtitle" production.subtitle Encode.string
         |> Encode.object
 
@@ -1427,6 +1435,12 @@ encodeProductions : List Production -> Value
 encodeProductions productions =
     productions
         |> Encode.list encodeProduction
+
+
+encodeSponsor : List Organization -> Value
+encodeSponsor sponsor =
+    sponsor
+        |> Encode.list encodeOrganization
 
 
 encodeVersion : Version -> Value

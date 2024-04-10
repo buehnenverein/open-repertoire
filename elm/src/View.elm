@@ -276,22 +276,31 @@ productionNameMatches filter production =
 
 productionTable : Production -> Html Msg
 productionTable production =
-    div [ class "tile is-ancestor" ]
-        [ div [ class "tile is-8 is-vertical is-parent" ]
-            [ div [ class "tile is-child box" ]
-                [ productionInfo production ]
-            , div [ class "tile is-child box" ]
-                [ viewProductionAccessibility production
+    div [ class "tile is-vertical is-ancestor" ]
+        [ div [ class "tile" ]
+            [ div [ class "tile is-8 is-vertical is-parent" ]
+                [ div [ class "tile is-child box" ]
+                    [ productionInfo production ]
+                , div [ class "tile is-child box" ]
+                    [ viewProductionAccessibility production
+                    ]
+                ]
+            , div [ class "tile is-vertical is-parent" ]
+                [ div [ class "tile is-child box" ]
+                    [ viewCreators production.creator ]
+                , div [ class "tile is-child box" ]
+                    [ viewProductionAudience production
+                    ]
                 ]
             ]
-        , div [ class "tile is-vertical is-parent" ]
+        , div [ class "tile is-parent" ]
             [ div [ class "tile is-child box" ]
-                [ viewCreators production.creator ]
-            , div [ class "tile is-child box" ]
-                [ viewProductionAudience production
-                ]
-            , div [ class "tile is-child box" ]
                 [ viewFunders production
+                ]
+            ]
+        , div [ class "tile is-parent" ]
+            [ div [ class "tile is-child box" ]
+                [ viewSponsors production
                 ]
             ]
         ]
@@ -392,6 +401,35 @@ viewFunders production =
 
 viewFunder : Organization -> Html Msg
 viewFunder organization =
+    table [ class "table" ]
+        [ tbody []
+            [ tableRow "Name" organization.name
+            , maybeTableRow "Addresse" (organization.address |> Maybe.andThen .streetAddress)
+            , maybeTableRow "Postleitzahl" (organization.address |> Maybe.andThen .postalCode)
+            , maybeTableRow "Stadt" (organization.address |> Maybe.andThen .addressLocality)
+            , tr []
+                [ th [] [ text "Logo" ]
+                , td [] [ maybeLink { url = organization.logo, description = Just "Link" } ]
+                ]
+            ]
+        ]
+
+
+viewSponsors : Production -> Html Msg
+viewSponsors production =
+    div []
+        [ div [ class "title is-5" ] [ text "Sponsoren" ]
+        , case production.sponsor of
+            Nothing ->
+                text "Die Daten enthalten keine Informationen zu Sponsoren"
+
+            Just list ->
+                div [] (List.map viewSponsor list)
+        ]
+
+
+viewSponsor : Organization -> Html Msg
+viewSponsor organization =
     table [ class "table" ]
         [ tbody []
             [ tableRow "Name" organization.name
