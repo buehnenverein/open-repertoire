@@ -498,9 +498,9 @@ properties:
       - "https://schema.org"
   version:
     type: string
-    description: The API version that is being used. MUST be the string "v1" for now.
+    description: The API version that is being used. MUST be the string "v2" for now.
     enum:
-      - v1
+      - v2
   organization:
     $ref: "#/definitions/Organization"
   productions:

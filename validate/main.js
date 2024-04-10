@@ -8166,9 +8166,9 @@ var $author$project$Data$Root$productionDecoder = A4(
 														$author$project$Data$Root$productionAttypeDecoder,
 														$elm$json$Json$Decode$succeed($author$project$Data$Root$Production)))))))))))))));
 var $author$project$Data$Root$productionsDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$productionDecoder);
-var $author$project$Data$Root$V1 = 0;
+var $author$project$Data$Root$V2 = 0;
 var $author$project$Data$Root$parseVersion = function (version) {
-	if (version === 'v1') {
+	if (version === 'v2') {
 		return $elm$core$Result$Ok(0);
 	} else {
 		return $elm$core$Result$Err('Unknown version type: ' + version);

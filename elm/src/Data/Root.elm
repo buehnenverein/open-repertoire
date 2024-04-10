@@ -260,7 +260,7 @@ type alias PriceSpecification =
 
 
 type Version
-    = V1
+    = V2
 
 
 atContextDecoder : Decoder AtContext
@@ -859,8 +859,8 @@ versionDecoder =
 parseVersion : String -> Result String Version
 parseVersion version =
     case version of
-        "v1" ->
-            Ok V1
+        "v2" ->
+            Ok V2
 
         _ ->
             Err <| "Unknown version type: " ++ version
@@ -1437,5 +1437,5 @@ encodeVersion version =
 versionToString : Version -> String
 versionToString version =
     case version of
-        V1 ->
-            "v1"
+        V2 ->
+            "v2"
