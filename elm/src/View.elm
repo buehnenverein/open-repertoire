@@ -1,7 +1,7 @@
 module View exposing (main)
 
 import Browser
-import Data.Root exposing (CreatorRole, Event, EventEventStatus(..), LocationItem(..), Offer, Organization, PerformanceRole, Production, ProductionGenre, Root, WheelChairPlace, rootDecoder)
+import Data.Root exposing (CreatorEntry(..), CreatorRole, Event, EventEventStatus(..), LocationItem(..), Offer, Organization, PerformanceRole, Production, ProductionGenre, Root, WheelChairPlace, rootDecoder)
 import DateFormat
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -676,8 +676,18 @@ viewCreator : CreatorRole -> Html Msg
 viewCreator creator =
     tr []
         [ td [] [ text (Maybe.withDefault "" creator.roleName) ]
-        , td [] [ text creator.creator.name ]
+        , td [] [ text (creatorName creator.creator) ]
         ]
+
+
+creatorName : CreatorEntry -> String
+creatorName creator =
+    case creator of
+        CreatorEntryPe person ->
+            person.name
+
+        CreatorEntryOr organization ->
+            organization.name
 
 
 viewPerformers : Maybe (List PerformanceRole) -> Html Msg

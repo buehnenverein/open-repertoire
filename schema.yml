@@ -111,9 +111,11 @@ definitions:
           $ref: "#/definitions/Audience"
         creator:
           description: |-
-            List of all people contributing to the creation of this production, e.g. directors, stage designers, musical directors, etc.
+            List of people and organizations that contributed to the creation of this production, e.g. directors, stage designers, musical directors, etc.
+            If this production is a collaboration with another organization, e.g. another theater or orchestra, this organization should also be included
+            in this field.
 
-            If multiple people perform the same role/function (e.g. there is multiple directors or multiple actors perform the same role on stage at the same time),
+            If multiple people perform the same role/function (e.g. there is multiple directors),
             each person should get their own entry in the `creator` array.
           type: array
           items:
@@ -291,7 +293,8 @@ definitions:
           enum:
             - Role
         creator:
-          $ref: "#/definitions/Person"
+          $ref: "#/definitions/CreatorEntry"
+
         roleName:
           type: string
           description: 'The name of the role this person played in the creation of the production.'
@@ -340,6 +343,12 @@ definitions:
           #   - uebersetzung
           #   - vermittlung
           #   - virtual-reality-design
+
+    CreatorEntry:
+      type: object
+      oneOf:
+        - $ref: "#/definitions/Person"
+        - $ref: "#/definitions/Organization"
 
     PerformanceRole:
       type: object

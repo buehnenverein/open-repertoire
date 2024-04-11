@@ -74,9 +74,14 @@ type alias Audience =
     }
 
 
+type CreatorEntry
+    = CreatorEntryPe Person
+    | CreatorEntryOr Organization
+
+
 type alias CreatorRole =
     { atType : CreatorRoleAttype
-    , creator : Person
+    , creator : CreatorEntry
     , roleName : Maybe String
     }
 
@@ -471,11 +476,18 @@ audienceDecoder =
         |> optional "suggestedMinAge" (Decode.nullable Decode.int) Nothing
 
 
+creatorEntryDecoder : Decoder CreatorEntry
+creatorEntryDecoder =
+    Decode.oneOf [ personDecoder |> Decode.map CreatorEntryPe
+                 , organizationDecoder |> Decode.map CreatorEntryOr
+                 ]
+
+
 creatorRoleDecoder : Decoder CreatorRole
 creatorRoleDecoder =
     Decode.succeed CreatorRole
         |> required "@type" creatorRoleAttypeDecoder
-        |> required "creator" personDecoder
+        |> required "creator" creatorEntryDecoder
         |> optional "roleName" (Decode.nullable Decode.string) Nothing
 
 
@@ -1042,11 +1054,21 @@ encodeAudience audience =
         |> Encode.object
 
 
+encodeCreatorEntry : CreatorEntry -> Value
+encodeCreatorEntry creatorEntry =
+    case creatorEntry of
+        CreatorEntryPe person ->
+            encodePerson person
+
+        CreatorEntryOr organization ->
+            encodeOrganization organization
+
+
 encodeCreatorRole : CreatorRole -> Value
 encodeCreatorRole creatorRole =
     []
         |> Encode.required "@type" creatorRole.atType encodeCreatorRoleAttype
-        |> Encode.required "creator" creatorRole.creator encodePerson
+        |> Encode.required "creator" creatorRole.creator encodeCreatorEntry
         |> Encode.optional "roleName" creatorRole.roleName Encode.string
         |> Encode.object
 

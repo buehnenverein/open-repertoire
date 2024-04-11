@@ -3,6 +3,7 @@ module Helper.CustomValidations exposing (checkAll)
 import Data.Root
     exposing
         ( Audience
+        , CreatorEntry(..)
         , CreatorRole
         , Event
         , EventEventStatus(..)
@@ -242,9 +243,19 @@ event =
 creator : Validator CreatorRole
 creator =
     object
-        [ field "/creator" .creator person
+        [ field "/creator" .creator creatorEntry
         , field "/roleName" .roleName optional
         ]
+
+
+creatorEntry : Validator CreatorEntry
+creatorEntry path data =
+    case data of
+        CreatorEntryPe personInfo ->
+            person path personInfo
+
+        CreatorEntryOr organizationInfo ->
+            organization path organizationInfo
 
 
 person : Validator Person
