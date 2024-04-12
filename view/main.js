@@ -1857,9 +1857,9 @@ var _Platform_worker = F4(function(impl, flagDecoder, debugMetadata, args)
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.ck,
-		impl.cE,
-		impl.cw,
+		impl.cl,
+		impl.cF,
+		impl.cx,
 		function() { return function() {} }
 	);
 });
@@ -3943,11 +3943,11 @@ var _Browser_element = _Debugger_element || F4(function(impl, flagDecoder, debug
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.ck,
-		impl.cE,
-		impl.cw,
+		impl.cl,
+		impl.cF,
+		impl.cx,
 		function(sendToApp, initialModel) {
-			var view = impl.cF;
+			var view = impl.cG;
 			/**/
 			var domNode = args['node'];
 			//*/
@@ -3979,12 +3979,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.ck,
-		impl.cE,
-		impl.cw,
+		impl.cl,
+		impl.cF,
+		impl.cx,
 		function(sendToApp, initialModel) {
 			var divertHrefToApp = impl.aq && impl.aq(sendToApp)
-			var view = impl.cF;
+			var view = impl.cG;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
 			var currNode = _VirtualDom_virtualize(bodyNode);
@@ -3992,12 +3992,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 			{
 				_VirtualDom_divertHrefToApp = divertHrefToApp;
 				var doc = view(model);
-				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.ca);
+				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.cb);
 				var patches = _VirtualDom_diff(currNode, nextNode);
 				bodyNode = _VirtualDom_applyPatches(bodyNode, currNode, patches, sendToApp);
 				currNode = nextNode;
 				_VirtualDom_divertHrefToApp = 0;
-				(title !== doc.cy) && (_VirtualDom_doc.title = title = doc.cy);
+				(title !== doc.cz) && (_VirtualDom_doc.title = title = doc.cz);
 			});
 		}
 	);
@@ -4053,8 +4053,8 @@ function _Browser_makeAnimator(model, draw)
 
 function _Browser_application(impl)
 {
-	var onUrlChange = impl.cn;
-	var onUrlRequest = impl.co;
+	var onUrlChange = impl.co;
+	var onUrlRequest = impl.cp;
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
@@ -4084,13 +4084,13 @@ function _Browser_application(impl)
 				}
 			});
 		},
-		ck: function(flags)
+		cl: function(flags)
 		{
-			return A3(impl.ck, flags, _Browser_getUrl(), key);
+			return A3(impl.cl, flags, _Browser_getUrl(), key);
 		},
+		cG: impl.cG,
 		cF: impl.cF,
-		cE: impl.cE,
-		cw: impl.cw
+		cx: impl.cx
 	});
 }
 
@@ -4156,17 +4156,17 @@ var _Browser_decodeEvent = F2(function(decoder, event)
 function _Browser_visibilityInfo()
 {
 	return (typeof _VirtualDom_doc.hidden !== 'undefined')
-		? { ci: 'hidden', cb: 'visibilitychange' }
+		? { cj: 'hidden', cc: 'visibilitychange' }
 		:
 	(typeof _VirtualDom_doc.mozHidden !== 'undefined')
-		? { ci: 'mozHidden', cb: 'mozvisibilitychange' }
+		? { cj: 'mozHidden', cc: 'mozvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.msHidden !== 'undefined')
-		? { ci: 'msHidden', cb: 'msvisibilitychange' }
+		? { cj: 'msHidden', cc: 'msvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.webkitHidden !== 'undefined')
-		? { ci: 'webkitHidden', cb: 'webkitvisibilitychange' }
-		: { ci: 'hidden', cb: 'visibilitychange' };
+		? { cj: 'webkitHidden', cc: 'webkitvisibilitychange' }
+		: { cj: 'hidden', cc: 'visibilitychange' };
 }
 
 
@@ -4248,10 +4248,10 @@ function _Browser_getViewport()
 {
 	return {
 		bL: _Browser_getScene(),
-		b0: {
-			b4: _Browser_window.pageXOffset,
-			b5: _Browser_window.pageYOffset,
-			b3: _Browser_doc.documentElement.clientWidth,
+		b1: {
+			b5: _Browser_window.pageXOffset,
+			b6: _Browser_window.pageYOffset,
+			b4: _Browser_doc.documentElement.clientWidth,
 			a6: _Browser_doc.documentElement.clientHeight
 		}
 	};
@@ -4262,7 +4262,7 @@ function _Browser_getScene()
 	var body = _Browser_doc.body;
 	var elem = _Browser_doc.documentElement;
 	return {
-		b3: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
+		b4: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
 		a6: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
@@ -4287,13 +4287,13 @@ function _Browser_getViewportOf(id)
 	{
 		return {
 			bL: {
-				b3: node.scrollWidth,
+				b4: node.scrollWidth,
 				a6: node.scrollHeight
 			},
-			b0: {
-				b4: node.scrollLeft,
-				b5: node.scrollTop,
-				b3: node.clientWidth,
+			b1: {
+				b5: node.scrollLeft,
+				b6: node.scrollTop,
+				b4: node.clientWidth,
 				a6: node.clientHeight
 			}
 		};
@@ -4325,16 +4325,16 @@ function _Browser_getElement(id)
 		var y = _Browser_window.pageYOffset;
 		return {
 			bL: _Browser_getScene(),
-			b0: {
-				b4: x,
-				b5: y,
-				b3: _Browser_doc.documentElement.clientWidth,
+			b1: {
+				b5: x,
+				b6: y,
+				b4: _Browser_doc.documentElement.clientWidth,
 				a6: _Browser_doc.documentElement.clientHeight
 			},
-			ce: {
-				b4: x + rect.left,
-				b5: y + rect.top,
-				b3: rect.width,
+			cf: {
+				b5: x + rect.left,
+				b6: y + rect.top,
+				b4: rect.width,
 				a6: rect.height
 			}
 		};
@@ -4426,25 +4426,25 @@ var _Http_toTask = F3(function(router, toTask, request)
 	return _Scheduler_binding(function(callback)
 	{
 		function done(response) {
-			callback(toTask(request.cf.a(response)));
+			callback(toTask(request.cg.a(response)));
 		}
 
 		var xhr = new XMLHttpRequest();
 		xhr.addEventListener('error', function() { done($elm$http$Http$NetworkError_); });
 		xhr.addEventListener('timeout', function() { done($elm$http$Http$Timeout_); });
-		xhr.addEventListener('load', function() { done(_Http_toResponse(request.cf.b, xhr)); });
-		$elm$core$Maybe$isJust(request.bZ) && _Http_track(router, xhr, request.bZ.a);
+		xhr.addEventListener('load', function() { done(_Http_toResponse(request.cg.b, xhr)); });
+		$elm$core$Maybe$isJust(request.b_) && _Http_track(router, xhr, request.b_.a);
 
 		try {
-			xhr.open(request.cm, request.K, true);
+			xhr.open(request.cn, request.K, true);
 		} catch (e) {
 			return done($elm$http$Http$BadUrl_(request.K));
 		}
 
 		_Http_configureRequest(xhr, request);
 
-		request.ca.a && xhr.setRequestHeader('Content-Type', request.ca.a);
-		xhr.send(request.ca.b);
+		request.cb.a && xhr.setRequestHeader('Content-Type', request.cb.a);
+		xhr.send(request.cb.b);
 
 		return function() { xhr.c = true; xhr.abort(); };
 	});
@@ -4459,9 +4459,9 @@ function _Http_configureRequest(xhr, request)
 	{
 		xhr.setRequestHeader(headers.a.a, headers.a.b);
 	}
-	xhr.timeout = request.cx.a || 0;
-	xhr.responseType = request.cf.d;
-	xhr.withCredentials = request.b8;
+	xhr.timeout = request.cy.a || 0;
+	xhr.responseType = request.cg.d;
+	xhr.withCredentials = request.b9;
 }
 
 
@@ -4483,8 +4483,8 @@ function _Http_toMetadata(xhr)
 {
 	return {
 		K: xhr.responseURL,
-		cu: xhr.status,
-		cv: xhr.statusText,
+		cv: xhr.status,
+		cw: xhr.statusText,
 		a5: _Http_parseHeaders(xhr.getAllResponseHeaders())
 	};
 }
@@ -4580,14 +4580,14 @@ function _Http_track(router, xhr, tracker)
 	xhr.upload.addEventListener('progress', function(event) {
 		if (xhr.c) { return; }
 		_Scheduler_rawSpawn(A2($elm$core$Platform$sendToSelf, router, _Utils_Tuple2(tracker, $elm$http$Http$Sending({
-			ct: event.loaded,
+			cu: event.loaded,
 			bO: event.total
 		}))));
 	});
 	xhr.addEventListener('progress', function(event) {
 		if (xhr.c) { return; }
 		_Scheduler_rawSpawn(A2($elm$core$Platform$sendToSelf, router, _Utils_Tuple2(tracker, $elm$http$Http$Receiving({
-			cq: event.loaded,
+			cr: event.loaded,
 			bO: event.lengthComputable ? $elm$core$Maybe$Just(event.total) : $elm$core$Maybe$Nothing
 		}))));
 	});
@@ -5572,7 +5572,7 @@ var $justinmimbs$timezone_data$TimeZone$maxYear = 2037;
 var $justinmimbs$timezone_data$TimeZone$minYear = 1970;
 var $justinmimbs$timezone_data$TimeZone$Specification$DateTime = F5(
 	function (year, month, day, time, clock) {
-		return {w: clock, aR: day, bm: month, ab: time, b6: year};
+		return {w: clock, aR: day, bm: month, ab: time, b7: year};
 	});
 var $elm$time$Time$Jan = 0;
 var $justinmimbs$timezone_data$TimeZone$Specification$Universal = 0;
@@ -5765,7 +5765,7 @@ var $justinmimbs$timezone_data$TimeZone$Specification$minutesFromDateTime = func
 	var time = _v0.ab;
 	var day = _v0.aR;
 	var month = _v0.bm;
-	var year = _v0.b6;
+	var year = _v0.b7;
 	return $justinmimbs$timezone_data$TimeZone$Specification$minutesFromRataDie(
 		A3($justinmimbs$timezone_data$RataDie$dayOfMonth, year, month, day)) + time;
 };
@@ -5823,11 +5823,11 @@ var $justinmimbs$timezone_data$TimeZone$Specification$rulesToOffsetChanges = F5(
 						A2(
 							$elm$core$List$filter,
 							function (rule) {
-								return (_Utils_cmp(rule.a1, year) < 1) && (_Utils_cmp(year, rule.bY) < 1);
+								return (_Utils_cmp(rule.a1, year) < 1) && (_Utils_cmp(year, rule.bZ) < 1);
 							},
 							rules)));
 			},
-			A2($elm$core$List$range, start.b6 - 1, until.b6));
+			A2($elm$core$List$range, start.b7 - 1, until.b7));
 		var initialOffset = {l: 0, z: standardOffset};
 		var initialChange = {
 			b: standardOffset,
@@ -6035,7 +6035,7 @@ var $justinmimbs$timezone_data$TimeZone$Specification$Day = function (a) {
 var $elm$time$Time$Mar = 2;
 var $justinmimbs$timezone_data$TimeZone$Specification$Rule = F7(
 	function (from, to, month, day, time, clock, save) {
-		return {w: clock, aR: day, a1: from, bm: month, l: save, ab: time, bY: to};
+		return {w: clock, aR: day, a1: from, bm: month, l: save, ab: time, bZ: to};
 	});
 var $elm$time$Time$Sep = 8;
 var $justinmimbs$timezone_data$TimeZone$Specification$Standard = 1;
@@ -24408,7 +24408,7 @@ var $elm$http$Http$resolve = F2(
 			case 3:
 				var metadata = response.a;
 				return $elm$core$Result$Err(
-					$elm$http$Http$BadStatus(metadata.cu));
+					$elm$http$Http$BadStatus(metadata.cv));
 			default:
 				var body = response.b;
 				return A2(
@@ -24445,7 +24445,7 @@ var $elm$http$Http$Request = function (a) {
 };
 var $elm$http$Http$State = F2(
 	function (reqs, subs) {
-		return {bF: reqs, bS: subs};
+		return {bF: reqs, bT: subs};
 	});
 var $elm$http$Http$init = $elm$core$Task$succeed(
 	A2($elm$http$Http$State, $elm$core$Dict$empty, _List_Nil));
@@ -24489,7 +24489,7 @@ var $elm$http$Http$updateReqs = F3(
 					return A2(
 						$elm$core$Task$andThen,
 						function (pid) {
-							var _v4 = req.bZ;
+							var _v4 = req.b_;
 							if (_v4.$ === 1) {
 								return A3($elm$http$Http$updateReqs, router, otherCmds, reqs);
 							} else {
@@ -24562,7 +24562,7 @@ var $elm$http$Http$onSelfMsg = F3(
 				A2(
 					$elm$core$List$filterMap,
 					A3($elm$http$Http$maybeSend, router, tracker, progress),
-					state.bS)));
+					state.bT)));
 	});
 var $elm$http$Http$Cancel = function (a) {
 	return {$: 0, a: a};
@@ -24576,13 +24576,13 @@ var $elm$http$Http$cmdMap = F2(
 			var r = cmd.a;
 			return $elm$http$Http$Request(
 				{
-					b8: r.b8,
-					ca: r.ca,
-					cf: A2(_Http_mapExpect, func, r.cf),
+					b9: r.b9,
+					cb: r.cb,
+					cg: A2(_Http_mapExpect, func, r.cg),
 					a5: r.a5,
-					cm: r.cm,
-					cx: r.cx,
-					bZ: r.bZ,
+					cn: r.cn,
+					cy: r.cy,
+					b_: r.b_,
 					K: r.K
 				});
 		}
@@ -24606,11 +24606,11 @@ var $elm$http$Http$subscription = _Platform_leaf('Http');
 var $elm$http$Http$request = function (r) {
 	return $elm$http$Http$command(
 		$elm$http$Http$Request(
-			{b8: false, ca: r.ca, cf: r.cf, a5: r.a5, cm: r.cm, cx: r.cx, bZ: r.bZ, K: r.K}));
+			{b9: false, cb: r.cb, cg: r.cg, a5: r.a5, cn: r.cn, cy: r.cy, b_: r.b_, K: r.K}));
 };
 var $elm$http$Http$get = function (r) {
 	return $elm$http$Http$request(
-		{ca: $elm$http$Http$emptyBody, cf: r.cf, a5: _List_Nil, cm: 'GET', cx: $elm$core$Maybe$Nothing, bZ: $elm$core$Maybe$Nothing, K: r.K});
+		{cb: $elm$http$Http$emptyBody, cg: r.cg, a5: _List_Nil, cn: 'GET', cy: $elm$core$Maybe$Nothing, b_: $elm$core$Maybe$Nothing, K: r.K});
 };
 var $author$project$View$isUrl = function (string) {
 	var _v0 = _Utils_Tuple2(
@@ -24637,7 +24637,7 @@ var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Data$Root$Root = F4(
 	function (atContext, organization, productions, version) {
-		return {aJ: atContext, bq: organization, bB: productions, b$: version};
+		return {aJ: atContext, bq: organization, bB: productions, b0: version};
 	});
 var $elm$json$Json$Decode$andThen = _Json_andThen;
 var $elm$json$Json$Decode$fail = _Json_fail;
@@ -24747,7 +24747,7 @@ var $author$project$Data$Root$organizationAttypeDecoder = A2(
 	$elm$json$Json$Decode$string);
 var $author$project$Data$Root$PostalAddress = F4(
 	function (atType, addressLocality, postalCode, streetAddress) {
-		return {aI: addressLocality, e: atType, bu: postalCode, bR: streetAddress};
+		return {aI: addressLocality, e: atType, bu: postalCode, bS: streetAddress};
 	});
 var $author$project$Data$Root$PostalAddressType = 0;
 var $author$project$Data$Root$parsePostalAddressAttype = function (postalAddressAttype) {
@@ -24820,9 +24820,13 @@ var $author$project$Data$Root$Production = function (atType) {
 									return function (events) {
 										return function (funder) {
 											return function (genre) {
-												return function (name) {
-													return function (subtitle) {
-														return {aC: _abstract, aD: accessModeSufficient, aE: accessibilityHazard, aF: accessibilitySummary, aH: additionalInfo, e: atType, aK: audience, V: creator, aT: description, aZ: events, a2: funder, a3: genre, p: name, bT: subtitle};
+												return function (inLanguage) {
+													return function (name) {
+														return function (sponsor) {
+															return function (subtitle) {
+																return {aC: _abstract, aD: accessModeSufficient, aE: accessibilityHazard, aF: accessibilitySummary, aH: additionalInfo, e: atType, aK: audience, V: creator, aT: description, aZ: events, a2: funder, a3: genre, ba: inLanguage, p: name, bQ: sponsor, bU: subtitle};
+															};
+														};
 													};
 												};
 											};
@@ -24906,7 +24910,7 @@ var $author$project$Data$Root$accessibilityHazardItemDecoder = A2(
 var $author$project$Data$Root$accessibilityHazardDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$accessibilityHazardItemDecoder);
 var $author$project$Data$Root$Audience = F4(
 	function (atType, audienceType, suggestedMaxAge, suggestedMinAge) {
-		return {e: atType, aL: audienceType, bV: suggestedMaxAge, bW: suggestedMinAge};
+		return {e: atType, aL: audienceType, bW: suggestedMaxAge, bX: suggestedMinAge};
 	});
 var $author$project$Data$Root$PeopleAudienceType = 0;
 var $author$project$Data$Root$parseAudienceAttype = function (audienceAttype) {
@@ -24945,18 +24949,12 @@ var $author$project$Data$Root$CreatorRole = F3(
 	function (atType, creator, roleName) {
 		return {e: atType, V: creator, bJ: roleName};
 	});
-var $author$project$Data$Root$RoleType = 0;
-var $author$project$Data$Root$parseCreatorRoleAttype = function (creatorRoleAttype) {
-	if (creatorRoleAttype === 'Role') {
-		return $elm$core$Result$Ok(0);
-	} else {
-		return $elm$core$Result$Err('Unknown creatorRoleAttype type: ' + creatorRoleAttype);
-	}
+var $author$project$Data$Root$CreatorEntryOr = function (a) {
+	return {$: 1, a: a};
 };
-var $author$project$Data$Root$creatorRoleAttypeDecoder = A2(
-	$elm$json$Json$Decode$andThen,
-	A2($elm$core$Basics$composeR, $author$project$Data$Root$parseCreatorRoleAttype, $elm_community$json_extra$Json$Decode$Extra$fromResult),
-	$elm$json$Json$Decode$string);
+var $author$project$Data$Root$CreatorEntryPe = function (a) {
+	return {$: 0, a: a};
+};
 var $author$project$Data$Root$Person = F2(
 	function (atType, name) {
 		return {e: atType, p: name};
@@ -24982,6 +24980,24 @@ var $author$project$Data$Root$personDecoder = A3(
 		'@type',
 		$author$project$Data$Root$personAttypeDecoder,
 		$elm$json$Json$Decode$succeed($author$project$Data$Root$Person)));
+var $author$project$Data$Root$creatorEntryDecoder = $elm$json$Json$Decode$oneOf(
+	_List_fromArray(
+		[
+			A2($elm$json$Json$Decode$map, $author$project$Data$Root$CreatorEntryPe, $author$project$Data$Root$personDecoder),
+			A2($elm$json$Json$Decode$map, $author$project$Data$Root$CreatorEntryOr, $author$project$Data$Root$organizationDecoder)
+		]));
+var $author$project$Data$Root$RoleType = 0;
+var $author$project$Data$Root$parseCreatorRoleAttype = function (creatorRoleAttype) {
+	if (creatorRoleAttype === 'Role') {
+		return $elm$core$Result$Ok(0);
+	} else {
+		return $elm$core$Result$Err('Unknown creatorRoleAttype type: ' + creatorRoleAttype);
+	}
+};
+var $author$project$Data$Root$creatorRoleAttypeDecoder = A2(
+	$elm$json$Json$Decode$andThen,
+	A2($elm$core$Basics$composeR, $author$project$Data$Root$parseCreatorRoleAttype, $elm_community$json_extra$Json$Decode$Extra$fromResult),
+	$elm$json$Json$Decode$string);
 var $author$project$Data$Root$creatorRoleDecoder = A4(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 	'roleName',
@@ -24990,7 +25006,7 @@ var $author$project$Data$Root$creatorRoleDecoder = A4(
 	A3(
 		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 		'creator',
-		$author$project$Data$Root$personDecoder,
+		$author$project$Data$Root$creatorEntryDecoder,
 		A3(
 			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 			'@type',
@@ -25001,16 +25017,14 @@ var $author$project$Data$Root$Event = function (atType) {
 	return function (duration) {
 		return function (endDate) {
 			return function (eventStatus) {
-				return function (inLanguage) {
-					return function (location) {
-						return function (offers) {
-							return function (performer) {
-								return function (previousStartDate) {
-									return function (startDate) {
-										return function (subtitleLanguage) {
-											return function (url) {
-												return {e: atType, aU: duration, aW: endDate, aY: eventStatus, ba: inLanguage, bg: location, bp: offers, Y: performer, bv: previousStartDate, bQ: startDate, bU: subtitleLanguage, K: url};
-											};
+				return function (location) {
+					return function (offers) {
+						return function (performer) {
+							return function (previousStartDate) {
+								return function (startDate) {
+									return function (subtitleLanguage) {
+										return function (url) {
+											return {e: atType, aU: duration, aW: endDate, aY: eventStatus, bg: location, bp: offers, Y: performer, bv: previousStartDate, bR: startDate, bV: subtitleLanguage, K: url};
 										};
 									};
 								};
@@ -25067,7 +25081,7 @@ var $author$project$Data$Root$LocationItemVi = function (a) {
 };
 var $author$project$Data$Root$Place = F6(
 	function (atType, address, latitude, longitude, name, wheelChairPlaces) {
-		return {U: address, e: atType, bf: latitude, bi: longitude, p: name, b1: wheelChairPlaces};
+		return {U: address, e: atType, bf: latitude, bi: longitude, p: name, b2: wheelChairPlaces};
 	});
 var $elm$json$Json$Decode$float = _Json_decodeFloat;
 var $author$project$Data$Root$PlaceType = 0;
@@ -25084,7 +25098,7 @@ var $author$project$Data$Root$placeAttypeDecoder = A2(
 	$elm$json$Json$Decode$string);
 var $author$project$Data$Root$WheelChairPlace = F3(
 	function (count, hasSpaceForAssistant, wheelchairUserCapacity) {
-		return {aQ: count, a4: hasSpaceForAssistant, b2: wheelchairUserCapacity};
+		return {aQ: count, a4: hasSpaceForAssistant, b3: wheelchairUserCapacity};
 	});
 var $elm$json$Json$Decode$bool = _Json_decodeBool;
 var $author$project$Data$Root$wheelChairPlaceDecoder = A4(
@@ -25306,29 +25320,24 @@ var $author$project$Data$Root$eventDecoder = A4(
 							$elm$core$Maybe$Nothing,
 							A4(
 								$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-								'inLanguage',
-								$elm$json$Json$Decode$nullable($elm$json$Json$Decode$string),
+								'eventStatus',
+								$elm$json$Json$Decode$nullable($author$project$Data$Root$eventEventStatusDecoder),
 								$elm$core$Maybe$Nothing,
 								A4(
 									$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-									'eventStatus',
-									$elm$json$Json$Decode$nullable($author$project$Data$Root$eventEventStatusDecoder),
+									'endDate',
+									$elm$json$Json$Decode$nullable($elm$json$Json$Decode$string),
 									$elm$core$Maybe$Nothing,
 									A4(
 										$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-										'endDate',
-										$elm$json$Json$Decode$nullable($elm$json$Json$Decode$string),
+										'duration',
+										$elm$json$Json$Decode$nullable($elm$json$Json$Decode$int),
 										$elm$core$Maybe$Nothing,
-										A4(
-											$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-											'duration',
-											$elm$json$Json$Decode$nullable($elm$json$Json$Decode$int),
-											$elm$core$Maybe$Nothing,
-											A3(
-												$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-												'@type',
-												$author$project$Data$Root$eventAttypeDecoder,
-												$elm$json$Json$Decode$succeed($author$project$Data$Root$Event)))))))))))));
+										A3(
+											$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+											'@type',
+											$author$project$Data$Root$eventAttypeDecoder,
+											$elm$json$Json$Decode$succeed($author$project$Data$Root$Event))))))))))));
 var $author$project$Data$Root$eventsDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$eventDecoder);
 var $author$project$Data$Root$funderDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$organizationDecoder);
 var $author$project$Data$Root$CreativeWorkType = 0;
@@ -25447,74 +25456,85 @@ var $author$project$Data$Root$productionGenreDecoder = A2(
 	$elm$json$Json$Decode$andThen,
 	A2($elm$core$Basics$composeR, $author$project$Data$Root$parseProductionGenre, $elm_community$json_extra$Json$Decode$Extra$fromResult),
 	$elm$json$Json$Decode$string);
+var $author$project$Data$Root$sponsorDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$organizationDecoder);
 var $author$project$Data$Root$productionDecoder = A4(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 	'subtitle',
 	$elm$json$Json$Decode$nullable($elm$json$Json$Decode$string),
 	$elm$core$Maybe$Nothing,
-	A3(
-		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-		'name',
-		$elm$json$Json$Decode$string,
-		A4(
-			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-			'genre',
-			$elm$json$Json$Decode$nullable($author$project$Data$Root$productionGenreDecoder),
-			$elm$core$Maybe$Nothing,
+	A4(
+		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+		'sponsor',
+		$elm$json$Json$Decode$nullable($author$project$Data$Root$sponsorDecoder),
+		$elm$core$Maybe$Nothing,
+		A3(
+			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+			'name',
+			$elm$json$Json$Decode$string,
 			A4(
 				$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-				'funder',
-				$elm$json$Json$Decode$nullable($author$project$Data$Root$funderDecoder),
+				'inLanguage',
+				$elm$json$Json$Decode$nullable($elm$json$Json$Decode$string),
 				$elm$core$Maybe$Nothing,
-				A3(
-					$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-					'events',
-					$author$project$Data$Root$eventsDecoder,
+				A4(
+					$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+					'genre',
+					$elm$json$Json$Decode$nullable($author$project$Data$Root$productionGenreDecoder),
+					$elm$core$Maybe$Nothing,
 					A4(
 						$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-						'description',
-						$elm$json$Json$Decode$nullable($elm$json$Json$Decode$string),
+						'funder',
+						$elm$json$Json$Decode$nullable($author$project$Data$Root$funderDecoder),
 						$elm$core$Maybe$Nothing,
-						A4(
-							$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-							'creator',
-							$elm$json$Json$Decode$nullable($author$project$Data$Root$creatorDecoder),
-							$elm$core$Maybe$Nothing,
+						A3(
+							$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+							'events',
+							$author$project$Data$Root$eventsDecoder,
 							A4(
 								$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-								'audience',
-								$elm$json$Json$Decode$nullable($author$project$Data$Root$audienceDecoder),
+								'description',
+								$elm$json$Json$Decode$nullable($elm$json$Json$Decode$string),
 								$elm$core$Maybe$Nothing,
 								A4(
 									$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-									'additionalInfo',
-									$elm$json$Json$Decode$nullable($elm$json$Json$Decode$string),
+									'creator',
+									$elm$json$Json$Decode$nullable($author$project$Data$Root$creatorDecoder),
 									$elm$core$Maybe$Nothing,
 									A4(
 										$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-										'accessibilitySummary',
-										$elm$json$Json$Decode$nullable($elm$json$Json$Decode$string),
+										'audience',
+										$elm$json$Json$Decode$nullable($author$project$Data$Root$audienceDecoder),
 										$elm$core$Maybe$Nothing,
 										A4(
 											$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-											'accessibilityHazard',
-											$elm$json$Json$Decode$nullable($author$project$Data$Root$accessibilityHazardDecoder),
+											'additionalInfo',
+											$elm$json$Json$Decode$nullable($elm$json$Json$Decode$string),
 											$elm$core$Maybe$Nothing,
 											A4(
 												$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-												'accessModeSufficient',
-												$elm$json$Json$Decode$nullable($author$project$Data$Root$accessModeSufficientDecoder),
+												'accessibilitySummary',
+												$elm$json$Json$Decode$nullable($elm$json$Json$Decode$string),
 												$elm$core$Maybe$Nothing,
 												A4(
 													$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-													'abstract',
-													$elm$json$Json$Decode$nullable($elm$json$Json$Decode$string),
+													'accessibilityHazard',
+													$elm$json$Json$Decode$nullable($author$project$Data$Root$accessibilityHazardDecoder),
 													$elm$core$Maybe$Nothing,
-													A3(
-														$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-														'@type',
-														$author$project$Data$Root$productionAttypeDecoder,
-														$elm$json$Json$Decode$succeed($author$project$Data$Root$Production)))))))))))))));
+													A4(
+														$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+														'accessModeSufficient',
+														$elm$json$Json$Decode$nullable($author$project$Data$Root$accessModeSufficientDecoder),
+														$elm$core$Maybe$Nothing,
+														A4(
+															$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+															'abstract',
+															$elm$json$Json$Decode$nullable($elm$json$Json$Decode$string),
+															$elm$core$Maybe$Nothing,
+															A3(
+																$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+																'@type',
+																$author$project$Data$Root$productionAttypeDecoder,
+																$elm$json$Json$Decode$succeed($author$project$Data$Root$Production)))))))))))))))));
 var $author$project$Data$Root$productionsDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$productionDecoder);
 var $author$project$Data$Root$V2 = 0;
 var $author$project$Data$Root$parseVersion = function (version) {
@@ -25554,7 +25574,7 @@ var $author$project$View$fetchData = F2(
 					{j: $krisajenkins$remotedata$RemoteData$Loading}),
 				$elm$http$Http$get(
 					{
-						cf: A2(
+						cg: A2(
 							$elm$http$Http$expectJson,
 							A2($elm$core$Basics$composeR, $krisajenkins$remotedata$RemoteData$fromResult, $author$project$View$Response),
 							$author$project$Data$Root$rootDecoder),
@@ -26168,7 +26188,8 @@ var $author$project$View$productionInfo = function (production) {
 				_List_fromArray(
 					[
 						A2($author$project$View$tableRow, 'Titel', production.p),
-						A2($author$project$View$maybeTableRow, 'Untertitel', production.bT),
+						A2($author$project$View$maybeTableRow, 'Sprache', production.ba),
+						A2($author$project$View$maybeTableRow, 'Untertitel', production.bU),
 						A2($author$project$View$maybeTableRow, 'Beschreibung', production.aT),
 						A2($author$project$View$maybeTableRow, 'Kurzbeschreibung', production.aC),
 						A2($author$project$View$maybeTableRow, 'Zusätzliche Informationen', production.aH),
@@ -26180,6 +26201,15 @@ var $author$project$View$productionInfo = function (production) {
 			]));
 };
 var $elm$html$Html$em = _VirtualDom_node('em');
+var $author$project$View$creatorName = function (creator) {
+	if (!creator.$) {
+		var person = creator.a;
+		return person.p;
+	} else {
+		var organization = creator.a;
+		return organization.p;
+	}
+};
 var $author$project$View$viewCreator = function (creator) {
 	return A2(
 		$elm$html$Html$tr,
@@ -26199,7 +26229,8 @@ var $author$project$View$viewCreator = function (creator) {
 				_List_Nil,
 				_List_fromArray(
 					[
-						$elm$html$Html$text(creator.V.p)
+						$elm$html$Html$text(
+						$author$project$View$creatorName(creator.V))
 					]))
 			]));
 };
@@ -26309,7 +26340,7 @@ var $author$project$View$viewFunder = function (organization) {
 						A2(
 							$elm$core$Maybe$andThen,
 							function ($) {
-								return $.bR;
+								return $.bS;
 							},
 							organization.U)),
 						A2(
@@ -26376,7 +26407,13 @@ var $author$project$View$viewFunders = function (production) {
 				function () {
 				var _v0 = production.a2;
 				if (_v0.$ === 1) {
-					return $elm$html$Html$text('Die Daten enthalten keine Informationen zu Förderern');
+					return A2(
+						$elm$html$Html$em,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Die Daten enthalten keine Informationen zu Förderern')
+							]));
 				} else {
 					var list = _v0.a;
 					return A2(
@@ -26526,7 +26563,7 @@ var $author$project$View$viewProductionAudience = function (production) {
 									A2(
 										$elm$core$Maybe$andThen,
 										function ($) {
-											return $.bW;
+											return $.bX;
 										},
 										production.aK))),
 								A2(
@@ -26538,11 +26575,116 @@ var $author$project$View$viewProductionAudience = function (production) {
 									A2(
 										$elm$core$Maybe$andThen,
 										function ($) {
-											return $.bV;
+											return $.bW;
 										},
 										production.aK)))
 							]))
 					]))
+			]));
+};
+var $author$project$View$viewSponsor = function (organization) {
+	return A2(
+		$elm$html$Html$table,
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$class('table')
+			]),
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$tbody,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2($author$project$View$tableRow, 'Name', organization.p),
+						A2(
+						$author$project$View$maybeTableRow,
+						'Addresse',
+						A2(
+							$elm$core$Maybe$andThen,
+							function ($) {
+								return $.bS;
+							},
+							organization.U)),
+						A2(
+						$author$project$View$maybeTableRow,
+						'Postleitzahl',
+						A2(
+							$elm$core$Maybe$andThen,
+							function ($) {
+								return $.bu;
+							},
+							organization.U)),
+						A2(
+						$author$project$View$maybeTableRow,
+						'Stadt',
+						A2(
+							$elm$core$Maybe$andThen,
+							function ($) {
+								return $.aI;
+							},
+							organization.U)),
+						A2(
+						$elm$html$Html$tr,
+						_List_Nil,
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$th,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Logo')
+									])),
+								A2(
+								$elm$html$Html$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$author$project$View$maybeLink(
+										{
+											aT: $elm$core$Maybe$Just('Link'),
+											K: organization.bh
+										})
+									]))
+							]))
+					]))
+			]));
+};
+var $author$project$View$viewSponsors = function (production) {
+	return A2(
+		$elm$html$Html$div,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('title is-5')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Sponsoren')
+					])),
+				function () {
+				var _v0 = production.bQ;
+				if (_v0.$ === 1) {
+					return A2(
+						$elm$html$Html$em,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Die Daten enthalten keine Informationen zu Sponsoren')
+							]));
+				} else {
+					var list = _v0.a;
+					return A2(
+						$elm$html$Html$div,
+						_List_Nil,
+						A2($elm$core$List$map, $author$project$View$viewSponsor, list));
+				}
+			}()
 			]));
 };
 var $author$project$View$productionTable = function (production) {
@@ -26550,7 +26692,7 @@ var $author$project$View$productionTable = function (production) {
 		$elm$html$Html$div,
 		_List_fromArray(
 			[
-				$elm$html$Html$Attributes$class('tile is-ancestor')
+				$elm$html$Html$Attributes$class('tile is-vertical is-ancestor')
 			]),
 		_List_fromArray(
 			[
@@ -26558,7 +26700,7 @@ var $author$project$View$productionTable = function (production) {
 				$elm$html$Html$div,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$class('tile is-8 is-vertical is-parent')
+						$elm$html$Html$Attributes$class('tile')
 					]),
 				_List_fromArray(
 					[
@@ -26566,51 +26708,69 @@ var $author$project$View$productionTable = function (production) {
 						$elm$html$Html$div,
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$class('tile is-child box')
+								$elm$html$Html$Attributes$class('tile is-8 is-vertical is-parent')
 							]),
 						_List_fromArray(
 							[
-								$author$project$View$productionInfo(production)
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('tile is-child box')
+									]),
+								_List_fromArray(
+									[
+										$author$project$View$productionInfo(production)
+									])),
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('tile is-child box')
+									]),
+								_List_fromArray(
+									[
+										$author$project$View$viewProductionAccessibility(production)
+									]))
 							])),
 						A2(
 						$elm$html$Html$div,
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$class('tile is-child box')
+								$elm$html$Html$Attributes$class('tile is-vertical is-parent')
 							]),
 						_List_fromArray(
 							[
-								$author$project$View$viewProductionAccessibility(production)
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('tile is-child box')
+									]),
+								_List_fromArray(
+									[
+										$author$project$View$viewCreators(production.V)
+									])),
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('tile is-child box')
+									]),
+								_List_fromArray(
+									[
+										$author$project$View$viewProductionAudience(production)
+									]))
 							]))
 					])),
 				A2(
 				$elm$html$Html$div,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$class('tile is-vertical is-parent')
+						$elm$html$Html$Attributes$class('tile is-parent')
 					]),
 				_List_fromArray(
 					[
-						A2(
-						$elm$html$Html$div,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('tile is-child box')
-							]),
-						_List_fromArray(
-							[
-								$author$project$View$viewCreators(production.V)
-							])),
-						A2(
-						$elm$html$Html$div,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('tile is-child box')
-							]),
-						_List_fromArray(
-							[
-								$author$project$View$viewProductionAudience(production)
-							])),
 						A2(
 						$elm$html$Html$div,
 						_List_fromArray(
@@ -26620,6 +26780,25 @@ var $author$project$View$productionTable = function (production) {
 						_List_fromArray(
 							[
 								$author$project$View$viewFunders(production)
+							]))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('tile is-parent')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('tile is-child box')
+							]),
+						_List_fromArray(
+							[
+								$author$project$View$viewSponsors(production)
 							]))
 					]))
 			]));
@@ -26670,7 +26849,7 @@ var $ryannhg$date_format$DateFormat$DayOfMonthFixed = {$: 7};
 var $ryannhg$date_format$DateFormat$dayOfMonthFixed = $ryannhg$date_format$DateFormat$DayOfMonthFixed;
 var $ryannhg$date_format$DateFormat$Language$Language = F6(
 	function (toMonthName, toMonthAbbreviation, toWeekdayName, toWeekdayAbbreviation, toAmPm, toOrdinalSuffix) {
-		return {cz: toAmPm, cA: toMonthAbbreviation, cB: toMonthName, J: toOrdinalSuffix, cC: toWeekdayAbbreviation, cD: toWeekdayName};
+		return {cA: toAmPm, cB: toMonthAbbreviation, cC: toMonthName, J: toOrdinalSuffix, cD: toWeekdayAbbreviation, cE: toWeekdayName};
 	});
 var $ryannhg$date_format$DateFormat$Language$toEnglishAmPm = function (hour) {
 	return (hour > 11) ? 'pm' : 'am';
@@ -26814,7 +26993,7 @@ var $elm$time$Time$toHour = F2(
 	});
 var $ryannhg$date_format$DateFormat$amPm = F3(
 	function (language, zone, posix) {
-		return language.cz(
+		return language.cA(
 			A2($elm$time$Time$toHour, zone, posix));
 	});
 var $elm$core$Basics$ge = _Utils_ge;
@@ -26830,7 +27009,7 @@ var $elm$time$Time$toCivil = function (minutes) {
 	return {
 		aR: (dayOfYear - ((((153 * mp) + 2) / 5) | 0)) + 1,
 		bm: month,
-		b6: year + ((month <= 2) ? 1 : 0)
+		b7: year + ((month <= 2) ? 1 : 0)
 	};
 };
 var $elm$time$Time$toDay = F2(
@@ -27133,7 +27312,7 @@ var $elm$core$List$take = F2(
 var $elm$time$Time$toYear = F2(
 	function (zone, time) {
 		return $elm$time$Time$toCivil(
-			A2($elm$time$Time$toAdjustedMinutes, zone, time)).b6;
+			A2($elm$time$Time$toAdjustedMinutes, zone, time)).b7;
 	});
 var $ryannhg$date_format$DateFormat$dayOfYear = F2(
 	function (zone, posix) {
@@ -27244,10 +27423,10 @@ var $ryannhg$date_format$DateFormat$piece = F4(
 					2,
 					A2($ryannhg$date_format$DateFormat$monthNumber_, zone, posix));
 			case 3:
-				return language.cA(
+				return language.cB(
 					A2($elm$time$Time$toMonth, zone, posix));
 			case 4:
-				return language.cB(
+				return language.cC(
 					A2($elm$time$Time$toMonth, zone, posix));
 			case 17:
 				return $elm$core$String$fromInt(
@@ -27300,10 +27479,10 @@ var $ryannhg$date_format$DateFormat$piece = F4(
 				}(
 					A2($ryannhg$date_format$DateFormat$dayOfWeek, zone, posix));
 			case 13:
-				return language.cC(
+				return language.cD(
 					A2($elm$time$Time$toWeekday, zone, posix));
 			case 14:
-				return language.cD(
+				return language.cE(
 					A2($elm$time$Time$toWeekday, zone, posix));
 			case 19:
 				return $elm$core$String$fromInt(
@@ -27451,7 +27630,7 @@ var $elm$parser$Parser$Advanced$AddRight = F2(
 	});
 var $elm$parser$Parser$Advanced$DeadEnd = F4(
 	function (row, col, problem, contextStack) {
-		return {aP: col, cc: contextStack, by: problem, bK: row};
+		return {aP: col, cd: contextStack, by: problem, bK: row};
 	});
 var $elm$parser$Parser$Advanced$Empty = {$: 0};
 var $elm$parser$Parser$Advanced$fromState = F2(
@@ -28222,11 +28401,11 @@ var $author$project$View$viewEventTable = F2(
 							A2(
 							$author$project$View$tableRow,
 							'Startdatum',
-							A2($author$project$View$formatDate, event.bQ, zone)),
+							A2($author$project$View$formatDate, event.bR, zone)),
 							A2(
 							$author$project$View$tableRow,
 							'Startzeit',
-							A2($author$project$View$formatTime, event.bQ, zone)),
+							A2($author$project$View$formatTime, event.bR, zone)),
 							A2(
 							$author$project$View$tableRow,
 							'Enddatum',
@@ -28245,8 +28424,7 @@ var $author$project$View$viewEventTable = F2(
 							$author$project$View$maybeTableRow,
 							'Dauer',
 							A2($elm$core$Maybe$map, $author$project$View$formatDuration, event.aU)),
-							A2($author$project$View$maybeTableRow, 'Sprache', event.ba),
-							A2($author$project$View$maybeTableRow, 'Untertitel in', event.bU),
+							A2($author$project$View$maybeTableRow, 'Untertitel in', event.bV),
 							A2(
 							$author$project$View$tableRow,
 							'Status',
@@ -28336,7 +28514,7 @@ var $author$project$View$wheelChairCapacity = function (wheelChairPlaces) {
 	var _v0 = A2(
 		$elm$core$Maybe$map,
 		function ($) {
-			return $.b2;
+			return $.b3;
 		},
 		wheelChairPlaces);
 	if (!_v0.$) {
@@ -28374,7 +28552,7 @@ var $author$project$View$locationTable = function (location) {
 					_List_fromArray(
 						[
 							A2($author$project$View$maybeTableRow, 'Name', place.p),
-							A2($author$project$View$maybeTableRow, 'Addresse', place.U.bR),
+							A2($author$project$View$maybeTableRow, 'Addresse', place.U.bS),
 							A2($author$project$View$maybeTableRow, 'Postleitzahl', place.U.bu),
 							A2($author$project$View$maybeTableRow, 'Stadt', place.U.aI),
 							A2(
@@ -28400,15 +28578,15 @@ var $author$project$View$locationTable = function (location) {
 							A2(
 							$author$project$View$maybeTableRow,
 							'Rollstuhlplätze',
-							$author$project$View$wheelChairCount(place.b1)),
+							$author$project$View$wheelChairCount(place.b2)),
 							A2(
 							$author$project$View$tableRow,
 							'Platz für Assistent:in?',
-							$author$project$View$spaceForAssistant(place.b1)),
+							$author$project$View$spaceForAssistant(place.b2)),
 							A2(
 							$author$project$View$maybeTableRow,
 							'Rollstuhlkapazität',
-							$author$project$View$wheelChairCapacity(place.b1))
+							$author$project$View$wheelChairCapacity(place.b2))
 						]))
 				]));
 	} else {
@@ -29298,6 +29476,6 @@ var $author$project$View$view = function (model) {
 			]));
 };
 var $author$project$View$main = $elm$browser$Browser$element(
-	{ck: $author$project$View$init, cw: $author$project$View$subscriptions, cE: $author$project$View$update, cF: $author$project$View$view});
+	{cl: $author$project$View$init, cx: $author$project$View$subscriptions, cF: $author$project$View$update, cG: $author$project$View$view});
 _Platform_export({'View':{'init':$author$project$View$main(
 	$elm$json$Json$Decode$succeed(0))(0)}});}(this));
