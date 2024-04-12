@@ -392,7 +392,7 @@ viewFunders production =
         [ div [ class "title is-5" ] [ text "Förderer" ]
         , case production.funder of
             Nothing ->
-                text "Die Daten enthalten keine Informationen zu Förderern"
+                em [] [ text "Die Daten enthalten keine Informationen zu Förderern" ]
 
             Just list ->
                 div [] (List.map viewFunder list)
@@ -421,7 +421,7 @@ viewSponsors production =
         [ div [ class "title is-5" ] [ text "Sponsoren" ]
         , case production.sponsor of
             Nothing ->
-                text "Die Daten enthalten keine Informationen zu Sponsoren"
+                em [] [ text "Die Daten enthalten keine Informationen zu Sponsoren" ]
 
             Just list ->
                 div [] (List.map viewSponsor list)
