@@ -7073,43 +7073,64 @@ var $author$project$Helper$CustomValidations$previousStartDateIsSet = F2(
 		var _v0 = _Utils_Tuple3(data.aV, data.bP, data.bt);
 		_v0$3:
 		while (true) {
-			if (!_v0.a.$) {
-				if (!_v0.c.$) {
-					if (_v0.a.a === 4) {
-						var _v3 = _v0.a.a;
-						var start = _v0.b;
-						var previousStart = _v0.c.a;
-						return _Utils_eq(start, previousStart) ? _List_fromArray(
-							[
-								A2($author$project$Helper$CustomValidations$ValidationMessage, path + '/previousStartDate', 'should be different from startDate for rescheduled events')
-							]) : _List_Nil;
+			_v0$4:
+			while (true) {
+				_v0$5:
+				while (true) {
+					if (!_v0.a.$) {
+						if (_v0.c.$ === 1) {
+							switch (_v0.a.a) {
+								case 3:
+									var _v1 = _v0.a.a;
+									var _v2 = _v0.c;
+									return _List_fromArray(
+										[
+											A2($author$project$Helper$CustomValidations$ValidationMessage, path + '/previousStartDate', 'should be set for postponed events')
+										]);
+								case 4:
+									var _v4 = _v0.a.a;
+									var _v5 = _v0.c;
+									return _List_fromArray(
+										[
+											A2($author$project$Helper$CustomValidations$ValidationMessage, path + '/previousStartDate', 'should be set for rescheduled events')
+										]);
+								case 1:
+									break _v0$3;
+								default:
+									break _v0$5;
+							}
+						} else {
+							switch (_v0.a.a) {
+								case 4:
+									var _v3 = _v0.a.a;
+									var start = _v0.b;
+									var previousStart = _v0.c.a;
+									return _Utils_eq(start, previousStart) ? _List_fromArray(
+										[
+											A2($author$project$Helper$CustomValidations$ValidationMessage, path + '/previousStartDate', 'should be different from startDate for rescheduled events')
+										]) : _List_Nil;
+								case 1:
+									break _v0$3;
+								default:
+									break _v0$4;
+							}
+						}
 					} else {
-						break _v0$3;
-					}
-				} else {
-					switch (_v0.a.a) {
-						case 3:
-							var _v1 = _v0.a.a;
-							var _v2 = _v0.c;
-							return _List_fromArray(
-								[
-									A2($author$project$Helper$CustomValidations$ValidationMessage, path + '/previousStartDate', 'should be set for postponed events')
-								]);
-						case 4:
-							var _v4 = _v0.a.a;
-							var _v5 = _v0.c;
-							return _List_fromArray(
-								[
-									A2($author$project$Helper$CustomValidations$ValidationMessage, path + '/previousStartDate', 'should be set for rescheduled events')
-								]);
-						default:
-							break _v0$3;
+						if (!_v0.c.$) {
+							break _v0$4;
+						} else {
+							break _v0$5;
+						}
 					}
 				}
-			} else {
-				break _v0$3;
+				return _List_Nil;
 			}
+			return _List_fromArray(
+				[
+					A2($author$project$Helper$CustomValidations$ValidationMessage, path + '/previousStartDate', 'should only be set if the event status is either \'rescheduled, \'postponed\', or \'cancelled\'')
+				]);
 		}
+		var _v6 = _v0.a.a;
 		return _List_Nil;
 	});
 var $author$project$Helper$CustomValidations$event = $author$project$Helper$CustomValidations$object(

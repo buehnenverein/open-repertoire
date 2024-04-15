@@ -183,6 +183,12 @@ previousStartDateIsSet path data =
         ( Just EventRescheduledEvent, _, Nothing ) ->
             [ ValidationMessage (path ++ "/previousStartDate") "should be set for rescheduled events" ]
 
+        ( Just EventCancelledEvent, _, _ ) ->
+            []
+
+        ( _, _, Just _ ) ->
+            [ ValidationMessage (path ++ "/previousStartDate") "should only be set if the event status is either 'rescheduled, 'postponed', or 'cancelled'" ]
+
         ( _, _, _ ) ->
             []
 
