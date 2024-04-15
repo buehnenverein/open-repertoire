@@ -3,7 +3,7 @@
 definitions: 
     Production:
       type: object
-      description: "An object containing unchanging information about the production."
+      description: "An object containing information about the production and its events."
       additionalProperties: false
       required:
         - "@type"
@@ -17,15 +17,15 @@ definitions:
             - "Play"
         name:
           type: string
-          description: The event title
+          description: The production's title.
           example: Hedwig and the Angry Inch
         subtitle:
           type: string
-          description: The event's optional subtitle
+          description: The production's optional subtitle.
           example: US-amerikanisches Off-Broadway-Rock-Musical
         description:
           type: string
-          description: A text describing the production
+          description: A text describing the production.
           example: Hedwig, die Queen des Glamrock, kommt auf ihrer Tournee in Augsburg vorbei! Gemeinsam mit ihrer Band The Angry Inch gibt sie eines ihrer mitreißenden Konzerte. Zwischen den Songs, die – mal Rocknummer, mal Country-Ballade – von ihrem Leben und der Suche nach der eigenen Identität erzählen, kommt sie dem Publikum so nah wie nie.\nDiese Show sollten Sie nicht verpassen!
         abstract:
           type: string
@@ -33,10 +33,10 @@ definitions:
           example: "Das Kult-Rockmusical »Hedwig and the Angry Inch« wurde innerhalb weniger Jahre vom Off-Broadway-Geheimtipp zu einem Hit am Broadway selbst. 2023 erobert Hedwig, die »weltweit ignorierte Queen of Glamrock« endlich auch die Herzen des Augsburger Publikums – mit dem langjährigen Schauspiel-Ensemble-Mitglied Thomas Prazak in der Hauptrolle. Die Live-Musik steuern Stefan Leibold, Jonas Horche, Tilman Herpichböhm und Niklas Rehle als Band »The Angry Inch« bei."
         additionalInfo:
           type: string
-          description: Additional information about the production
+          description: Additional information about the production.
         events:
           type: array
-          description: "List of current events offered by the organization"
+          description: A list of events at which this production will be performed. 
           items:
             $ref: "#/definitions/Event"
         genre:
@@ -76,12 +76,13 @@ definitions:
           example: "musical"
         accessModeSufficient:
           type: array
+          description: A list of single or combined accessModes that are sufficient to understand all the intellectual content of this production.
           items:
             type: string
-            description: A list of single or combined accessModes that are sufficient to understand all the intellectual content of a resource.
             enum: [auditory, tactile, textual, visual]
         accessibilityHazard:
           type: array
+          description: A list of characteristics of the production that are physiologically dangerous to some users.
           items:
             type: string
             example: flashingHazard
@@ -125,15 +126,23 @@ definitions:
           description: A list of organization's that support this production through some kind of financial contribution.
           items:
             $ref: "#/definitions/Organization"
+          example:
+            - "@type": Organization
+              name: A Funding Organization
+              logo: https://example.com/logos/logo.png
         sponsor:
           type: array
-          description: A person or organization that supports this production through a pledge, promise, or financial contribution.
+          description: A list of organization's that support this production through a pledge, promise, or financial contribution.
+          example:
+            - "@type": Organization
+              name: A Sponsoring Organization
+              logo: https://example.com/logos/logo2.png
           items:
             $ref: "#/definitions/Organization"
 
     Audience:
       type: object
-      description: Object describing the intended target audience of this production
+      description: Object describing the intended target audience of this production.
       required:
         - "@type"
       properties:
@@ -143,17 +152,17 @@ definitions:
             - "PeopleAudience"
         suggestedMinAge:
           type: integer
-          description: Minimum recommended age in years
+          description: Minimum recommended age in years.
           example: 8
           minimum: 0
         suggestedMaxAge:
           type: integer
-          description: Maximum recommended age in years
+          description: Maximum recommended age in years.
           example: 15
           minimum: 0
         audienceType:
           type: string
-          description: The target group for this production
+          description: A short textual description of the production's intended target audience.
           example: Kinder und Jugendliche
 
     Event:
@@ -189,11 +198,11 @@ definitions:
           type: string
           description: Link to further information about the event
           format: uri
-          example: "https://staatstheater-augsburg.de/hedwig_and_the_angry_inch"
+          example: "https://example.com/events/123"
         subtitleLanguage:
           type: string
           description: Language of the sub-/surtitles for this event, if any. Use the BCP 47 Language Tags.
-          example: en
+          example: en-US
         
         location:
           description: The location of this event. An event can take place at one or more physical locations,
@@ -205,11 +214,17 @@ definitions:
               - $ref: "#/definitions/VirtualLocation"    
         performer:
           type: array
+          description: |-
+            A list of people performing at the event, e.g. actors, dancers, etc.
+            
+            If multiple people perform the same role on stage (e.g. there is multiple actors
+            performing the same character), each person should get their own entry in the `performer` array.
           items:
             $ref: "#/definitions/PerformanceRole"
             
         offers:
           type: array
+          description: A list of offers for this event, i.e. information about prices, tickets, etc.
           items:
             $ref: "#/definitions/Offer"
         eventStatus:
@@ -298,6 +313,7 @@ definitions:
         roleName:
           type: string
           description: 'The name of the role this person played in the creation of the production.'
+          example: Regie
           # enum:
           #   - akrobatik
           #   - alles
@@ -363,6 +379,8 @@ definitions:
             - PerformanceRole
         characterName:
           type: string
+          description: The name of the character performed on stage, if any.
+          example: Hedwig
         performer:
           $ref: "#/definitions/Person"
 
@@ -401,6 +419,7 @@ definitions:
 
     PostalAddress:
       type: object
+      description: The address of e.g. an organization or event location.
       additionalProperties: false
       required:
         - "@type"
@@ -412,16 +431,15 @@ definitions:
         postalCode:
           type: string
           example: "86156"
-          # pattern: "\d{5}"
-          description: The location's postal code
+          description: The postal code.
         streetAddress:
           type: string
           example: Am Alten Gaswerk 7
-          description: The location's street address
+          description: The street address.
         addressLocality:
           type: string
           example: Augsburg
-          description: The city the location is in
+          description: The locality in which the street address is, i.e. the city.
 
     VirtualLocation:
       type: object
@@ -477,6 +495,8 @@ definitions:
             - Person
         name: 
           type: string
+          description: The person's name.
+          example: Max Mustermann
         
     Organization:
       type: object
@@ -497,6 +517,7 @@ definitions:
         logo:
           type: string
           format: uri
+          description: A link to the organization's logo.
         
 required:
   - "@context"
@@ -516,10 +537,11 @@ properties:
     enum:
       - v2
   organization:
+    description: Information about the organization that is hosting and/or producing the events, i.e. the theater (group).
     $ref: "#/definitions/Organization"
   productions:
     type: array
-    description: "The collection of all productions in the repertoire."
+    description: "A list of all current productions in the repertoire."
     items:
       $ref: "#/definitions/Production"
 
