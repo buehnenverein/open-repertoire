@@ -304,14 +304,16 @@ productionInfo : Production -> Html Msg
 productionInfo production =
     table [ class "table is-hoverable" ]
         [ tbody []
-            [ tableRow "Titel" production.name
-            , maybeTableRow "Sprache" production.inLanguage
-            , maybeTableRow "Untertitel" production.subtitle
-            , maybeTableRow "Beschreibung" production.description
-            , maybeTableRow "Kurzbeschreibung" production.abstract
-            , maybeTableRow "Zusätzliche Informationen" production.additionalInfo
-            , maybeTableRow "Genre" (Maybe.map humanReadableGenre production.genre)
-            ]
+            ([ required "Titel" production.name
+             , optional "Sprache" production.inLanguage
+             , optional "Untertitel" production.subtitle
+             , optional "Beschreibung" production.description
+             , optional "Kurzbeschreibung" production.abstract
+             , optional "Zusätzliche Informationen" production.additionalInfo
+             , optional "Genre" production.genre |> dataMap humanReadableGenre
+             ]
+                |> renderData
+            )
         ]
 
 
@@ -340,16 +342,12 @@ viewProductionAudience production =
         [ div [ class "title is-5" ] [ text "Zielgruppe" ]
         , table [ class "table" ]
             [ tbody []
-                [ maybeTableRow "Beschreibung" (Maybe.andThen .audienceType production.audience)
-                , maybeTableRow "Mindestalter"
-                    (Maybe.andThen .suggestedMinAge production.audience
-                        |> Maybe.map String.fromInt
-                    )
-                , maybeTableRow "Höchstalter"
-                    (Maybe.andThen .suggestedMaxAge production.audience
-                        |> Maybe.map String.fromInt
-                    )
-                ]
+                ([ nestedOptional "Beschreibung" production.audience .audienceType
+                 , nestedOptional "Mindestalter" production.audience .suggestedMinAge |> dataMap String.fromInt
+                 , nestedOptional "Höchstalter" production.audience .suggestedMaxAge |> dataMap String.fromInt
+                 ]
+                    |> renderData
+                )
             ]
         ]
 
@@ -360,10 +358,12 @@ viewProductionAccessibility production =
         [ div [ class "title is-5" ] [ text "Barrierefreiheit" ]
         , table [ class "table" ]
             [ tbody []
-                [ maybeTableRow "Zugangsmodus" (Maybe.map viewAccessMode production.accessModeSufficient)
-                , maybeTableRow "Inhaltswarnungen" (Maybe.map viewAccessibilityHazards production.accessibilityHazard)
-                , maybeTableRow "Barrierefreiheitsbeschreibung" production.accessibilitySummary
-                ]
+                ([ optional "Zugangsmodus" production.accessModeSufficient |> dataMap viewAccessMode
+                 , optional "Inhaltswarnungen" production.accessibilityHazard |> dataMap viewAccessibilityHazards
+                 , optional "Barrierefreiheitsbeschreibung" production.accessibilitySummary
+                 ]
+                    |> renderData
+                )
             ]
         ]
 
@@ -397,15 +397,19 @@ viewFunder : Organization -> Html Msg
 viewFunder organization =
     table [ class "table" ]
         [ tbody []
-            [ tableRow "Name" organization.name
-            , maybeTableRow "Addresse" (organization.address |> Maybe.andThen .streetAddress)
-            , maybeTableRow "Postleitzahl" (organization.address |> Maybe.andThen .postalCode)
-            , maybeTableRow "Stadt" (organization.address |> Maybe.andThen .addressLocality)
-            , tr []
-                [ th [] [ text "Logo" ]
-                , td [] [ maybeLink { url = organization.logo, description = Just "Link" } ]
-                ]
-            ]
+            (([ required "Name" organization.name
+              , nestedOptional "Addresse" organization.address .streetAddress
+              , nestedOptional "Postleitzahl" organization.address .postalCode
+              , nestedOptional "Stadt" organization.address .addressLocality
+              ]
+                |> renderData
+             )
+                ++ [ tr []
+                        [ th [] [ text "Logo" ]
+                        , td [] [ maybeLink { url = organization.logo, description = Just "Link" } ]
+                        ]
+                   ]
+            )
         ]
 
 
@@ -426,15 +430,19 @@ viewSponsor : Organization -> Html Msg
 viewSponsor organization =
     table [ class "table" ]
         [ tbody []
-            [ tableRow "Name" organization.name
-            , maybeTableRow "Addresse" (organization.address |> Maybe.andThen .streetAddress)
-            , maybeTableRow "Postleitzahl" (organization.address |> Maybe.andThen .postalCode)
-            , maybeTableRow "Stadt" (organization.address |> Maybe.andThen .addressLocality)
-            , tr []
-                [ th [] [ text "Logo" ]
-                , td [] [ maybeLink { url = organization.logo, description = Just "Link" } ]
-                ]
-            ]
+            (([ required "Name" organization.name
+              , nestedOptional "Addresse" organization.address .streetAddress
+              , nestedOptional "Postleitzahl" organization.address .postalCode
+              , nestedOptional "Stadt" organization.address .addressLocality
+              ]
+                |> renderData
+             )
+                ++ [ tr []
+                        [ th [] [ text "Logo" ]
+                        , td [] [ maybeLink { url = organization.logo, description = Just "Link" } ]
+                        ]
+                   ]
+            )
         ]
 
 
@@ -472,24 +480,28 @@ viewEventTable : ZoneWithName -> Event -> Html Msg
 viewEventTable zone event =
     table [ class "table" ]
         [ tbody []
-            [ tableRow "Startdatum" (formatDate event.startDate zone)
-            , tableRow "Startzeit" (formatTime event.startDate zone)
-            , tableRow "Enddatum" (formatDate (Maybe.withDefault "" event.endDate) zone)
-            , tableRow "Endzeit" (formatTime (Maybe.withDefault "" event.endDate) zone)
-            , maybeTableRow "Dauer" (Maybe.map formatDuration event.duration)
-            , maybeTableRow "Untertitel in" event.subtitleLanguage
-            , tableRow "Status" (eventStatusToString event.eventStatus)
-            , tableRow "Vorheriges Startdatum" (formatDate (Maybe.withDefault "" event.previousStartDate) zone)
-            , tableRow "Vorherige Startzeit" (formatTime (Maybe.withDefault "" event.previousStartDate) zone)
-            , tr []
-                [ th []
-                    [ text "Link"
-                    ]
-                , td []
-                    [ maybeLink { url = event.url, description = Nothing }
-                    ]
-                ]
-            ]
+            (([ required "Startdatum" (formatDate event.startDate zone)
+              , required "Startzeit" (formatTime event.startDate zone)
+              , required "Enddatum" (formatDate (Maybe.withDefault "" event.endDate) zone)
+              , required "Endzeit" (formatTime (Maybe.withDefault "" event.endDate) zone)
+              , optional "Dauer" event.duration |> dataMap formatDuration
+              , optional "Untertitel in" event.subtitleLanguage
+              , required "Status" (eventStatusToString event.eventStatus)
+              , required "Vorheriges Startdatum" (formatDate (Maybe.withDefault "" event.previousStartDate) zone)
+              , required "Vorherige Startzeit" (formatTime (Maybe.withDefault "" event.previousStartDate) zone)
+              ]
+                |> renderData
+             )
+                ++ [ tr []
+                        [ th []
+                            [ text "Link"
+                            ]
+                        , td []
+                            [ maybeLink { url = event.url, description = Nothing }
+                            ]
+                        ]
+                   ]
+            )
         ]
 
 
@@ -565,39 +577,36 @@ locationTable location =
         LocationItemPl place ->
             table [ class "table" ]
                 [ tbody []
-                    [ maybeTableRow "Name" place.name
-                    , maybeTableRow "Addresse" place.address.streetAddress
-                    , maybeTableRow "Postleitzahl" place.address.postalCode
-                    , maybeTableRow "Stadt" place.address.addressLocality
+                    [ optional "Name" place.name |> renderEntry
+                    , optional "Addresse" place.address.streetAddress |> renderEntry
+                    , optional "Postleitzahl" place.address.postalCode |> renderEntry
+                    , optional "Stadt" place.address.addressLocality |> renderEntry
                     , tr []
                         [ th [] [ text "Koordinaten" ]
                         , td []
                             [ geoCoordinates place
                             ]
                         ]
-                    , maybeTableRow "Rollstuhlplätze" (wheelChairCount place.wheelChairPlaces)
-                    , tableRow "Platz für Assistent:in?" (spaceForAssistant place.wheelChairPlaces)
-                    , maybeTableRow "Rollstuhlkapazität" (wheelChairCapacity place.wheelChairPlaces)
+                    , optional "Rollstuhlplätze" place.wheelChairPlaces
+                        |> dataMap .count
+                        |> dataMap String.fromInt
+                        |> renderEntry
+                    , required "Platz für Assistent:in?" (spaceForAssistant place.wheelChairPlaces) |> renderEntry
+                    , nestedOptional "Rollstuhlkapazität" place.wheelChairPlaces .wheelchairUserCapacity
+                        |> dataMap String.fromInt
+                        |> renderEntry
                     ]
                 ]
 
         LocationItemVi info ->
             table [ class "table" ]
                 [ tbody []
-                    [ maybeTableRow "Name" info.name
-                    , maybeTableRow "Link" info.url
-                    ]
+                    ([ optional "Name" info.name
+                     , optional "Link" info.url
+                     ]
+                        |> renderData
+                    )
                 ]
-
-
-wheelChairCapacity : Maybe WheelChairPlace -> Maybe String
-wheelChairCapacity wheelChairPlaces =
-    case Maybe.map .wheelchairUserCapacity wheelChairPlaces of
-        Just capacity ->
-            Maybe.map String.fromInt capacity
-
-        Nothing ->
-            Just ""
 
 
 spaceForAssistant : Maybe WheelChairPlace -> String
@@ -611,12 +620,6 @@ spaceForAssistant wheelChairPlaces =
 
         Nothing ->
             ""
-
-
-wheelChairCount : Maybe WheelChairPlace -> Maybe String
-wheelChairCount wheelChairPlaces =
-    Maybe.map .count wheelChairPlaces
-        |> Maybe.map String.fromInt
 
 
 geoCoordinates : { a | latitude : Maybe Float, longitude : Maybe Float } -> Html Msg
@@ -934,32 +937,6 @@ maybeLink { url, description } =
             text ""
 
 
-tableRow : String -> String -> Html Msg
-tableRow name value =
-    tr []
-        [ th []
-            [ text name
-            ]
-        , td
-            [ class "preserve-newlines" ]
-            [ text value
-            ]
-        ]
-
-
-maybeTableRow : String -> Maybe String -> Html Msg
-maybeTableRow name value =
-    tr []
-        [ th []
-            [ text name
-            ]
-        , td
-            [ class "preserve-newlines" ]
-            [ text (Maybe.withDefault "" value)
-            ]
-        ]
-
-
 viewRequestError : String -> Http.Error -> Html Msg
 viewRequestError url error =
     section
@@ -1108,6 +1085,71 @@ filterInput filter =
                 []
             ]
         ]
+
+
+
+-- DATA ENTRY
+
+
+type DataEntry a
+    = Required { name : String, value : a }
+    | Optional { name : String, value : Maybe a }
+
+
+required : String -> a -> DataEntry a
+required name value =
+    Required { name = name, value = value }
+
+
+optional : String -> Maybe a -> DataEntry a
+optional name value =
+    Optional { name = name, value = value }
+
+
+nestedOptional : String -> Maybe a -> (a -> Maybe b) -> DataEntry b
+nestedOptional name value f =
+    Optional { name = name, value = Maybe.andThen f value }
+
+
+renderData : List (DataEntry String) -> List (Html Msg)
+renderData =
+    List.map renderEntry
+
+
+renderEntry : DataEntry String -> Html msg
+renderEntry entry =
+    case entry of
+        Required { name, value } ->
+            tr []
+                [ th []
+                    [ text name
+                    ]
+                , td
+                    [ class "preserve-newlines" ]
+                    [ text value
+                    ]
+                ]
+
+        Optional { name, value } ->
+            tr []
+                [ th []
+                    [ text name
+                    ]
+                , td
+                    [ class "preserve-newlines" ]
+                    [ text (Maybe.withDefault "" value)
+                    ]
+                ]
+
+
+dataMap : (a -> b) -> DataEntry a -> DataEntry b
+dataMap f entry =
+    case entry of
+        Required { name, value } ->
+            Required { name = name, value = f value }
+
+        Optional { name, value } ->
+            Optional { name = name, value = Maybe.map f value }
 
 
 
