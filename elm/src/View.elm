@@ -470,15 +470,15 @@ viewEventTable : ZoneWithName -> Event -> Html Msg
 viewEventTable zone event =
     table [ class "table" ]
         [ tbody []
-            ([ required "Startdatum" (formatDate event.startDate zone)
-             , required "Startzeit" (formatTime event.startDate zone)
-             , required "Enddatum" (formatDate (Maybe.withDefault "" event.endDate) zone)
-             , required "Endzeit" (formatTime (Maybe.withDefault "" event.endDate) zone)
+            ([ required "Startdatum" event.startDate |> asDate zone
+             , required "Startzeit" event.startDate |> asTime zone
+             , optional "Enddatum" event.endDate |> asDate zone
+             , optional "Endzeit" event.endDate |> asTime zone
              , optional "Dauer" event.duration |> dataMap formatDuration
              , optional "Untertitel in" event.subtitleLanguage
              , required "Status" (eventStatusToString event.eventStatus)
-             , required "Vorheriges Startdatum" (formatDate (Maybe.withDefault "" event.previousStartDate) zone)
-             , required "Vorherige Startzeit" (formatTime (Maybe.withDefault "" event.previousStartDate) zone)
+             , optional "Vorheriges Startdatum" event.previousStartDate |> asDate zone
+             , optional "Vorherige Startzeit" event.previousStartDate |> asTime zone
              , optional "Link" event.url |> asLink Nothing
              ]
                 |> renderData
@@ -1079,6 +1079,8 @@ type DataEntry a
 type Options
     = Default
     | Link (Maybe String)
+    | Date ZoneWithName
+    | Time ZoneWithName
 
 
 required : String -> a -> DataEntry a
@@ -1106,6 +1108,26 @@ asLink linkText entry =
             Optional { data | options = Link linkText }
 
 
+asDate : ZoneWithName -> DataEntry a -> DataEntry a
+asDate zone entry =
+    case entry of
+        Required data ->
+            Required { data | options = Date zone }
+
+        Optional data ->
+            Optional { data | options = Date zone }
+
+
+asTime : ZoneWithName -> DataEntry a -> DataEntry a
+asTime zone entry =
+    case entry of
+        Required data ->
+            Required { data | options = Time zone }
+
+        Optional data ->
+            Optional { data | options = Time zone }
+
+
 renderData : List (DataEntry String) -> List (Html Msg)
 renderData =
     List.map renderEntry
@@ -1124,6 +1146,14 @@ viewRequired value options =
                 [ Html.a [ href value, target "_blank" ] [ text (Maybe.withDefault value linkText) ]
                 ]
 
+        Date zone ->
+            td []
+                [ text (formatDate value zone) ]
+
+        Time zone ->
+            td []
+                [ text (formatTime value zone) ]
+
 
 viewOptional : Maybe String -> Options -> Html Msg
 viewOptional value options =
@@ -1138,6 +1168,18 @@ viewOptional value options =
             td
                 []
                 [ Html.a [ href v, target "_blank" ] [ text (Maybe.withDefault v linkText) ]
+                ]
+
+        ( Just v, Date zone ) ->
+            td
+                []
+                [ text (formatDate v zone)
+                ]
+
+        ( Just v, Time zone ) ->
+            td
+                []
+                [ text (formatTime v zone)
                 ]
 
         ( Nothing, _ ) ->
