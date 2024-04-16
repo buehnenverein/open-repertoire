@@ -558,25 +558,20 @@ locationTable location =
         LocationItemPl place ->
             table [ class "table" ]
                 [ tbody []
-                    [ optional "Name" place.name |> renderEntry
-                    , optional "Addresse" place.address.streetAddress |> renderEntry
-                    , optional "Postleitzahl" place.address.postalCode |> renderEntry
-                    , optional "Stadt" place.address.addressLocality |> renderEntry
-                    , tr []
-                        [ th [] [ text "Koordinaten" ]
-                        , td []
-                            [ geoCoordinates place
-                            ]
-                        ]
-                    , optional "Rollstuhlplätze" place.wheelChairPlaces
+                    ([ optional "Name" place.name
+                     , optional "Addresse" place.address.streetAddress
+                     , optional "Postleitzahl" place.address.postalCode
+                     , optional "Stadt" place.address.addressLocality
+                     , nestedOptional "Koordinaten" (Just place) osmUrl |> asLink (Just "Karte anzeigen")
+                     , optional "Rollstuhlplätze" place.wheelChairPlaces
                         |> dataMap .count
                         |> dataMap String.fromInt
-                        |> renderEntry
-                    , required "Platz für Assistent:in?" (spaceForAssistant place.wheelChairPlaces) |> renderEntry
-                    , nestedOptional "Rollstuhlkapazität" place.wheelChairPlaces .wheelchairUserCapacity
+                     , required "Platz für Assistent:in?" (spaceForAssistant place.wheelChairPlaces)
+                     , nestedOptional "Rollstuhlkapazität" place.wheelChairPlaces .wheelchairUserCapacity
                         |> dataMap String.fromInt
-                        |> renderEntry
-                    ]
+                     ]
+                        |> renderData
+                    )
                 ]
 
         LocationItemVi info ->
@@ -603,26 +598,19 @@ spaceForAssistant wheelChairPlaces =
             ""
 
 
-geoCoordinates : { a | latitude : Maybe Float, longitude : Maybe Float } -> Html Msg
-geoCoordinates place =
+osmUrl : { a | latitude : Maybe Float, longitude : Maybe Float } -> Maybe String
+osmUrl place =
     case ( place.latitude, place.longitude ) of
         ( Just lat, Just lon ) ->
-            osmLink { latitude = lat, longitude = lon }
+            Just
+                ("https://www.osm.org/?zoom=19&mlat="
+                    ++ String.fromFloat lat
+                    ++ "&mlon="
+                    ++ String.fromFloat lon
+                )
 
         _ ->
-            text ""
-
-
-osmLink : { a | latitude : Float, longitude : Float } -> Html Msg
-osmLink place =
-    let
-        url =
-            "https://www.osm.org/?zoom=19&mlat="
-                ++ String.fromFloat place.latitude
-                ++ "&mlon="
-                ++ String.fromFloat place.longitude
-    in
-    a [ href url, target "_blank" ] [ text "Karte anzeigen" ]
+            Nothing
 
 
 
