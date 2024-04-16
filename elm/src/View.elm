@@ -397,18 +397,13 @@ viewFunder : Organization -> Html Msg
 viewFunder organization =
     table [ class "table" ]
         [ tbody []
-            (([ required "Name" organization.name
-              , nestedOptional "Addresse" organization.address .streetAddress
-              , nestedOptional "Postleitzahl" organization.address .postalCode
-              , nestedOptional "Stadt" organization.address .addressLocality
-              ]
+            ([ required "Name" organization.name
+             , nestedOptional "Addresse" organization.address .streetAddress
+             , nestedOptional "Postleitzahl" organization.address .postalCode
+             , nestedOptional "Stadt" organization.address .addressLocality
+             , optional "Logo" organization.logo |> asLink (Just "Link")
+             ]
                 |> renderData
-             )
-                ++ [ tr []
-                        [ th [] [ text "Logo" ]
-                        , td [] [ maybeLink { url = organization.logo, description = Just "Link" } ]
-                        ]
-                   ]
             )
         ]
 
@@ -430,18 +425,13 @@ viewSponsor : Organization -> Html Msg
 viewSponsor organization =
     table [ class "table" ]
         [ tbody []
-            (([ required "Name" organization.name
-              , nestedOptional "Addresse" organization.address .streetAddress
-              , nestedOptional "Postleitzahl" organization.address .postalCode
-              , nestedOptional "Stadt" organization.address .addressLocality
-              ]
+            ([ required "Name" organization.name
+             , nestedOptional "Addresse" organization.address .streetAddress
+             , nestedOptional "Postleitzahl" organization.address .postalCode
+             , nestedOptional "Stadt" organization.address .addressLocality
+             , optional "Logo" organization.logo |> asLink (Just "Link")
+             ]
                 |> renderData
-             )
-                ++ [ tr []
-                        [ th [] [ text "Logo" ]
-                        , td [] [ maybeLink { url = organization.logo, description = Just "Link" } ]
-                        ]
-                   ]
             )
         ]
 
@@ -480,27 +470,18 @@ viewEventTable : ZoneWithName -> Event -> Html Msg
 viewEventTable zone event =
     table [ class "table" ]
         [ tbody []
-            (([ required "Startdatum" (formatDate event.startDate zone)
-              , required "Startzeit" (formatTime event.startDate zone)
-              , required "Enddatum" (formatDate (Maybe.withDefault "" event.endDate) zone)
-              , required "Endzeit" (formatTime (Maybe.withDefault "" event.endDate) zone)
-              , optional "Dauer" event.duration |> dataMap formatDuration
-              , optional "Untertitel in" event.subtitleLanguage
-              , required "Status" (eventStatusToString event.eventStatus)
-              , required "Vorheriges Startdatum" (formatDate (Maybe.withDefault "" event.previousStartDate) zone)
-              , required "Vorherige Startzeit" (formatTime (Maybe.withDefault "" event.previousStartDate) zone)
-              ]
+            ([ required "Startdatum" (formatDate event.startDate zone)
+             , required "Startzeit" (formatTime event.startDate zone)
+             , required "Enddatum" (formatDate (Maybe.withDefault "" event.endDate) zone)
+             , required "Endzeit" (formatTime (Maybe.withDefault "" event.endDate) zone)
+             , optional "Dauer" event.duration |> dataMap formatDuration
+             , optional "Untertitel in" event.subtitleLanguage
+             , required "Status" (eventStatusToString event.eventStatus)
+             , required "Vorheriges Startdatum" (formatDate (Maybe.withDefault "" event.previousStartDate) zone)
+             , required "Vorherige Startzeit" (formatTime (Maybe.withDefault "" event.previousStartDate) zone)
+             , optional "Link" event.url |> asLink Nothing
+             ]
                 |> renderData
-             )
-                ++ [ tr []
-                        [ th []
-                            [ text "Link"
-                            ]
-                        , td []
-                            [ maybeLink { url = event.url, description = Nothing }
-                            ]
-                        ]
-                   ]
             )
         ]
 
@@ -752,6 +733,15 @@ viewOffer offer =
                 |> List.filterMap identity
                 |> List.map (\price -> String.fromFloat price ++ " " ++ offer.priceSpecification.priceCurrency)
                 |> String.join " - "
+
+        maybeLink : { url : Maybe String, description : Maybe String } -> Html Msg
+        maybeLink { url, description } =
+            case url of
+                Just link ->
+                    Html.a [ href link, target "_blank" ] [ text (Maybe.withDefault link description) ]
+
+                Nothing ->
+                    text ""
     in
     tr []
         [ td []
@@ -927,16 +917,6 @@ formatDuration duration =
         String.fromInt hours ++ ":00" ++ "h"
 
 
-maybeLink : { url : Maybe String, description : Maybe String } -> Html Msg
-maybeLink { url, description } =
-    case url of
-        Just link ->
-            Html.a [ href link, target "_blank" ] [ text (Maybe.withDefault link description) ]
-
-        Nothing ->
-            text ""
-
-
 viewRequestError : String -> Http.Error -> Html Msg
 viewRequestError url error =
     section
@@ -1092,23 +1072,38 @@ filterInput filter =
 
 
 type DataEntry a
-    = Required { name : String, value : a }
-    | Optional { name : String, value : Maybe a }
+    = Required { name : String, value : a, options : Options }
+    | Optional { name : String, value : Maybe a, options : Options }
+
+
+type Options
+    = Default
+    | Link (Maybe String)
 
 
 required : String -> a -> DataEntry a
 required name value =
-    Required { name = name, value = value }
+    Required { name = name, value = value, options = Default }
 
 
 optional : String -> Maybe a -> DataEntry a
 optional name value =
-    Optional { name = name, value = value }
+    Optional { name = name, value = value, options = Default }
 
 
 nestedOptional : String -> Maybe a -> (a -> Maybe b) -> DataEntry b
 nestedOptional name value f =
-    Optional { name = name, value = Maybe.andThen f value }
+    Optional { name = name, value = Maybe.andThen f value, options = Default }
+
+
+asLink : Maybe String -> DataEntry a -> DataEntry a
+asLink linkText entry =
+    case entry of
+        Required data ->
+            Required { data | options = Link linkText }
+
+        Optional data ->
+            Optional { data | options = Link linkText }
 
 
 renderData : List (DataEntry String) -> List (Html Msg)
@@ -1116,40 +1111,66 @@ renderData =
     List.map renderEntry
 
 
-renderEntry : DataEntry String -> Html msg
-renderEntry entry =
-    case entry of
-        Required { name, value } ->
-            tr []
-                [ th []
-                    [ text name
-                    ]
-                , td
-                    [ class "preserve-newlines" ]
-                    [ text value
-                    ]
+viewRequired : String -> Options -> Html Msg
+viewRequired value options =
+    case options of
+        Default ->
+            td [ class "preserve-newlines" ]
+                [ text value
                 ]
 
-        Optional { name, value } ->
+        Link linkText ->
+            td []
+                [ Html.a [ href value, target "_blank" ] [ text (Maybe.withDefault value linkText) ]
+                ]
+
+
+viewOptional : Maybe String -> Options -> Html Msg
+viewOptional value options =
+    case ( value, options ) of
+        ( Just v, Default ) ->
+            td
+                [ class "preserve-newlines" ]
+                [ text v
+                ]
+
+        ( Just v, Link linkText ) ->
+            td
+                []
+                [ Html.a [ href v, target "_blank" ] [ text (Maybe.withDefault v linkText) ]
+                ]
+
+        ( Nothing, _ ) ->
+            td
+                []
+                [ text ""
+                ]
+
+
+renderEntry : DataEntry String -> Html Msg
+renderEntry entry =
+    case entry of
+        Required { name, value, options } ->
             tr []
-                [ th []
-                    [ text name
-                    ]
-                , td
-                    [ class "preserve-newlines" ]
-                    [ text (Maybe.withDefault "" value)
-                    ]
+                [ th [] [ text name ]
+                , viewRequired value options
+                ]
+
+        Optional { name, value, options } ->
+            tr []
+                [ th [] [ text name ]
+                , viewOptional value options
                 ]
 
 
 dataMap : (a -> b) -> DataEntry a -> DataEntry b
 dataMap f entry =
     case entry of
-        Required { name, value } ->
-            Required { name = name, value = f value }
+        Required { name, value, options } ->
+            Required { name = name, value = f value, options = options }
 
-        Optional { name, value } ->
-            Optional { name = name, value = Maybe.map f value }
+        Optional { name, value, options } ->
+            Optional { name = name, value = Maybe.map f value, options = options }
 
 
 
