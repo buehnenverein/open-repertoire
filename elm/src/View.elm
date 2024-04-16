@@ -206,7 +206,7 @@ viewData data zone =
                     [ h1 [ class "is-size-1" ] [ text production.name ]
                     ]
                 , card (text "Info")
-                    (productionTable production)
+                    (productionGrid production)
                     (productionOpen index)
                     (ProductionCardClicked index (not (productionOpen index)))
                 , card (text "Veranstaltungen")
@@ -274,32 +274,26 @@ productionNameMatches filter production =
     String.contains (String.toLower filter) (String.toLower production.name)
 
 
-productionTable : Production -> Html Msg
-productionTable production =
-    div [ class "tile is-vertical is-ancestor" ]
-        [ div [ class "tile" ]
-            [ div [ class "tile is-8 is-vertical is-parent" ]
-                [ div [ class "tile is-child box" ]
-                    [ productionInfo production ]
-                , div [ class "tile is-child box" ]
-                    [ viewProductionAccessibility production
-                    ]
+productionGrid : Production -> Html Msg
+productionGrid production =
+    div [ class "fixed-grid has-3-cols has-1-cols-mobile has-1-cols-tablet has-1-cols-desktop" ]
+        [ div [ class "grid" ]
+            [ div [ class "cell box mb-0 is-col-span-2-widescreen is-row-span-3" ]
+                [ productionInfo production
                 ]
-            , div [ class "tile is-vertical is-parent" ]
-                [ div [ class "tile is-child box" ]
-                    [ viewCreators production.creator ]
-                , div [ class "tile is-child box" ]
-                    [ viewProductionAudience production
-                    ]
+            , div [ class "cell box mb-0 is-row-span-2" ]
+                [ viewCreators production.creator
                 ]
-            ]
-        , div [ class "tile is-parent" ]
-            [ div [ class "tile is-child box" ]
+            , div [ class "cell box mb-0 is-row-span-2" ]
+                [ viewProductionAudience production
+                ]
+            , div [ class "cell box mb-0 is-col-span-2-widescreen" ]
+                [ viewProductionAccessibility production
+                ]
+            , div [ class "cell box mb-0 is-col-span-3-widescreen" ]
                 [ viewFunders production
                 ]
-            ]
-        , div [ class "tile is-parent" ]
-            [ div [ class "tile is-child box" ]
+            , div [ class "cell box mb-0 is-col-span-3-widescreen" ]
                 [ viewSponsors production
                 ]
             ]
@@ -456,23 +450,19 @@ viewEvents events zone =
 
 viewEvent : ZoneWithName -> Event -> Html Msg
 viewEvent zone event =
-    div []
-        [ div [ class "tile is-ancestor" ]
-            [ div [ class "tile is-vertical is-parent" ]
-                [ div [ class "tile is-child box" ]
-                    [ viewEventTable zone event
-                    ]
-                , div [ class "tile is-child box" ]
-                    [ viewPerformers event.performer
-                    ]
+    div [ class "fixed-grid has-2-cols" ]
+        [ div [ class "grid" ]
+            [ div [ class "cell box mb-0 is-col-span-2 is-col-span-1-widescreen" ]
+                [ viewEventTable zone event
                 ]
-            , div [ class "tile is-vertical is-parent" ]
-                [ div [ class "tile is-child box" ]
-                    [ viewLocations event.location
-                    ]
-                , div [ class "tile is-child box" ]
-                    [ viewOffers event.offers
-                    ]
+            , div [ class "cell box mb-0 is-col-span-2 is-col-span-1-widescreen" ]
+                [ viewLocations event.location
+                ]
+            , div [ class "cell box mb-0 is-col-span-2 is-col-span-1-widescreen" ]
+                [ viewPerformers event.performer
+                ]
+            , div [ class "cell box mb-0 is-col-span-2 is-col-span-1-widescreen" ]
+                [ viewOffers event.offers
                 ]
             ]
         ]
@@ -846,11 +836,11 @@ card title content isOpen clickHandler =
             [ class "card-header has-background-primary is-clickable"
             , onClick clickHandler
             ]
-            [ div [ class "card-header-title has-text-white" ]
+            [ div [ class "card-header-title has-text-primary-invert" ]
                 [ title
                 , span [ style "margin-left" "0.5em" ] []
                 , i
-                    [ class "fas  has-text-white"
+                    [ class "fas  has-text-primary-invert"
                     , classList [ ( "fa-angle-down", isOpen ), ( "fa-angle-right", not isOpen ) ]
                     ]
                     []

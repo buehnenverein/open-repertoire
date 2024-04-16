@@ -25865,7 +25865,7 @@ var $author$project$View$card = F4(
 							$elm$html$Html$div,
 							_List_fromArray(
 								[
-									$elm$html$Html$Attributes$class('card-header-title has-text-white')
+									$elm$html$Html$Attributes$class('card-header-title has-text-primary-invert')
 								]),
 							_List_fromArray(
 								[
@@ -25881,7 +25881,7 @@ var $author$project$View$card = F4(
 									$elm$html$Html$i,
 									_List_fromArray(
 										[
-											$elm$html$Html$Attributes$class('fas  has-text-white'),
+											$elm$html$Html$Attributes$class('fas  has-text-primary-invert'),
 											$elm$html$Html$Attributes$classList(
 											_List_fromArray(
 												[
@@ -25991,14 +25991,6 @@ var $elm$core$Set$member = F2(
 	function (key, _v0) {
 		var dict = _v0;
 		return A2($elm$core$Dict$member, key, dict);
-	});
-var $elm$core$String$toLower = _String_toLower;
-var $author$project$View$productionNameMatches = F2(
-	function (filter, production) {
-		return A2(
-			$elm$core$String$contains,
-			$elm$core$String$toLower(filter),
-			$elm$core$String$toLower(production.p));
 	});
 var $elm$core$String$fromList = _String_fromList;
 var $author$project$Data$Root$productionGenreToString = function (productionGenre) {
@@ -26687,12 +26679,12 @@ var $author$project$View$viewSponsors = function (production) {
 			}()
 			]));
 };
-var $author$project$View$productionTable = function (production) {
+var $author$project$View$productionGrid = function (production) {
 	return A2(
 		$elm$html$Html$div,
 		_List_fromArray(
 			[
-				$elm$html$Html$Attributes$class('tile is-vertical is-ancestor')
+				$elm$html$Html$Attributes$class('fixed-grid has-3-cols has-1-cols-mobile has-1-cols-tablet has-1-cols-desktop')
 			]),
 		_List_fromArray(
 			[
@@ -26700,7 +26692,7 @@ var $author$project$View$productionTable = function (production) {
 				$elm$html$Html$div,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$class('tile')
+						$elm$html$Html$Attributes$class('grid')
 					]),
 				_List_fromArray(
 					[
@@ -26708,93 +26700,57 @@ var $author$project$View$productionTable = function (production) {
 						$elm$html$Html$div,
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$class('tile is-8 is-vertical is-parent')
+								$elm$html$Html$Attributes$class('cell box mb-0 is-col-span-2-widescreen is-row-span-3')
 							]),
 						_List_fromArray(
 							[
-								A2(
-								$elm$html$Html$div,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$class('tile is-child box')
-									]),
-								_List_fromArray(
-									[
-										$author$project$View$productionInfo(production)
-									])),
-								A2(
-								$elm$html$Html$div,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$class('tile is-child box')
-									]),
-								_List_fromArray(
-									[
-										$author$project$View$viewProductionAccessibility(production)
-									]))
+								$author$project$View$productionInfo(production)
 							])),
 						A2(
 						$elm$html$Html$div,
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$class('tile is-vertical is-parent')
+								$elm$html$Html$Attributes$class('cell box mb-0 is-row-span-2')
 							]),
 						_List_fromArray(
 							[
-								A2(
-								$elm$html$Html$div,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$class('tile is-child box')
-									]),
-								_List_fromArray(
-									[
-										$author$project$View$viewCreators(production.V)
-									])),
-								A2(
-								$elm$html$Html$div,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$class('tile is-child box')
-									]),
-								_List_fromArray(
-									[
-										$author$project$View$viewProductionAudience(production)
-									]))
-							]))
-					])),
-				A2(
-				$elm$html$Html$div,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$class('tile is-parent')
-					]),
-				_List_fromArray(
-					[
+								$author$project$View$viewCreators(production.V)
+							])),
 						A2(
 						$elm$html$Html$div,
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$class('tile is-child box')
+								$elm$html$Html$Attributes$class('cell box mb-0 is-row-span-2')
+							]),
+						_List_fromArray(
+							[
+								$author$project$View$viewProductionAudience(production)
+							])),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('cell box mb-0 is-col-span-2-widescreen')
+							]),
+						_List_fromArray(
+							[
+								$author$project$View$viewProductionAccessibility(production)
+							])),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('cell box mb-0 is-col-span-3-widescreen')
 							]),
 						_List_fromArray(
 							[
 								$author$project$View$viewFunders(production)
-							]))
-					])),
-				A2(
-				$elm$html$Html$div,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$class('tile is-parent')
-					]),
-				_List_fromArray(
-					[
+							])),
 						A2(
 						$elm$html$Html$div,
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$class('tile is-child box')
+								$elm$html$Html$Attributes$class('cell box mb-0 is-col-span-3-widescreen')
 							]),
 						_List_fromArray(
 							[
@@ -26803,6 +26759,14 @@ var $author$project$View$productionTable = function (production) {
 					]))
 			]));
 };
+var $elm$core$String$toLower = _String_toLower;
+var $author$project$View$productionNameMatches = F2(
+	function (filter, production) {
+		return A2(
+			$elm$core$String$contains,
+			$elm$core$String$toLower(filter),
+			$elm$core$String$toLower(production.p));
+	});
 var $elm$html$Html$hr = _VirtualDom_node('hr');
 var $elm$core$List$intersperse = F2(
 	function (sep, xs) {
@@ -28958,14 +28922,17 @@ var $author$project$View$viewEvent = F2(
 	function (zone, event) {
 		return A2(
 			$elm$html$Html$div,
-			_List_Nil,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$class('fixed-grid has-2-cols')
+				]),
 			_List_fromArray(
 				[
 					A2(
 					$elm$html$Html$div,
 					_List_fromArray(
 						[
-							$elm$html$Html$Attributes$class('tile is-ancestor')
+							$elm$html$Html$Attributes$class('grid')
 						]),
 					_List_fromArray(
 						[
@@ -28973,59 +28940,41 @@ var $author$project$View$viewEvent = F2(
 							$elm$html$Html$div,
 							_List_fromArray(
 								[
-									$elm$html$Html$Attributes$class('tile is-vertical is-parent')
+									$elm$html$Html$Attributes$class('cell box mb-0 is-col-span-2 is-col-span-1-widescreen')
 								]),
 							_List_fromArray(
 								[
-									A2(
-									$elm$html$Html$div,
-									_List_fromArray(
-										[
-											$elm$html$Html$Attributes$class('tile is-child box')
-										]),
-									_List_fromArray(
-										[
-											A2($author$project$View$viewEventTable, zone, event)
-										])),
-									A2(
-									$elm$html$Html$div,
-									_List_fromArray(
-										[
-											$elm$html$Html$Attributes$class('tile is-child box')
-										]),
-									_List_fromArray(
-										[
-											$author$project$View$viewPerformers(event.Y)
-										]))
+									A2($author$project$View$viewEventTable, zone, event)
 								])),
 							A2(
 							$elm$html$Html$div,
 							_List_fromArray(
 								[
-									$elm$html$Html$Attributes$class('tile is-vertical is-parent')
+									$elm$html$Html$Attributes$class('cell box mb-0 is-col-span-2 is-col-span-1-widescreen')
 								]),
 							_List_fromArray(
 								[
-									A2(
-									$elm$html$Html$div,
-									_List_fromArray(
-										[
-											$elm$html$Html$Attributes$class('tile is-child box')
-										]),
-									_List_fromArray(
-										[
-											$author$project$View$viewLocations(event.bg)
-										])),
-									A2(
-									$elm$html$Html$div,
-									_List_fromArray(
-										[
-											$elm$html$Html$Attributes$class('tile is-child box')
-										]),
-									_List_fromArray(
-										[
-											$author$project$View$viewOffers(event.bp)
-										]))
+									$author$project$View$viewLocations(event.bg)
+								])),
+							A2(
+							$elm$html$Html$div,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$class('cell box mb-0 is-col-span-2 is-col-span-1-widescreen')
+								]),
+							_List_fromArray(
+								[
+									$author$project$View$viewPerformers(event.Y)
+								])),
+							A2(
+							$elm$html$Html$div,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$class('cell box mb-0 is-col-span-2 is-col-span-1-widescreen')
+								]),
+							_List_fromArray(
+								[
+									$author$project$View$viewOffers(event.bp)
 								]))
 						]))
 				]));
@@ -29083,7 +29032,7 @@ var $author$project$View$viewData = F2(
 							A4(
 							$author$project$View$card,
 							$elm$html$Html$text('Info'),
-							$author$project$View$productionTable(production),
+							$author$project$View$productionGrid(production),
 							productionOpen(index),
 							A2(
 								$author$project$View$ProductionCardClicked,
