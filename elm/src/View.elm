@@ -302,18 +302,14 @@ productionGrid production =
 
 productionInfo : Production -> Html Msg
 productionInfo production =
-    table [ class "table is-hoverable" ]
-        [ tbody []
-            ([ required "Titel" production.name
-             , optional "Sprache" production.inLanguage
-             , optional "Untertitel" production.subtitle
-             , optional "Beschreibung" production.description
-             , optional "Kurzbeschreibung" production.abstract
-             , optional "Zusätzliche Informationen" production.additionalInfo
-             , optional "Genre" production.genre |> dataMap humanReadableGenre
-             ]
-                |> renderData
-            )
+    dataTable
+        [ required "Titel" production.name
+        , optional "Sprache" production.inLanguage
+        , optional "Untertitel" production.subtitle
+        , optional "Beschreibung" production.description
+        , optional "Kurzbeschreibung" production.abstract
+        , optional "Zusätzliche Informationen" production.additionalInfo
+        , optional "Genre" production.genre |> dataMap humanReadableGenre
         ]
 
 
@@ -340,14 +336,10 @@ viewProductionAudience : Production -> Html Msg
 viewProductionAudience production =
     div []
         [ div [ class "title is-5" ] [ text "Zielgruppe" ]
-        , table [ class "table" ]
-            [ tbody []
-                ([ nestedOptional "Beschreibung" production.audience .audienceType
-                 , nestedOptional "Mindestalter" production.audience .suggestedMinAge |> dataMap String.fromInt
-                 , nestedOptional "Höchstalter" production.audience .suggestedMaxAge |> dataMap String.fromInt
-                 ]
-                    |> renderData
-                )
+        , dataTable
+            [ nestedOptional "Beschreibung" production.audience .audienceType
+            , nestedOptional "Mindestalter" production.audience .suggestedMinAge |> dataMap String.fromInt
+            , nestedOptional "Höchstalter" production.audience .suggestedMaxAge |> dataMap String.fromInt
             ]
         ]
 
@@ -356,14 +348,10 @@ viewProductionAccessibility : Production -> Html Msg
 viewProductionAccessibility production =
     div []
         [ div [ class "title is-5" ] [ text "Barrierefreiheit" ]
-        , table [ class "table" ]
-            [ tbody []
-                ([ optional "Zugangsmodus" production.accessModeSufficient |> dataMap viewAccessMode
-                 , optional "Inhaltswarnungen" production.accessibilityHazard |> dataMap viewAccessibilityHazards
-                 , optional "Barrierefreiheitsbeschreibung" production.accessibilitySummary
-                 ]
-                    |> renderData
-                )
+        , dataTable
+            [ optional "Zugangsmodus" production.accessModeSufficient |> dataMap viewAccessMode
+            , optional "Inhaltswarnungen" production.accessibilityHazard |> dataMap viewAccessibilityHazards
+            , optional "Barrierefreiheitsbeschreibung" production.accessibilitySummary
             ]
         ]
 
@@ -395,16 +383,12 @@ viewFunders production =
 
 viewFunder : Organization -> Html Msg
 viewFunder organization =
-    table [ class "table" ]
-        [ tbody []
-            ([ required "Name" organization.name
-             , nestedOptional "Addresse" organization.address .streetAddress
-             , nestedOptional "Postleitzahl" organization.address .postalCode
-             , nestedOptional "Stadt" organization.address .addressLocality
-             , optional "Logo" organization.logo |> asLink (Just "Link")
-             ]
-                |> renderData
-            )
+    dataTable
+        [ required "Name" organization.name
+        , nestedOptional "Addresse" organization.address .streetAddress
+        , nestedOptional "Postleitzahl" organization.address .postalCode
+        , nestedOptional "Stadt" organization.address .addressLocality
+        , optional "Logo" organization.logo |> asLink (Just "Link")
         ]
 
 
@@ -423,16 +407,12 @@ viewSponsors production =
 
 viewSponsor : Organization -> Html Msg
 viewSponsor organization =
-    table [ class "table" ]
-        [ tbody []
-            ([ required "Name" organization.name
-             , nestedOptional "Addresse" organization.address .streetAddress
-             , nestedOptional "Postleitzahl" organization.address .postalCode
-             , nestedOptional "Stadt" organization.address .addressLocality
-             , optional "Logo" organization.logo |> asLink (Just "Link")
-             ]
-                |> renderData
-            )
+    dataTable
+        [ required "Name" organization.name
+        , nestedOptional "Addresse" organization.address .streetAddress
+        , nestedOptional "Postleitzahl" organization.address .postalCode
+        , nestedOptional "Stadt" organization.address .addressLocality
+        , optional "Logo" organization.logo |> asLink (Just "Link")
         ]
 
 
@@ -468,21 +448,17 @@ viewEvent zone event =
 
 viewEventTable : ZoneWithName -> Event -> Html Msg
 viewEventTable zone event =
-    table [ class "table" ]
-        [ tbody []
-            ([ required "Startdatum" event.startDate |> asDate zone
-             , required "Startzeit" event.startDate |> asTime zone
-             , optional "Enddatum" event.endDate |> asDate zone
-             , optional "Endzeit" event.endDate |> asTime zone
-             , optional "Dauer" event.duration |> dataMap formatDuration
-             , optional "Untertitel in" event.subtitleLanguage
-             , required "Status" (eventStatusToString event.eventStatus)
-             , optional "Vorheriges Startdatum" event.previousStartDate |> asDate zone
-             , optional "Vorherige Startzeit" event.previousStartDate |> asTime zone
-             , optional "Link" event.url |> asLink Nothing
-             ]
-                |> renderData
-            )
+    dataTable
+        [ required "Startdatum" event.startDate |> asDate zone
+        , required "Startzeit" event.startDate |> asTime zone
+        , optional "Enddatum" event.endDate |> asDate zone
+        , optional "Endzeit" event.endDate |> asTime zone
+        , optional "Dauer" event.duration |> dataMap formatDuration
+        , optional "Untertitel in" event.subtitleLanguage
+        , required "Status" (eventStatusToString event.eventStatus)
+        , optional "Vorheriges Startdatum" event.previousStartDate |> asDate zone
+        , optional "Vorherige Startzeit" event.previousStartDate |> asTime zone
+        , optional "Link" event.url |> asLink Nothing
         ]
 
 
@@ -556,32 +532,24 @@ locationTable : LocationItem -> Html Msg
 locationTable location =
     case location of
         LocationItemPl place ->
-            table [ class "table" ]
-                [ tbody []
-                    ([ optional "Name" place.name
-                     , optional "Addresse" place.address.streetAddress
-                     , optional "Postleitzahl" place.address.postalCode
-                     , optional "Stadt" place.address.addressLocality
-                     , nestedOptional "Koordinaten" (Just place) osmUrl |> asLink (Just "Karte anzeigen")
-                     , optional "Rollstuhlplätze" place.wheelChairPlaces
-                        |> dataMap .count
-                        |> dataMap String.fromInt
-                     , required "Platz für Assistent:in?" (spaceForAssistant place.wheelChairPlaces)
-                     , nestedOptional "Rollstuhlkapazität" place.wheelChairPlaces .wheelchairUserCapacity
-                        |> dataMap String.fromInt
-                     ]
-                        |> renderData
-                    )
+            dataTable
+                [ optional "Name" place.name
+                , optional "Addresse" place.address.streetAddress
+                , optional "Postleitzahl" place.address.postalCode
+                , optional "Stadt" place.address.addressLocality
+                , nestedOptional "Koordinaten" (Just place) osmUrl |> asLink (Just "Karte anzeigen")
+                , optional "Rollstuhlplätze" place.wheelChairPlaces
+                    |> dataMap .count
+                    |> dataMap String.fromInt
+                , required "Platz für Assistent:in?" (spaceForAssistant place.wheelChairPlaces)
+                , nestedOptional "Rollstuhlkapazität" place.wheelChairPlaces .wheelchairUserCapacity
+                    |> dataMap String.fromInt
                 ]
 
         LocationItemVi info ->
-            table [ class "table" ]
-                [ tbody []
-                    ([ optional "Name" info.name
-                     , optional "Link" info.url
-                     ]
-                        |> renderData
-                    )
+            dataTable
+                [ optional "Name" info.name
+                , optional "Link" info.url
                 ]
 
 
@@ -1116,11 +1084,6 @@ asTime zone entry =
             Optional { data | options = Time zone }
 
 
-renderData : List (DataEntry String) -> List (Html Msg)
-renderData =
-    List.map renderEntry
-
-
 viewRequired : String -> Options -> Html Msg
 viewRequired value options =
     case options of
@@ -1201,6 +1164,14 @@ dataMap f entry =
 
         Optional { name, value, options } ->
             Optional { name = name, value = Maybe.map f value, options = options }
+
+
+dataTable : List (DataEntry String) -> Html Msg
+dataTable entries =
+    table [ class "table is-hoverable" ]
+        [ tbody []
+            (List.map renderEntry entries)
+        ]
 
 
 
