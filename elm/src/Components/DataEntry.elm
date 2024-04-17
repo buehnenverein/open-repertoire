@@ -7,9 +7,17 @@ import Iso8601
 import Time
 
 
-type DataEntry a
-    = Required { name : String, value : a, options : Options }
-    | Optional { name : String, value : Maybe a, options : Options }
+type Model a
+    = Required (DataEntry a)
+    | Optional (DataEntry (Maybe a))
+
+
+type alias DataEntry a =
+    { name : String
+    , value : a
+    , options : Options
+    , helpText : Maybe String
+    }
 
 
 type Options
@@ -27,41 +35,71 @@ type alias ZoneWithName =
 -- CREATION
 
 
-required : String -> a -> DataEntry a
+required : String -> a -> Model a
 required name value =
-    Required { name = name, value = value, options = Default }
+    Required
+        { name = name
+        , value = value
+        , options = Default
+        , helpText = Nothing
+        }
 
 
-optional : String -> Maybe a -> DataEntry a
+optional : String -> Maybe a -> Model a
 optional name value =
-    Optional { name = name, value = value, options = Default }
+    Optional
+        { name = name
+        , value = value
+        , options = Default
+        , helpText = Nothing
+        }
 
 
 
 -- TRANSFORMATION
 
 
-map : (a -> b) -> DataEntry a -> DataEntry b
+map : (a -> b) -> Model a -> Model b
 map f entry =
     case entry of
-        Required { name, value, options } ->
-            Required { name = name, value = f value, options = options }
+        Required { name, value, options, helpText } ->
+            Required
+                { name = name
+                , value = f value
+                , options = options
+                , helpText = helpText
+                }
 
-        Optional { name, value, options } ->
-            Optional { name = name, value = Maybe.map f value, options = options }
+        Optional { name, value, options, helpText } ->
+            Optional
+                { name = name
+                , value = Maybe.map f value
+                , options = options
+                , helpText = helpText
+                }
 
 
-nested : (a -> Maybe b) -> DataEntry a -> DataEntry b
+nested : (a -> Maybe b) -> Model a -> Model b
 nested f entry =
     case entry of
-        Required { name, value, options } ->
-            Optional { name = name, value = f value, options = options }
+        Required { name, value, options, helpText } ->
+            Optional
+                { name = name
+                , value = f value
+                , options = options
+                , helpText = helpText
+                }
 
-        Optional { name, value, options } ->
-            Optional { name = name, value = Maybe.andThen f value, options = options }
+        Optional { name, value, options, helpText } ->
+            Optional
+                { name = name
+                , value = Maybe.andThen f value
+                , options = options
+                , helpText = helpText
+                }
 
 
-asLink : Maybe String -> DataEntry a -> DataEntry a
+asLink : Maybe String -> Model a -> Model a
 asLink linkText entry =
     case entry of
         Required data ->
@@ -71,7 +109,7 @@ asLink linkText entry =
             Optional { data | options = Link linkText }
 
 
-asDate : ZoneWithName -> DataEntry a -> DataEntry a
+asDate : ZoneWithName -> Model a -> Model a
 asDate zone entry =
     case entry of
         Required data ->
@@ -81,7 +119,7 @@ asDate zone entry =
             Optional { data | options = Date zone }
 
 
-asTime : ZoneWithName -> DataEntry a -> DataEntry a
+asTime : ZoneWithName -> Model a -> Model a
 asTime zone entry =
     case entry of
         Required data ->
@@ -95,7 +133,7 @@ asTime zone entry =
 -- VIEW
 
 
-view : List (DataEntry String) -> Html msg
+view : List (Model String) -> Html msg
 view entries =
     table [ class "table is-hoverable" ]
         [ tbody []
@@ -103,7 +141,7 @@ view entries =
         ]
 
 
-viewEntry : DataEntry String -> Html msg
+viewEntry : Model String -> Html msg
 viewEntry entry =
     case entry of
         Required { name, value, options } ->
