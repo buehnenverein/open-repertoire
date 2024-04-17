@@ -349,9 +349,14 @@ viewProductionAccessibility production =
     div []
         [ div [ class "title is-5" ] [ text "Barrierefreiheit" ]
         , Entry.view
-            [ Entry.optional "Zugangsmodus" production.accessModeSufficient |> Entry.map viewAccessMode
-            , Entry.optional "Inhaltswarnungen" production.accessibilityHazard |> Entry.map viewAccessibilityHazards
+            [ Entry.optional "Zugangsmodus" production.accessModeSufficient
+                |> Entry.map viewAccessMode
+                |> Entry.withHelp "Eine Liste an Sinnen, die ausreichend sind um sich die Produktion inhaltlich zu erschließen."
+            , Entry.optional "Inhaltswarnungen" production.accessibilityHazard
+                |> Entry.map viewAccessibilityHazards
+                |> Entry.withHelp "Eigenschaften der Produktion, die für bestimtme Personen gefährlich sein könnten (z.B. Lichtblitze/Stroboskoplicht)."
             , Entry.optional "Barrierefreiheitsbeschreibung" production.accessibilitySummary
+                |> Entry.withHelp "Eine textuelle Beschreibung möglicher Barrieren bei dieser Produktion."
             ]
         ]
 

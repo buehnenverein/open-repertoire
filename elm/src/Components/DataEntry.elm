@@ -1,8 +1,8 @@
-module Components.DataEntry exposing (ZoneWithName, asDate, asLink, asTime, map, nested, optional, required, view)
+module Components.DataEntry exposing (ZoneWithName, asDate, asLink, asTime, map, nested, optional, required, view, withHelp)
 
 import DateFormat
 import Html exposing (..)
-import Html.Attributes exposing (class, href, target)
+import Html.Attributes exposing (attribute, class, href, style, target)
 import Iso8601
 import Time
 
@@ -129,6 +129,16 @@ asTime zone entry =
             Optional { data | options = Time zone }
 
 
+withHelp : String -> Model a -> Model a
+withHelp message entry =
+    case entry of
+        Required data ->
+            Required { data | helpText = Just message }
+
+        Optional data ->
+            Optional { data | helpText = Just message }
+
+
 
 -- VIEW
 
@@ -144,15 +154,31 @@ view entries =
 viewEntry : Model String -> Html msg
 viewEntry entry =
     case entry of
-        Required { name, value, options } ->
+        Required { name, value, options, helpText } ->
             tr []
-                [ th [] [ text name ]
+                [ th []
+                    [ text name
+                    , case helpText of
+                        Just h ->
+                            help h
+
+                        Nothing ->
+                            text ""
+                    ]
                 , viewRequired value options
                 ]
 
-        Optional { name, value, options } ->
+        Optional { name, value, options, helpText } ->
             tr []
-                [ th [] [ text name ]
+                [ th []
+                    [ text name
+                    , case helpText of
+                        Just h ->
+                            help h
+
+                        Nothing ->
+                            text ""
+                    ]
                 , viewOptional value options
                 ]
 
@@ -211,6 +237,19 @@ viewOptional value options =
                 []
                 [ text ""
                 ]
+
+
+help : String -> Html msg
+help message =
+    span
+        [ attribute "data-tooltip" message
+        , class "has-tooltip-arrow has-tooltip-multiline"
+        , style "border-bottom" "none"
+        ]
+        [ text " "
+        , i [ class "fas fa-circle-question" ]
+            [ text " " ]
+        ]
 
 
 
