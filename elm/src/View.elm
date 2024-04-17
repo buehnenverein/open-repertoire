@@ -332,9 +332,14 @@ viewProductionAudience production =
     div []
         [ div [ class "title is-5" ] [ text "Zielgruppe" ]
         , Entry.view
-            [ Entry.nestedOptional "Beschreibung" production.audience .audienceType
-            , Entry.nestedOptional "Mindestalter" production.audience .suggestedMinAge |> Entry.map String.fromInt
-            , Entry.nestedOptional "Höchstalter" production.audience .suggestedMaxAge |> Entry.map String.fromInt
+            [ Entry.optional "Beschreibung" production.audience
+                |> Entry.nested .audienceType
+            , Entry.optional "Mindestalter" production.audience
+                |> Entry.nested .suggestedMinAge
+                |> Entry.map String.fromInt
+            , Entry.optional "Höchstalter" production.audience
+                |> Entry.nested .suggestedMaxAge
+                |> Entry.map String.fromInt
             ]
         ]
 
@@ -380,9 +385,9 @@ viewFunder : Organization -> Html Msg
 viewFunder organization =
     Entry.view
         [ Entry.required "Name" organization.name
-        , Entry.nestedOptional "Addresse" organization.address .streetAddress
-        , Entry.nestedOptional "Postleitzahl" organization.address .postalCode
-        , Entry.nestedOptional "Stadt" organization.address .addressLocality
+        , Entry.optional "Addresse" organization.address |> Entry.nested .streetAddress
+        , Entry.optional "Postleitzahl" organization.address |> Entry.nested .postalCode
+        , Entry.optional "Stadt" organization.address |> Entry.nested .addressLocality
         , Entry.optional "Logo" organization.logo |> asLink (Just "Link")
         ]
 
@@ -404,9 +409,9 @@ viewSponsor : Organization -> Html Msg
 viewSponsor organization =
     Entry.view
         [ Entry.required "Name" organization.name
-        , Entry.nestedOptional "Addresse" organization.address .streetAddress
-        , Entry.nestedOptional "Postleitzahl" organization.address .postalCode
-        , Entry.nestedOptional "Stadt" organization.address .addressLocality
+        , Entry.optional "Addresse" organization.address |> Entry.nested .streetAddress
+        , Entry.optional "Postleitzahl" organization.address |> Entry.nested .postalCode
+        , Entry.optional "Stadt" organization.address |> Entry.nested .addressLocality
         , Entry.optional "Logo" organization.logo |> asLink (Just "Link")
         ]
 
@@ -532,12 +537,15 @@ locationTable location =
                 , Entry.optional "Addresse" place.address.streetAddress
                 , Entry.optional "Postleitzahl" place.address.postalCode
                 , Entry.optional "Stadt" place.address.addressLocality
-                , Entry.nestedOptional "Koordinaten" (Just place) osmUrl |> asLink (Just "Karte anzeigen")
+                , Entry.required "Koordinaten" place
+                    |> Entry.nested osmUrl
+                    |> asLink (Just "Karte anzeigen")
                 , Entry.optional "Rollstuhlplätze" place.wheelChairPlaces
                     |> Entry.map .count
                     |> Entry.map String.fromInt
                 , Entry.required "Platz für Assistent:in?" (spaceForAssistant place.wheelChairPlaces)
-                , Entry.nestedOptional "Rollstuhlkapazität" place.wheelChairPlaces .wheelchairUserCapacity
+                , Entry.optional "Rollstuhlkapazität" place.wheelChairPlaces
+                    |> Entry.nested .wheelchairUserCapacity
                     |> Entry.map String.fromInt
                 ]
 

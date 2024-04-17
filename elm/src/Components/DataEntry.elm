@@ -1,4 +1,4 @@
-module Components.DataEntry exposing (ZoneWithName, asDate, asLink, asTime, map, nestedOptional, optional, required, view)
+module Components.DataEntry exposing (ZoneWithName, asDate, asLink, asTime, map, nested, optional, required, view)
 
 import DateFormat
 import Html exposing (..)
@@ -37,11 +37,6 @@ optional name value =
     Optional { name = name, value = value, options = Default }
 
 
-nestedOptional : String -> Maybe a -> (a -> Maybe b) -> DataEntry b
-nestedOptional name value f =
-    Optional { name = name, value = Maybe.andThen f value, options = Default }
-
-
 
 -- TRANSFORMATION
 
@@ -54,6 +49,16 @@ map f entry =
 
         Optional { name, value, options } ->
             Optional { name = name, value = Maybe.map f value, options = options }
+
+
+nested : (a -> Maybe b) -> DataEntry a -> DataEntry b
+nested f entry =
+    case entry of
+        Required { name, value, options } ->
+            Optional { name = name, value = f value, options = options }
+
+        Optional { name, value, options } ->
+            Optional { name = name, value = Maybe.andThen f value, options = options }
 
 
 asLink : Maybe String -> DataEntry a -> DataEntry a
