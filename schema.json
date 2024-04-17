@@ -234,6 +234,11 @@
           "example": 90,
           "minimum": 0
         },
+        "intermission": {
+          "type": "boolean",
+          "description": "Indicates whether or not there will be an intermission during this event.",
+          "example": true
+        },
         "url": {
           "type": "string",
           "description": "Link to further information about the event",

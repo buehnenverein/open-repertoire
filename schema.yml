@@ -29,7 +29,7 @@ definitions:
           example: Hedwig, die Queen des Glamrock, kommt auf ihrer Tournee in Augsburg vorbei! Gemeinsam mit ihrer Band The Angry Inch gibt sie eines ihrer mitreißenden Konzerte. Zwischen den Songs, die – mal Rocknummer, mal Country-Ballade – von ihrem Leben und der Suche nach der eigenen Identität erzählen, kommt sie dem Publikum so nah wie nie.\nDiese Show sollten Sie nicht verpassen!
         abstract:
           type: string
-          description: A short abstract or teaser text describing the production
+          description: A short abstract or teaser text describing the production.
           example: "Das Kult-Rockmusical »Hedwig and the Angry Inch« wurde innerhalb weniger Jahre vom Off-Broadway-Geheimtipp zu einem Hit am Broadway selbst. 2023 erobert Hedwig, die »weltweit ignorierte Queen of Glamrock« endlich auch die Herzen des Augsburger Publikums – mit dem langjährigen Schauspiel-Ensemble-Mitglied Thomas Prazak in der Hauptrolle. Die Live-Musik steuern Stefan Leibold, Jonas Horche, Tilman Herpichböhm und Niklas Rehle als Band »The Angry Inch« bei."
         additionalInfo:
           type: string
@@ -190,10 +190,10 @@ definitions:
           description: The duration of the event in minutes.
           example: 90
           minimum: 0
-        # pause:
-        #   type: boolean
-        #   description: "TODO: Gibt es hierfür eine Entsprechung in schema.org?"
-        #   example: false
+        intermission:
+          type: boolean
+          description: Indicates whether or not there will be an intermission during this event.
+          example: true
         url:
           type: string
           description: Link to further information about the event

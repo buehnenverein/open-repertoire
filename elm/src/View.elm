@@ -2,7 +2,7 @@ module View exposing (main)
 
 import Browser
 import Components.DataEntry as Entry exposing (asDate, asLink, asTime)
-import Data.Root exposing (CreatorEntry(..), CreatorRole, Event, EventEventStatus(..), LocationItem(..), Offer, Organization, PerformanceRole, Production, ProductionGenre, Root, WheelChairPlace, rootDecoder)
+import Data.Root exposing (CreatorEntry(..), CreatorRole, Event, EventEventStatus(..), LocationItem(..), Offer, Organization, PerformanceRole, Production, ProductionGenre, Root, rootDecoder)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
@@ -459,6 +459,7 @@ viewEventTable zone event =
         , Entry.optional "Enddatum" event.endDate |> asDate zone
         , Entry.optional "Endzeit" event.endDate |> asTime zone
         , Entry.optional "Dauer" event.duration |> Entry.map formatDuration
+        , Entry.optional "Mit Pause?" event.intermission |> Entry.map boolString
         , Entry.optional "Untertitel in" event.subtitleLanguage
         , Entry.required "Status" (eventStatusToString event.eventStatus)
         , Entry.optional "Vorheriges Startdatum" event.previousStartDate |> asDate zone
@@ -548,7 +549,9 @@ locationTable location =
                 , Entry.optional "Rollstuhlplätze" place.wheelChairPlaces
                     |> Entry.map .count
                     |> Entry.map String.fromInt
-                , Entry.required "Platz für Assistent:in?" (spaceForAssistant place.wheelChairPlaces)
+                , Entry.optional "Platz für Assistent:in?" place.wheelChairPlaces
+                    |> Entry.nested .hasSpaceForAssistant
+                    |> Entry.map boolString
                 , Entry.optional "Rollstuhlkapazität" place.wheelChairPlaces
                     |> Entry.nested .wheelchairUserCapacity
                     |> Entry.map String.fromInt
@@ -559,19 +562,6 @@ locationTable location =
                 [ Entry.optional "Name" info.name
                 , Entry.optional "Link" info.url
                 ]
-
-
-spaceForAssistant : Maybe WheelChairPlace -> String
-spaceForAssistant wheelChairPlaces =
-    case Maybe.andThen .hasSpaceForAssistant wheelChairPlaces of
-        Just True ->
-            "Ja"
-
-        Just False ->
-            "Nein"
-
-        Nothing ->
-            ""
 
 
 osmUrl : { a | latitude : Maybe Float, longitude : Maybe Float } -> Maybe String
@@ -836,6 +826,15 @@ formatDuration duration =
 
     else
         String.fromInt hours ++ ":00" ++ "h"
+
+
+boolString : Bool -> String
+boolString value =
+    if value then
+        "Ja"
+
+    else
+        "Nein"
 
 
 viewRequestError : String -> Http.Error -> Html Msg
