@@ -1,13 +1,12 @@
 module View exposing (main)
 
 import Browser
+import Components.DataEntry as Entry exposing (asDate, asLink, asTime)
 import Data.Root exposing (CreatorEntry(..), CreatorRole, Event, EventEventStatus(..), LocationItem(..), Offer, Organization, PerformanceRole, Production, ProductionGenre, Root, WheelChairPlace, rootDecoder)
-import DateFormat
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
 import Http exposing (Error(..))
-import Iso8601
 import Json.Decode as Decode
 import RemoteData exposing (RemoteData(..))
 import Set exposing (Set)
@@ -29,7 +28,7 @@ main =
 
 type alias Model =
     { input : String
-    , localTimeZone : ZoneWithName
+    , localTimeZone : Entry.ZoneWithName
     , data : EventData
     }
 
@@ -51,14 +50,10 @@ type alias EventData =
     RemoteData Error Data
 
 
-type alias ZoneWithName =
-    ( String, Time.Zone )
-
-
 type Msg
     = Submit String
     | TextChange String
-    | GotTimeZone ZoneWithName
+    | GotTimeZone Entry.ZoneWithName
     | Response (RemoteData Http.Error Root)
     | ProductionCardClicked Int Bool
     | EventCardClicked Int Bool
@@ -188,7 +183,7 @@ view model =
 -- VIEW HELPERS
 
 
-viewData : Data -> ZoneWithName -> Html Msg
+viewData : Data -> Entry.ZoneWithName -> Html Msg
 viewData data zone =
     let
         productionOpen index =
@@ -302,14 +297,14 @@ productionGrid production =
 
 productionInfo : Production -> Html Msg
 productionInfo production =
-    dataTable
-        [ required "Titel" production.name
-        , optional "Sprache" production.inLanguage
-        , optional "Untertitel" production.subtitle
-        , optional "Beschreibung" production.description
-        , optional "Kurzbeschreibung" production.abstract
-        , optional "Zusätzliche Informationen" production.additionalInfo
-        , optional "Genre" production.genre |> dataMap humanReadableGenre
+    Entry.view
+        [ Entry.required "Titel" production.name
+        , Entry.optional "Sprache" production.inLanguage
+        , Entry.optional "Untertitel" production.subtitle
+        , Entry.optional "Beschreibung" production.description
+        , Entry.optional "Kurzbeschreibung" production.abstract
+        , Entry.optional "Zusätzliche Informationen" production.additionalInfo
+        , Entry.optional "Genre" production.genre |> Entry.map humanReadableGenre
         ]
 
 
@@ -336,10 +331,10 @@ viewProductionAudience : Production -> Html Msg
 viewProductionAudience production =
     div []
         [ div [ class "title is-5" ] [ text "Zielgruppe" ]
-        , dataTable
-            [ nestedOptional "Beschreibung" production.audience .audienceType
-            , nestedOptional "Mindestalter" production.audience .suggestedMinAge |> dataMap String.fromInt
-            , nestedOptional "Höchstalter" production.audience .suggestedMaxAge |> dataMap String.fromInt
+        , Entry.view
+            [ Entry.nestedOptional "Beschreibung" production.audience .audienceType
+            , Entry.nestedOptional "Mindestalter" production.audience .suggestedMinAge |> Entry.map String.fromInt
+            , Entry.nestedOptional "Höchstalter" production.audience .suggestedMaxAge |> Entry.map String.fromInt
             ]
         ]
 
@@ -348,10 +343,10 @@ viewProductionAccessibility : Production -> Html Msg
 viewProductionAccessibility production =
     div []
         [ div [ class "title is-5" ] [ text "Barrierefreiheit" ]
-        , dataTable
-            [ optional "Zugangsmodus" production.accessModeSufficient |> dataMap viewAccessMode
-            , optional "Inhaltswarnungen" production.accessibilityHazard |> dataMap viewAccessibilityHazards
-            , optional "Barrierefreiheitsbeschreibung" production.accessibilitySummary
+        , Entry.view
+            [ Entry.optional "Zugangsmodus" production.accessModeSufficient |> Entry.map viewAccessMode
+            , Entry.optional "Inhaltswarnungen" production.accessibilityHazard |> Entry.map viewAccessibilityHazards
+            , Entry.optional "Barrierefreiheitsbeschreibung" production.accessibilitySummary
             ]
         ]
 
@@ -383,12 +378,12 @@ viewFunders production =
 
 viewFunder : Organization -> Html Msg
 viewFunder organization =
-    dataTable
-        [ required "Name" organization.name
-        , nestedOptional "Addresse" organization.address .streetAddress
-        , nestedOptional "Postleitzahl" organization.address .postalCode
-        , nestedOptional "Stadt" organization.address .addressLocality
-        , optional "Logo" organization.logo |> asLink (Just "Link")
+    Entry.view
+        [ Entry.required "Name" organization.name
+        , Entry.nestedOptional "Addresse" organization.address .streetAddress
+        , Entry.nestedOptional "Postleitzahl" organization.address .postalCode
+        , Entry.nestedOptional "Stadt" organization.address .addressLocality
+        , Entry.optional "Logo" organization.logo |> asLink (Just "Link")
         ]
 
 
@@ -407,12 +402,12 @@ viewSponsors production =
 
 viewSponsor : Organization -> Html Msg
 viewSponsor organization =
-    dataTable
-        [ required "Name" organization.name
-        , nestedOptional "Addresse" organization.address .streetAddress
-        , nestedOptional "Postleitzahl" organization.address .postalCode
-        , nestedOptional "Stadt" organization.address .addressLocality
-        , optional "Logo" organization.logo |> asLink (Just "Link")
+    Entry.view
+        [ Entry.required "Name" organization.name
+        , Entry.nestedOptional "Addresse" organization.address .streetAddress
+        , Entry.nestedOptional "Postleitzahl" organization.address .postalCode
+        , Entry.nestedOptional "Stadt" organization.address .addressLocality
+        , Entry.optional "Logo" organization.logo |> asLink (Just "Link")
         ]
 
 
@@ -420,13 +415,13 @@ viewSponsor organization =
 -- EVENTS
 
 
-viewEvents : List Event -> ZoneWithName -> List (Html Msg)
+viewEvents : List Event -> Entry.ZoneWithName -> List (Html Msg)
 viewEvents events zone =
     List.map (viewEvent zone) events
         |> List.intersperse (hr [ class "has-background-grey-light mb-6 mt-6" ] [])
 
 
-viewEvent : ZoneWithName -> Event -> Html Msg
+viewEvent : Entry.ZoneWithName -> Event -> Html Msg
 viewEvent zone event =
     div [ class "fixed-grid has-2-cols" ]
         [ div [ class "grid" ]
@@ -446,19 +441,19 @@ viewEvent zone event =
         ]
 
 
-viewEventTable : ZoneWithName -> Event -> Html Msg
+viewEventTable : Entry.ZoneWithName -> Event -> Html Msg
 viewEventTable zone event =
-    dataTable
-        [ required "Startdatum" event.startDate |> asDate zone
-        , required "Startzeit" event.startDate |> asTime zone
-        , optional "Enddatum" event.endDate |> asDate zone
-        , optional "Endzeit" event.endDate |> asTime zone
-        , optional "Dauer" event.duration |> dataMap formatDuration
-        , optional "Untertitel in" event.subtitleLanguage
-        , required "Status" (eventStatusToString event.eventStatus)
-        , optional "Vorheriges Startdatum" event.previousStartDate |> asDate zone
-        , optional "Vorherige Startzeit" event.previousStartDate |> asTime zone
-        , optional "Link" event.url |> asLink Nothing
+    Entry.view
+        [ Entry.required "Startdatum" event.startDate |> asDate zone
+        , Entry.required "Startzeit" event.startDate |> asTime zone
+        , Entry.optional "Enddatum" event.endDate |> asDate zone
+        , Entry.optional "Endzeit" event.endDate |> asTime zone
+        , Entry.optional "Dauer" event.duration |> Entry.map formatDuration
+        , Entry.optional "Untertitel in" event.subtitleLanguage
+        , Entry.required "Status" (eventStatusToString event.eventStatus)
+        , Entry.optional "Vorheriges Startdatum" event.previousStartDate |> asDate zone
+        , Entry.optional "Vorherige Startzeit" event.previousStartDate |> asTime zone
+        , Entry.optional "Link" event.url |> asLink Nothing
         ]
 
 
@@ -532,24 +527,24 @@ locationTable : LocationItem -> Html Msg
 locationTable location =
     case location of
         LocationItemPl place ->
-            dataTable
-                [ optional "Name" place.name
-                , optional "Addresse" place.address.streetAddress
-                , optional "Postleitzahl" place.address.postalCode
-                , optional "Stadt" place.address.addressLocality
-                , nestedOptional "Koordinaten" (Just place) osmUrl |> asLink (Just "Karte anzeigen")
-                , optional "Rollstuhlplätze" place.wheelChairPlaces
-                    |> dataMap .count
-                    |> dataMap String.fromInt
-                , required "Platz für Assistent:in?" (spaceForAssistant place.wheelChairPlaces)
-                , nestedOptional "Rollstuhlkapazität" place.wheelChairPlaces .wheelchairUserCapacity
-                    |> dataMap String.fromInt
+            Entry.view
+                [ Entry.optional "Name" place.name
+                , Entry.optional "Addresse" place.address.streetAddress
+                , Entry.optional "Postleitzahl" place.address.postalCode
+                , Entry.optional "Stadt" place.address.addressLocality
+                , Entry.nestedOptional "Koordinaten" (Just place) osmUrl |> asLink (Just "Karte anzeigen")
+                , Entry.optional "Rollstuhlplätze" place.wheelChairPlaces
+                    |> Entry.map .count
+                    |> Entry.map String.fromInt
+                , Entry.required "Platz für Assistent:in?" (spaceForAssistant place.wheelChairPlaces)
+                , Entry.nestedOptional "Rollstuhlkapazität" place.wheelChairPlaces .wheelchairUserCapacity
+                    |> Entry.map String.fromInt
                 ]
 
         LocationItemVi info ->
-            dataTable
-                [ optional "Name" info.name
-                , optional "Link" info.url
+            Entry.view
+                [ Entry.optional "Name" info.name
+                , Entry.optional "Link" info.url
                 ]
 
 
@@ -811,49 +806,6 @@ section content =
         ]
 
 
-formatDate : String -> ZoneWithName -> String
-formatDate isoString ( _, timezone ) =
-    case Iso8601.toTime isoString of
-        Ok result ->
-            DateFormat.format
-                [ DateFormat.dayOfMonthFixed
-                , DateFormat.text "."
-                , DateFormat.monthFixed
-                , DateFormat.text "."
-                , DateFormat.yearNumber
-                ]
-                timezone
-                result
-
-        Err _ ->
-            if String.trim isoString == "" then
-                ""
-
-            else
-                "Ungültige Datumsangabe (" ++ isoString ++ ")"
-
-
-formatTime : String -> ZoneWithName -> String
-formatTime isoString ( name, timezone ) =
-    case Iso8601.toTime isoString of
-        Ok result ->
-            DateFormat.format
-                [ DateFormat.hourMilitaryFixed
-                , DateFormat.text ":"
-                , DateFormat.minuteFixed
-                , DateFormat.text (" (" ++ name ++ ")")
-                ]
-                timezone
-                result
-
-        Err _ ->
-            if String.trim isoString == "" then
-                ""
-
-            else
-                "Ungültige Zeitangabe (" ++ isoString ++ ")"
-
-
 formatDuration : Int -> String
 formatDuration duration =
     let
@@ -1025,156 +977,6 @@ filterInput filter =
 
 
 -- DATA ENTRY
-
-
-type DataEntry a
-    = Required { name : String, value : a, options : Options }
-    | Optional { name : String, value : Maybe a, options : Options }
-
-
-type Options
-    = Default
-    | Link (Maybe String)
-    | Date ZoneWithName
-    | Time ZoneWithName
-
-
-required : String -> a -> DataEntry a
-required name value =
-    Required { name = name, value = value, options = Default }
-
-
-optional : String -> Maybe a -> DataEntry a
-optional name value =
-    Optional { name = name, value = value, options = Default }
-
-
-nestedOptional : String -> Maybe a -> (a -> Maybe b) -> DataEntry b
-nestedOptional name value f =
-    Optional { name = name, value = Maybe.andThen f value, options = Default }
-
-
-asLink : Maybe String -> DataEntry a -> DataEntry a
-asLink linkText entry =
-    case entry of
-        Required data ->
-            Required { data | options = Link linkText }
-
-        Optional data ->
-            Optional { data | options = Link linkText }
-
-
-asDate : ZoneWithName -> DataEntry a -> DataEntry a
-asDate zone entry =
-    case entry of
-        Required data ->
-            Required { data | options = Date zone }
-
-        Optional data ->
-            Optional { data | options = Date zone }
-
-
-asTime : ZoneWithName -> DataEntry a -> DataEntry a
-asTime zone entry =
-    case entry of
-        Required data ->
-            Required { data | options = Time zone }
-
-        Optional data ->
-            Optional { data | options = Time zone }
-
-
-viewRequired : String -> Options -> Html Msg
-viewRequired value options =
-    case options of
-        Default ->
-            td [ class "preserve-newlines" ]
-                [ text value
-                ]
-
-        Link linkText ->
-            td []
-                [ Html.a [ href value, target "_blank" ] [ text (Maybe.withDefault value linkText) ]
-                ]
-
-        Date zone ->
-            td []
-                [ text (formatDate value zone) ]
-
-        Time zone ->
-            td []
-                [ text (formatTime value zone) ]
-
-
-viewOptional : Maybe String -> Options -> Html Msg
-viewOptional value options =
-    case ( value, options ) of
-        ( Just v, Default ) ->
-            td
-                [ class "preserve-newlines" ]
-                [ text v
-                ]
-
-        ( Just v, Link linkText ) ->
-            td
-                []
-                [ Html.a [ href v, target "_blank" ] [ text (Maybe.withDefault v linkText) ]
-                ]
-
-        ( Just v, Date zone ) ->
-            td
-                []
-                [ text (formatDate v zone)
-                ]
-
-        ( Just v, Time zone ) ->
-            td
-                []
-                [ text (formatTime v zone)
-                ]
-
-        ( Nothing, _ ) ->
-            td
-                []
-                [ text ""
-                ]
-
-
-renderEntry : DataEntry String -> Html Msg
-renderEntry entry =
-    case entry of
-        Required { name, value, options } ->
-            tr []
-                [ th [] [ text name ]
-                , viewRequired value options
-                ]
-
-        Optional { name, value, options } ->
-            tr []
-                [ th [] [ text name ]
-                , viewOptional value options
-                ]
-
-
-dataMap : (a -> b) -> DataEntry a -> DataEntry b
-dataMap f entry =
-    case entry of
-        Required { name, value, options } ->
-            Required { name = name, value = f value, options = options }
-
-        Optional { name, value, options } ->
-            Optional { name = name, value = Maybe.map f value, options = options }
-
-
-dataTable : List (DataEntry String) -> Html Msg
-dataTable entries =
-    table [ class "table is-hoverable" ]
-        [ tbody []
-            (List.map renderEntry entries)
-        ]
-
-
-
 -- SUBSCRIPTIONS
 
 
