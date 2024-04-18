@@ -3,6 +3,7 @@ module View exposing (main)
 import Browser
 import Components.DataEntry as Entry exposing (asDate, asLink, asTime)
 import Data.Root exposing (CreatorEntry(..), CreatorRole, Event, EventEventStatus(..), LocationItem(..), Offer, Organization, PerformanceRole, Production, ProductionGenre, Root, rootDecoder)
+import Helper.CustomValidations as CustomValidations
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
@@ -300,8 +301,11 @@ productionInfo production =
     Entry.view
         [ Entry.required "Titel" production.name
         , Entry.optional "Sprache" production.inLanguage
+            |> Entry.withWarnings CustomValidations.languageTagValid
         , Entry.optional "Untertitel" production.subtitle
-        , Entry.optional "Beschreibung" production.description
+        , Entry.required "Beschreibung" production
+            |> Entry.withWarnings CustomValidations.teaserOrDescription
+            |> Entry.nested .description
         , Entry.optional "Kurzbeschreibung" production.abstract
         , Entry.optional "Zusätzliche Informationen" production.additionalInfo
         , Entry.optional "Genre" production.genre |> Entry.map humanReadableGenre
@@ -329,17 +333,25 @@ humanReadableGenre genre =
 
 viewProductionAudience : Production -> Html Msg
 viewProductionAudience production =
+    let
+        formatAge audience =
+            ([ audience.suggestedMinAge
+             , audience.suggestedMaxAge
+             ]
+                |> List.filterMap identity
+                |> List.map String.fromInt
+                |> String.join " - "
+            )
+                ++ " Jahre"
+    in
     div []
         [ div [ class "title is-5" ] [ text "Zielgruppe" ]
         , Entry.view
             [ Entry.optional "Beschreibung" production.audience
                 |> Entry.nested .audienceType
-            , Entry.optional "Mindestalter" production.audience
-                |> Entry.nested .suggestedMinAge
-                |> Entry.map String.fromInt
-            , Entry.optional "Höchstalter" production.audience
-                |> Entry.nested .suggestedMaxAge
-                |> Entry.map String.fromInt
+            , Entry.optional "Altersempfehlung" production.audience
+                |> Entry.withWarnings CustomValidations.minMaxAge
+                |> Entry.map formatAge
             ]
         ]
 
@@ -458,12 +470,21 @@ viewEventTable zone event =
         , Entry.required "Startzeit" event.startDate |> asTime zone
         , Entry.optional "Enddatum" event.endDate |> asDate zone
         , Entry.optional "Endzeit" event.endDate |> asTime zone
-        , Entry.optional "Dauer" event.duration |> Entry.map formatDuration
+        , Entry.optional "Dauer" event.duration
+            |> Entry.withWarnings CustomValidations.duration
+            |> Entry.map formatDuration
         , Entry.optional "Mit Pause?" event.intermission |> Entry.map boolString
         , Entry.optional "Untertitel in" event.subtitleLanguage
+            |> Entry.withWarnings CustomValidations.languageTagValid
         , Entry.required "Status" (eventStatusToString event.eventStatus)
-        , Entry.optional "Vorheriges Startdatum" event.previousStartDate |> asDate zone
-        , Entry.optional "Vorherige Startzeit" event.previousStartDate |> asTime zone
+        , Entry.required "Vorheriges Startdatum" event
+            |> Entry.withWarnings CustomValidations.eventStatusAndDate
+            |> Entry.nested .previousStartDate
+            |> asDate zone
+        , Entry.required "Vorherige Startzeit" event
+            |> Entry.withWarnings CustomValidations.eventStatusAndDate
+            |> Entry.nested .previousStartDate
+            |> asTime zone
         , Entry.optional "Link" event.url |> asLink Nothing
         ]
 
@@ -653,56 +674,34 @@ viewOffers offers =
         [ div [ class "title is-5" ] [ text "Ticketinformationen" ]
         , case offers of
             Nothing ->
-                table [ class "table is-fullwidth" ]
-                    [ tbody
-                        []
-                        [ tr []
-                            [ td [] [ em [] [ text "Die Daten enthalten keine Ticketinformationen für diese Veranstaltung" ] ]
-                            ]
-                        ]
-                    ]
+                em [] [ text "Die Daten enthalten keine Ticketinformationen für diese Veranstaltung" ]
+
+            Just [] ->
+                em [] [ text "Die Daten enthalten keine Ticketinformationen für diese Veranstaltung" ]
 
             Just list ->
-                table [ class "table is-fullwidth" ]
-                    [ tbody
-                        []
-                        (tr []
-                            [ th [] [ text "Name" ]
-                            , th [] [ text "Preis" ]
-                            , th [] [ text "Link" ]
-                            ]
-                            :: List.map viewOffer list
-                        )
-                    ]
+                div [] (List.map viewOffer list)
         ]
 
 
 viewOffer : Offer -> Html Msg
 viewOffer offer =
     let
-        formattedPrice =
-            [ Just offer.priceSpecification.minPrice
-            , offer.priceSpecification.maxPrice
+        formatPrice specification =
+            [ Just specification.minPrice
+            , specification.maxPrice
             ]
                 |> List.filterMap identity
-                |> List.map (\price -> String.fromFloat price ++ " " ++ offer.priceSpecification.priceCurrency)
+                |> List.map (\price -> String.fromFloat price ++ " " ++ specification.priceCurrency)
                 |> String.join " - "
-
-        maybeLink : { url : Maybe String, description : Maybe String } -> Html Msg
-        maybeLink { url, description } =
-            case url of
-                Just link ->
-                    Html.a [ href link, target "_blank" ] [ text (Maybe.withDefault link description) ]
-
-                Nothing ->
-                    text ""
     in
-    tr []
-        [ td []
-            [ text (Maybe.withDefault "" offer.name)
-            ]
-        , td [] [ text formattedPrice ]
-        , td [] [ maybeLink { url = offer.url, description = Nothing } ]
+    Entry.view
+        [ Entry.optional "Name" offer.name
+        , Entry.required "Preis" offer.priceSpecification
+            |> Entry.withWarnings CustomValidations.minMaxPrice
+            |> Entry.map formatPrice
+        , Entry.optional "Link" offer.url
+            |> asLink Nothing
         ]
 
 

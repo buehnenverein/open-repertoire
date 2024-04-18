@@ -1,4 +1,4 @@
-module Helper.CustomValidations exposing (checkAll)
+module Helper.CustomValidations exposing (Validator, checkAll, duration, eventStatusAndDate, languageTagValid, minMaxAge, minMaxPrice, teaserOrDescription, viewerMessage)
 
 import Data.Root
     exposing
@@ -26,7 +26,26 @@ import LanguageTag.Parser
 type alias ValidationMessage =
     { path : String
     , message : String
+    , messageForView : Maybe String
     }
+
+
+viewerMessage : ValidationMessage -> Maybe String
+viewerMessage msg =
+    msg.messageForView
+
+
+message : String -> String -> ValidationMessage
+message path msg =
+    { path = path
+    , message = msg
+    , messageForView = Nothing
+    }
+
+
+forView : String -> ValidationMessage -> ValidationMessage
+forView viewMessage msg =
+    { msg | messageForView = Just viewMessage }
 
 
 type alias Validator value =
@@ -101,7 +120,7 @@ maybe validator basePath model =
 required : Validator String
 required path value =
     if String.trim value == "" then
-        [ ValidationMessage path "is a required text field, but you provided an empty value"
+        [ message path "is a required text field, but you provided an empty value"
         ]
 
     else
@@ -113,7 +132,7 @@ optional path value =
     case value of
         Just text ->
             if String.trim text == "" then
-                [ ValidationMessage path "is empty. You can omit optional text fields if there is no content."
+                [ message path "is empty. You can omit optional text fields if there is no content."
                 ]
 
             else
@@ -130,14 +149,16 @@ optional path value =
 duration : Validator Int
 duration path minutes =
     if minutes > 900 then
-        [ ValidationMessage path
+        [ message path
             "seems to be very long. The duration field is supposed to contain the event's duration in minutes. Are you sure you didn't accidentally use seconds instead?"
+            |> forView "Diese Veranstaltung scheint sehr lange zu dauern. Sind Sie sich sicher, dass diese Angabe korrekt ist?"
         ]
 
     else if minutes >= 0 && minutes < 10 then
         -- the duration being negative is already a validation error, so we don't need to cover this case here
-        [ ValidationMessage path
+        [ message path
             "seems to be very short. The duration field is supposed to contain the event's duration in minutes. Are you sure you didn't accidentally use hours instead?"
+            |> forView "Diese Veranstaltung scheint sehr kurz zu sein. Sind Sie sich sicher, dass diese Angabe korrekt ist?"
         ]
 
     else
@@ -148,10 +169,10 @@ geocoordinates : Validator Place
 geocoordinates path data =
     case ( data.latitude, data.longitude ) of
         ( Nothing, Just _ ) ->
-            [ ValidationMessage path "has a longitude but no latitude" ]
+            [ message path "has a longitude but no latitude" ]
 
         ( Just _, Nothing ) ->
-            [ ValidationMessage path "has a latitude but no longitude" ]
+            [ message path "has a latitude but no longitude" ]
 
         _ ->
             []
@@ -161,35 +182,75 @@ teaserOrDescription : Validator Production
 teaserOrDescription path data =
     case ( data.abstract, data.description ) of
         ( Nothing, Nothing ) ->
-            [ ValidationMessage path "has neither a description nor a teaser. You should set at least one of these fields." ]
+            [ message path "has neither a description nor a teaser. You should set at least one of these fields."
+                |> forView "Diese Produktion hat weder eine Beschreibung noch eine Kurzbeschreibung. Wenigstens eines der beiden Felder sollte gesetzt sein."
+            ]
 
         _ ->
             []
 
 
-previousStartDateIsSet : Validator Event
-previousStartDateIsSet path data =
-    case ( data.eventStatus, data.startDate, data.previousStartDate ) of
-        ( Just EventPostponedEvent, _, Nothing ) ->
-            [ ValidationMessage (path ++ "/previousStartDate") "should be set for postponed events" ]
+eventStatusAndDate : Validator Event
+eventStatusAndDate =
+    object
+        [ previousStartDateDifferentFromCurrent
+        , previousStartPresent
+        , previousStartNotRequired
+        ]
 
-        ( Just EventRescheduledEvent, start, Just previousStart ) ->
-            if start == previousStart then
-                [ ValidationMessage (path ++ "/previousStartDate") "should be different from startDate for rescheduled events" ]
+
+previousStartDateDifferentFromCurrent : Validator Event
+previousStartDateDifferentFromCurrent path data =
+    case data.previousStartDate of
+        Just previousStart ->
+            if data.startDate == previousStart then
+                [ message (path ++ "/previousStartDate") "should be different from startDate for rescheduled events"
+                    |> forView "Die vorherige Startzeit sollte sich von der neuen Startzeit unterscheiden."
+                ]
 
             else
                 []
 
-        ( Just EventRescheduledEvent, _, Nothing ) ->
-            [ ValidationMessage (path ++ "/previousStartDate") "should be set for rescheduled events" ]
-
-        ( Just EventCancelledEvent, _, _ ) ->
+        Nothing ->
             []
 
-        ( _, _, Just _ ) ->
-            [ ValidationMessage (path ++ "/previousStartDate") "should only be set if the event status is either 'rescheduled, 'postponed', or 'cancelled'" ]
 
-        ( _, _, _ ) ->
+previousStartPresent : Validator Event
+previousStartPresent path data =
+    case ( data.eventStatus, data.previousStartDate ) of
+        ( Just EventPostponedEvent, Nothing ) ->
+            [ message (path ++ "/previousStartDate") "should be set for postponed events"
+                |> forView "Die vorherige Startzeit sollte bei verschobenen Veranstaltungen angegeben werden."
+            ]
+
+        ( Just EventRescheduledEvent, Nothing ) ->
+            [ message (path ++ "/previousStartDate") "should be set for rescheduled events"
+                |> forView "Die vorherige Startzeit sollte bei verschobenen Veranstaltungen angegeben werden."
+            ]
+
+        ( _, _ ) ->
+            []
+
+
+previousStartNotRequired : Validator Event
+previousStartNotRequired path data =
+    case ( data.eventStatus, data.previousStartDate ) of
+        ( Just EventScheduledEvent, Just _ ) ->
+            [ message (path ++ "/previousStartDate") "should only be set if the event status is either 'rescheduled, 'postponed', or 'cancelled'"
+                |> forView "Die vorherige Startzeit sollte nur bei verschobenen oder abgesagten Veranstaltungen angegeben werden."
+            ]
+
+        ( Just EventMovedOnlineEvent, Just _ ) ->
+            [ message (path ++ "/previousStartDate") "should only be set if the event status is either 'rescheduled, 'postponed', or 'cancelled'"
+                |> forView "Die vorherige Startzeit sollte nur bei verschobenen oder abgesagten Veranstaltungen angegeben werden."
+            ]
+
+        ( Nothing, Just _ ) ->
+            [ message (path ++ "/previousStartDate") "should only be set if the event status is either 'rescheduled, 'postponed', or 'cancelled'"
+                |> forView "Die vorherige Startzeit sollte nur bei verschobenen oder abgesagten Veranstaltungen angegeben werden."
+            ]
+
+        ( _, _ ) ->
             []
 
 
@@ -197,7 +258,8 @@ languageTagValid : Validator String
 languageTagValid path data =
     let
         validationMsg =
-            ValidationMessage path "doesn't seem to be a valid language code. This field should contain language codes like 'en', 'de', etc."
+            message path "doesn't seem to be a valid language code. This field should contain language codes like 'en', 'de', etc."
+                |> forView "Dieses Feld sollte einen Sprachcode enthalten und nicht, z.B. den vollen Namen der Sprache. Beispiele für Codes dieser Art sind \"de\" und \"en-GB\"."
     in
     case LanguageTag.Parser.parseBcp47 data of
         Just ( lang, _ ) ->
@@ -211,18 +273,35 @@ languageTagValid path data =
             [ validationMsg ]
 
 
-isLessOrEqual : ( String, Maybe number ) -> Validator number
-isLessOrEqual ( otherName, otherValue ) path data =
-    case otherValue of
-        Just other ->
-            if data > other then
-                [ ValidationMessage path ("should be smaller than " ++ otherName)
+minMaxPrice : Validator PriceSpecification
+minMaxPrice path data =
+    case data.maxPrice of
+        Just max ->
+            if data.minPrice > max then
+                [ message path "should be smaller than maxPrice"
+                    |> forView "Der Mindestpreis sollte niedriger sein als der Höchstpreis."
                 ]
 
             else
                 []
 
         Nothing ->
+            []
+
+
+minMaxAge : Validator Audience
+minMaxAge path data =
+    case ( data.suggestedMinAge, data.suggestedMaxAge ) of
+        ( Just minAge, Just maxAge ) ->
+            if minAge > maxAge then
+                [ message (path ++ "/suggestedMinAge") "should be smaller than suggestedMaxAge"
+                    |> forView "Das Mindestalter sollte niedriger sein als das Höchstalter."
+                ]
+
+            else
+                []
+
+        ( _, _ ) ->
             []
 
 
@@ -242,7 +321,7 @@ event =
         , field "/startDate" .startDate required
         , field "/subtitleLanguage" .subtitleLanguage (maybe languageTagValid)
         , field "/url" .url optional
-        , previousStartDateIsSet
+        , eventStatusAndDate
         ]
 
 
@@ -289,14 +368,11 @@ offer =
 
 
 priceSpecification : Validator PriceSpecification
-priceSpecification path data =
+priceSpecification =
     object
         [ field "/priceCurrency" .priceCurrency required
-        , field "/minPrice"
-            .minPrice
-            (isLessOrEqual ( "maxPrice", data.maxPrice ))
+        , minMaxPrice
         ]
-        |> check data path
 
 
 production : Validator Production
@@ -326,16 +402,11 @@ address =
 
 
 audience : Validator Audience
-audience path data =
+audience =
     object
         [ field "/audienceType" .audienceType optional
-        , field "/suggestedMinAge"
-            .suggestedMinAge
-            (maybe
-                (isLessOrEqual ( "suggestedMaxAge", data.suggestedMaxAge ))
-            )
+        , minMaxAge
         ]
-        |> check data path
 
 
 location : Validator LocationItem

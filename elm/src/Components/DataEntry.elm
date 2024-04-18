@@ -1,6 +1,7 @@
-module Components.DataEntry exposing (ZoneWithName, asDate, asLink, asTime, map, nested, optional, required, view, withHelp)
+module Components.DataEntry exposing (ZoneWithName, asDate, asLink, asTime, map, nested, optional, required, view, withHelp, withWarnings)
 
 import DateFormat
+import Helper.CustomValidations exposing (Validator, viewerMessage)
 import Html exposing (..)
 import Html.Attributes exposing (attribute, class, href, style, target)
 import Iso8601
@@ -12,6 +13,7 @@ type alias Model a =
     , value : Value a
     , options : Options
     , helpText : Maybe String
+    , warnings : List String
     }
 
 
@@ -41,6 +43,7 @@ required name value =
     , value = Required value
     , options = Default
     , helpText = Nothing
+    , warnings = []
     }
 
 
@@ -50,6 +53,7 @@ optional name value =
     , value = Optional value
     , options = Default
     , helpText = Nothing
+    , warnings = []
     }
 
 
@@ -62,6 +66,7 @@ applyOne requiredFun optionalFun entry =
     { name = entry.name
     , helpText = entry.helpText
     , options = entry.options
+    , warnings = entry.warnings
     , value =
         case entry.value of
             Required value ->
@@ -102,6 +107,23 @@ withHelp message entry =
     { entry | helpText = Just message }
 
 
+withWarnings : Validator a -> Model a -> Model a
+withWarnings validator entry =
+    let
+        getMessages value =
+            List.filterMap viewerMessage (validator "" value)
+    in
+    case entry.value of
+        Required value ->
+            { entry | warnings = entry.warnings ++ getMessages value }
+
+        Optional (Just value) ->
+            { entry | warnings = entry.warnings ++ getMessages value }
+
+        Optional Nothing ->
+            entry
+
+
 
 -- VIEW
 
@@ -119,9 +141,10 @@ viewEntry entry =
     tr []
         [ th []
             [ text entry.name
+            , warningTooltip entry.warnings
             , case entry.helpText of
                 Just h ->
-                    help h
+                    helpTooltip h
 
                 Nothing ->
                     text ""
@@ -191,8 +214,8 @@ viewOptional value options =
                 ]
 
 
-help : String -> Html msg
-help message =
+helpTooltip : String -> Html msg
+helpTooltip message =
     span
         [ attribute "data-tooltip" message
         , class "has-tooltip-arrow has-tooltip-multiline"
@@ -202,6 +225,24 @@ help message =
         , i [ class "fas fa-circle-question" ]
             [ text " " ]
         ]
+
+
+warningTooltip : List String -> Html msg
+warningTooltip warnings =
+    case warnings of
+        [] ->
+            text ""
+
+        list ->
+            span
+                [ attribute "data-tooltip" (String.join " " list)
+                , class "has-text-warning has-tooltip-arrow has-tooltip-multiline"
+                , style "border-bottom" "none"
+                ]
+                [ text " "
+                , i [ class "fas fa-triangle-exclamation" ]
+                    [ text " " ]
+                ]
 
 
 
