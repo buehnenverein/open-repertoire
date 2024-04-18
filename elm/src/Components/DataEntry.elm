@@ -7,17 +7,17 @@ import Iso8601
 import Time
 
 
-type Model a
-    = Required (DataEntry a)
-    | Optional (DataEntry (Maybe a))
-
-
-type alias DataEntry a =
+type alias Model a =
     { name : String
-    , value : a
+    , value : Value a
     , options : Options
     , helpText : Maybe String
     }
+
+
+type Value a
+    = Required a
+    | Optional (Maybe a)
 
 
 type Options
@@ -37,106 +37,69 @@ type alias ZoneWithName =
 
 required : String -> a -> Model a
 required name value =
-    Required
-        { name = name
-        , value = value
-        , options = Default
-        , helpText = Nothing
-        }
+    { name = name
+    , value = Required value
+    , options = Default
+    , helpText = Nothing
+    }
 
 
 optional : String -> Maybe a -> Model a
 optional name value =
-    Optional
-        { name = name
-        , value = value
-        , options = Default
-        , helpText = Nothing
-        }
+    { name = name
+    , value = Optional value
+    , options = Default
+    , helpText = Nothing
+    }
 
 
 
 -- TRANSFORMATION
 
 
+applyOne : (a -> Value b) -> (Maybe a -> Value b) -> Model a -> Model b
+applyOne requiredFun optionalFun entry =
+    { name = entry.name
+    , helpText = entry.helpText
+    , options = entry.options
+    , value =
+        case entry.value of
+            Required value ->
+                requiredFun value
+
+            Optional value ->
+                optionalFun value
+    }
+
+
 map : (a -> b) -> Model a -> Model b
 map f entry =
-    case entry of
-        Required { name, value, options, helpText } ->
-            Required
-                { name = name
-                , value = f value
-                , options = options
-                , helpText = helpText
-                }
-
-        Optional { name, value, options, helpText } ->
-            Optional
-                { name = name
-                , value = Maybe.map f value
-                , options = options
-                , helpText = helpText
-                }
+    applyOne (Required << f) (Optional << Maybe.map f) entry
 
 
 nested : (a -> Maybe b) -> Model a -> Model b
 nested f entry =
-    case entry of
-        Required { name, value, options, helpText } ->
-            Optional
-                { name = name
-                , value = f value
-                , options = options
-                , helpText = helpText
-                }
-
-        Optional { name, value, options, helpText } ->
-            Optional
-                { name = name
-                , value = Maybe.andThen f value
-                , options = options
-                , helpText = helpText
-                }
+    applyOne (Optional << f) (Optional << Maybe.andThen f) entry
 
 
 asLink : Maybe String -> Model a -> Model a
 asLink linkText entry =
-    case entry of
-        Required data ->
-            Required { data | options = Link linkText }
-
-        Optional data ->
-            Optional { data | options = Link linkText }
+    { entry | options = Link linkText }
 
 
 asDate : ZoneWithName -> Model a -> Model a
 asDate zone entry =
-    case entry of
-        Required data ->
-            Required { data | options = Date zone }
-
-        Optional data ->
-            Optional { data | options = Date zone }
+    { entry | options = Date zone }
 
 
 asTime : ZoneWithName -> Model a -> Model a
 asTime zone entry =
-    case entry of
-        Required data ->
-            Required { data | options = Time zone }
-
-        Optional data ->
-            Optional { data | options = Time zone }
+    { entry | options = Time zone }
 
 
 withHelp : String -> Model a -> Model a
 withHelp message entry =
-    case entry of
-        Required data ->
-            Required { data | helpText = Just message }
-
-        Optional data ->
-            Optional { data | helpText = Just message }
+    { entry | helpText = Just message }
 
 
 
@@ -153,34 +116,23 @@ view entries =
 
 viewEntry : Model String -> Html msg
 viewEntry entry =
-    case entry of
-        Required { name, value, options, helpText } ->
-            tr []
-                [ th []
-                    [ text name
-                    , case helpText of
-                        Just h ->
-                            help h
+    tr []
+        [ th []
+            [ text entry.name
+            , case entry.helpText of
+                Just h ->
+                    help h
 
-                        Nothing ->
-                            text ""
-                    ]
-                , viewRequired value options
-                ]
+                Nothing ->
+                    text ""
+            ]
+        , case entry.value of
+            Required value ->
+                viewRequired value entry.options
 
-        Optional { name, value, options, helpText } ->
-            tr []
-                [ th []
-                    [ text name
-                    , case helpText of
-                        Just h ->
-                            help h
-
-                        Nothing ->
-                            text ""
-                    ]
-                , viewOptional value options
-                ]
+            Optional value ->
+                viewOptional value entry.options
+        ]
 
 
 viewRequired : String -> Options -> Html msg
