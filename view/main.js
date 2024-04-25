@@ -25789,6 +25789,8 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 	});
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $elm$html$Html$div = _VirtualDom_node('div');
+var $elm$virtual_dom$VirtualDom$lazy2 = _VirtualDom_lazy2;
+var $elm$html$Html$Lazy$lazy2 = $elm$virtual_dom$VirtualDom$lazy2;
 var $author$project$View$section = function (content) {
 	return A2(
 		$elm$html$Html$div,
@@ -25809,14 +25811,27 @@ var $author$project$View$section = function (content) {
 };
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $author$project$View$EventCardClicked = F2(
-	function (a, b) {
-		return {$: 5, a: a, b: b};
+var $author$project$View$Submit = function (a) {
+	return {$: 0, a: a};
+};
+var $author$project$View$TextChange = function (a) {
+	return {$: 1, a: a};
+};
+var $elm$virtual_dom$VirtualDom$attribute = F2(
+	function (key, value) {
+		return A2(
+			_VirtualDom_attribute,
+			_VirtualDom_noOnOrFormAction(key),
+			_VirtualDom_noJavaScriptOrHtmlUri(value));
 	});
-var $author$project$View$ProductionCardClicked = F2(
-	function (a, b) {
-		return {$: 4, a: a, b: b};
-	});
+var $elm$html$Html$Attributes$attribute = $elm$virtual_dom$VirtualDom$attribute;
+var $elm$html$Html$Attributes$autocomplete = function (bool) {
+	return A2(
+		$elm$html$Html$Attributes$stringProperty,
+		'autocomplete',
+		bool ? 'on' : 'off');
+};
+var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$html$Html$Attributes$classList = function (classes) {
 	return $elm$html$Html$Attributes$class(
 		A2(
@@ -25827,8 +25842,32 @@ var $elm$html$Html$Attributes$classList = function (classes) {
 				$elm$core$Tuple$first,
 				A2($elm$core$List$filter, $elm$core$Tuple$second, classes))));
 };
+var $elm$json$Json$Encode$bool = _Json_wrap;
+var $elm$html$Html$Attributes$boolProperty = F2(
+	function (key, bool) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$bool(bool));
+	});
+var $elm$html$Html$Attributes$disabled = $elm$html$Html$Attributes$boolProperty('disabled');
+var $elm$html$Html$h3 = _VirtualDom_node('h3');
 var $elm$html$Html$i = _VirtualDom_node('i');
+var $author$project$View$isJson = function (string) {
+	var _v0 = A2($elm$json$Json$Decode$decodeString, $elm$json$Json$Decode$value, string);
+	if (!_v0.$) {
+		return true;
+	} else {
+		return false;
+	}
+};
 var $elm$core$Basics$not = _Basics_not;
+var $author$project$View$looksLikeJson = function (string) {
+	return (A2($elm$core$String$startsWith, '{', string) || A2($elm$core$String$startsWith, '[', string)) && (!$elm$core$String$isEmpty(string));
+};
+var $author$project$View$looksLikeUrl = function (string) {
+	return (A2($elm$core$String$startsWith, 'http', string) || (A2($elm$core$String$startsWith, 'www', string) || (!$author$project$View$looksLikeJson(string)))) && (!$elm$core$String$isEmpty(string));
+};
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 0, a: a};
 };
@@ -25846,7 +25885,175 @@ var $elm$html$Html$Events$onClick = function (msg) {
 		'click',
 		$elm$json$Json$Decode$succeed(msg));
 };
+var $elm$html$Html$Events$alwaysStop = function (x) {
+	return _Utils_Tuple2(x, true);
+};
+var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
+	return {$: 1, a: a};
+};
+var $elm$html$Html$Events$stopPropagationOn = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
+	});
+var $elm$html$Html$Events$targetValue = A2(
+	$elm$json$Json$Decode$at,
+	_List_fromArray(
+		['target', 'value']),
+	$elm$json$Json$Decode$string);
+var $elm$html$Html$Events$onInput = function (tagger) {
+	return A2(
+		$elm$html$Html$Events$stopPropagationOn,
+		'input',
+		A2(
+			$elm$json$Json$Decode$map,
+			$elm$html$Html$Events$alwaysStop,
+			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
+};
 var $elm$html$Html$span = _VirtualDom_node('span');
+var $elm$html$Html$Attributes$spellcheck = $elm$html$Html$Attributes$boolProperty('spellcheck');
+var $elm$html$Html$textarea = _VirtualDom_node('textarea');
+var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
+var $author$project$View$viewInput = F2(
+	function (inputString, buttonEnabled) {
+		var invalidUrl = $author$project$View$looksLikeUrl(inputString) && (!$author$project$View$isUrl(inputString));
+		var invalidJson = $author$project$View$looksLikeJson(inputString) && (!$author$project$View$isJson(inputString));
+		var invalid = invalidUrl || invalidJson;
+		var controlAttrs = invalidUrl ? _List_fromArray(
+			[
+				A2($elm$html$Html$Attributes$attribute, 'data-tooltip', 'Invalider Link')
+			]) : (invalidJson ? _List_fromArray(
+			[
+				A2($elm$html$Html$Attributes$attribute, 'data-tooltip', 'Invalides Datenformat')
+			]) : _List_Nil);
+		return $author$project$View$section(
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('field')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$h3,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$class('label is-size-3')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Geben Sie die URL Ihres Endpunkts ein ODER kopieren & fügen Sie Ihre Daten ein')
+								])),
+							A2(
+							$elm$html$Html$div,
+							A2(
+								$elm$core$List$cons,
+								$elm$html$Html$Attributes$class('control has-icons-right has-tooltip-arrow'),
+								controlAttrs),
+							_List_fromArray(
+								[
+									A2(
+									$elm$html$Html$textarea,
+									_List_fromArray(
+										[
+											$elm$html$Html$Events$onInput($author$project$View$TextChange),
+											$elm$html$Html$Attributes$value(inputString),
+											$elm$html$Html$Attributes$class('input'),
+											$elm$html$Html$Attributes$autocomplete(false),
+											$elm$html$Html$Attributes$spellcheck(false),
+											A2($elm$html$Html$Attributes$attribute, 'autocorrect', 'off'),
+											A2($elm$html$Html$Attributes$attribute, 'autocapitalize', 'off'),
+											$elm$html$Html$Attributes$classList(
+											_List_fromArray(
+												[
+													_Utils_Tuple2('is-danger', invalid)
+												]))
+										]),
+									_List_Nil),
+									A2(
+									$elm$html$Html$span,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$class('icon is-right')
+										]),
+									_List_fromArray(
+										[
+											A2(
+											$elm$html$Html$i,
+											_List_fromArray(
+												[
+													$elm$html$Html$Attributes$class('fas has-text-danger'),
+													$elm$html$Html$Attributes$classList(
+													_List_fromArray(
+														[
+															_Utils_Tuple2('fa-xmark', invalid)
+														]))
+												]),
+											_List_Nil)
+										]))
+								]))
+						])),
+					A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('control')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$button,
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick(
+									$author$project$View$Submit(inputString)),
+									$elm$html$Html$Attributes$disabled(
+									(!buttonEnabled) || (invalid || $elm$core$String$isEmpty(inputString))),
+									$elm$html$Html$Attributes$class('button is-primary')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Daten anzeigen')
+								]))
+						]))
+				]));
+	});
+var $elm$html$Html$h1 = _VirtualDom_node('h1');
+var $elm$html$Html$p = _VirtualDom_node('p');
+var $author$project$View$viewIntroduction = $author$project$View$section(
+	_List_fromArray(
+		[
+			A2(
+			$elm$html$Html$h1,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$class('is-size-1')
+				]),
+			_List_fromArray(
+				[
+					$elm$html$Html$text('Anwendungsfall 3 - Datenbetrachter')
+				])),
+			A2(
+			$elm$html$Html$p,
+			_List_Nil,
+			_List_fromArray(
+				[
+					$elm$html$Html$text('Verwenden Sie dieses Tool, um die Daten anzuzeigen, die von Ihrem Repertoire-Endpunkt zurückgegeben werden.')
+				]))
+		]));
+var $author$project$View$EventCardClicked = F2(
+	function (a, b) {
+		return {$: 5, a: a, b: b};
+	});
+var $author$project$View$ProductionCardClicked = F2(
+	function (a, b) {
+		return {$: 4, a: a, b: b};
+	});
 var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
 var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
 var $author$project$View$card = F4(
@@ -25913,36 +26120,8 @@ var $author$project$View$NameFilterChanged = function (a) {
 	return {$: 6, a: a};
 };
 var $elm$html$Html$input = _VirtualDom_node('input');
-var $elm$html$Html$Events$alwaysStop = function (x) {
-	return _Utils_Tuple2(x, true);
-};
-var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
-	return {$: 1, a: a};
-};
-var $elm$html$Html$Events$stopPropagationOn = F2(
-	function (event, decoder) {
-		return A2(
-			$elm$virtual_dom$VirtualDom$on,
-			event,
-			$elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
-	});
-var $elm$html$Html$Events$targetValue = A2(
-	$elm$json$Json$Decode$at,
-	_List_fromArray(
-		['target', 'value']),
-	$elm$json$Json$Decode$string);
-var $elm$html$Html$Events$onInput = function (tagger) {
-	return A2(
-		$elm$html$Html$Events$stopPropagationOn,
-		'input',
-		A2(
-			$elm$json$Json$Decode$map,
-			$elm$html$Html$Events$alwaysStop,
-			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
-};
 var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
 var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
-var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
 var $author$project$View$filterInput = function (filter) {
 	return A2(
 		$elm$html$Html$div,
@@ -25984,7 +26163,6 @@ var $author$project$View$filterInput = function (filter) {
 					]))
 			]));
 };
-var $elm$html$Html$h1 = _VirtualDom_node('h1');
 var $elm$core$Dict$member = F2(
 	function (key, dict) {
 		var _v0 = A2($elm$core$Dict$get, key, dict);
@@ -26591,14 +26769,6 @@ var $author$project$Helper$CustomValidations$teaserOrDescription = F2(
 	});
 var $elm$html$Html$table = _VirtualDom_node('table');
 var $elm$html$Html$tbody = _VirtualDom_node('tbody');
-var $elm$virtual_dom$VirtualDom$attribute = F2(
-	function (key, value) {
-		return A2(
-			_VirtualDom_attribute,
-			_VirtualDom_noOnOrFormAction(key),
-			_VirtualDom_noJavaScriptOrHtmlUri(value));
-	});
-var $elm$html$Html$Attributes$attribute = $elm$virtual_dom$VirtualDom$attribute;
 var $author$project$Components$DataEntry$helpTooltip = function (message) {
 	return A2(
 		$elm$html$Html$span,
@@ -29682,10 +29852,13 @@ var $author$project$View$viewEvents = F2(
 				$author$project$View$viewEvent(zone),
 				events));
 	});
-var $author$project$View$viewData = F2(
+var $author$project$View$viewJsonData = F2(
 	function (data, zone) {
 		var productionOpen = function (index) {
 			return !A2($elm$core$Set$member, index, data.D);
+		};
+		var hideProduction = function (production) {
+			return !A2($author$project$View$productionNameMatches, data.R, production);
 		};
 		var eventOpen = function (index) {
 			return !A2($elm$core$Set$member, index, data.C);
@@ -29694,7 +29867,16 @@ var $author$project$View$viewData = F2(
 			function (index, production) {
 				return A2(
 					$elm$html$Html$div,
-					_List_Nil,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$classList(
+							_List_fromArray(
+								[
+									_Utils_Tuple2(
+									'is-hidden',
+									hideProduction(production))
+								]))
+						]),
 					_List_fromArray(
 						[
 							A2(
@@ -29748,170 +29930,10 @@ var $author$project$View$viewData = F2(
 					_List_Nil,
 					A2(
 						$elm$core$List$indexedMap,
-						viewProduction,
-						A2(
-							$elm$core$List$filter,
-							$author$project$View$productionNameMatches(data.R),
-							data.as.bG)))
+						$elm$html$Html$Lazy$lazy2(viewProduction),
+						data.as.bG))
 				]));
 	});
-var $author$project$View$Submit = function (a) {
-	return {$: 0, a: a};
-};
-var $author$project$View$TextChange = function (a) {
-	return {$: 1, a: a};
-};
-var $elm$html$Html$button = _VirtualDom_node('button');
-var $elm$json$Json$Encode$bool = _Json_wrap;
-var $elm$html$Html$Attributes$boolProperty = F2(
-	function (key, bool) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			$elm$json$Json$Encode$bool(bool));
-	});
-var $elm$html$Html$Attributes$disabled = $elm$html$Html$Attributes$boolProperty('disabled');
-var $elm$html$Html$h3 = _VirtualDom_node('h3');
-var $author$project$View$isJson = function (string) {
-	var _v0 = A2($elm$json$Json$Decode$decodeString, $elm$json$Json$Decode$value, string);
-	if (!_v0.$) {
-		return true;
-	} else {
-		return false;
-	}
-};
-var $author$project$View$looksLikeJson = function (string) {
-	return (A2($elm$core$String$startsWith, '{', string) || A2($elm$core$String$startsWith, '[', string)) && (!$elm$core$String$isEmpty(string));
-};
-var $author$project$View$looksLikeUrl = function (string) {
-	return (A2($elm$core$String$startsWith, 'http', string) || (A2($elm$core$String$startsWith, 'www', string) || (!$author$project$View$looksLikeJson(string)))) && (!$elm$core$String$isEmpty(string));
-};
-var $elm$html$Html$textarea = _VirtualDom_node('textarea');
-var $author$project$View$viewInput = F2(
-	function (inputString, buttonEnabled) {
-		var invalidUrl = $author$project$View$looksLikeUrl(inputString) && (!$author$project$View$isUrl(inputString));
-		var invalidJson = $author$project$View$looksLikeJson(inputString) && (!$author$project$View$isJson(inputString));
-		var invalid = invalidUrl || invalidJson;
-		var controlAttrs = invalidUrl ? _List_fromArray(
-			[
-				A2($elm$html$Html$Attributes$attribute, 'data-tooltip', 'Invalider Link')
-			]) : (invalidJson ? _List_fromArray(
-			[
-				A2($elm$html$Html$Attributes$attribute, 'data-tooltip', 'Invalides Datenformat')
-			]) : _List_Nil);
-		return $author$project$View$section(
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$div,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$class('field')
-						]),
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$h3,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('label is-size-3')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Geben Sie die URL Ihres Endpunkts ein ODER kopieren & fügen Sie Ihre Daten ein')
-								])),
-							A2(
-							$elm$html$Html$div,
-							A2(
-								$elm$core$List$cons,
-								$elm$html$Html$Attributes$class('control has-icons-right has-tooltip-arrow'),
-								controlAttrs),
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$textarea,
-									_List_fromArray(
-										[
-											$elm$html$Html$Events$onInput($author$project$View$TextChange),
-											$elm$html$Html$Attributes$value(inputString),
-											$elm$html$Html$Attributes$class('input'),
-											$elm$html$Html$Attributes$classList(
-											_List_fromArray(
-												[
-													_Utils_Tuple2('is-danger', invalid)
-												]))
-										]),
-									_List_Nil),
-									A2(
-									$elm$html$Html$span,
-									_List_fromArray(
-										[
-											$elm$html$Html$Attributes$class('icon is-right')
-										]),
-									_List_fromArray(
-										[
-											A2(
-											$elm$html$Html$i,
-											_List_fromArray(
-												[
-													$elm$html$Html$Attributes$class('fas has-text-danger'),
-													$elm$html$Html$Attributes$classList(
-													_List_fromArray(
-														[
-															_Utils_Tuple2('fa-xmark', invalid)
-														]))
-												]),
-											_List_Nil)
-										]))
-								]))
-						])),
-					A2(
-					$elm$html$Html$div,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$class('control')
-						]),
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$button,
-							_List_fromArray(
-								[
-									$elm$html$Html$Events$onClick(
-									$author$project$View$Submit(inputString)),
-									$elm$html$Html$Attributes$disabled(
-									(!buttonEnabled) || (invalid || $elm$core$String$isEmpty(inputString))),
-									$elm$html$Html$Attributes$class('button is-primary')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Daten anzeigen')
-								]))
-						]))
-				]));
-	});
-var $elm$html$Html$p = _VirtualDom_node('p');
-var $author$project$View$viewIntroduction = $author$project$View$section(
-	_List_fromArray(
-		[
-			A2(
-			$elm$html$Html$h1,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$class('is-size-1')
-				]),
-			_List_fromArray(
-				[
-					$elm$html$Html$text('Anwendungsfall 3 - Datenbetrachter')
-				])),
-			A2(
-			$elm$html$Html$p,
-			_List_Nil,
-			_List_fromArray(
-				[
-					$elm$html$Html$text('Verwenden Sie dieses Tool, um die Daten anzuzeigen, die von Ihrem Repertoire-Endpunkt zurückgegeben werden.')
-				]))
-		]));
 var $elm$html$Html$li = _VirtualDom_node('li');
 var $elm$html$Html$ul = _VirtualDom_node('ul');
 var $author$project$View$viewJsonError = A2(
@@ -30078,7 +30100,7 @@ var $author$project$View$view = function (model) {
 		_List_fromArray(
 			[
 				$author$project$View$viewIntroduction,
-				A2($author$project$View$viewInput, model.P, enableButton),
+				A3($elm$html$Html$Lazy$lazy2, $author$project$View$viewInput, model.P, enableButton),
 				function () {
 				var _v0 = model.j;
 				switch (_v0.$) {
@@ -30089,7 +30111,7 @@ var $author$project$View$view = function (model) {
 					case 2:
 						if (!_v0.a.$) {
 							var error = _v0.a.a;
-							return A2($author$project$View$viewRequestError, model.P, error);
+							return A3($elm$html$Html$Lazy$lazy2, $author$project$View$viewRequestError, model.P, error);
 						} else {
 							return $author$project$View$section(
 								_List_fromArray(
@@ -30106,7 +30128,7 @@ var $author$project$View$view = function (model) {
 						}
 					default:
 						var data = _v0.a;
-						return A2($author$project$View$viewData, data, model.Z);
+						return A3($elm$html$Html$Lazy$lazy2, $author$project$View$viewJsonData, data, model.Z);
 				}
 			}()
 			]));
