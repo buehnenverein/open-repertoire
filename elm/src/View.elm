@@ -7,6 +7,7 @@ import Helper.CustomValidations as CustomValidations
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
+import Html.Lazy exposing (lazy2)
 import Http exposing (Error(..))
 import Json.Decode as Decode
 import RemoteData exposing (RemoteData(..))
@@ -158,7 +159,7 @@ view model =
     in
     div [ class "container" ]
         [ viewIntroduction
-        , viewInput model.input enableButton
+        , lazy2 viewInput model.input enableButton
         , case model.data of
             NotAsked ->
                 text ""
@@ -167,7 +168,7 @@ view model =
                 text ""
 
             Failure (HttpError error) ->
-                viewRequestError model.input error
+                lazy2 viewRequestError model.input error
 
             Failure (JsonError _) ->
                 section
@@ -176,7 +177,7 @@ view model =
                     ]
 
             Success data ->
-                viewData data model.localTimeZone
+                lazy2 viewJsonData data model.localTimeZone
         ]
 
 
@@ -184,8 +185,8 @@ view model =
 -- VIEW HELPERS
 
 
-viewData : Data -> Entry.ZoneWithName -> Html Msg
-viewData data zone =
+viewJsonData : Data -> Entry.ZoneWithName -> Html Msg
+viewJsonData data zone =
     let
         productionOpen index =
             not
@@ -195,9 +196,12 @@ viewData data zone =
             not
                 (Set.member index data.hiddenEvents)
 
+        hideProduction production =
+            not (productionNameMatches data.nameFilter production)
+
         viewProduction : Int -> Production -> Html Msg
         viewProduction index production =
-            div []
+            div [ classList [ ( "is-hidden", hideProduction production ) ] ]
                 [ div [ class "sticky-header" ]
                     [ h1 [ class "is-size-1" ] [ text production.name ]
                     ]
@@ -213,10 +217,10 @@ viewData data zone =
     in
     section
         [ filterInput data.nameFilter
-        , div []
+        , div
+            []
             (data.root.productions
-                |> List.filter (productionNameMatches data.nameFilter)
-                |> List.indexedMap viewProduction
+                |> List.indexedMap (lazy2 viewProduction)
             )
         ]
 
@@ -956,6 +960,10 @@ viewInput inputString buttonEnabled =
                     [ onInput TextChange
                     , value inputString
                     , class "input"
+                    , autocomplete False
+                    , spellcheck False
+                    , attribute "autocorrect" "off"
+                    , attribute "autocapitalize" "off"
                     , classList [ ( "is-danger", invalid ) ]
                     ]
                     []
