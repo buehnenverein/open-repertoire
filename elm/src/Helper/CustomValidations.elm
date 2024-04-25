@@ -1,4 +1,4 @@
-module Helper.CustomValidations exposing (Validator, checkAll, duration, eventStatusAndDate, languageTagValid, minMaxAge, minMaxPrice, teaserOrDescription, viewerMessage)
+module Helper.CustomValidations exposing (Validator, checkAll, duration, eventStatusAndDate, languageTagValid, minMaxAge, minMaxPrice, startAndEndDates, teaserOrDescription, viewerMessage)
 
 import Data.Root
     exposing
@@ -20,7 +20,9 @@ import Data.Root
         , VirtualLocation
         )
 import Helper.LanguageCodes as LanguageCodes
+import Iso8601
 import LanguageTag.Parser
+import Time
 
 
 type alias ValidationMessage =
@@ -305,6 +307,34 @@ minMaxAge path data =
             []
 
 
+startAndEndDates : Validator Event
+startAndEndDates path data =
+    let
+        startMillis =
+            data.startDate
+                |> Iso8601.toTime
+                |> Result.map Time.posixToMillis
+
+        endMillis =
+            data.endDate
+                |> Result.fromMaybe []
+                |> Result.andThen Iso8601.toTime
+                |> Result.map Time.posixToMillis
+    in
+    case ( startMillis, endMillis ) of
+        ( Ok start, Ok end ) ->
+            if start > end then
+                [ message (path ++ "/startDate") "should be before endDate"
+                    |> forView "Der Beginn der Veranstaltung liegt nach dem Ende der Veranstaltung."
+                ]
+
+            else
+                []
+
+        _ ->
+            []
+
+
 
 -- MODEL VALIDATORS
 
@@ -322,6 +352,7 @@ event =
         , field "/subtitleLanguage" .subtitleLanguage (maybe languageTagValid)
         , field "/url" .url optional
         , eventStatusAndDate
+        , startAndEndDates
         ]
 
 

@@ -466,8 +466,14 @@ viewEvent zone event =
 viewEventTable : Entry.ZoneWithName -> Event -> Html Msg
 viewEventTable zone event =
     Entry.view
-        [ Entry.required "Startdatum" event.startDate |> asDate zone
-        , Entry.required "Startzeit" event.startDate |> asTime zone
+        [ Entry.required "Startdatum" event
+            |> Entry.withWarnings CustomValidations.startAndEndDates
+            |> Entry.map .startDate
+            |> asDate zone
+        , Entry.required "Startzeit" event
+            |> Entry.withWarnings CustomValidations.startAndEndDates
+            |> Entry.map .startDate
+            |> asTime zone
         , Entry.optional "Enddatum" event.endDate |> asDate zone
         , Entry.optional "Endzeit" event.endDate |> asTime zone
         , Entry.optional "Dauer" event.duration

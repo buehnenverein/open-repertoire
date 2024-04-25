@@ -29129,6 +29129,64 @@ var $author$project$View$formatDuration = function (duration) {
 	var hours = (duration / 60) | 0;
 	return (minutes >= 10) ? ($elm$core$String$fromInt(hours) + (':' + ($elm$core$String$fromInt(minutes) + 'h'))) : ((minutes > 0) ? ($elm$core$String$fromInt(hours) + (':0' + ($elm$core$String$fromInt(minutes) + 'h'))) : ($elm$core$String$fromInt(hours) + (':00' + 'h')));
 };
+var $elm$core$Result$andThen = F2(
+	function (callback, result) {
+		if (!result.$) {
+			var value = result.a;
+			return callback(value);
+		} else {
+			var msg = result.a;
+			return $elm$core$Result$Err(msg);
+		}
+	});
+var $elm$core$Result$fromMaybe = F2(
+	function (err, maybe) {
+		if (!maybe.$) {
+			var v = maybe.a;
+			return $elm$core$Result$Ok(v);
+		} else {
+			return $elm$core$Result$Err(err);
+		}
+	});
+var $elm$core$Result$map = F2(
+	function (func, ra) {
+		if (!ra.$) {
+			var a = ra.a;
+			return $elm$core$Result$Ok(
+				func(a));
+		} else {
+			var e = ra.a;
+			return $elm$core$Result$Err(e);
+		}
+	});
+var $author$project$Helper$CustomValidations$startAndEndDates = F2(
+	function (path, data) {
+		var startMillis = A2(
+			$elm$core$Result$map,
+			$elm$time$Time$posixToMillis,
+			$rtfeldman$elm_iso8601_date_strings$Iso8601$toTime(data.bW));
+		var endMillis = A2(
+			$elm$core$Result$map,
+			$elm$time$Time$posixToMillis,
+			A2(
+				$elm$core$Result$andThen,
+				$rtfeldman$elm_iso8601_date_strings$Iso8601$toTime,
+				A2($elm$core$Result$fromMaybe, _List_Nil, data.aZ)));
+		var _v0 = _Utils_Tuple2(startMillis, endMillis);
+		if ((!_v0.a.$) && (!_v0.b.$)) {
+			var start = _v0.a.a;
+			var end = _v0.b.a;
+			return (_Utils_cmp(start, end) > 0) ? _List_fromArray(
+				[
+					A2(
+					$author$project$Helper$CustomValidations$forView,
+					'Der Beginn der Veranstaltung liegt nach dem Ende der Veranstaltung.',
+					A2($author$project$Helper$CustomValidations$message, path + '/startDate', 'should be before endDate'))
+				]) : _List_Nil;
+		} else {
+			return _List_Nil;
+		}
+	});
 var $author$project$View$viewEventTable = F2(
 	function (zone, event) {
 		return $author$project$Components$DataEntry$view(
@@ -29137,11 +29195,27 @@ var $author$project$View$viewEventTable = F2(
 					A2(
 					$author$project$Components$DataEntry$asDate,
 					zone,
-					A2($author$project$Components$DataEntry$required, 'Startdatum', event.bW)),
+					A2(
+						$author$project$Components$DataEntry$map,
+						function ($) {
+							return $.bW;
+						},
+						A2(
+							$author$project$Components$DataEntry$withWarnings,
+							$author$project$Helper$CustomValidations$startAndEndDates,
+							A2($author$project$Components$DataEntry$required, 'Startdatum', event)))),
 					A2(
 					$author$project$Components$DataEntry$asTime,
 					zone,
-					A2($author$project$Components$DataEntry$required, 'Startzeit', event.bW)),
+					A2(
+						$author$project$Components$DataEntry$map,
+						function ($) {
+							return $.bW;
+						},
+						A2(
+							$author$project$Components$DataEntry$withWarnings,
+							$author$project$Helper$CustomValidations$startAndEndDates,
+							A2($author$project$Components$DataEntry$required, 'Startzeit', event)))),
 					A2(
 					$author$project$Components$DataEntry$asDate,
 					zone,
