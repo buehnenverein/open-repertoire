@@ -2,7 +2,7 @@ port module Validate exposing (main)
 
 import Browser
 import Data.Root
-import Helper.CustomValidations exposing (checkAll)
+import Helper.CustomValidations as CustomValidations
 import Html exposing (Html, button, div, h1, h3, input, p, span, table, tbody, td, text, textarea, th, thead, tr)
 import Html.Attributes exposing (class, classList, disabled, style, type_, value)
 import Html.Events exposing (onClick, onInput)
@@ -135,24 +135,47 @@ update msg model =
             ( { model | state = RequestFailed error }, Cmd.none )
 
         ReceiveValidationResult responseValue validationResult ->
-            case Decode.decodeValue resultDecoder validationResult of
-                Ok Valid ->
-                    ( { model | state = ResultSuccess (groupedWarnings responseValue) responseValue }, Cmd.none )
+            ( { model | state = handleValidationResult responseValue validationResult }, Cmd.none )
 
-                Ok (Error errors) ->
-                    ( { model
-                        | state =
-                            ResultError
-                                { errors = groupIssues errors
-                                , warnings = groupedWarnings responseValue
-                                }
-                                responseValue
-                      }
-                    , Cmd.none
-                    )
 
-                Err parsingError ->
-                    ( { model | state = ValidationParsingError (Decode.errorToString parsingError) }, Cmd.none )
+handleValidationResult : Decode.Value -> Decode.Value -> State
+handleValidationResult response result =
+    let
+        customIssues =
+            customValidations response
+                |> List.map toValidationIssue
+
+        isWarning issue =
+            case issue.kind of
+                ValidationWarning ->
+                    True
+
+                ValidationError _ ->
+                    False
+
+        ( customWarnings, customErrors ) =
+            List.partition isWarning customIssues
+    in
+    case ( Decode.decodeValue resultDecoder result, customErrors ) of
+        ( Ok Valid, [] ) ->
+            ResultSuccess (groupIssues customWarnings) response
+
+        ( Ok Valid, custom ) ->
+            ResultError
+                { errors = groupIssues custom
+                , warnings = groupIssues customWarnings
+                }
+                response
+
+        ( Ok (Error errors), custom ) ->
+            ResultError
+                { errors = groupIssues (errors ++ custom)
+                , warnings = groupIssues customWarnings
+                }
+                response
+
+        ( Err parsingError, _ ) ->
+            ValidationParsingError (Decode.errorToString parsingError)
 
 
 view : Model -> Html Msg
@@ -574,26 +597,40 @@ isInteger string =
             False
 
 
-groupedWarnings : Decode.Value -> List ValidationIssueGroup
-groupedWarnings jsonValue =
-    groupIssues (parseWarnings jsonValue)
-
-
-parseWarnings : Decode.Value -> List ValidationIssue
-parseWarnings jsonValue =
+customValidations : Decode.Value -> List CustomValidations.ValidationMessage
+customValidations jsonValue =
     let
         decodingResult =
             Decode.decodeValue Data.Root.rootDecoder jsonValue
-
-        warnings =
-            case decodingResult of
-                Ok data ->
-                    checkAll data
-
-                Err _ ->
-                    []
     in
-    List.map (\{ path, message } -> ValidationIssue path message ValidationWarning) warnings
+    case decodingResult of
+        Ok data ->
+            CustomValidations.checkAll data
+
+        Err _ ->
+            []
+
+
+toValidationIssue : CustomValidations.ValidationMessage -> ValidationIssue
+toValidationIssue message =
+    case message.kind of
+        CustomValidations.Warning ->
+            ValidationIssue message.path message.message ValidationWarning
+
+        CustomValidations.Error ->
+            let
+                keyword =
+                    String.split "/" message.path
+                        |> List.Extra.last
+                        |> Maybe.withDefault ""
+
+                errorInfo =
+                    { keyword = keyword
+                    , additionalProperty = Nothing
+                    , allowedEnumValues = Nothing
+                    }
+            in
+            ValidationIssue message.path message.message (ValidationError errorInfo)
 
 
 

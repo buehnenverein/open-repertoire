@@ -1,4 +1,4 @@
-module Helper.CustomValidations exposing (Validator, checkAll, duration, eventStatusAndDate, languageTagValid, minMaxAge, minMaxPrice, startAndEndDates, teaserOrDescription, viewerMessage)
+module Helper.CustomValidations exposing (MessageType(..), ValidationMessage, Validator, checkAll, duration, eventStatusAndDate, languageTagValid, minMaxAge, minMaxPrice, startAndEndDates, teaserOrDescription, viewerMessage)
 
 import Data.Root
     exposing
@@ -30,7 +30,13 @@ type alias ValidationMessage =
     { path : String
     , message : String
     , messageForView : Maybe String
+    , kind : MessageType
     }
+
+
+type MessageType
+    = Warning
+    | Error
 
 
 viewerMessage : ValidationMessage -> Maybe String
@@ -38,11 +44,21 @@ viewerMessage msg =
     msg.messageForView
 
 
-message : String -> String -> ValidationMessage
-message path msg =
+warning : String -> String -> ValidationMessage
+warning path msg =
     { path = path
     , message = msg
     , messageForView = Nothing
+    , kind = Warning
+    }
+
+
+error : String -> String -> ValidationMessage
+error path msg =
+    { path = path
+    , message = msg
+    , messageForView = Nothing
+    , kind = Error
     }
 
 
@@ -124,7 +140,7 @@ maybe validator basePath model =
 required : Validator String
 required path value =
     if String.trim value == "" then
-        [ message path "is a required text field, but you provided an empty value"
+        [ warning path "is a required text field, but you provided an empty value"
         ]
 
     else
@@ -136,7 +152,7 @@ optional path value =
     case value of
         Just text ->
             if String.trim text == "" then
-                [ message path "is empty. You can omit optional text fields if there is no content."
+                [ warning path "is empty. You can omit optional text fields if there is no content."
                 ]
 
             else
@@ -157,9 +173,9 @@ uniqueIdsFor name path data =
             List.map .identifier data
 
         getMessage idx item count =
-            message
-                (path ++ "/" ++ String.fromInt idx)
-                ("must have a unique ID. However, ID "
+            error
+                (path ++ "/" ++ String.fromInt idx ++ "/identifier")
+                ("must be unique. However, ID "
                     ++ item.identifier
                     ++ " is also used in "
                     ++ String.fromInt (count - 1)
@@ -184,14 +200,14 @@ uniqueIdsFor name path data =
 duration : Validator Int
 duration path minutes =
     if minutes > 900 then
-        [ message path
+        [ warning path
             "seems to be very long. The duration field is supposed to contain the event's duration in minutes. Are you sure you didn't accidentally use seconds instead?"
             |> forView "Diese Veranstaltung scheint sehr lange zu dauern. Sind Sie sich sicher, dass diese Angabe korrekt ist?"
         ]
 
     else if minutes >= 0 && minutes < 10 then
         -- the duration being negative is already a validation error, so we don't need to cover this case here
-        [ message path
+        [ warning path
             "seems to be very short. The duration field is supposed to contain the event's duration in minutes. Are you sure you didn't accidentally use hours instead?"
             |> forView "Diese Veranstaltung scheint sehr kurz zu sein. Sind Sie sich sicher, dass diese Angabe korrekt ist?"
         ]
@@ -204,10 +220,10 @@ geocoordinates : Validator Place
 geocoordinates path data =
     case ( data.latitude, data.longitude ) of
         ( Nothing, Just _ ) ->
-            [ message path "has a longitude but no latitude" ]
+            [ warning path "has a longitude but no latitude" ]
 
         ( Just _, Nothing ) ->
-            [ message path "has a latitude but no longitude" ]
+            [ warning path "has a latitude but no longitude" ]
 
         _ ->
             []
@@ -217,7 +233,7 @@ teaserOrDescription : Validator Production
 teaserOrDescription path data =
     case ( data.abstract, data.description ) of
         ( Nothing, Nothing ) ->
-            [ message path "has neither a description nor a teaser. You should set at least one of these fields."
+            [ warning path "has neither a description nor a teaser. You should set at least one of these fields."
                 |> forView "Diese Produktion hat weder eine Beschreibung noch eine Kurzbeschreibung. Wenigstens eines der beiden Felder sollte gesetzt sein."
             ]
 
@@ -239,7 +255,7 @@ previousStartDateDifferentFromCurrent path data =
     case data.previousStartDate of
         Just previousStart ->
             if data.startDate == previousStart then
-                [ message (path ++ "/previousStartDate") "should be different from startDate for rescheduled events"
+                [ warning (path ++ "/previousStartDate") "should be different from startDate for rescheduled events"
                     |> forView "Die vorherige Startzeit sollte sich von der neuen Startzeit unterscheiden."
                 ]
 
@@ -254,12 +270,12 @@ previousStartPresent : Validator Event
 previousStartPresent path data =
     case ( data.eventStatus, data.previousStartDate ) of
         ( Just EventPostponedEvent, Nothing ) ->
-            [ message (path ++ "/previousStartDate") "should be set for postponed events"
+            [ warning (path ++ "/previousStartDate") "should be set for postponed events"
                 |> forView "Die vorherige Startzeit sollte bei verschobenen Veranstaltungen angegeben werden."
             ]
 
         ( Just EventRescheduledEvent, Nothing ) ->
-            [ message (path ++ "/previousStartDate") "should be set for rescheduled events"
+            [ warning (path ++ "/previousStartDate") "should be set for rescheduled events"
                 |> forView "Die vorherige Startzeit sollte bei verschobenen Veranstaltungen angegeben werden."
             ]
 
@@ -271,17 +287,17 @@ previousStartNotRequired : Validator Event
 previousStartNotRequired path data =
     case ( data.eventStatus, data.previousStartDate ) of
         ( Just EventScheduledEvent, Just _ ) ->
-            [ message (path ++ "/previousStartDate") "should only be set if the event status is either 'rescheduled, 'postponed', or 'cancelled'"
+            [ warning (path ++ "/previousStartDate") "should only be set if the event status is either 'rescheduled, 'postponed', or 'cancelled'"
                 |> forView "Die vorherige Startzeit sollte nur bei verschobenen oder abgesagten Veranstaltungen angegeben werden."
             ]
 
         ( Just EventMovedOnlineEvent, Just _ ) ->
-            [ message (path ++ "/previousStartDate") "should only be set if the event status is either 'rescheduled, 'postponed', or 'cancelled'"
+            [ warning (path ++ "/previousStartDate") "should only be set if the event status is either 'rescheduled, 'postponed', or 'cancelled'"
                 |> forView "Die vorherige Startzeit sollte nur bei verschobenen oder abgesagten Veranstaltungen angegeben werden."
             ]
 
         ( Nothing, Just _ ) ->
-            [ message (path ++ "/previousStartDate") "should only be set if the event status is either 'rescheduled, 'postponed', or 'cancelled'"
+            [ warning (path ++ "/previousStartDate") "should only be set if the event status is either 'rescheduled, 'postponed', or 'cancelled'"
                 |> forView "Die vorherige Startzeit sollte nur bei verschobenen oder abgesagten Veranstaltungen angegeben werden."
             ]
 
@@ -293,7 +309,7 @@ languageTagValid : Validator String
 languageTagValid path data =
     let
         validationMsg =
-            message path "doesn't seem to be a valid language code. This field should contain language codes like 'en', 'de', etc."
+            warning path "doesn't seem to be a valid language code. This field should contain language codes like 'en', 'de', etc."
                 |> forView "Dieses Feld sollte einen Sprachcode enthalten und nicht, z.B. den vollen Namen der Sprache. Beispiele für Codes dieser Art sind \"de\" und \"en-GB\"."
     in
     case LanguageTag.Parser.parseBcp47 data of
@@ -313,7 +329,7 @@ minMaxPrice path data =
     case data.maxPrice of
         Just max ->
             if data.minPrice > max then
-                [ message path "should be smaller than maxPrice"
+                [ warning path "should be smaller than maxPrice"
                     |> forView "Der Mindestpreis sollte niedriger sein als der Höchstpreis."
                 ]
 
@@ -329,7 +345,7 @@ minMaxAge path data =
     case ( data.suggestedMinAge, data.suggestedMaxAge ) of
         ( Just minAge, Just maxAge ) ->
             if minAge > maxAge then
-                [ message (path ++ "/suggestedMinAge") "should be smaller than suggestedMaxAge"
+                [ warning (path ++ "/suggestedMinAge") "should be smaller than suggestedMaxAge"
                     |> forView "Das Mindestalter sollte niedriger sein als das Höchstalter."
                 ]
 
@@ -357,7 +373,7 @@ startAndEndDates path data =
     case ( startMillis, endMillis ) of
         ( Ok start, Ok end ) ->
             if start > end then
-                [ message (path ++ "/startDate") "should be before endDate"
+                [ warning (path ++ "/startDate") "should be before endDate"
                     |> forView "Der Beginn der Veranstaltung liegt nach dem Ende der Veranstaltung."
                 ]
 
