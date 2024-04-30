@@ -22,6 +22,7 @@ import Data.Root
 import Helper.LanguageCodes as LanguageCodes
 import Iso8601
 import LanguageTag.Parser
+import List.Extra
 import Time
 
 
@@ -59,6 +60,7 @@ checkAll data =
     object
         [ field "/organization" .organization organization
         , field "/productions" .productions (list production)
+        , field "/productions" .productions (uniqueIdsFor "productions")
         ]
         |> check data ""
 
@@ -146,6 +148,37 @@ optional path value =
 
 
 -- CUSTOM VALIDATORS
+
+
+uniqueIdsFor : String -> Validator (List { a | identifier : String })
+uniqueIdsFor name path data =
+    let
+        allIds =
+            List.map .identifier data
+
+        getMessage idx item count =
+            message
+                (path ++ "/" ++ String.fromInt idx)
+                ("must have a unique ID. However, ID "
+                    ++ item.identifier
+                    ++ " is also used in "
+                    ++ String.fromInt (count - 1)
+                    ++ " other "
+                    ++ name
+                    ++ "."
+                )
+    in
+    List.indexedMap
+        (\idx item ->
+            case elementCount item.identifier allIds of
+                1 ->
+                    Nothing
+
+                count ->
+                    Just (getMessage idx item count)
+        )
+        data
+        |> List.filterMap identity
 
 
 duration : Validator Int
@@ -415,6 +448,7 @@ production =
         , field "/creator" .creator (maybe (list creator))
         , field "/description" .description optional
         , field "/events" .events (list event)
+        , field "/events" .events (uniqueIdsFor "events")
         , field "/inLanguage" .inLanguage (maybe languageTagValid)
         , field "/subtitle" .subtitle optional
         , field "/abstract" .abstract optional
@@ -465,3 +499,16 @@ virtualLocation =
         [ field "/name" .name optional
         , field "/url" .url optional
         ]
+
+
+
+-- HELPERS
+
+
+elementCount : a -> List a -> Int
+elementCount element all =
+    let
+        equalsElement =
+            (==) element
+    in
+    List.Extra.count equalsElement all

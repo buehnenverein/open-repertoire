@@ -8210,6 +8210,53 @@ var $author$project$Helper$CustomValidations$teaserOrDescription = F2(
 			return _List_Nil;
 		}
 	});
+var $elm_community$list_extra$List$Extra$count = function (predicate) {
+	return A2(
+		$elm$core$List$foldl,
+		F2(
+			function (x, acc) {
+				return predicate(x) ? (acc + 1) : acc;
+			}),
+		0);
+};
+var $author$project$Helper$CustomValidations$elementCount = F2(
+	function (element, all) {
+		var equalsElement = $elm$core$Basics$eq(element);
+		return A2($elm_community$list_extra$List$Extra$count, equalsElement, all);
+	});
+var $author$project$Helper$CustomValidations$uniqueIdsFor = F3(
+	function (name, path, data) {
+		var getMessage = F3(
+			function (idx, item, count) {
+				return A2(
+					$author$project$Helper$CustomValidations$message,
+					path + ('/' + $elm$core$String$fromInt(idx)),
+					'must have a unique ID. However, ID ' + (item.T + (' is also used in ' + ($elm$core$String$fromInt(count - 1) + (' other ' + (name + '.'))))));
+			});
+		var allIds = A2(
+			$elm$core$List$map,
+			function ($) {
+				return $.T;
+			},
+			data);
+		return A2(
+			$elm$core$List$filterMap,
+			$elm$core$Basics$identity,
+			A2(
+				$elm$core$List$indexedMap,
+				F2(
+					function (idx, item) {
+						var _v0 = A2($author$project$Helper$CustomValidations$elementCount, item.T, allIds);
+						if (_v0 === 1) {
+							return $elm$core$Maybe$Nothing;
+						} else {
+							var count = _v0;
+							return $elm$core$Maybe$Just(
+								A3(getMessage, idx, item, count));
+						}
+					}),
+				data));
+	});
 var $author$project$Helper$CustomValidations$production = $author$project$Helper$CustomValidations$object(
 	_List_fromArray(
 		[
@@ -8256,6 +8303,13 @@ var $author$project$Helper$CustomValidations$production = $author$project$Helper
 				return $.aY;
 			},
 			$author$project$Helper$CustomValidations$list($author$project$Helper$CustomValidations$event)),
+			A3(
+			$author$project$Helper$CustomValidations$field,
+			'/events',
+			function ($) {
+				return $.aY;
+			},
+			$author$project$Helper$CustomValidations$uniqueIdsFor('events')),
 			A3(
 			$author$project$Helper$CustomValidations$field,
 			'/inLanguage',
@@ -8307,7 +8361,14 @@ var $author$project$Helper$CustomValidations$checkAll = function (data) {
 					function ($) {
 						return $.bE;
 					},
-					$author$project$Helper$CustomValidations$list($author$project$Helper$CustomValidations$production))
+					$author$project$Helper$CustomValidations$list($author$project$Helper$CustomValidations$production)),
+					A3(
+					$author$project$Helper$CustomValidations$field,
+					'/productions',
+					function ($) {
+						return $.bE;
+					},
+					$author$project$Helper$CustomValidations$uniqueIdsFor('productions'))
 				])));
 };
 var $author$project$Data$Root$Root = F4(
