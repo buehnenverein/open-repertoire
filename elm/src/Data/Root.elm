@@ -91,6 +91,7 @@ type alias Event =
     , duration : Maybe Int
     , endDate : Maybe String
     , eventStatus : Maybe EventEventStatus
+    , identifier : String
     , intermission : Maybe Bool
     , location : Maybe (List LocationItem)
     , offers : Maybe (List Offer)
@@ -162,6 +163,7 @@ type alias Production =
     , events : List Event
     , funder : Maybe (List Organization)
     , genre : Maybe ProductionGenre
+    , identifier : String
     , inLanguage : Maybe String
     , name : String
     , sponsor : Maybe (List Organization)
@@ -499,6 +501,7 @@ eventDecoder =
         |> optional "duration" (Decode.nullable Decode.int) Nothing
         |> optional "endDate" (Decode.nullable Decode.string) Nothing
         |> optional "eventStatus" (Decode.nullable eventEventStatusDecoder) Nothing
+        |> required "identifier" Decode.string
         |> optional "intermission" (Decode.nullable Decode.bool) Nothing
         |> optional "location" (Decode.nullable locationDecoder) Nothing
         |> optional "offers" (Decode.nullable offersDecoder) Nothing
@@ -577,6 +580,7 @@ productionDecoder =
         |> required "events" eventsDecoder
         |> optional "funder" (Decode.nullable funderDecoder) Nothing
         |> optional "genre" (Decode.nullable productionGenreDecoder) Nothing
+        |> required "identifier" Decode.string
         |> optional "inLanguage" (Decode.nullable Decode.string) Nothing
         |> required "name" Decode.string
         |> optional "sponsor" (Decode.nullable sponsorDecoder) Nothing
@@ -1082,6 +1086,7 @@ encodeEvent event =
         |> Encode.optional "duration" event.duration Encode.int
         |> Encode.optional "endDate" event.endDate Encode.string
         |> Encode.optional "eventStatus" event.eventStatus encodeEventEventStatus
+        |> Encode.required "identifier" event.identifier Encode.string
         |> Encode.optional "intermission" event.intermission Encode.bool
         |> Encode.optional "location" event.location encodeLocation
         |> Encode.optional "offers" event.offers encodeOffers
@@ -1167,6 +1172,7 @@ encodeProduction production =
         |> Encode.required "events" production.events encodeEvents
         |> Encode.optional "funder" production.funder encodeFunder
         |> Encode.optional "genre" production.genre encodeProductionGenre
+        |> Encode.required "identifier" production.identifier Encode.string
         |> Encode.optional "inLanguage" production.inLanguage Encode.string
         |> Encode.required "name" production.name Encode.string
         |> Encode.optional "sponsor" production.sponsor encodeSponsor

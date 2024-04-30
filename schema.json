@@ -8,6 +8,7 @@
       "additionalProperties": false,
       "required": [
         "@type",
+        "identifier",
         "name",
         "events"
       ],
@@ -18,6 +19,11 @@
             "CreativeWork",
             "Play"
           ]
+        },
+        "identifier": {
+          "type": "string",
+          "description": "The unique ID of this production. This could be an internal database ID, for example.",
+          "example": "123"
         },
         "name": {
           "type": "string",
@@ -207,6 +213,7 @@
       "type": "object",
       "required": [
         "@type",
+        "identifier",
         "startDate"
       ],
       "additionalProperties": false,
@@ -216,6 +223,11 @@
           "enum": [
             "Event"
           ]
+        },
+        "identifier": {
+          "type": "string",
+          "description": "The unique ID of this event. This could be an internal database ID, for example.",
+          "example": "345"
         },
         "startDate": {
           "type": "string",

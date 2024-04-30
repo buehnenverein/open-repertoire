@@ -7,6 +7,7 @@ definitions:
       additionalProperties: false
       required:
         - "@type"
+        - identifier
         - name
         - events
       properties:
@@ -15,6 +16,10 @@ definitions:
           enum:
             - "CreativeWork"
             - "Play"
+        identifier:
+          type: string
+          description: The unique ID of this production. This could be an internal database ID, for example.
+          example: "123"
         name:
           type: string
           description: The production's title.
@@ -169,6 +174,7 @@ definitions:
       type: object
       required:
         - "@type"
+        - identifier
         - startDate
       additionalProperties: false
       properties:
@@ -176,6 +182,10 @@ definitions:
           type: string
           enum:
             - "Event"
+        identifier:
+          type: string
+          description: The unique ID of this event. This could be an internal database ID, for example.
+          example: "345"
         startDate:
           type: string
           description: "The start date and time of the event (in ISO 8601 date format)."

@@ -303,7 +303,8 @@ productionGrid production =
 productionInfo : Production -> Html Msg
 productionInfo production =
     Entry.view
-        [ Entry.required "Titel" production.name
+        [ Entry.required "ID" production.identifier
+        , Entry.required "Titel" production.name
         , Entry.optional "Sprache" production.inLanguage
             |> Entry.withWarnings CustomValidations.languageTagValid
         , Entry.optional "Untertitel" production.subtitle
@@ -470,7 +471,8 @@ viewEvent zone event =
 viewEventTable : Entry.ZoneWithName -> Event -> Html Msg
 viewEventTable zone event =
     Entry.view
-        [ Entry.required "Startdatum" event
+        [ Entry.required "ID" event.identifier
+        , Entry.required "Startdatum" event
             |> Entry.withWarnings CustomValidations.startAndEndDates
             |> Entry.map .startDate
             |> asDate zone
