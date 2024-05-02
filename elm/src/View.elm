@@ -38,6 +38,7 @@ type alias Model =
 type alias Data =
     { root : Root
     , nameFilter : String
+    , showOnlyWarning : Bool
     , hiddenProductions : Set Int
     , hiddenEvents : Set Int
     }
@@ -60,6 +61,7 @@ type Msg
     | ProductionCardClicked Int Bool
     | EventCardClicked Int Bool
     | NameFilterChanged String
+    | ToggleWarningsFilter
 
 
 init : () -> ( Model, Cmd Msg )
@@ -78,6 +80,7 @@ newData value =
     , nameFilter = ""
     , hiddenProductions = Set.empty
     , hiddenEvents = Set.empty
+    , showOnlyWarning = False
     }
 
 
@@ -121,6 +124,9 @@ update msg model =
 
         NameFilterChanged filter ->
             ( { model | data = updateNameFilter model.data filter }, Cmd.none )
+
+        ToggleWarningsFilter ->
+            ( { model | data = toggleWarningsFilter model.data }, Cmd.none )
 
 
 fetchData : Model -> String -> ( Model, Cmd Msg )
@@ -196,12 +202,9 @@ viewJsonData data zone =
             not
                 (Set.member index data.hiddenEvents)
 
-        hideProduction production =
-            not (productionNameMatches data.nameFilter production)
-
         viewProduction : Int -> Production -> Html Msg
         viewProduction index production =
-            div [ classList [ ( "is-hidden", hideProduction production ) ] ]
+            div [ classList [ ( "is-hidden", not (isProductionVisible data production) ) ] ]
                 [ div [ class "sticky-header" ]
                     [ h1 [ class "is-size-1" ] [ text production.name ]
                     ]
@@ -216,13 +219,20 @@ viewJsonData data zone =
                 ]
     in
     section
-        [ filterInput data.nameFilter
+        [ div [ class "block" ] [ nameFilterInput data.nameFilter ]
+        , div [ class "block" ] [ warningsFilterButton data ]
         , div
-            []
+            [ class "block" ]
             (data.root.productions
                 |> List.indexedMap (lazy2 viewProduction)
             )
         ]
+
+
+isProductionVisible : Data -> Production -> Bool
+isProductionVisible data production =
+    productionNameMatches data.nameFilter production
+        && (not data.showOnlyWarning || hasWarnings production)
 
 
 looksLikeUrl : String -> Bool
@@ -721,6 +731,14 @@ viewOffer offer =
 -- HELPERS
 
 
+hasWarnings : Production -> Bool
+hasWarnings production =
+    CustomValidations.production "" production
+        |> List.filterMap CustomValidations.viewerMessage
+        |> List.isEmpty
+        |> not
+
+
 isOnlineEvent : List LocationItem -> Bool
 isOnlineEvent locations =
     let
@@ -756,6 +774,16 @@ updateNameFilter remoteData filter =
     case remoteData of
         Success data ->
             Success { data | nameFilter = filter }
+
+        _ ->
+            remoteData
+
+
+toggleWarningsFilter : EventData -> EventData
+toggleWarningsFilter remoteData =
+    case remoteData of
+        Success data ->
+            Success { data | showOnlyWarning = not data.showOnlyWarning }
 
         _ ->
             remoteData
@@ -985,8 +1013,8 @@ viewInput inputString buttonEnabled =
         ]
 
 
-filterInput : String -> Html Msg
-filterInput filter =
+nameFilterInput : String -> Html Msg
+nameFilterInput filter =
     div [ class "field" ]
         [ div [ class "label" ] [ text "Ergebnisse nach Titel filtern:" ]
         , div [ class "control" ]
@@ -1000,6 +1028,35 @@ filterInput filter =
                 []
             ]
         ]
+
+
+warningsFilterButton : { a | root : Root, showOnlyWarning : Bool } -> Html Msg
+warningsFilterButton data =
+    let
+        count =
+            List.filter hasWarnings data.root.productions
+                |> List.length
+
+        buttonText =
+            if count == 1 then
+                "1 Produktion mit potentiellen Problemen anzeigen"
+
+            else
+                String.fromInt count ++ " Produktionen mit potentiellen Problemen anzeigen"
+    in
+    if count == 0 then
+        text ""
+
+    else
+        div [ class "buttons is-right" ]
+            [ button
+                [ class "button is-warning"
+                , classList [ ( "is-outlined", not data.showOnlyWarning ) ]
+                , onClick ToggleWarningsFilter
+                ]
+                [ text buttonText
+                ]
+            ]
 
 
 

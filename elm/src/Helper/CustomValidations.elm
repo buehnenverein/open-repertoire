@@ -1,4 +1,4 @@
-module Helper.CustomValidations exposing (MessageType(..), ValidationMessage, Validator, abstractOrDescription, checkAll, duration, eventStatusAndDate, languageTagValid, minMaxAge, minMaxPrice, startAndEndDates, viewerMessage)
+module Helper.CustomValidations exposing (MessageType(..), ValidationMessage, Validator, abstractOrDescription, checkAll, duration, eventStatusAndDate, languageTagValid, minMaxAge, minMaxPrice, production, startAndEndDates, viewerMessage)
 
 import Data.Root
     exposing
