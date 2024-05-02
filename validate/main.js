@@ -6377,6 +6377,9 @@ var $author$project$Helper$CustomValidations$object = F3(
 			validators);
 	});
 var $elm$core$String$trim = _String_trim;
+var $author$project$Helper$CustomValidations$isEmptyString = function (string) {
+	return $elm$core$String$trim(string) === '';
+};
 var $author$project$Helper$CustomValidations$Warning = 0;
 var $author$project$Helper$CustomValidations$warning = F2(
 	function (path, msg) {
@@ -6386,7 +6389,7 @@ var $author$project$Helper$CustomValidations$optional = F2(
 	function (path, value) {
 		if (!value.$) {
 			var text = value.a;
-			return ($elm$core$String$trim(text) === '') ? _List_fromArray(
+			return $author$project$Helper$CustomValidations$isEmptyString(text) ? _List_fromArray(
 				[
 					A2($author$project$Helper$CustomValidations$warning, path, 'is empty. You can omit optional text fields if there is no content.')
 				]) : _List_Nil;
@@ -6430,7 +6433,7 @@ var $author$project$Helper$CustomValidations$maybe = F3(
 	});
 var $author$project$Helper$CustomValidations$required = F2(
 	function (path, value) {
-		return ($elm$core$String$trim(value) === '') ? _List_fromArray(
+		return $author$project$Helper$CustomValidations$isEmptyString(value) ? _List_fromArray(
 			[
 				A2($author$project$Helper$CustomValidations$warning, path, 'is a required text field, but you provided an empty value')
 			]) : _List_Nil;
@@ -8084,22 +8087,28 @@ var $author$project$Helper$CustomValidations$event = $author$project$Helper$Cust
 			$author$project$Helper$CustomValidations$eventStatusAndDate,
 			$author$project$Helper$CustomValidations$startAndEndDates
 		]));
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (!maybe.$) {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
 var $author$project$Helper$CustomValidations$teaserOrDescription = F2(
 	function (path, data) {
-		var _v0 = _Utils_Tuple2(data.aG, data.aX);
-		if ((_v0.a.$ === 1) && (_v0.b.$ === 1)) {
-			var _v1 = _v0.a;
-			var _v2 = _v0.b;
-			return _List_fromArray(
-				[
-					A2(
-					$author$project$Helper$CustomValidations$forView,
-					'Diese Produktion hat weder eine Beschreibung noch eine Kurzbeschreibung. Wenigstens eines der beiden Felder sollte gesetzt sein.',
-					A2($author$project$Helper$CustomValidations$warning, path, 'has neither a description nor a teaser. You should set at least one of these fields.'))
-				]);
-		} else {
-			return _List_Nil;
-		}
+		var message = _List_fromArray(
+			[
+				A2(
+				$author$project$Helper$CustomValidations$forView,
+				'Diese Produktion hat weder eine Beschreibung noch eine Kurzbeschreibung. Wenigstens eines der beiden Felder sollte gesetzt sein.',
+				A2($author$project$Helper$CustomValidations$warning, path, 'has neither a description nor a teaser. You should set at least one of these fields.'))
+			]);
+		var combinedString = _Utils_ap(
+			A2($elm$core$Maybe$withDefault, '', data.aG),
+			A2($elm$core$Maybe$withDefault, '', data.aX));
+		return $author$project$Helper$CustomValidations$isEmptyString(combinedString) ? message : _List_Nil;
 	});
 var $elm_community$list_extra$List$Extra$count = function (predicate) {
 	return A2(
@@ -9409,15 +9418,6 @@ var $elm_community$list_extra$List$Extra$last = function (items) {
 		}
 	}
 };
-var $elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (!maybe.$) {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
-	});
 var $author$project$Validate$toValidationIssue = function (message) {
 	var _v0 = message.am;
 	if (!_v0) {

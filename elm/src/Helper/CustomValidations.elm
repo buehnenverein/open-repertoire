@@ -139,7 +139,7 @@ maybe validator basePath model =
 
 required : Validator String
 required path value =
-    if String.trim value == "" then
+    if isEmptyString value then
         [ warning path "is a required text field, but you provided an empty value"
         ]
 
@@ -151,7 +151,7 @@ optional : Validator (Maybe String)
 optional path value =
     case value of
         Just text ->
-            if String.trim text == "" then
+            if isEmptyString text then
                 [ warning path "is empty. You can omit optional text fields if there is no content."
                 ]
 
@@ -231,14 +231,23 @@ geocoordinates path data =
 
 teaserOrDescription : Validator Production
 teaserOrDescription path data =
-    case ( data.abstract, data.description ) of
-        ( Nothing, Nothing ) ->
+    let
+        -- If either abstract or description contains actual text, then the combined
+        -- string will also contain actual text
+        combinedString =
+            Maybe.withDefault "" data.abstract
+                ++ Maybe.withDefault "" data.description
+
+        message =
             [ warning path "has neither a description nor a teaser. You should set at least one of these fields."
                 |> forView "Diese Produktion hat weder eine Beschreibung noch eine Kurzbeschreibung. Wenigstens eines der beiden Felder sollte gesetzt sein."
             ]
+    in
+    if isEmptyString combinedString then
+        message
 
-        _ ->
-            []
+    else
+        []
 
 
 eventStatusAndDate : Validator Event
@@ -528,3 +537,8 @@ elementCount element all =
             (==) element
     in
     List.Extra.count equalsElement all
+
+
+isEmptyString : String -> Bool
+isEmptyString string =
+    String.trim string == ""

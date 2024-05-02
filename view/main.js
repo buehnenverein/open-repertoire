@@ -26763,22 +26763,32 @@ var $author$project$Components$DataEntry$required = F2(
 			t: _List_Nil
 		};
 	});
+var $elm$core$String$trim = _String_trim;
+var $author$project$Helper$CustomValidations$isEmptyString = function (string) {
+	return $elm$core$String$trim(string) === '';
+};
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (!maybe.$) {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
 var $author$project$Helper$CustomValidations$teaserOrDescription = F2(
 	function (path, data) {
-		var _v0 = _Utils_Tuple2(data.aJ, data.a_);
-		if ((_v0.a.$ === 1) && (_v0.b.$ === 1)) {
-			var _v1 = _v0.a;
-			var _v2 = _v0.b;
-			return _List_fromArray(
-				[
-					A2(
-					$author$project$Helper$CustomValidations$forView,
-					'Diese Produktion hat weder eine Beschreibung noch eine Kurzbeschreibung. Wenigstens eines der beiden Felder sollte gesetzt sein.',
-					A2($author$project$Helper$CustomValidations$warning, path, 'has neither a description nor a teaser. You should set at least one of these fields.'))
-				]);
-		} else {
-			return _List_Nil;
-		}
+		var message = _List_fromArray(
+			[
+				A2(
+				$author$project$Helper$CustomValidations$forView,
+				'Diese Produktion hat weder eine Beschreibung noch eine Kurzbeschreibung. Wenigstens eines der beiden Felder sollte gesetzt sein.',
+				A2($author$project$Helper$CustomValidations$warning, path, 'has neither a description nor a teaser. You should set at least one of these fields.'))
+			]);
+		var combinedString = _Utils_ap(
+			A2($elm$core$Maybe$withDefault, '', data.aJ),
+			A2($elm$core$Maybe$withDefault, '', data.a_));
+		return $author$project$Helper$CustomValidations$isEmptyString(combinedString) ? message : _List_Nil;
 	});
 var $elm$html$Html$table = _VirtualDom_node('table');
 var $elm$html$Html$tbody = _VirtualDom_node('tbody');
@@ -27019,15 +27029,6 @@ var $elm$time$Time$toWeekday = F2(
 				return 1;
 			default:
 				return 2;
-		}
-	});
-var $elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (!maybe.$) {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
 		}
 	});
 var $ryannhg$date_format$DateFormat$dayOfWeek = F2(
@@ -28301,7 +28302,6 @@ var $elm$parser$Parser$run = F2(
 var $rtfeldman$elm_iso8601_date_strings$Iso8601$toTime = function (str) {
 	return A2($elm$parser$Parser$run, $rtfeldman$elm_iso8601_date_strings$Iso8601$iso8601, str);
 };
-var $elm$core$String$trim = _String_trim;
 var $ryannhg$date_format$DateFormat$YearNumber = {$: 16};
 var $ryannhg$date_format$DateFormat$yearNumber = $ryannhg$date_format$DateFormat$YearNumber;
 var $author$project$Components$DataEntry$formatDate = F2(
