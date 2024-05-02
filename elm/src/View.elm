@@ -309,7 +309,7 @@ productionInfo production =
             |> Entry.withWarnings CustomValidations.languageTagValid
         , Entry.optional "Untertitel" production.subtitle
         , Entry.required "Beschreibung" production
-            |> Entry.withWarnings CustomValidations.teaserOrDescription
+            |> Entry.withWarnings CustomValidations.abstractOrDescription
             |> Entry.nested .description
         , Entry.optional "Kurzbeschreibung" production.abstract
         , Entry.optional "Zusätzliche Informationen" production.additionalInfo

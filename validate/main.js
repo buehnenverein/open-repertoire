@@ -6464,6 +6464,29 @@ var $author$project$Helper$CustomValidations$forView = F2(
 				M: $elm$core$Maybe$Just(viewMessage)
 			});
 	});
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (!maybe.$) {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
+var $author$project$Helper$CustomValidations$abstractOrDescription = F2(
+	function (path, data) {
+		var message = _List_fromArray(
+			[
+				A2(
+				$author$project$Helper$CustomValidations$forView,
+				'Diese Produktion hat weder eine Beschreibung noch eine Kurzbeschreibung. Wenigstens eines der beiden Felder sollte gesetzt sein.',
+				A2($author$project$Helper$CustomValidations$warning, path, 'has neither a description nor an abstract. You should set at least one of these fields.'))
+			]);
+		var combinedString = _Utils_ap(
+			A2($elm$core$Maybe$withDefault, '', data.aG),
+			A2($elm$core$Maybe$withDefault, '', data.aX));
+		return $author$project$Helper$CustomValidations$isEmptyString(combinedString) ? message : _List_Nil;
+	});
 var $author$project$Helper$CustomValidations$minMaxAge = F2(
 	function (path, data) {
 		var _v0 = _Utils_Tuple2(data.b$, data.b_);
@@ -8087,29 +8110,6 @@ var $author$project$Helper$CustomValidations$event = $author$project$Helper$Cust
 			$author$project$Helper$CustomValidations$eventStatusAndDate,
 			$author$project$Helper$CustomValidations$startAndEndDates
 		]));
-var $elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (!maybe.$) {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
-	});
-var $author$project$Helper$CustomValidations$teaserOrDescription = F2(
-	function (path, data) {
-		var message = _List_fromArray(
-			[
-				A2(
-				$author$project$Helper$CustomValidations$forView,
-				'Diese Produktion hat weder eine Beschreibung noch eine Kurzbeschreibung. Wenigstens eines der beiden Felder sollte gesetzt sein.',
-				A2($author$project$Helper$CustomValidations$warning, path, 'has neither a description nor a teaser. You should set at least one of these fields.'))
-			]);
-		var combinedString = _Utils_ap(
-			A2($elm$core$Maybe$withDefault, '', data.aG),
-			A2($elm$core$Maybe$withDefault, '', data.aX));
-		return $author$project$Helper$CustomValidations$isEmptyString(combinedString) ? message : _List_Nil;
-	});
 var $elm_community$list_extra$List$Extra$count = function (predicate) {
 	return A2(
 		$elm$core$List$foldl,
@@ -8243,7 +8243,7 @@ var $author$project$Helper$CustomValidations$production = $author$project$Helper
 				return $.n;
 			},
 			$author$project$Helper$CustomValidations$required),
-			$author$project$Helper$CustomValidations$teaserOrDescription
+			$author$project$Helper$CustomValidations$abstractOrDescription
 		]));
 var $author$project$Helper$CustomValidations$checkAll = function (data) {
 	return A3(

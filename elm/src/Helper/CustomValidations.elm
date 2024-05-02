@@ -1,4 +1,4 @@
-module Helper.CustomValidations exposing (MessageType(..), ValidationMessage, Validator, checkAll, duration, eventStatusAndDate, languageTagValid, minMaxAge, minMaxPrice, startAndEndDates, teaserOrDescription, viewerMessage)
+module Helper.CustomValidations exposing (MessageType(..), ValidationMessage, Validator, abstractOrDescription, checkAll, duration, eventStatusAndDate, languageTagValid, minMaxAge, minMaxPrice, startAndEndDates, viewerMessage)
 
 import Data.Root
     exposing
@@ -229,8 +229,8 @@ geocoordinates path data =
             []
 
 
-teaserOrDescription : Validator Production
-teaserOrDescription path data =
+abstractOrDescription : Validator Production
+abstractOrDescription path data =
     let
         -- If either abstract or description contains actual text, then the combined
         -- string will also contain actual text
@@ -239,7 +239,7 @@ teaserOrDescription path data =
                 ++ Maybe.withDefault "" data.description
 
         message =
-            [ warning path "has neither a description nor a teaser. You should set at least one of these fields."
+            [ warning path "has neither a description nor an abstract. You should set at least one of these fields."
                 |> forView "Diese Produktion hat weder eine Beschreibung noch eine Kurzbeschreibung. Wenigstens eines der beiden Felder sollte gesetzt sein."
             ]
     in
@@ -478,7 +478,7 @@ production =
         , field "/subtitle" .subtitle optional
         , field "/abstract" .abstract optional
         , field "/name" .name required
-        , teaserOrDescription
+        , abstractOrDescription
         ]
 
 
