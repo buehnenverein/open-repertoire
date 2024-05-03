@@ -219,8 +219,7 @@ viewJsonData data zone =
                 ]
     in
     section
-        [ div [ class "block" ] [ nameFilterInput data.nameFilter ]
-        , div [ class "block" ] [ warningsFilterButton data ]
+        [ controlBar data
         , div
             [ class "block" ]
             (data.root.productions
@@ -1013,19 +1012,39 @@ viewInput inputString buttonEnabled =
         ]
 
 
+controlBar : Data -> Html Msg
+controlBar data =
+    div
+        [ class "hero is-small is-dark control-bar" ]
+        [ div [ class "hero-body is-flex is-flex-direction-column" ]
+            [ nameFilterInput data.nameFilter
+            , div [ class "is-flex is-justify-content-space-between" ]
+                [ collapseExpandButtons
+                , warningsFilterButton data
+                ]
+            ]
+        ]
+
+
 nameFilterInput : String -> Html Msg
 nameFilterInput filter =
-    div [ class "field" ]
-        [ div [ class "label" ] [ text "Ergebnisse nach Titel filtern:" ]
-        , div [ class "control" ]
-            [ input
-                [ type_ "text"
-                , onInput NameFilterChanged
-                , value filter
-                , placeholder "Titel"
-                , class "input"
+    div [ class "field is-horizontal" ]
+        [ div [ class "field-label" ]
+            [ label [ class "label has-text-dark-invert" ] [ text "Ergebnisse nach Titel filtern:" ]
+            ]
+        , div [ class "field-body" ]
+            [ div [ class "field" ]
+                [ div [ class "control" ]
+                    [ input
+                        [ type_ "text"
+                        , onInput NameFilterChanged
+                        , value filter
+                        , placeholder "Titel"
+                        , class "input is-small"
+                        ]
+                        []
+                    ]
                 ]
-                []
             ]
         ]
 
@@ -1048,9 +1067,9 @@ warningsFilterButton data =
         text ""
 
     else
-        div [ class "buttons is-right" ]
+        div [ class "buttons" ]
             [ button
-                [ class "button is-warning"
+                [ class "button is-warning is-small"
                 , classList [ ( "is-outlined", not data.showOnlyWarning ) ]
                 , onClick ToggleWarningsFilter
                 ]
@@ -1059,8 +1078,15 @@ warningsFilterButton data =
             ]
 
 
+collapseExpandButtons : Html Msg
+collapseExpandButtons =
+    div [ class "buttons mb-0" ]
+        [ button [ class "button is-primary is-small" ] [ text "Expand all" ]
+        , button [ class "button is-primary is-small" ] [ text "Collapse all" ]
+        ]
 
--- DATA ENTRY
+
+
 -- SUBSCRIPTIONS
 
 
