@@ -1055,10 +1055,24 @@ controlBar data =
             [ nameFilterInput data.nameFilter
             , div [ class "is-flex is-justify-content-space-between" ]
                 [ collapseExpandButtons
+                , viewProductionCount data
                 , warningsFilterButton data
                 ]
             ]
         ]
+
+
+viewProductionCount : Data -> Html Msg
+viewProductionCount data =
+    let
+        count =
+            List.length data.root.productions
+
+        visibleCount =
+            List.filter (isProductionVisible data) data.root.productions
+                |> List.length
+    in
+    text (String.fromInt visibleCount ++ " von " ++ String.fromInt count ++ " Produktionen werden angezeigt")
 
 
 nameFilterInput : String -> Html Msg
