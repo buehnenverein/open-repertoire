@@ -212,9 +212,11 @@ viewJsonData data zone =
 
         viewProduction : Int -> Production -> Html Msg
         viewProduction index production =
-            div [ classList [ ( "is-hidden", not (isProductionVisible data production) ) ] ]
-                [ div [ class "sticky-header" ]
-                    [ h1 [ class "is-size-1" ] [ text production.name ]
+            div [ class "block mt-6", classList [ ( "is-hidden", not (isProductionVisible data production) ) ] ]
+                [ div [ class "hero is-dark is-small sticky-header" ]
+                    [ div [ class "hero-body" ]
+                        [ p [ class "title" ] [ text production.name ]
+                        ]
                     ]
                 , card (text "Info")
                     (productionGrid production)
