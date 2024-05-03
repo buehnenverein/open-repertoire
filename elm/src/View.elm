@@ -62,6 +62,8 @@ type Msg
     | EventCardClicked Int Bool
     | NameFilterChanged String
     | ToggleWarningsFilter
+    | ExpandAllClicked
+    | CollapseAllClicked
 
 
 init : () -> ( Model, Cmd Msg )
@@ -127,6 +129,12 @@ update msg model =
 
         ToggleWarningsFilter ->
             ( { model | data = toggleWarningsFilter model.data }, Cmd.none )
+
+        ExpandAllClicked ->
+            ( { model | data = expandAll model.data }, Cmd.none )
+
+        CollapseAllClicked ->
+            ( { model | data = collapseAll model.data }, Cmd.none )
 
 
 fetchData : Model -> String -> ( Model, Cmd Msg )
@@ -788,6 +796,31 @@ toggleWarningsFilter remoteData =
             remoteData
 
 
+expandAll : EventData -> EventData
+expandAll remoteData =
+    case remoteData of
+        Success data ->
+            Success { data | hiddenProductions = Set.empty, hiddenEvents = Set.empty }
+
+        _ ->
+            remoteData
+
+
+collapseAll : EventData -> EventData
+collapseAll remoteData =
+    case remoteData of
+        Success data ->
+            let
+                allIds =
+                    List.range 0 (List.length data.root.productions - 1)
+                        |> Set.fromList
+            in
+            Success { data | hiddenProductions = allIds, hiddenEvents = allIds }
+
+        _ ->
+            remoteData
+
+
 toggleProductionCard : EventData -> Int -> Bool -> EventData
 toggleProductionCard remoteData index isOpen =
     case ( remoteData, isOpen ) of
@@ -1081,8 +1114,16 @@ warningsFilterButton data =
 collapseExpandButtons : Html Msg
 collapseExpandButtons =
     div [ class "buttons mb-0" ]
-        [ button [ class "button is-primary is-small" ] [ text "Expand all" ]
-        , button [ class "button is-primary is-small" ] [ text "Collapse all" ]
+        [ button
+            [ class "button is-primary is-small"
+            , onClick ExpandAllClicked
+            ]
+            [ text "Expand all" ]
+        , button
+            [ class "button is-primary is-small"
+            , onClick CollapseAllClicked
+            ]
+            [ text "Collapse all" ]
         ]
 
 
