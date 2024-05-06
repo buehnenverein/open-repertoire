@@ -92,7 +92,7 @@ type alias Event =
     , endDate : Maybe String
     , eventStatus : Maybe EventEventStatus
     , identifier : String
-    , intermission : Maybe Bool
+    , intermission : Maybe Int
     , location : Maybe (List LocationItem)
     , offers : Maybe (List Offer)
     , performer : Maybe (List PerformanceRole)
@@ -502,7 +502,7 @@ eventDecoder =
         |> optional "endDate" (Decode.nullable Decode.string) Nothing
         |> optional "eventStatus" (Decode.nullable eventEventStatusDecoder) Nothing
         |> required "identifier" Decode.string
-        |> optional "intermission" (Decode.nullable Decode.bool) Nothing
+        |> optional "intermission" (Decode.nullable Decode.int) Nothing
         |> optional "location" (Decode.nullable locationDecoder) Nothing
         |> optional "offers" (Decode.nullable offersDecoder) Nothing
         |> optional "performer" (Decode.nullable performerDecoder) Nothing
@@ -1087,7 +1087,7 @@ encodeEvent event =
         |> Encode.optional "endDate" event.endDate Encode.string
         |> Encode.optional "eventStatus" event.eventStatus encodeEventEventStatus
         |> Encode.required "identifier" event.identifier Encode.string
-        |> Encode.optional "intermission" event.intermission Encode.bool
+        |> Encode.optional "intermission" event.intermission Encode.int
         |> Encode.optional "location" event.location encodeLocation
         |> Encode.optional "offers" event.offers encodeOffers
         |> Encode.optional "performer" event.performer encodePerformer

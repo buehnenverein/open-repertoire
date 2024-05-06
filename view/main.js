@@ -25042,7 +25042,6 @@ var $author$project$Data$Root$Event = function (atType) {
 		};
 	};
 };
-var $elm$json$Json$Decode$bool = _Json_decodeBool;
 var $author$project$Data$Root$EventType = 0;
 var $author$project$Data$Root$parseEventAttype = function (eventAttype) {
 	if (eventAttype === 'Event') {
@@ -25107,6 +25106,7 @@ var $author$project$Data$Root$WheelChairPlace = F3(
 	function (count, hasSpaceForAssistant, wheelchairUserCapacity) {
 		return {aY: count, bc: hasSpaceForAssistant, cb: wheelchairUserCapacity};
 	});
+var $elm$json$Json$Decode$bool = _Json_decodeBool;
 var $author$project$Data$Root$wheelChairPlaceDecoder = A4(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 	'wheelchairUserCapacity',
@@ -25327,7 +25327,7 @@ var $author$project$Data$Root$eventDecoder = A4(
 							A4(
 								$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 								'intermission',
-								$elm$json$Json$Decode$nullable($elm$json$Json$Decode$bool),
+								$elm$json$Json$Decode$nullable($elm$json$Json$Decode$int),
 								$elm$core$Maybe$Nothing,
 								A3(
 									$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
@@ -29870,9 +29870,6 @@ var $author$project$Components$DataEntry$asTime = F2(
 				r: $author$project$Components$DataEntry$Time(zone)
 			});
 	});
-var $author$project$View$boolString = function (value) {
-	return value ? 'Ja' : 'Nein';
-};
 var $author$project$View$eventStatusToString = function (eventStatus) {
 	if (eventStatus.$ === 1) {
 		return 'Findet statt';
@@ -29900,6 +29897,9 @@ var $author$project$View$formatDuration = function (duration) {
 	var minutes = A2($elm$core$Basics$modBy, 60, duration);
 	var hours = (duration / 60) | 0;
 	return (minutes >= 10) ? ($elm$core$String$fromInt(hours) + (':' + ($elm$core$String$fromInt(minutes) + 'h'))) : ((minutes > 0) ? ($elm$core$String$fromInt(hours) + (':0' + ($elm$core$String$fromInt(minutes) + 'h'))) : ($elm$core$String$fromInt(hours) + (':00' + 'h')));
+};
+var $author$project$View$intermissionCountToString = function (intermissionCount) {
+	return (intermissionCount < 1) ? 'Nein' : ('Ja (' + ($elm$core$String$fromInt(intermissionCount) + ')'));
 };
 var $author$project$View$viewEventTable = F2(
 	function (zone, event) {
@@ -29948,7 +29948,7 @@ var $author$project$View$viewEventTable = F2(
 						A2($author$project$Components$DataEntry$optional, 'Dauer', event.a0))),
 					A2(
 					$author$project$Components$DataEntry$map,
-					$author$project$View$boolString,
+					$author$project$View$intermissionCountToString,
 					A2($author$project$Components$DataEntry$optional, 'Mit Pause?', event.bl)),
 					A2(
 					$author$project$Components$DataEntry$withWarnings,
@@ -29988,6 +29988,9 @@ var $author$project$View$viewEventTable = F2(
 					A2($author$project$Components$DataEntry$optional, 'Link', event.N))
 				]));
 	});
+var $author$project$View$boolString = function (value) {
+	return value ? 'Ja' : 'Nein';
+};
 var $elm$core$String$fromFloat = _String_fromNumber;
 var $author$project$View$osmUrl = function (place) {
 	var _v0 = _Utils_Tuple2(place.bo, place.br);

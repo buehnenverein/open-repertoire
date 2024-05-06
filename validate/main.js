@@ -8682,7 +8682,6 @@ var $author$project$Data$Root$Event = function (atType) {
 		};
 	};
 };
-var $elm$json$Json$Decode$bool = _Json_decodeBool;
 var $author$project$Data$Root$EventType = 0;
 var $author$project$Data$Root$parseEventAttype = function (eventAttype) {
 	if (eventAttype === 'Event') {
@@ -8747,6 +8746,7 @@ var $author$project$Data$Root$WheelChairPlace = F3(
 	function (count, hasSpaceForAssistant, wheelchairUserCapacity) {
 		return {aU: count, a8: hasSpaceForAssistant, b7: wheelchairUserCapacity};
 	});
+var $elm$json$Json$Decode$bool = _Json_decodeBool;
 var $author$project$Data$Root$wheelChairPlaceDecoder = A4(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 	'wheelchairUserCapacity',
@@ -8967,7 +8967,7 @@ var $author$project$Data$Root$eventDecoder = A4(
 							A4(
 								$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 								'intermission',
-								$elm$json$Json$Decode$nullable($elm$json$Json$Decode$bool),
+								$elm$json$Json$Decode$nullable($elm$json$Json$Decode$int),
 								$elm$core$Maybe$Nothing,
 								A3(
 									$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,

@@ -201,9 +201,9 @@ definitions:
           example: 90
           minimum: 0
         intermission:
-          type: boolean
-          description: Indicates whether or not there will be an intermission during this event.
-          example: true
+            type: integer
+            example: 1
+            description: The number of intermissions during this event. Set to 0 or omit this field, if there is no intermission during this event. 
         url:
           type: string
           description: Link to further information about the event

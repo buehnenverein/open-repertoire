@@ -495,7 +495,8 @@ viewEventTable zone event =
         , Entry.optional "Dauer" event.duration
             |> Entry.withWarnings CustomValidations.duration
             |> Entry.map formatDuration
-        , Entry.optional "Mit Pause?" event.intermission |> Entry.map boolString
+        , Entry.optional "Mit Pause?" event.intermission
+            |> Entry.map intermissionCountToString
         , Entry.optional "Untertitel in" event.subtitleLanguage
             |> Entry.withWarnings CustomValidations.languageTagValid
         , Entry.required "Status" (eventStatusToString event.eventStatus)
@@ -509,6 +510,15 @@ viewEventTable zone event =
             |> asTime zone
         , Entry.optional "Link" event.url |> asLink Nothing
         ]
+
+
+intermissionCountToString : Int -> String
+intermissionCountToString intermissionCount =
+    if intermissionCount < 1 then
+        "Nein"
+
+    else
+        "Ja (" ++ String.fromInt intermissionCount ++ ")"
 
 
 eventStatusToString : Maybe EventEventStatus -> String
