@@ -62,6 +62,8 @@ type Msg
     | EventCardClicked Int Bool
     | NameFilterChanged String
     | ToggleWarningsFilter
+    | ExpandAllClicked
+    | CollapseAllClicked
 
 
 init : () -> ( Model, Cmd Msg )
@@ -127,6 +129,12 @@ update msg model =
 
         ToggleWarningsFilter ->
             ( { model | data = toggleWarningsFilter model.data }, Cmd.none )
+
+        ExpandAllClicked ->
+            ( { model | data = expandAll model.data }, Cmd.none )
+
+        CollapseAllClicked ->
+            ( { model | data = collapseAll model.data }, Cmd.none )
 
 
 fetchData : Model -> String -> ( Model, Cmd Msg )
@@ -204,9 +212,11 @@ viewJsonData data zone =
 
         viewProduction : Int -> Production -> Html Msg
         viewProduction index production =
-            div [ classList [ ( "is-hidden", not (isProductionVisible data production) ) ] ]
-                [ div [ class "sticky-header" ]
-                    [ h1 [ class "is-size-1" ] [ text production.name ]
+            div [ class "block mt-6", classList [ ( "is-hidden", not (isProductionVisible data production) ) ] ]
+                [ div [ class "hero is-dark is-small sticky-header" ]
+                    [ div [ class "hero-body" ]
+                        [ p [ class "title" ] [ text production.name ]
+                        ]
                     ]
                 , card (text "Info")
                     (productionGrid production)
@@ -219,8 +229,7 @@ viewJsonData data zone =
                 ]
     in
     section
-        [ div [ class "block" ] [ nameFilterInput data.nameFilter ]
-        , div [ class "block" ] [ warningsFilterButton data ]
+        [ controlBar data
         , div
             [ class "block" ]
             (data.root.productions
@@ -799,6 +808,31 @@ toggleWarningsFilter remoteData =
             remoteData
 
 
+expandAll : EventData -> EventData
+expandAll remoteData =
+    case remoteData of
+        Success data ->
+            Success { data | hiddenProductions = Set.empty, hiddenEvents = Set.empty }
+
+        _ ->
+            remoteData
+
+
+collapseAll : EventData -> EventData
+collapseAll remoteData =
+    case remoteData of
+        Success data ->
+            let
+                allIds =
+                    List.range 0 (List.length data.root.productions - 1)
+                        |> Set.fromList
+            in
+            Success { data | hiddenProductions = allIds, hiddenEvents = allIds }
+
+        _ ->
+            remoteData
+
+
 toggleProductionCard : EventData -> Int -> Bool -> EventData
 toggleProductionCard remoteData index isOpen =
     case ( remoteData, isOpen ) of
@@ -1023,19 +1057,53 @@ viewInput inputString buttonEnabled =
         ]
 
 
+controlBar : Data -> Html Msg
+controlBar data =
+    div
+        [ class "hero is-small is-dark control-bar" ]
+        [ div [ class "hero-body is-flex is-flex-direction-column" ]
+            [ nameFilterInput data.nameFilter
+            , div [ class "is-flex is-justify-content-space-between" ]
+                [ collapseExpandButtons
+                , viewProductionCount data
+                , warningsFilterButton data
+                ]
+            ]
+        ]
+
+
+viewProductionCount : Data -> Html Msg
+viewProductionCount data =
+    let
+        count =
+            List.length data.root.productions
+
+        visibleCount =
+            List.filter (isProductionVisible data) data.root.productions
+                |> List.length
+    in
+    text (String.fromInt visibleCount ++ " von " ++ String.fromInt count ++ " Produktionen werden angezeigt")
+
+
 nameFilterInput : String -> Html Msg
 nameFilterInput filter =
-    div [ class "field" ]
-        [ div [ class "label" ] [ text "Ergebnisse nach Titel filtern:" ]
-        , div [ class "control" ]
-            [ input
-                [ type_ "text"
-                , onInput NameFilterChanged
-                , value filter
-                , placeholder "Titel"
-                , class "input"
+    div [ class "field is-horizontal" ]
+        [ div [ class "field-label" ]
+            [ label [ class "label has-text-dark-invert" ] [ text "Ergebnisse nach Titel filtern:" ]
+            ]
+        , div [ class "field-body" ]
+            [ div [ class "field" ]
+                [ div [ class "control" ]
+                    [ input
+                        [ type_ "text"
+                        , onInput NameFilterChanged
+                        , value filter
+                        , placeholder "Titel"
+                        , class "input is-small"
+                        ]
+                        []
+                    ]
                 ]
-                []
             ]
         ]
 
@@ -1058,9 +1126,9 @@ warningsFilterButton data =
         text ""
 
     else
-        div [ class "buttons is-right" ]
+        div [ class "buttons" ]
             [ button
-                [ class "button is-warning"
+                [ class "button is-warning is-small"
                 , classList [ ( "is-outlined", not data.showOnlyWarning ) ]
                 , onClick ToggleWarningsFilter
                 ]
@@ -1069,8 +1137,23 @@ warningsFilterButton data =
             ]
 
 
+collapseExpandButtons : Html Msg
+collapseExpandButtons =
+    div [ class "buttons mb-0" ]
+        [ button
+            [ class "button is-primary is-small"
+            , onClick ExpandAllClicked
+            ]
+            [ text "Expand all" ]
+        , button
+            [ class "button is-primary is-small"
+            , onClick CollapseAllClicked
+            ]
+            [ text "Collapse all" ]
+        ]
 
--- DATA ENTRY
+
+
 -- SUBSCRIPTIONS
 
 
