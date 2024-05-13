@@ -475,7 +475,7 @@ production =
         , field "/events" .events (list event)
         , field "/events" .events (uniqueIdsFor "events")
         , field "/inLanguage" .inLanguage (maybe languageTagValid)
-        , field "/subtitle" .subtitle optional
+        , field "/alternateName" .alternateName optional
         , field "/abstract" .abstract optional
         , field "/name" .name required
         , abstractOrDescription

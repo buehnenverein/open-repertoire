@@ -157,6 +157,7 @@ type alias Production =
     , accessibilityHazard : Maybe (List AccessibilityHazardItem)
     , accessibilitySummary : Maybe String
     , additionalInfo : Maybe String
+    , alternateName : Maybe String
     , audience : Maybe Audience
     , creator : Maybe (List CreatorRole)
     , description : Maybe String
@@ -167,7 +168,6 @@ type alias Production =
     , inLanguage : Maybe String
     , name : String
     , sponsor : Maybe (List Organization)
-    , subtitle : Maybe String
     }
 
 
@@ -574,6 +574,7 @@ productionDecoder =
         |> optional "accessibilityHazard" (Decode.nullable accessibilityHazardDecoder) Nothing
         |> optional "accessibilitySummary" (Decode.nullable Decode.string) Nothing
         |> optional "additionalInfo" (Decode.nullable Decode.string) Nothing
+        |> optional "alternateName" (Decode.nullable Decode.string) Nothing
         |> optional "audience" (Decode.nullable audienceDecoder) Nothing
         |> optional "creator" (Decode.nullable creatorDecoder) Nothing
         |> optional "description" (Decode.nullable Decode.string) Nothing
@@ -584,7 +585,6 @@ productionDecoder =
         |> optional "inLanguage" (Decode.nullable Decode.string) Nothing
         |> required "name" Decode.string
         |> optional "sponsor" (Decode.nullable sponsorDecoder) Nothing
-        |> optional "subtitle" (Decode.nullable Decode.string) Nothing
 
 
 rootDecoder : Decoder Root
@@ -1166,6 +1166,7 @@ encodeProduction production =
         |> Encode.optional "accessibilityHazard" production.accessibilityHazard encodeAccessibilityHazard
         |> Encode.optional "accessibilitySummary" production.accessibilitySummary Encode.string
         |> Encode.optional "additionalInfo" production.additionalInfo Encode.string
+        |> Encode.optional "alternateName" production.alternateName Encode.string
         |> Encode.optional "audience" production.audience encodeAudience
         |> Encode.optional "creator" production.creator encodeCreator
         |> Encode.optional "description" production.description Encode.string
@@ -1176,7 +1177,6 @@ encodeProduction production =
         |> Encode.optional "inLanguage" production.inLanguage Encode.string
         |> Encode.required "name" production.name Encode.string
         |> Encode.optional "sponsor" production.sponsor encodeSponsor
-        |> Encode.optional "subtitle" production.subtitle Encode.string
         |> Encode.object
 
 

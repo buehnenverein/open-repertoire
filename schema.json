@@ -30,7 +30,7 @@
           "description": "The production's title.",
           "example": "Hedwig and the Angry Inch"
         },
-        "subtitle": {
+        "alternateName": {
           "type": "string",
           "description": "The production's optional subtitle.",
           "example": "US-amerikanisches Off-Broadway-Rock-Musical"

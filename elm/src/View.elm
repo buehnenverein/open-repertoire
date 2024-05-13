@@ -326,7 +326,7 @@ productionInfo production =
         , Entry.required "Titel" production.name
         , Entry.optional "Sprache" production.inLanguage
             |> Entry.withWarnings CustomValidations.languageTagValid
-        , Entry.optional "Untertitel" production.subtitle
+        , Entry.optional "Untertitel" production.alternateName
         , Entry.required "Beschreibung" production
             |> Entry.withWarnings CustomValidations.abstractOrDescription
             |> Entry.nested .description
