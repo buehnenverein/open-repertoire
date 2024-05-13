@@ -2,7 +2,7 @@ module View exposing (main)
 
 import Browser
 import Components.DataEntry as Entry exposing (asDate, asLink, asTime)
-import Data.Root exposing (CreatorEntry(..), CreatorRole, Event, EventEventStatus(..), LocationItem(..), Offer, Organization, PerformanceRole, Production, ProductionGenre, Root, rootDecoder)
+import Data.Root exposing (CreatorEntry(..), CreatorRole, Event, EventEventStatus(..), EventTypeItem(..), LocationItem(..), Offer, Organization, PerformanceRole, Production, ProductionGenre, ProductionProductionType(..), Root, rootDecoder)
 import Helper.CustomValidations as CustomValidations
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -333,6 +333,7 @@ productionInfo production =
         , Entry.optional "Kurzbeschreibung" production.abstract
         , Entry.optional "Zusätzliche Informationen" production.additionalInfo
         , Entry.optional "Genre" production.genre |> Entry.map humanReadableGenre
+        , Entry.optional "Produktionstyp" production.productionType |> Entry.map humanReadableProductionType
         ]
 
 
@@ -353,6 +354,19 @@ humanReadableGenre genre =
         |> String.split "-"
         |> List.map firstToUpper
         |> String.join " "
+
+
+humanReadableProductionType : ProductionProductionType -> String
+humanReadableProductionType productionType =
+    case productionType of
+        WorldPremiereProduction ->
+            "Uraufführung"
+
+        FirstPerformanceProduction ->
+            "Erstaufführung"
+
+        RevivalProduction ->
+            "Wiederaufnahme"
 
 
 viewProductionAudience : Production -> Html Msg
@@ -506,6 +520,8 @@ viewEventTable zone event =
             |> Entry.map formatDuration
         , Entry.optional "Mit Pause?" event.intermission
             |> Entry.map intermissionCountToString
+        , Entry.optional "Veranstaltungstyp" event.eventType
+            |> Entry.map humanReadableEventTypes
         , Entry.optional "Untertitel in" event.subtitleLanguage
             |> Entry.withWarnings CustomValidations.languageTagValid
         , Entry.required "Status" (eventStatusToString event.eventStatus)
@@ -519,6 +535,24 @@ viewEventTable zone event =
             |> asTime zone
         , Entry.optional "Link" event.url |> asLink Nothing
         ]
+
+
+humanReadableEventTypes : List EventTypeItem -> String
+humanReadableEventTypes eventTypes =
+    let
+        translation eventType =
+            case eventType of
+                PremiereEventType ->
+                    "Premiere"
+
+                LastShowEventType ->
+                    "Derniere"
+
+                GuestPerformanceEventType ->
+                    "Gastspiel"
+    in
+    List.map translation eventTypes
+        |> String.join ", "
 
 
 intermissionCountToString : Int -> String
