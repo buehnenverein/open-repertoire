@@ -79,6 +79,12 @@ definitions:
             - workshop
             - zeitgenoessischer-tanz
           example: "musical"
+        productionType:
+          type: string
+          enum:
+            - WorldPremiere
+            - FirstPerformance
+            - Revival
         accessModeSufficient:
           type: array
           description: A list of single or combined accessModes that are sufficient to understand all the intellectual content of this production.
@@ -237,6 +243,14 @@ definitions:
           description: A list of offers for this event, i.e. information about prices, tickets, etc.
           items:
             $ref: "#/definitions/Offer"
+        eventType:
+          type: array
+          items:
+            type: string
+            enum:
+              - Premiere
+              - LastShow
+              - GuestPerformance
         eventStatus:
           type: string
           description: |-

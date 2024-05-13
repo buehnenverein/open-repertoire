@@ -91,6 +91,7 @@ type alias Event =
     , duration : Maybe Int
     , endDate : Maybe String
     , eventStatus : Maybe EventEventStatus
+    , eventType : Maybe (List EventTypeItem)
     , identifier : String
     , intermission : Maybe Int
     , location : Maybe (List LocationItem)
@@ -167,6 +168,7 @@ type alias Production =
     , identifier : String
     , inLanguage : Maybe String
     , name : String
+    , productionType : Maybe ProductionProductionType
     , sponsor : Maybe (List Organization)
     }
 
@@ -222,6 +224,12 @@ type EventEventStatus
     | EventRescheduledEvent
 
 
+type EventTypeItem
+    = PremiereEventType
+    | LastShowEventType
+    | GuestPerformanceEventType
+
+
 type ProductionGenre
     = AudiowalkProduction
     | BallettProduction
@@ -266,6 +274,12 @@ type alias PriceSpecification =
     , minPrice : Float
     , priceCurrency : String
     }
+
+
+type ProductionProductionType
+    = WorldPremiereProduction
+    | FirstPerformanceProduction
+    | RevivalProduction
 
 
 type Version
@@ -501,6 +515,7 @@ eventDecoder =
         |> optional "duration" (Decode.nullable Decode.int) Nothing
         |> optional "endDate" (Decode.nullable Decode.string) Nothing
         |> optional "eventStatus" (Decode.nullable eventEventStatusDecoder) Nothing
+        |> optional "eventType" (Decode.nullable eventTypeDecoder) Nothing
         |> required "identifier" Decode.string
         |> optional "intermission" (Decode.nullable Decode.int) Nothing
         |> optional "location" (Decode.nullable locationDecoder) Nothing
@@ -584,6 +599,7 @@ productionDecoder =
         |> required "identifier" Decode.string
         |> optional "inLanguage" (Decode.nullable Decode.string) Nothing
         |> required "name" Decode.string
+        |> optional "productionType" (Decode.nullable productionProductionTypeDecoder) Nothing
         |> optional "sponsor" (Decode.nullable sponsorDecoder) Nothing
 
 
@@ -721,6 +737,32 @@ parseEventEventStatus eventEventStatus =
 
         _ ->
             Err <| "Unknown eventEventStatus type: " ++ eventEventStatus
+
+
+eventTypeDecoder : Decoder (List EventTypeItem)
+eventTypeDecoder =
+    Decode.list eventTypeItemDecoder
+
+
+eventTypeItemDecoder : Decoder EventTypeItem
+eventTypeItemDecoder =
+    Decode.string |> Decode.andThen (parseEventTypeItem >> Decode.fromResult)
+
+
+parseEventTypeItem : String -> Result String EventTypeItem
+parseEventTypeItem eventTypeItem =
+    case eventTypeItem of
+        "Premiere" ->
+            Ok PremiereEventType
+
+        "LastShow" ->
+            Ok LastShowEventType
+
+        "GuestPerformance" ->
+            Ok GuestPerformanceEventType
+
+        _ ->
+            Err <| "Unknown eventTypeItem type: " ++ eventTypeItem
 
 
 eventsDecoder : Decoder (List Event)
@@ -864,6 +906,27 @@ priceSpecificationDecoder =
         |> optional "maxPrice" (Decode.nullable Decode.float) Nothing
         |> required "minPrice" Decode.float
         |> required "priceCurrency" Decode.string
+
+
+productionProductionTypeDecoder : Decoder ProductionProductionType
+productionProductionTypeDecoder =
+    Decode.string |> Decode.andThen (parseProductionProductionType >> Decode.fromResult)
+
+
+parseProductionProductionType : String -> Result String ProductionProductionType
+parseProductionProductionType productionProductionType =
+    case productionProductionType of
+        "WorldPremiere" ->
+            Ok WorldPremiereProduction
+
+        "FirstPerformance" ->
+            Ok FirstPerformanceProduction
+
+        "Revival" ->
+            Ok RevivalProduction
+
+        _ ->
+            Err <| "Unknown productionProductionType type: " ++ productionProductionType
 
 
 productionsDecoder : Decoder (List Production)
@@ -1086,6 +1149,7 @@ encodeEvent event =
         |> Encode.optional "duration" event.duration Encode.int
         |> Encode.optional "endDate" event.endDate Encode.string
         |> Encode.optional "eventStatus" event.eventStatus encodeEventEventStatus
+        |> Encode.optional "eventType" event.eventType encodeEventType
         |> Encode.required "identifier" event.identifier Encode.string
         |> Encode.optional "intermission" event.intermission Encode.int
         |> Encode.optional "location" event.location encodeLocation
@@ -1176,6 +1240,7 @@ encodeProduction production =
         |> Encode.required "identifier" production.identifier Encode.string
         |> Encode.optional "inLanguage" production.inLanguage Encode.string
         |> Encode.required "name" production.name Encode.string
+        |> Encode.optional "productionType" production.productionType encodeProductionProductionType
         |> Encode.optional "sponsor" production.sponsor encodeSponsor
         |> Encode.object
 
@@ -1311,6 +1376,30 @@ eventEventStatusToString eventEventStatus =
 
         EventRescheduledEvent ->
             "EventRescheduled"
+
+
+encodeEventType : List EventTypeItem -> Value
+encodeEventType eventType =
+    eventType
+        |> Encode.list encodeEventTypeItem
+
+
+encodeEventTypeItem : EventTypeItem -> Value
+encodeEventTypeItem eventTypeItem =
+    eventTypeItem |> eventTypeItemToString |> Encode.string
+
+
+eventTypeItemToString : EventTypeItem -> String
+eventTypeItemToString eventTypeItem =
+    case eventTypeItem of
+        PremiereEventType ->
+            "Premiere"
+
+        LastShowEventType ->
+            "LastShow"
+
+        GuestPerformanceEventType ->
+            "GuestPerformance"
 
 
 encodeEvents : List Event -> Value
@@ -1460,6 +1549,24 @@ encodePriceSpecification priceSpecification =
         |> Encode.required "minPrice" priceSpecification.minPrice Encode.float
         |> Encode.required "priceCurrency" priceSpecification.priceCurrency Encode.string
         |> Encode.object
+
+
+encodeProductionProductionType : ProductionProductionType -> Value
+encodeProductionProductionType productionProductionType =
+    productionProductionType |> productionProductionTypeToString |> Encode.string
+
+
+productionProductionTypeToString : ProductionProductionType -> String
+productionProductionTypeToString productionProductionType =
+    case productionProductionType of
+        WorldPremiereProduction ->
+            "WorldPremiere"
+
+        FirstPerformanceProduction ->
+            "FirstPerformance"
+
+        RevivalProduction ->
+            "Revival"
 
 
 encodeProductions : List Production -> Value
