@@ -477,16 +477,16 @@ viewSponsor organization =
 
 viewEvents : List Event -> Entry.ZoneWithName -> List (Html Msg)
 viewEvents events zone =
-    List.map (viewEvent zone) events
+    List.map (viewEvent zone events) events
         |> List.intersperse (hr [ class "has-background-grey-light mb-6 mt-6" ] [])
 
 
-viewEvent : Entry.ZoneWithName -> Event -> Html Msg
-viewEvent zone event =
+viewEvent : Entry.ZoneWithName -> List Event -> Event -> Html Msg
+viewEvent zone allEvents event =
     div [ class "fixed-grid has-2-cols" ]
         [ div [ class "grid" ]
             [ div [ class "cell box mb-0 is-col-span-2 is-col-span-1-widescreen" ]
-                [ viewEventTable zone event
+                [ viewEventTable zone allEvents event
                 ]
             , div [ class "cell box mb-0 is-col-span-2 is-col-span-1-widescreen" ]
                 [ viewLocations event.location
@@ -501,8 +501,8 @@ viewEvent zone event =
         ]
 
 
-viewEventTable : Entry.ZoneWithName -> Event -> Html Msg
-viewEventTable zone event =
+viewEventTable : Entry.ZoneWithName -> List Event -> Event -> Html Msg
+viewEventTable zone allEvents event =
     Entry.view
         [ Entry.required "ID" event.identifier
         , Entry.required "Startdatum" event
@@ -520,7 +520,10 @@ viewEventTable zone event =
             |> Entry.map formatDuration
         , Entry.optional "Mit Pause?" event.intermission
             |> Entry.map intermissionCountToString
-        , Entry.optional "Veranstaltungstyp" event.eventType
+        , Entry.required "Veranstaltungstyp" event
+            |> Entry.withWarnings (CustomValidations.validPremiere allEvents)
+            |> Entry.withWarnings (CustomValidations.validDerniere allEvents)
+            |> Entry.nested .eventType
             |> Entry.map humanReadableEventTypes
         , Entry.optional "Untertitel in" event.subtitleLanguage
             |> Entry.withWarnings CustomValidations.languageTagValid

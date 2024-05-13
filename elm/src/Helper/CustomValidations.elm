@@ -1,4 +1,4 @@
-module Helper.CustomValidations exposing (MessageType(..), ValidationMessage, Validator, abstractOrDescription, checkAll, duration, eventStatusAndDate, languageTagValid, minMaxAge, minMaxPrice, production, startAndEndDates, viewerMessage)
+module Helper.CustomValidations exposing (MessageType(..), ValidationMessage, Validator, abstractOrDescription, checkAll, duration, eventStatusAndDate, languageTagValid, minMaxAge, minMaxPrice, production, startAndEndDates, validDerniere, validPremiere, viewerMessage)
 
 import Data.Root
     exposing
@@ -7,6 +7,7 @@ import Data.Root
         , CreatorRole
         , Event
         , EventEventStatus(..)
+        , EventTypeItem(..)
         , LocationItem(..)
         , Offer
         , Organization
@@ -195,6 +196,72 @@ uniqueIdsFor name path data =
         )
         data
         |> List.filterMap identity
+
+
+premiereValid : Validator (List Event)
+premiereValid path events =
+    list (validPremiere events)
+        |> check events path
+
+
+validPremiere : List Event -> Validator Event
+validPremiere allEvents path data =
+    let
+        isPremiere ev =
+            case ev.eventType of
+                Just types ->
+                    List.member PremiereEventType types
+
+                Nothing ->
+                    False
+
+        isFirst ev =
+            List.all
+                (\other ->
+                    other == ev || other.startDate > ev.startDate
+                )
+                allEvents
+    in
+    if isPremiere data && not (isFirst data) then
+        [ warning path "is labeled as the premiere, but it doesn't seem to be the first performance of this production"
+            |> forView "Diese Aufführung ist als Premiere gekennzeichnet, obwohl es Aufführungen gibt, die früher stattfinden."
+        ]
+
+    else
+        []
+
+
+derniereValid : Validator (List Event)
+derniereValid path events =
+    list (validDerniere events)
+        |> check events path
+
+
+validDerniere : List Event -> Validator Event
+validDerniere allEvents path data =
+    let
+        isDerniere ev =
+            case ev.eventType of
+                Just types ->
+                    List.member LastShowEventType types
+
+                Nothing ->
+                    False
+
+        isLast ev =
+            List.all
+                (\other ->
+                    other == ev || other.startDate < ev.startDate
+                )
+                allEvents
+    in
+    if isDerniere data && not (isLast data) then
+        [ warning path "is labeled as the last show, but it doesn't seem to be the last performance of this production"
+            |> forView "Diese Aufführung ist als Derniere gekennzeichnet, obwohl es Aufführungen gibt, die später stattfinden."
+        ]
+
+    else
+        []
 
 
 duration : Validator Int
@@ -474,6 +541,8 @@ production =
         , field "/description" .description optional
         , field "/events" .events (list event)
         , field "/events" .events (uniqueIdsFor "events")
+        , field "/events" .events premiereValid
+        , field "/events" .events derniereValid
         , field "/inLanguage" .inLanguage (maybe languageTagValid)
         , field "/subtitle" .subtitle optional
         , field "/abstract" .abstract optional
