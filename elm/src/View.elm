@@ -329,6 +329,7 @@ productionInfo production =
         , Entry.optional "Untertitel" production.subtitle
         , Entry.required "Beschreibung" production
             |> Entry.withWarnings CustomValidations.abstractOrDescription
+            |> Entry.withWarnings CustomValidations.abstractDifferentFromDescription
             |> Entry.nested .description
         , Entry.required "Kurzbeschreibung" production
             |> Entry.withWarnings CustomValidations.abstractDifferentFromDescription

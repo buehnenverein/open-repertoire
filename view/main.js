@@ -29730,8 +29730,11 @@ var $author$project$View$productionInfo = function (production) {
 				},
 				A2(
 					$author$project$Components$DataEntry$withWarnings,
-					$author$project$Helper$CustomValidations$abstractOrDescription,
-					A2($author$project$Components$DataEntry$required, 'Beschreibung', production))),
+					$author$project$Helper$CustomValidations$abstractDifferentFromDescription,
+					A2(
+						$author$project$Components$DataEntry$withWarnings,
+						$author$project$Helper$CustomValidations$abstractOrDescription,
+						A2($author$project$Components$DataEntry$required, 'Beschreibung', production)))),
 				A2(
 				$author$project$Components$DataEntry$nested,
 				function ($) {
