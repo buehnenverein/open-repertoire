@@ -1,4 +1,4 @@
-module Helper.CustomValidations exposing (MessageType(..), ValidationMessage, Validator, abstractOrDescription, checkAll, duration, eventStatusAndDate, languageTagValid, minMaxAge, minMaxPrice, production, startAndEndDates, validDerniere, validPremiere, viewerMessage)
+module Helper.CustomValidations exposing (MessageType(..), ValidationMessage, Validator, abstractDifferentFromDescription, abstractOrDescription, checkAll, duration, eventStatusAndDate, languageTagValid, minMaxAge, minMaxPrice, production, startAndEndDates, validDerniere, validPremiere, viewerMessage)
 
 import Data.Root
     exposing
@@ -317,6 +317,26 @@ abstractOrDescription path data =
         []
 
 
+abstractDifferentFromDescription : Validator Production
+abstractDifferentFromDescription path data =
+    let
+        sameText text1 text2 =
+            String.trim text1 == String.trim text2 && not (isEmptyString text1)
+    in
+    case ( data.description, data.abstract ) of
+        ( Just description, Just abstract ) ->
+            if sameText description abstract then
+                [ warning (path ++ "/abstract") "is the same"
+                    |> forView "Kurzbeschreibung und Beschreibung enthalten den selben Text. Vermeiden Sie es, Ihre Beschreibungstexte zu doppeln."
+                ]
+
+            else
+                []
+
+        _ ->
+            []
+
+
 eventStatusAndDate : Validator Event
 eventStatusAndDate =
     object
@@ -548,6 +568,7 @@ production =
         , field "/abstract" .abstract optional
         , field "/name" .name required
         , abstractOrDescription
+        , abstractDifferentFromDescription
         ]
 
 
@@ -610,4 +631,4 @@ elementCount element all =
 
 isEmptyString : String -> Bool
 isEmptyString string =
-    String.trim string == ""
+    String.isEmpty (String.trim string)

@@ -330,7 +330,9 @@ productionInfo production =
         , Entry.required "Beschreibung" production
             |> Entry.withWarnings CustomValidations.abstractOrDescription
             |> Entry.nested .description
-        , Entry.optional "Kurzbeschreibung" production.abstract
+        , Entry.required "Kurzbeschreibung" production
+            |> Entry.withWarnings CustomValidations.abstractDifferentFromDescription
+            |> Entry.nested .abstract
         , Entry.optional "Zusätzliche Informationen" production.additionalInfo
         , Entry.optional "Genre" production.genre |> Entry.map humanReadableGenre
         , Entry.optional "Produktionstyp" production.productionType |> Entry.map humanReadableProductionType

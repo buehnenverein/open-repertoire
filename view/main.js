@@ -26371,12 +26371,36 @@ var $author$project$Helper$CustomValidations$forView = F2(
 	});
 var $elm$core$String$trim = _String_trim;
 var $author$project$Helper$CustomValidations$isEmptyString = function (string) {
-	return $elm$core$String$trim(string) === '';
+	return $elm$core$String$isEmpty(
+		$elm$core$String$trim(string));
 };
 var $author$project$Helper$CustomValidations$Warning = 0;
 var $author$project$Helper$CustomValidations$warning = F2(
 	function (path, msg) {
 		return {ar: 0, as: msg, T: $elm$core$Maybe$Nothing, av: path};
+	});
+var $author$project$Helper$CustomValidations$abstractDifferentFromDescription = F2(
+	function (path, data) {
+		var sameText = F2(
+			function (text1, text2) {
+				return _Utils_eq(
+					$elm$core$String$trim(text1),
+					$elm$core$String$trim(text2)) && (!$author$project$Helper$CustomValidations$isEmptyString(text1));
+			});
+		var _v0 = _Utils_Tuple2(data.a$, data.aK);
+		if ((!_v0.a.$) && (!_v0.b.$)) {
+			var description = _v0.a.a;
+			var _abstract = _v0.b.a;
+			return A2(sameText, description, _abstract) ? _List_fromArray(
+				[
+					A2(
+					$author$project$Helper$CustomValidations$forView,
+					'Kurzbeschreibung und Beschreibung enthalten den selben Text. Vermeiden Sie es, Ihre Beschreibungstexte zu doppeln.',
+					A2($author$project$Helper$CustomValidations$warning, path + '/abstract', 'is the same'))
+				]) : _List_Nil;
+		} else {
+			return _List_Nil;
+		}
 	});
 var $elm$core$Maybe$withDefault = F2(
 	function (_default, maybe) {
@@ -28342,7 +28366,8 @@ var $author$project$Helper$CustomValidations$production = $author$project$Helper
 				return $.K;
 			},
 			$author$project$Helper$CustomValidations$required),
-			$author$project$Helper$CustomValidations$abstractOrDescription
+			$author$project$Helper$CustomValidations$abstractOrDescription,
+			$author$project$Helper$CustomValidations$abstractDifferentFromDescription
 		]));
 var $author$project$Helper$CustomValidations$viewerMessage = function (msg) {
 	return msg.T;
@@ -29707,7 +29732,15 @@ var $author$project$View$productionInfo = function (production) {
 					$author$project$Components$DataEntry$withWarnings,
 					$author$project$Helper$CustomValidations$abstractOrDescription,
 					A2($author$project$Components$DataEntry$required, 'Beschreibung', production))),
-				A2($author$project$Components$DataEntry$optional, 'Kurzbeschreibung', production.aK),
+				A2(
+				$author$project$Components$DataEntry$nested,
+				function ($) {
+					return $.aK;
+				},
+				A2(
+					$author$project$Components$DataEntry$withWarnings,
+					$author$project$Helper$CustomValidations$abstractDifferentFromDescription,
+					A2($author$project$Components$DataEntry$required, 'Kurzbeschreibung', production))),
 				A2($author$project$Components$DataEntry$optional, 'Zusätzliche Informationen', production.aP),
 				A2(
 				$author$project$Components$DataEntry$map,
