@@ -59,12 +59,15 @@ jobs:
           mkdir public
           cd public
 
-          # Index 0 is the release branch
-          mv ../branches/0/* ./
-
           # Index 1 is the release-v2 branch
           mkdir -p v2
           mv ../branches/1/* ./v2
+          cp -R ./v2/* ./
+
+          # Index 0 is the release branch
+          mkdir -p v1
+          mv ../branches/0/* ./v1
+
 
           ls -lR
       - name: Upload artifact
