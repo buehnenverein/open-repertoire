@@ -447,6 +447,8 @@ definitions:
       additionalProperties: false
       required:
         - "@type"
+        - postalCode
+        - addressLocality
       properties:
         "@type":
           type: string

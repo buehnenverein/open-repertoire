@@ -575,8 +575,8 @@ production =
 address : Validator PostalAddress
 address =
     object
-        [ field "/addressLocality" .addressLocality optional
-        , field "/postalCode" .postalCode optional
+        [ field "/addressLocality" .addressLocality required
+        , field "/postalCode" .postalCode required
         , field "/streetAddress" .streetAddress optional
         ]
 

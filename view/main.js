@@ -24808,16 +24808,14 @@ var $author$project$Data$Root$postalAddressDecoder = A4(
 	'streetAddress',
 	$elm$json$Json$Decode$nullable($elm$json$Json$Decode$string),
 	$elm$core$Maybe$Nothing,
-	A4(
-		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+	A3(
+		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 		'postalCode',
-		$elm$json$Json$Decode$nullable($elm$json$Json$Decode$string),
-		$elm$core$Maybe$Nothing,
-		A4(
-			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+		$elm$json$Json$Decode$string,
+		A3(
+			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 			'addressLocality',
-			$elm$json$Json$Decode$nullable($elm$json$Json$Decode$string),
-			$elm$core$Maybe$Nothing,
+			$elm$json$Json$Decode$string,
 			A3(
 				$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 				'@type',
@@ -26486,6 +26484,13 @@ var $author$project$Helper$CustomValidations$audience = $author$project$Helper$C
 			$author$project$Helper$CustomValidations$optional),
 			$author$project$Helper$CustomValidations$minMaxAge
 		]));
+var $author$project$Helper$CustomValidations$required = F2(
+	function (path, value) {
+		return $author$project$Helper$CustomValidations$isEmptyString(value) ? _List_fromArray(
+			[
+				A2($author$project$Helper$CustomValidations$warning, path, 'is a required text field, but you provided an empty value')
+			]) : _List_Nil;
+	});
 var $author$project$Helper$CustomValidations$address = $author$project$Helper$CustomValidations$object(
 	_List_fromArray(
 		[
@@ -26495,14 +26500,14 @@ var $author$project$Helper$CustomValidations$address = $author$project$Helper$Cu
 			function ($) {
 				return $.aQ;
 			},
-			$author$project$Helper$CustomValidations$optional),
+			$author$project$Helper$CustomValidations$required),
 			A3(
 			$author$project$Helper$CustomValidations$field,
 			'/postalCode',
 			function ($) {
 				return $.bD;
 			},
-			$author$project$Helper$CustomValidations$optional),
+			$author$project$Helper$CustomValidations$required),
 			A3(
 			$author$project$Helper$CustomValidations$field,
 			'/streetAddress',
@@ -26519,13 +26524,6 @@ var $author$project$Helper$CustomValidations$maybe = F3(
 		} else {
 			return _List_Nil;
 		}
-	});
-var $author$project$Helper$CustomValidations$required = F2(
-	function (path, value) {
-		return $author$project$Helper$CustomValidations$isEmptyString(value) ? _List_fromArray(
-			[
-				A2($author$project$Helper$CustomValidations$warning, path, 'is a required text field, but you provided an empty value')
-			]) : _List_Nil;
 	});
 var $author$project$Helper$CustomValidations$organization = $author$project$Helper$CustomValidations$object(
 	_List_fromArray(
@@ -29859,13 +29857,13 @@ var $author$project$View$viewFunder = function (organization) {
 				},
 				A2($author$project$Components$DataEntry$optional, 'Addresse', organization.Z)),
 				A2(
-				$author$project$Components$DataEntry$nested,
+				$author$project$Components$DataEntry$map,
 				function ($) {
 					return $.bD;
 				},
 				A2($author$project$Components$DataEntry$optional, 'Postleitzahl', organization.Z)),
 				A2(
-				$author$project$Components$DataEntry$nested,
+				$author$project$Components$DataEntry$map,
 				function ($) {
 					return $.aQ;
 				},
@@ -30070,13 +30068,13 @@ var $author$project$View$viewSponsor = function (organization) {
 				},
 				A2($author$project$Components$DataEntry$optional, 'Addresse', organization.Z)),
 				A2(
-				$author$project$Components$DataEntry$nested,
+				$author$project$Components$DataEntry$map,
 				function ($) {
 					return $.bD;
 				},
 				A2($author$project$Components$DataEntry$optional, 'Postleitzahl', organization.Z)),
 				A2(
-				$author$project$Components$DataEntry$nested,
+				$author$project$Components$DataEntry$map,
 				function ($) {
 					return $.aQ;
 				},
@@ -30416,8 +30414,8 @@ var $author$project$View$locationTable = function (location) {
 				[
 					A2($author$project$Components$DataEntry$optional, 'Name', place.K),
 					A2($author$project$Components$DataEntry$optional, 'Addresse', place.Z.b0),
-					A2($author$project$Components$DataEntry$optional, 'Postleitzahl', place.Z.bD),
-					A2($author$project$Components$DataEntry$optional, 'Stadt', place.Z.aQ),
+					A2($author$project$Components$DataEntry$required, 'Postleitzahl', place.Z.bD),
+					A2($author$project$Components$DataEntry$required, 'Stadt', place.Z.aQ),
 					A2(
 					$author$project$Components$DataEntry$asLink,
 					$elm$core$Maybe$Just('Karte anzeigen'),

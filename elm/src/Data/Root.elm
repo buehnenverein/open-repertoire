@@ -145,8 +145,8 @@ type alias Place =
 
 type alias PostalAddress =
     { atType : PostalAddressAttype
-    , addressLocality : Maybe String
-    , postalCode : Maybe String
+    , addressLocality : String
+    , postalCode : String
     , streetAddress : Maybe String
     }
 
@@ -575,8 +575,8 @@ postalAddressDecoder : Decoder PostalAddress
 postalAddressDecoder =
     Decode.succeed PostalAddress
         |> required "@type" postalAddressAttypeDecoder
-        |> optional "addressLocality" (Decode.nullable Decode.string) Nothing
-        |> optional "postalCode" (Decode.nullable Decode.string) Nothing
+        |> required "addressLocality" Decode.string
+        |> required "postalCode" Decode.string
         |> optional "streetAddress" (Decode.nullable Decode.string) Nothing
 
 
@@ -1215,8 +1215,8 @@ encodePostalAddress : PostalAddress -> Value
 encodePostalAddress postalAddress =
     []
         |> Encode.required "@type" postalAddress.atType encodePostalAddressAttype
-        |> Encode.optional "addressLocality" postalAddress.addressLocality Encode.string
-        |> Encode.optional "postalCode" postalAddress.postalCode Encode.string
+        |> Encode.required "addressLocality" postalAddress.addressLocality Encode.string
+        |> Encode.required "postalCode" postalAddress.postalCode Encode.string
         |> Encode.optional "streetAddress" postalAddress.streetAddress Encode.string
         |> Encode.object
 

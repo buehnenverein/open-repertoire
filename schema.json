@@ -495,7 +495,9 @@
       "description": "The address of e.g. an organization or event location.",
       "additionalProperties": false,
       "required": [
-        "@type"
+        "@type",
+        "postalCode",
+        "addressLocality"
       ],
       "properties": {
         "@type": {

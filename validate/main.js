@@ -6398,6 +6398,13 @@ var $author$project$Helper$CustomValidations$optional = F2(
 			return _List_Nil;
 		}
 	});
+var $author$project$Helper$CustomValidations$required = F2(
+	function (path, value) {
+		return $author$project$Helper$CustomValidations$isEmptyString(value) ? _List_fromArray(
+			[
+				A2($author$project$Helper$CustomValidations$warning, path, 'is a required text field, but you provided an empty value')
+			]) : _List_Nil;
+	});
 var $author$project$Helper$CustomValidations$address = $author$project$Helper$CustomValidations$object(
 	_List_fromArray(
 		[
@@ -6407,14 +6414,14 @@ var $author$project$Helper$CustomValidations$address = $author$project$Helper$Cu
 			function ($) {
 				return $.aM;
 			},
-			$author$project$Helper$CustomValidations$optional),
+			$author$project$Helper$CustomValidations$required),
 			A3(
 			$author$project$Helper$CustomValidations$field,
 			'/postalCode',
 			function ($) {
 				return $.bz;
 			},
-			$author$project$Helper$CustomValidations$optional),
+			$author$project$Helper$CustomValidations$required),
 			A3(
 			$author$project$Helper$CustomValidations$field,
 			'/streetAddress',
@@ -6431,13 +6438,6 @@ var $author$project$Helper$CustomValidations$maybe = F3(
 		} else {
 			return _List_Nil;
 		}
-	});
-var $author$project$Helper$CustomValidations$required = F2(
-	function (path, value) {
-		return $author$project$Helper$CustomValidations$isEmptyString(value) ? _List_fromArray(
-			[
-				A2($author$project$Helper$CustomValidations$warning, path, 'is a required text field, but you provided an empty value')
-			]) : _List_Nil;
 	});
 var $author$project$Helper$CustomValidations$organization = $author$project$Helper$CustomValidations$object(
 	_List_fromArray(
@@ -8526,16 +8526,14 @@ var $author$project$Data$Root$postalAddressDecoder = A4(
 	'streetAddress',
 	$elm$json$Json$Decode$nullable($elm$json$Json$Decode$string),
 	$elm$core$Maybe$Nothing,
-	A4(
-		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+	A3(
+		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 		'postalCode',
-		$elm$json$Json$Decode$nullable($elm$json$Json$Decode$string),
-		$elm$core$Maybe$Nothing,
-		A4(
-			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+		$elm$json$Json$Decode$string,
+		A3(
+			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 			'addressLocality',
-			$elm$json$Json$Decode$nullable($elm$json$Json$Decode$string),
-			$elm$core$Maybe$Nothing,
+			$elm$json$Json$Decode$string,
 			A3(
 				$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 				'@type',

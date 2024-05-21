@@ -444,8 +444,8 @@ viewFunder organization =
     Entry.view
         [ Entry.required "Name" organization.name
         , Entry.optional "Addresse" organization.address |> Entry.nested .streetAddress
-        , Entry.optional "Postleitzahl" organization.address |> Entry.nested .postalCode
-        , Entry.optional "Stadt" organization.address |> Entry.nested .addressLocality
+        , Entry.optional "Postleitzahl" organization.address |> Entry.map .postalCode
+        , Entry.optional "Stadt" organization.address |> Entry.map .addressLocality
         , Entry.optional "Logo" organization.logo |> asLink (Just "Link")
         ]
 
@@ -468,8 +468,8 @@ viewSponsor organization =
     Entry.view
         [ Entry.required "Name" organization.name
         , Entry.optional "Addresse" organization.address |> Entry.nested .streetAddress
-        , Entry.optional "Postleitzahl" organization.address |> Entry.nested .postalCode
-        , Entry.optional "Stadt" organization.address |> Entry.nested .addressLocality
+        , Entry.optional "Postleitzahl" organization.address |> Entry.map .postalCode
+        , Entry.optional "Stadt" organization.address |> Entry.map .addressLocality
         , Entry.optional "Logo" organization.logo |> asLink (Just "Link")
         ]
 
@@ -643,8 +643,8 @@ locationTable location =
             Entry.view
                 [ Entry.optional "Name" place.name
                 , Entry.optional "Addresse" place.address.streetAddress
-                , Entry.optional "Postleitzahl" place.address.postalCode
-                , Entry.optional "Stadt" place.address.addressLocality
+                , Entry.required "Postleitzahl" place.address.postalCode
+                , Entry.required "Stadt" place.address.addressLocality
                 , Entry.required "Koordinaten" place
                     |> Entry.nested osmUrl
                     |> asLink (Just "Karte anzeigen")
