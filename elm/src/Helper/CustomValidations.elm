@@ -613,6 +613,7 @@ virtualLocation =
     object
         [ field "/name" .name optional
         , field "/url" .url optional
+        , field "/description" .description optional
         ]
 
 

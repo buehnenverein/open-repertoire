@@ -470,7 +470,9 @@ definitions:
     VirtualLocation:
       type: object
       additionalProperties: false
-      description: The virtual location of an online or hybrid event
+      description: |- 
+        If this event is taking place online (or both online and offline), a VirtualLocation specifies how to
+        participate in the online event.
       required:
         - "@type"
       properties:
@@ -487,7 +489,15 @@ definitions:
         url:
           type: string
           format: uri
-          description: The event's URL, if this is an online or hybrid event
+          description: |-
+            The virtual location's URL. This should be the link that is used to participate in the event
+            (e.g. a link to join an online meeting) or a link that lets the user sign up to attend the event.
+        description:
+          type: string
+          description: |-
+            A description of the virtual location. This field can also be used to provide additional information
+            on how to attend this event.
+          example: Information on how to join the Online-Event will be provided two days before the event via e-mail.
 
     WheelChairPlace:
       type: object

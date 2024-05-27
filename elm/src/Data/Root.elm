@@ -183,6 +183,7 @@ type alias Root =
 
 type alias VirtualLocation =
     { atType : VirtualLocationAttype
+    , description : Maybe String
     , name : Maybe String
     , url : Maybe String
     }
@@ -616,6 +617,7 @@ virtualLocationDecoder : Decoder VirtualLocation
 virtualLocationDecoder =
     Decode.succeed VirtualLocation
         |> required "@type" virtualLocationAttypeDecoder
+        |> optional "description" (Decode.nullable Decode.string) Nothing
         |> optional "name" (Decode.nullable Decode.string) Nothing
         |> optional "url" (Decode.nullable Decode.string) Nothing
 
@@ -1259,6 +1261,7 @@ encodeVirtualLocation : VirtualLocation -> Value
 encodeVirtualLocation virtualLocation =
     []
         |> Encode.required "@type" virtualLocation.atType encodeVirtualLocationAttype
+        |> Encode.optional "description" virtualLocation.description Encode.string
         |> Encode.optional "name" virtualLocation.name Encode.string
         |> Encode.optional "url" virtualLocation.url Encode.string
         |> Encode.object

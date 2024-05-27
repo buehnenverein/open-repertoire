@@ -663,6 +663,7 @@ locationTable location =
             Entry.view
                 [ Entry.optional "Name" info.name
                 , Entry.optional "Link" info.url
+                , Entry.optional "Beschreibung" info.description
                 ]
 
 
