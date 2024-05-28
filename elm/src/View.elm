@@ -556,6 +556,9 @@ humanReadableEventTypes eventTypes =
 
                 GuestPerformanceEventType ->
                     "Gastspiel"
+
+                PreviewEventType ->
+                    "Preview"
     in
     List.map translation eventTypes
         |> String.join ", "

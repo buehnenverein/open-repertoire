@@ -251,6 +251,7 @@ definitions:
               - Premiere
               - LastShow
               - GuestPerformance
+              - Preview
         eventStatus:
           type: string
           description: |-

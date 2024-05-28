@@ -25119,6 +25119,7 @@ var $author$project$Data$Root$eventEventStatusDecoder = A2(
 var $author$project$Data$Root$GuestPerformanceEventType = 2;
 var $author$project$Data$Root$LastShowEventType = 1;
 var $author$project$Data$Root$PremiereEventType = 0;
+var $author$project$Data$Root$PreviewEventType = 3;
 var $author$project$Data$Root$parseEventTypeItem = function (eventTypeItem) {
 	switch (eventTypeItem) {
 		case 'Premiere':
@@ -25127,6 +25128,8 @@ var $author$project$Data$Root$parseEventTypeItem = function (eventTypeItem) {
 			return $elm$core$Result$Ok(1);
 		case 'GuestPerformance':
 			return $elm$core$Result$Ok(2);
+		case 'Preview':
+			return $elm$core$Result$Ok(3);
 		default:
 			return $elm$core$Result$Err('Unknown eventTypeItem type: ' + eventTypeItem);
 	}
@@ -30289,8 +30292,10 @@ var $author$project$View$humanReadableEventTypes = function (eventTypes) {
 				return 'Premiere';
 			case 1:
 				return 'Derniere';
-			default:
+			case 2:
 				return 'Gastspiel';
+			default:
+				return 'Preview';
 		}
 	};
 	return A2(

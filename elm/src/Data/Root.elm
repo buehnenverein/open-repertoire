@@ -229,6 +229,7 @@ type EventTypeItem
     = PremiereEventType
     | LastShowEventType
     | GuestPerformanceEventType
+    | PreviewEventType
 
 
 type ProductionGenre
@@ -762,6 +763,9 @@ parseEventTypeItem eventTypeItem =
 
         "GuestPerformance" ->
             Ok GuestPerformanceEventType
+
+        "Preview" ->
+            Ok PreviewEventType
 
         _ ->
             Err <| "Unknown eventTypeItem type: " ++ eventTypeItem
@@ -1403,6 +1407,9 @@ eventTypeItemToString eventTypeItem =
 
         GuestPerformanceEventType ->
             "GuestPerformance"
+
+        PreviewEventType ->
+            "Preview"
 
 
 encodeEvents : List Event -> Value

@@ -8842,6 +8842,7 @@ var $author$project$Data$Root$eventEventStatusDecoder = A2(
 	A2($elm$core$Basics$composeR, $author$project$Data$Root$parseEventEventStatus, $elm_community$json_extra$Json$Decode$Extra$fromResult),
 	$elm$json$Json$Decode$string);
 var $author$project$Data$Root$GuestPerformanceEventType = 2;
+var $author$project$Data$Root$PreviewEventType = 3;
 var $author$project$Data$Root$parseEventTypeItem = function (eventTypeItem) {
 	switch (eventTypeItem) {
 		case 'Premiere':
@@ -8850,6 +8851,8 @@ var $author$project$Data$Root$parseEventTypeItem = function (eventTypeItem) {
 			return $elm$core$Result$Ok(1);
 		case 'GuestPerformance':
 			return $elm$core$Result$Ok(2);
+		case 'Preview':
+			return $elm$core$Result$Ok(3);
 		default:
 			return $elm$core$Result$Err('Unknown eventTypeItem type: ' + eventTypeItem);
 	}
