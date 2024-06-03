@@ -81,7 +81,7 @@ type CreatorEntry
 
 type alias CreatorRole =
     { atType : CreatorRoleAttype
-    , creator : CreatorEntry
+    , creator : List CreatorEntry
     , roleName : Maybe String
     }
 
@@ -123,7 +123,7 @@ type alias Organization =
 type alias PerformanceRole =
     { atType : PerformanceRoleAttype
     , characterName : Maybe String
-    , performer : Person
+    , performer : List Person
     }
 
 
@@ -497,16 +497,17 @@ audienceDecoder =
 
 creatorEntryDecoder : Decoder CreatorEntry
 creatorEntryDecoder =
-    Decode.oneOf [ personDecoder |> Decode.map CreatorEntryPe
-                 , organizationDecoder |> Decode.map CreatorEntryOr
-                 ]
+    Decode.oneOf
+        [ personDecoder |> Decode.map CreatorEntryPe
+        , organizationDecoder |> Decode.map CreatorEntryOr
+        ]
 
 
 creatorRoleDecoder : Decoder CreatorRole
 creatorRoleDecoder =
     Decode.succeed CreatorRole
         |> required "@type" creatorRoleAttypeDecoder
-        |> required "creator" creatorEntryDecoder
+        |> required "creator" creatorEntriesDecoder
         |> optional "roleName" (Decode.nullable Decode.string) Nothing
 
 
@@ -552,7 +553,7 @@ performanceRoleDecoder =
     Decode.succeed PerformanceRole
         |> required "@type" performanceRoleAttypeDecoder
         |> optional "characterName" (Decode.nullable Decode.string) Nothing
-        |> required "performer" personDecoder
+        |> required "performer" performersDecoder
 
 
 personDecoder : Decoder Person
@@ -713,6 +714,11 @@ parseAccessibilityHazardItem accessibilityHazardItem =
 creatorDecoder : Decoder (List CreatorRole)
 creatorDecoder =
     Decode.list creatorRoleDecoder
+
+
+creatorEntriesDecoder : Decoder (List CreatorEntry)
+creatorEntriesDecoder =
+    Decode.list creatorEntryDecoder
 
 
 eventEventStatusDecoder : Decoder EventEventStatus
@@ -890,14 +896,20 @@ locationDecoder =
 
 locationItemDecoder : Decoder LocationItem
 locationItemDecoder =
-    Decode.oneOf [ placeDecoder |> Decode.map LocationItemPl
-                 , virtualLocationDecoder |> Decode.map LocationItemVi
-                 ]
+    Decode.oneOf
+        [ placeDecoder |> Decode.map LocationItemPl
+        , virtualLocationDecoder |> Decode.map LocationItemVi
+        ]
 
 
 offersDecoder : Decoder (List Offer)
 offersDecoder =
     Decode.list offerDecoder
+
+
+performersDecoder : Decoder (List Person)
+performersDecoder =
+    Decode.list personDecoder
 
 
 performerDecoder : Decoder (List PerformanceRole)
@@ -1143,7 +1155,7 @@ encodeCreatorRole : CreatorRole -> Value
 encodeCreatorRole creatorRole =
     []
         |> Encode.required "@type" creatorRole.atType encodeCreatorRoleAttype
-        |> Encode.required "creator" creatorRole.creator encodeCreatorEntry
+        |> Encode.required "creator" creatorRole.creator encodeCreatorEntries
         |> Encode.optional "roleName" creatorRole.roleName Encode.string
         |> Encode.object
 
@@ -1193,7 +1205,7 @@ encodePerformanceRole performanceRole =
     []
         |> Encode.required "@type" performanceRole.atType encodePerformanceRoleAttype
         |> Encode.optional "characterName" performanceRole.characterName Encode.string
-        |> Encode.required "performer" performanceRole.performer encodePerson
+        |> Encode.required "performer" performanceRole.performer encodePerformers
         |> Encode.object
 
 
@@ -1359,6 +1371,12 @@ encodeCreator : List CreatorRole -> Value
 encodeCreator creator =
     creator
         |> Encode.list encodeCreatorRole
+
+
+encodeCreatorEntries : List CreatorEntry -> Value
+encodeCreatorEntries creator =
+    creator
+        |> Encode.list encodeCreatorEntry
 
 
 encodeEventEventStatus : EventEventStatus -> Value
@@ -1543,6 +1561,12 @@ encodeOffers : List Offer -> Value
 encodeOffers offers =
     offers
         |> Encode.list encodeOffer
+
+
+encodePerformers : List Person -> Value
+encodePerformers performer =
+    performer
+        |> Encode.list encodePerson
 
 
 encodePerformer : List PerformanceRole -> Value

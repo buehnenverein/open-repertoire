@@ -405,7 +405,10 @@
           ]
         },
         "creator": {
-          "$ref": "#/definitions/CreatorEntry"
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CreatorEntry"
+          }
         },
         "roleName": {
           "type": "string",
@@ -445,7 +448,10 @@
           "example": "Hedwig"
         },
         "performer": {
-          "$ref": "#/definitions/Person"
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Person"
+          }
         }
       }
     },

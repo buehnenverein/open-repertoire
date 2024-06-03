@@ -504,7 +504,7 @@ event =
 creator : Validator CreatorRole
 creator =
     object
-        [ field "/creator" .creator creatorEntry
+        [ field "/creator" .creator (list creatorEntry)
         , field "/roleName" .roleName optional
         ]
 
@@ -529,7 +529,7 @@ person =
 performer : Validator PerformanceRole
 performer =
     object
-        [ field "/performer" .performer person
+        [ field "/performer" .performer (list person)
         , field "/characterName" .characterName optional
         ]
 

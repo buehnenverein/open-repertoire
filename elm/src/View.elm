@@ -710,18 +710,23 @@ viewCreator : CreatorRole -> Html Msg
 viewCreator creator =
     tr []
         [ td [] [ text (Maybe.withDefault "" creator.roleName) ]
-        , td [] [ text (creatorName creator.creator) ]
+        , td [] [ text (creatorNames creator.creator) ]
         ]
 
 
-creatorName : CreatorEntry -> String
-creatorName creator =
-    case creator of
-        CreatorEntryPe person ->
-            person.name
+creatorNames : List CreatorEntry -> String
+creatorNames creators =
+    let
+        getName creator =
+            case creator of
+                CreatorEntryPe person ->
+                    person.name
 
-        CreatorEntryOr organization ->
-            organization.name
+                CreatorEntryOr organization ->
+                    organization.name
+    in
+    List.map getName creators
+        |> String.join ", "
 
 
 viewPerformers : Maybe (List PerformanceRole) -> Html Msg
@@ -743,9 +748,13 @@ viewPerformers performers =
 
 viewPerformer : PerformanceRole -> Html Msg
 viewPerformer performer =
+    let
+        namesString =
+            List.map .name performer.performer |> String.join ", "
+    in
     tr []
         [ td [] [ text (Maybe.withDefault "" performer.characterName) ]
-        , td [] [ text performer.performer.name ]
+        , td [] [ text namesString ]
         ]
 
 

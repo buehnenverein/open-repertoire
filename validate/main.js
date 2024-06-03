@@ -6571,7 +6571,7 @@ var $author$project$Helper$CustomValidations$creator = $author$project$Helper$Cu
 			function ($) {
 				return $.S;
 			},
-			$author$project$Helper$CustomValidations$creatorEntry),
+			$author$project$Helper$CustomValidations$list($author$project$Helper$CustomValidations$creatorEntry)),
 			A3(
 			$author$project$Helper$CustomValidations$field,
 			'/roleName',
@@ -7285,7 +7285,7 @@ var $author$project$Helper$CustomValidations$performer = $author$project$Helper$
 			function ($) {
 				return $.W;
 			},
-			$author$project$Helper$CustomValidations$person),
+			$author$project$Helper$CustomValidations$list($author$project$Helper$CustomValidations$person)),
 			A3(
 			$author$project$Helper$CustomValidations$field,
 			'/characterName',
@@ -8748,6 +8748,7 @@ var $author$project$Data$Root$creatorEntryDecoder = $elm$json$Json$Decode$oneOf(
 			A2($elm$json$Json$Decode$map, $author$project$Data$Root$CreatorEntryPe, $author$project$Data$Root$personDecoder),
 			A2($elm$json$Json$Decode$map, $author$project$Data$Root$CreatorEntryOr, $author$project$Data$Root$organizationDecoder)
 		]));
+var $author$project$Data$Root$creatorEntriesDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$creatorEntryDecoder);
 var $author$project$Data$Root$RoleType = 0;
 var $author$project$Data$Root$parseCreatorRoleAttype = function (creatorRoleAttype) {
 	if (creatorRoleAttype === 'Role') {
@@ -8768,7 +8769,7 @@ var $author$project$Data$Root$creatorRoleDecoder = A4(
 	A3(
 		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 		'creator',
-		$author$project$Data$Root$creatorEntryDecoder,
+		$author$project$Data$Root$creatorEntriesDecoder,
 		A3(
 			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 			'@type',
@@ -9063,10 +9064,11 @@ var $author$project$Data$Root$performanceRoleAttypeDecoder = A2(
 	$elm$json$Json$Decode$andThen,
 	A2($elm$core$Basics$composeR, $author$project$Data$Root$parsePerformanceRoleAttype, $elm_community$json_extra$Json$Decode$Extra$fromResult),
 	$elm$json$Json$Decode$string);
+var $author$project$Data$Root$performersDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$personDecoder);
 var $author$project$Data$Root$performanceRoleDecoder = A3(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 	'performer',
-	$author$project$Data$Root$personDecoder,
+	$author$project$Data$Root$performersDecoder,
 	A4(
 		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 		'characterName',

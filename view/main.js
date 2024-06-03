@@ -25023,6 +25023,7 @@ var $author$project$Data$Root$creatorEntryDecoder = $elm$json$Json$Decode$oneOf(
 			A2($elm$json$Json$Decode$map, $author$project$Data$Root$CreatorEntryPe, $author$project$Data$Root$personDecoder),
 			A2($elm$json$Json$Decode$map, $author$project$Data$Root$CreatorEntryOr, $author$project$Data$Root$organizationDecoder)
 		]));
+var $author$project$Data$Root$creatorEntriesDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$creatorEntryDecoder);
 var $author$project$Data$Root$RoleType = 0;
 var $author$project$Data$Root$parseCreatorRoleAttype = function (creatorRoleAttype) {
 	if (creatorRoleAttype === 'Role') {
@@ -25043,7 +25044,7 @@ var $author$project$Data$Root$creatorRoleDecoder = A4(
 	A3(
 		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 		'creator',
-		$author$project$Data$Root$creatorEntryDecoder,
+		$author$project$Data$Root$creatorEntriesDecoder,
 		A3(
 			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 			'@type',
@@ -25340,10 +25341,11 @@ var $author$project$Data$Root$performanceRoleAttypeDecoder = A2(
 	$elm$json$Json$Decode$andThen,
 	A2($elm$core$Basics$composeR, $author$project$Data$Root$parsePerformanceRoleAttype, $elm_community$json_extra$Json$Decode$Extra$fromResult),
 	$elm$json$Json$Decode$string);
+var $author$project$Data$Root$performersDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$personDecoder);
 var $author$project$Data$Root$performanceRoleDecoder = A3(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 	'performer',
-	$author$project$Data$Root$personDecoder,
+	$author$project$Data$Root$performersDecoder,
 	A4(
 		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 		'characterName',
@@ -26572,28 +26574,6 @@ var $author$project$Helper$CustomValidations$creatorEntry = F2(
 			return A2($author$project$Helper$CustomValidations$organization, path, organizationInfo);
 		}
 	});
-var $author$project$Helper$CustomValidations$creator = $author$project$Helper$CustomValidations$object(
-	_List_fromArray(
-		[
-			A3(
-			$author$project$Helper$CustomValidations$field,
-			'/creator',
-			function ($) {
-				return $._;
-			},
-			$author$project$Helper$CustomValidations$creatorEntry),
-			A3(
-			$author$project$Helper$CustomValidations$field,
-			'/roleName',
-			function ($) {
-				return $.bT;
-			},
-			$author$project$Helper$CustomValidations$optional)
-		]));
-var $author$project$Helper$CustomValidations$check = F3(
-	function (data, path, validator) {
-		return A2(validator, path, data);
-	});
 var $author$project$Helper$CustomValidations$list = F3(
 	function (validator, basePath, model) {
 		return A3(
@@ -26610,6 +26590,28 @@ var $author$project$Helper$CustomValidations$list = F3(
 							data);
 					}),
 				model));
+	});
+var $author$project$Helper$CustomValidations$creator = $author$project$Helper$CustomValidations$object(
+	_List_fromArray(
+		[
+			A3(
+			$author$project$Helper$CustomValidations$field,
+			'/creator',
+			function ($) {
+				return $._;
+			},
+			$author$project$Helper$CustomValidations$list($author$project$Helper$CustomValidations$creatorEntry)),
+			A3(
+			$author$project$Helper$CustomValidations$field,
+			'/roleName',
+			function ($) {
+				return $.bT;
+			},
+			$author$project$Helper$CustomValidations$optional)
+		]));
+var $author$project$Helper$CustomValidations$check = F3(
+	function (data, path, validator) {
+		return A2(validator, path, data);
 	});
 var $elm$core$List$any = F2(
 	function (isOkay, list) {
@@ -27307,7 +27309,7 @@ var $author$project$Helper$CustomValidations$performer = $author$project$Helper$
 			function ($) {
 				return $.ae;
 			},
-			$author$project$Helper$CustomValidations$person),
+			$author$project$Helper$CustomValidations$list($author$project$Helper$CustomValidations$person)),
 			A3(
 			$author$project$Helper$CustomValidations$field,
 			'/characterName',
@@ -29769,14 +29771,20 @@ var $author$project$View$productionInfo = function (production) {
 			]));
 };
 var $elm$html$Html$em = _VirtualDom_node('em');
-var $author$project$View$creatorName = function (creator) {
-	if (!creator.$) {
-		var person = creator.a;
-		return person.K;
-	} else {
-		var organization = creator.a;
-		return organization.K;
-	}
+var $author$project$View$creatorNames = function (creators) {
+	var getName = function (creator) {
+		if (!creator.$) {
+			var person = creator.a;
+			return person.K;
+		} else {
+			var organization = creator.a;
+			return organization.K;
+		}
+	};
+	return A2(
+		$elm$core$String$join,
+		', ',
+		A2($elm$core$List$map, getName, creators));
 };
 var $author$project$View$viewCreator = function (creator) {
 	return A2(
@@ -29798,7 +29806,7 @@ var $author$project$View$viewCreator = function (creator) {
 				_List_fromArray(
 					[
 						$elm$html$Html$text(
-						$author$project$View$creatorName(creator._))
+						$author$project$View$creatorNames(creator._))
 					]))
 			]));
 };
@@ -30659,6 +30667,15 @@ var $author$project$View$viewOffers = function (offers) {
 			]));
 };
 var $author$project$View$viewPerformer = function (performer) {
+	var namesString = A2(
+		$elm$core$String$join,
+		', ',
+		A2(
+			$elm$core$List$map,
+			function ($) {
+				return $.K;
+			},
+			performer.ae));
 	return A2(
 		$elm$html$Html$tr,
 		_List_Nil,
@@ -30677,7 +30694,7 @@ var $author$project$View$viewPerformer = function (performer) {
 				_List_Nil,
 				_List_fromArray(
 					[
-						$elm$html$Html$text(performer.ae.K)
+						$elm$html$Html$text(namesString)
 					]))
 			]));
 };
