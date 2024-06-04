@@ -33,6 +33,10 @@ type OfferAttype
     = OfferType
 
 
+type OfferingAttype
+    = OfferingEventType
+
+
 type PriceSpecificationAttype
     = PriceSpecificationType
 
@@ -88,6 +92,7 @@ type alias CreatorRole =
 
 type alias Event =
     { atType : EventAttype
+    , additionalOffering : Maybe (List Offering)
     , duration : Maybe Int
     , endDate : Maybe String
     , eventStatus : Maybe EventEventStatus
@@ -109,6 +114,17 @@ type alias Offer =
     , name : Maybe String
     , priceSpecification : PriceSpecification
     , url : Maybe String
+    }
+
+
+type alias Offering =
+    { atType : OfferingAttype
+    , description : Maybe String
+    , duration : Maybe Int
+    , endDate : Maybe String
+    , location : Maybe String
+    , name : String
+    , startDate : Maybe String
     }
 
 
@@ -363,6 +379,21 @@ parseOfferAttype offerAttype =
             Err <| "Unknown offerAttype type: " ++ offerAttype
 
 
+offeringAttypeDecoder : Decoder OfferingAttype
+offeringAttypeDecoder =
+    Decode.string |> Decode.andThen (parseOfferingAttype >> Decode.fromResult)
+
+
+parseOfferingAttype : String -> Result String OfferingAttype
+parseOfferingAttype offeringAttype =
+    case offeringAttype of
+        "Event" ->
+            Ok OfferingEventType
+
+        _ ->
+            Err <| "Unknown offeringAttype type: " ++ offeringAttype
+
+
 priceSpecificationAttypeDecoder : Decoder PriceSpecificationAttype
 priceSpecificationAttypeDecoder =
     Decode.string |> Decode.andThen (parsePriceSpecificationAttype >> Decode.fromResult)
@@ -515,6 +546,7 @@ eventDecoder : Decoder Event
 eventDecoder =
     Decode.succeed Event
         |> required "@type" eventAttypeDecoder
+        |> optional "additionalOffering" (Decode.nullable additionalOfferingDecoder) Nothing
         |> optional "duration" (Decode.nullable Decode.int) Nothing
         |> optional "endDate" (Decode.nullable Decode.string) Nothing
         |> optional "eventStatus" (Decode.nullable eventEventStatusDecoder) Nothing
@@ -537,6 +569,18 @@ offerDecoder =
         |> optional "name" (Decode.nullable Decode.string) Nothing
         |> required "priceSpecification" priceSpecificationDecoder
         |> optional "url" (Decode.nullable Decode.string) Nothing
+
+
+offeringDecoder : Decoder Offering
+offeringDecoder =
+    Decode.succeed Offering
+        |> required "@type" offeringAttypeDecoder
+        |> optional "description" (Decode.nullable Decode.string) Nothing
+        |> optional "duration" (Decode.nullable Decode.int) Nothing
+        |> optional "endDate" (Decode.nullable Decode.string) Nothing
+        |> optional "location" (Decode.nullable Decode.string) Nothing
+        |> required "name" Decode.string
+        |> optional "startDate" (Decode.nullable Decode.string) Nothing
 
 
 organizationDecoder : Decoder Organization
@@ -709,6 +753,11 @@ parseAccessibilityHazardItem accessibilityHazardItem =
 
         _ ->
             Err <| "Unknown accessibilityHazardItem type: " ++ accessibilityHazardItem
+
+
+additionalOfferingDecoder : Decoder (List Offering)
+additionalOfferingDecoder =
+    Decode.list offeringDecoder
 
 
 creatorDecoder : Decoder (List CreatorRole)
@@ -1032,6 +1081,18 @@ offerAttypeToString offerAttype =
             "Offer"
 
 
+encodeOfferingAttype : OfferingAttype -> Value
+encodeOfferingAttype offeringAttype =
+    offeringAttype |> offeringAttypeToString |> Encode.string
+
+
+offeringAttypeToString : OfferingAttype -> String
+offeringAttypeToString offeringAttype =
+    case offeringAttype of
+        OfferingEventType ->
+            "Event"
+
+
 encodePriceSpecificationAttype : PriceSpecificationAttype -> Value
 encodePriceSpecificationAttype priceSpecificationAttype =
     priceSpecificationAttype |> priceSpecificationAttypeToString |> Encode.string
@@ -1164,6 +1225,7 @@ encodeEvent : Event -> Value
 encodeEvent event =
     []
         |> Encode.required "@type" event.atType encodeEventAttype
+        |> Encode.optional "additionalOffering" event.additionalOffering encodeAdditionalOffering
         |> Encode.optional "duration" event.duration Encode.int
         |> Encode.optional "endDate" event.endDate Encode.string
         |> Encode.optional "eventStatus" event.eventStatus encodeEventEventStatus
@@ -1187,6 +1249,19 @@ encodeOffer offer =
         |> Encode.optional "name" offer.name Encode.string
         |> Encode.required "priceSpecification" offer.priceSpecification encodePriceSpecification
         |> Encode.optional "url" offer.url Encode.string
+        |> Encode.object
+
+
+encodeOffering : Offering -> Value
+encodeOffering offering =
+    []
+        |> Encode.required "@type" offering.atType encodeOfferingAttype
+        |> Encode.optional "description" offering.description Encode.string
+        |> Encode.optional "duration" offering.duration Encode.int
+        |> Encode.optional "endDate" offering.endDate Encode.string
+        |> Encode.optional "location" offering.location Encode.string
+        |> Encode.required "name" offering.name Encode.string
+        |> Encode.optional "startDate" offering.startDate Encode.string
         |> Encode.object
 
 
@@ -1365,6 +1440,12 @@ accessibilityHazardItemToString accessibilityHazardItem =
 
         UnknownSoundHazardAccessibilityHazard ->
             "unknownSoundHazard"
+
+
+encodeAdditionalOffering : List Offering -> Value
+encodeAdditionalOffering additionalOffering =
+    additionalOffering
+        |> Encode.list encodeOffering
 
 
 encodeCreator : List CreatorRole -> Value
