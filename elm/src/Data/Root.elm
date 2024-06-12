@@ -54,6 +54,10 @@ type OrganizationAttype
     = OrganizationType
 
 
+type OriginalWorkAttype
+    = OriginalWorkType
+
+
 type VirtualLocationAttype
     = VirtualLocationType
 
@@ -136,6 +140,13 @@ type alias Organization =
     }
 
 
+type alias OriginalWork =
+    { atType : OriginalWorkAttype
+    , author : Maybe Person
+    , name : String
+    }
+
+
 type alias PerformanceRole =
     { atType : PerformanceRoleAttype
     , characterName : Maybe String
@@ -182,6 +193,7 @@ type alias Production =
     , genre : Maybe (List GenreItem)
     , identifier : String
     , inLanguage : Maybe String
+    , isBasedOn : Maybe OriginalWork
     , name : String
     , productionType : Maybe ProductionProductionType
     , sponsor : Maybe (List Organization)
@@ -457,6 +469,21 @@ parseOrganizationAttype organizationAttype =
             Err <| "Unknown organizationAttype type: " ++ organizationAttype
 
 
+originalWorkAttypeDecoder : Decoder OriginalWorkAttype
+originalWorkAttypeDecoder =
+    Decode.string |> Decode.andThen (parseOriginalWorkAttype >> Decode.fromResult)
+
+
+parseOriginalWorkAttype : String -> Result String OriginalWorkAttype
+parseOriginalWorkAttype originalWorkAttype =
+    case originalWorkAttype of
+        "CreativeWork" ->
+            Ok OriginalWorkType
+
+        _ ->
+            Err <| "Unknown originalWorkAttype type: " ++ originalWorkAttype
+
+
 virtualLocationAttypeDecoder : Decoder VirtualLocationAttype
 virtualLocationAttypeDecoder =
     Decode.string |> Decode.andThen (parseVirtualLocationAttype >> Decode.fromResult)
@@ -592,6 +619,14 @@ organizationDecoder =
         |> required "name" Decode.string
 
 
+originalWorkDecoder : Decoder OriginalWork
+originalWorkDecoder =
+    Decode.succeed OriginalWork
+        |> required "@type" originalWorkAttypeDecoder
+        |> optional "author" (Decode.nullable personDecoder) Nothing
+        |> required "name" Decode.string
+
+
 performanceRoleDecoder : Decoder PerformanceRole
 performanceRoleDecoder =
     Decode.succeed PerformanceRole
@@ -644,6 +679,7 @@ productionDecoder =
         |> optional "genre" (Decode.nullable genreDecoder) Nothing
         |> required "identifier" Decode.string
         |> optional "inLanguage" (Decode.nullable Decode.string) Nothing
+        |> optional "isBasedOn" (Decode.nullable originalWorkDecoder) Nothing
         |> required "name" Decode.string
         |> optional "productionType" (Decode.nullable productionProductionTypeDecoder) Nothing
         |> optional "sponsor" (Decode.nullable sponsorDecoder) Nothing
@@ -1149,6 +1185,18 @@ organizationAttypeToString organizationAttype =
             "Organization"
 
 
+encodeOriginalWorkAttype : OriginalWorkAttype -> Value
+encodeOriginalWorkAttype originalWorkAttype =
+    originalWorkAttype |> originalWorkAttypeToString |> Encode.string
+
+
+originalWorkAttypeToString : OriginalWorkAttype -> String
+originalWorkAttypeToString originalWorkAttype =
+    case originalWorkAttype of
+        OriginalWorkType ->
+            "CreativeWork"
+
+
 encodeVirtualLocationAttype : VirtualLocationAttype -> Value
 encodeVirtualLocationAttype virtualLocationAttype =
     virtualLocationAttype |> virtualLocationAttypeToString |> Encode.string
@@ -1280,6 +1328,15 @@ encodeOrganization organization =
         |> Encode.object
 
 
+encodeOriginalWork : OriginalWork -> Value
+encodeOriginalWork originalWork =
+    []
+        |> Encode.required "@type" originalWork.atType encodeOriginalWorkAttype
+        |> Encode.optional "author" originalWork.author encodePerson
+        |> Encode.required "name" originalWork.name Encode.string
+        |> Encode.object
+
+
 encodePerformanceRole : PerformanceRole -> Value
 encodePerformanceRole performanceRole =
     []
@@ -1336,6 +1393,7 @@ encodeProduction production =
         |> Encode.optional "genre" production.genre encodeGenre
         |> Encode.required "identifier" production.identifier Encode.string
         |> Encode.optional "inLanguage" production.inLanguage Encode.string
+        |> Encode.optional "isBasedOn" production.isBasedOn encodeOriginalWork
         |> Encode.required "name" production.name Encode.string
         |> Encode.optional "productionType" production.productionType encodeProductionProductionType
         |> Encode.optional "sponsor" production.sponsor encodeSponsor

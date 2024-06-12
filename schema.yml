@@ -1,6 +1,21 @@
 "$schema": "http://json-schema.org/draft-07/schema#"
 "$id": https://peret.github.io/uc3-openapi/schema.json
 definitions: 
+    OriginalWork:
+      type: object
+      additionalProperties: false
+      required:
+        - "@type"
+        - "name"
+      properties:
+        "@type":
+          type: string
+          enum:
+            - "CreativeWork"
+        name:
+          type: string
+        author:
+          $ref: "#/definitions/Person"
     Production:
       type: object
       description: "An object containing information about the production and its events."
@@ -39,6 +54,8 @@ definitions:
         additionalInfo:
           type: string
           description: Additional information about the production.
+        isBasedOn:
+          $ref: "#/definitions/OriginalWork"
         events:
           type: array
           description: A list of events at which this production will be performed. 
