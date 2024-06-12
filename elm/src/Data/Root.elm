@@ -179,7 +179,7 @@ type alias Production =
     , description : Maybe String
     , events : List Event
     , funder : Maybe (List Organization)
-    , genre : Maybe ProductionGenre
+    , genre : Maybe (List GenreItem)
     , identifier : String
     , inLanguage : Maybe String
     , name : String
@@ -248,37 +248,37 @@ type EventTypeItem
     | PreviewEventType
 
 
-type ProductionGenre
-    = AudiowalkProduction
-    | BallettProduction
-    | DigitaltheaterProduction
-    | FigurentheaterProduction
-    | GameTheaterProduction
-    | HoerspielProduction
-    | ImprotheaterProduction
-    | InstallationProduction
-    | KabarettComedyProduction
-    | KammerkonzertProduction
-    | KonzertProduction
-    | LecturePerformanceProduction
-    | LesungProduction
-    | MusicalProduction
-    | MusiktheaterProduction
-    | ObjekttheaterProduction
-    | OperProduction
-    | OperetteProduction
-    | PerformanceProduction
-    | PhysicalTheatreProduction
-    | PodcastProduction
-    | PuppentheaterProduction
-    | SinfoniekonzertProduction
-    | SprechtheaterProduction
-    | SzenischeLesungProduction
-    | SzenischesKonzertProduction
-    | TanzProduction
-    | TheaterImOeffentlichenRaumProduction
-    | WorkshopProduction
-    | ZeitgenoessischerTanzProduction
+type GenreItem
+    = AudiowalkGenre
+    | BallettGenre
+    | DigitaltheaterGenre
+    | FigurentheaterGenre
+    | GameTheaterGenre
+    | HoerspielGenre
+    | ImprotheaterGenre
+    | InstallationGenre
+    | KabarettComedyGenre
+    | KammerkonzertGenre
+    | KonzertGenre
+    | LecturePerformanceGenre
+    | LesungGenre
+    | MusicalGenre
+    | MusiktheaterGenre
+    | ObjekttheaterGenre
+    | OperGenre
+    | OperetteGenre
+    | PerformanceGenre
+    | PhysicalTheatreGenre
+    | PodcastGenre
+    | PuppentheaterGenre
+    | SinfoniekonzertGenre
+    | SprechtheaterGenre
+    | SzenischeLesungGenre
+    | SzenischesKonzertGenre
+    | TanzGenre
+    | TheaterImOeffentlichenRaumGenre
+    | WorkshopGenre
+    | ZeitgenoessischerTanzGenre
 
 
 type LocationItem
@@ -641,7 +641,7 @@ productionDecoder =
         |> optional "description" (Decode.nullable Decode.string) Nothing
         |> required "events" eventsDecoder
         |> optional "funder" (Decode.nullable funderDecoder) Nothing
-        |> optional "genre" (Decode.nullable productionGenreDecoder) Nothing
+        |> optional "genre" (Decode.nullable genreDecoder) Nothing
         |> required "identifier" Decode.string
         |> optional "inLanguage" (Decode.nullable Decode.string) Nothing
         |> required "name" Decode.string
@@ -836,106 +836,111 @@ funderDecoder =
     Decode.list organizationDecoder
 
 
-productionGenreDecoder : Decoder ProductionGenre
-productionGenreDecoder =
-    Decode.string |> Decode.andThen (parseProductionGenre >> Decode.fromResult)
+genreDecoder : Decoder (List GenreItem)
+genreDecoder =
+    Decode.list genreItemDecoder
 
 
-parseProductionGenre : String -> Result String ProductionGenre
-parseProductionGenre productionGenre =
-    case productionGenre of
+genreItemDecoder : Decoder GenreItem
+genreItemDecoder =
+    Decode.string |> Decode.andThen (parseGenreItem >> Decode.fromResult)
+
+
+parseGenreItem : String -> Result String GenreItem
+parseGenreItem genreItem =
+    case genreItem of
         "audiowalk" ->
-            Ok AudiowalkProduction
+            Ok AudiowalkGenre
 
         "ballett" ->
-            Ok BallettProduction
+            Ok BallettGenre
 
         "digitaltheater" ->
-            Ok DigitaltheaterProduction
+            Ok DigitaltheaterGenre
 
         "figurentheater" ->
-            Ok FigurentheaterProduction
+            Ok FigurentheaterGenre
 
         "game-theater" ->
-            Ok GameTheaterProduction
+            Ok GameTheaterGenre
 
         "hoerspiel" ->
-            Ok HoerspielProduction
+            Ok HoerspielGenre
 
         "improtheater" ->
-            Ok ImprotheaterProduction
+            Ok ImprotheaterGenre
 
         "installation" ->
-            Ok InstallationProduction
+            Ok InstallationGenre
 
         "kabarett-comedy" ->
-            Ok KabarettComedyProduction
+            Ok KabarettComedyGenre
 
         "kammerkonzert" ->
-            Ok KammerkonzertProduction
+            Ok KammerkonzertGenre
 
         "konzert" ->
-            Ok KonzertProduction
+            Ok KonzertGenre
 
         "lecture-performance" ->
-            Ok LecturePerformanceProduction
+            Ok LecturePerformanceGenre
 
         "lesung" ->
-            Ok LesungProduction
+            Ok LesungGenre
 
         "musical" ->
-            Ok MusicalProduction
+            Ok MusicalGenre
 
         "musiktheater" ->
-            Ok MusiktheaterProduction
+            Ok MusiktheaterGenre
 
         "objekttheater" ->
-            Ok ObjekttheaterProduction
+            Ok ObjekttheaterGenre
 
         "oper" ->
-            Ok OperProduction
+            Ok OperGenre
 
         "operette" ->
-            Ok OperetteProduction
+            Ok OperetteGenre
 
         "performance" ->
-            Ok PerformanceProduction
+            Ok PerformanceGenre
 
         "physical-theatre" ->
-            Ok PhysicalTheatreProduction
+            Ok PhysicalTheatreGenre
 
         "podcast" ->
-            Ok PodcastProduction
+            Ok PodcastGenre
 
         "puppentheater" ->
-            Ok PuppentheaterProduction
+            Ok PuppentheaterGenre
 
         "sinfoniekonzert" ->
-            Ok SinfoniekonzertProduction
+            Ok SinfoniekonzertGenre
 
         "sprechtheater" ->
-            Ok SprechtheaterProduction
+            Ok SprechtheaterGenre
 
         "szenische-lesung" ->
-            Ok SzenischeLesungProduction
+            Ok SzenischeLesungGenre
 
         "szenisches-konzert" ->
-            Ok SzenischesKonzertProduction
+            Ok SzenischesKonzertGenre
 
         "tanz" ->
-            Ok TanzProduction
+            Ok TanzGenre
 
         "theater-im-oeffentlichen-raum" ->
-            Ok TheaterImOeffentlichenRaumProduction
+            Ok TheaterImOeffentlichenRaumGenre
 
         "workshop" ->
-            Ok WorkshopProduction
+            Ok WorkshopGenre
 
         "zeitgenoessischer-tanz" ->
-            Ok ZeitgenoessischerTanzProduction
+            Ok ZeitgenoessischerTanzGenre
 
         _ ->
-            Err <| "Unknown productionGenre type: " ++ productionGenre
+            Err <| "Unknown genreItem type: " ++ genreItem
 
 
 locationDecoder : Decoder (List LocationItem)
@@ -1328,7 +1333,7 @@ encodeProduction production =
         |> Encode.optional "description" production.description Encode.string
         |> Encode.required "events" production.events encodeEvents
         |> Encode.optional "funder" production.funder encodeFunder
-        |> Encode.optional "genre" production.genre encodeProductionGenre
+        |> Encode.optional "genre" production.genre encodeGenre
         |> Encode.required "identifier" production.identifier Encode.string
         |> Encode.optional "inLanguage" production.inLanguage Encode.string
         |> Encode.required "name" production.name Encode.string
@@ -1523,102 +1528,108 @@ encodeFunder funder =
         |> Encode.list encodeOrganization
 
 
-encodeProductionGenre : ProductionGenre -> Value
-encodeProductionGenre productionGenre =
-    productionGenre |> productionGenreToString |> Encode.string
+encodeGenre : List GenreItem -> Value
+encodeGenre genre =
+    genre
+        |> Encode.list encodeGenreItem
 
 
-productionGenreToString : ProductionGenre -> String
-productionGenreToString productionGenre =
-    case productionGenre of
-        AudiowalkProduction ->
+encodeGenreItem : GenreItem -> Value
+encodeGenreItem genreItem =
+    genreItem |> genreItemToString |> Encode.string
+
+
+genreItemToString : GenreItem -> String
+genreItemToString genreItem =
+    case genreItem of
+        AudiowalkGenre ->
             "audiowalk"
 
-        BallettProduction ->
+        BallettGenre ->
             "ballett"
 
-        DigitaltheaterProduction ->
+        DigitaltheaterGenre ->
             "digitaltheater"
 
-        FigurentheaterProduction ->
+        FigurentheaterGenre ->
             "figurentheater"
 
-        GameTheaterProduction ->
+        GameTheaterGenre ->
             "game-theater"
 
-        HoerspielProduction ->
+        HoerspielGenre ->
             "hoerspiel"
 
-        ImprotheaterProduction ->
+        ImprotheaterGenre ->
             "improtheater"
 
-        InstallationProduction ->
+        InstallationGenre ->
             "installation"
 
-        KabarettComedyProduction ->
+        KabarettComedyGenre ->
             "kabarett-comedy"
 
-        KammerkonzertProduction ->
+        KammerkonzertGenre ->
             "kammerkonzert"
 
-        KonzertProduction ->
+        KonzertGenre ->
             "konzert"
 
-        LecturePerformanceProduction ->
+        LecturePerformanceGenre ->
             "lecture-performance"
 
-        LesungProduction ->
+        LesungGenre ->
             "lesung"
 
-        MusicalProduction ->
+        MusicalGenre ->
             "musical"
 
-        MusiktheaterProduction ->
+        MusiktheaterGenre ->
             "musiktheater"
 
-        ObjekttheaterProduction ->
+        ObjekttheaterGenre ->
             "objekttheater"
 
-        OperProduction ->
+        OperGenre ->
             "oper"
 
-        OperetteProduction ->
+        OperetteGenre ->
             "operette"
 
-        PerformanceProduction ->
+        PerformanceGenre ->
             "performance"
 
-        PhysicalTheatreProduction ->
+        PhysicalTheatreGenre ->
             "physical-theatre"
 
-        PodcastProduction ->
+        PodcastGenre ->
             "podcast"
 
-        PuppentheaterProduction ->
+        PuppentheaterGenre ->
             "puppentheater"
 
-        SinfoniekonzertProduction ->
+        SinfoniekonzertGenre ->
             "sinfoniekonzert"
 
-        SprechtheaterProduction ->
+        SprechtheaterGenre ->
             "sprechtheater"
 
-        SzenischeLesungProduction ->
+        SzenischeLesungGenre ->
             "szenische-lesung"
 
-        SzenischesKonzertProduction ->
+        SzenischesKonzertGenre ->
             "szenisches-konzert"
 
-        TanzProduction ->
+        TanzGenre ->
             "tanz"
 
-        TheaterImOeffentlichenRaumProduction ->
+        TheaterImOeffentlichenRaumGenre ->
             "theater-im-oeffentlichen-raum"
 
-        WorkshopProduction ->
+        WorkshopGenre ->
             "workshop"
 
-        ZeitgenoessischerTanzProduction ->
+        ZeitgenoessischerTanzGenre ->
             "zeitgenoessischer-tanz"
 
 

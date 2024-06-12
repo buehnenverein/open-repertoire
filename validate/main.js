@@ -9208,54 +9208,38 @@ var $author$project$Data$Root$eventDecoder = A4(
 															$elm$json$Json$Decode$succeed($author$project$Data$Root$Event))))))))))))))));
 var $author$project$Data$Root$eventsDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$eventDecoder);
 var $author$project$Data$Root$funderDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$organizationDecoder);
-var $author$project$Data$Root$CreativeWorkType = 0;
-var $author$project$Data$Root$PlayType = 1;
-var $author$project$Data$Root$parseProductionAttype = function (productionAttype) {
-	switch (productionAttype) {
-		case 'CreativeWork':
-			return $elm$core$Result$Ok(0);
-		case 'Play':
-			return $elm$core$Result$Ok(1);
-		default:
-			return $elm$core$Result$Err('Unknown productionAttype type: ' + productionAttype);
-	}
-};
-var $author$project$Data$Root$productionAttypeDecoder = A2(
-	$elm$json$Json$Decode$andThen,
-	A2($elm$core$Basics$composeR, $author$project$Data$Root$parseProductionAttype, $elm_community$json_extra$Json$Decode$Extra$fromResult),
-	$elm$json$Json$Decode$string);
-var $author$project$Data$Root$AudiowalkProduction = 0;
-var $author$project$Data$Root$BallettProduction = 1;
-var $author$project$Data$Root$DigitaltheaterProduction = 2;
-var $author$project$Data$Root$FigurentheaterProduction = 3;
-var $author$project$Data$Root$GameTheaterProduction = 4;
-var $author$project$Data$Root$HoerspielProduction = 5;
-var $author$project$Data$Root$ImprotheaterProduction = 6;
-var $author$project$Data$Root$InstallationProduction = 7;
-var $author$project$Data$Root$KabarettComedyProduction = 8;
-var $author$project$Data$Root$KammerkonzertProduction = 9;
-var $author$project$Data$Root$KonzertProduction = 10;
-var $author$project$Data$Root$LecturePerformanceProduction = 11;
-var $author$project$Data$Root$LesungProduction = 12;
-var $author$project$Data$Root$MusicalProduction = 13;
-var $author$project$Data$Root$MusiktheaterProduction = 14;
-var $author$project$Data$Root$ObjekttheaterProduction = 15;
-var $author$project$Data$Root$OperProduction = 16;
-var $author$project$Data$Root$OperetteProduction = 17;
-var $author$project$Data$Root$PerformanceProduction = 18;
-var $author$project$Data$Root$PhysicalTheatreProduction = 19;
-var $author$project$Data$Root$PodcastProduction = 20;
-var $author$project$Data$Root$PuppentheaterProduction = 21;
-var $author$project$Data$Root$SinfoniekonzertProduction = 22;
-var $author$project$Data$Root$SprechtheaterProduction = 23;
-var $author$project$Data$Root$SzenischeLesungProduction = 24;
-var $author$project$Data$Root$SzenischesKonzertProduction = 25;
-var $author$project$Data$Root$TanzProduction = 26;
-var $author$project$Data$Root$TheaterImOeffentlichenRaumProduction = 27;
-var $author$project$Data$Root$WorkshopProduction = 28;
-var $author$project$Data$Root$ZeitgenoessischerTanzProduction = 29;
-var $author$project$Data$Root$parseProductionGenre = function (productionGenre) {
-	switch (productionGenre) {
+var $author$project$Data$Root$AudiowalkGenre = 0;
+var $author$project$Data$Root$BallettGenre = 1;
+var $author$project$Data$Root$DigitaltheaterGenre = 2;
+var $author$project$Data$Root$FigurentheaterGenre = 3;
+var $author$project$Data$Root$GameTheaterGenre = 4;
+var $author$project$Data$Root$HoerspielGenre = 5;
+var $author$project$Data$Root$ImprotheaterGenre = 6;
+var $author$project$Data$Root$InstallationGenre = 7;
+var $author$project$Data$Root$KabarettComedyGenre = 8;
+var $author$project$Data$Root$KammerkonzertGenre = 9;
+var $author$project$Data$Root$KonzertGenre = 10;
+var $author$project$Data$Root$LecturePerformanceGenre = 11;
+var $author$project$Data$Root$LesungGenre = 12;
+var $author$project$Data$Root$MusicalGenre = 13;
+var $author$project$Data$Root$MusiktheaterGenre = 14;
+var $author$project$Data$Root$ObjekttheaterGenre = 15;
+var $author$project$Data$Root$OperGenre = 16;
+var $author$project$Data$Root$OperetteGenre = 17;
+var $author$project$Data$Root$PerformanceGenre = 18;
+var $author$project$Data$Root$PhysicalTheatreGenre = 19;
+var $author$project$Data$Root$PodcastGenre = 20;
+var $author$project$Data$Root$PuppentheaterGenre = 21;
+var $author$project$Data$Root$SinfoniekonzertGenre = 22;
+var $author$project$Data$Root$SprechtheaterGenre = 23;
+var $author$project$Data$Root$SzenischeLesungGenre = 24;
+var $author$project$Data$Root$SzenischesKonzertGenre = 25;
+var $author$project$Data$Root$TanzGenre = 26;
+var $author$project$Data$Root$TheaterImOeffentlichenRaumGenre = 27;
+var $author$project$Data$Root$WorkshopGenre = 28;
+var $author$project$Data$Root$ZeitgenoessischerTanzGenre = 29;
+var $author$project$Data$Root$parseGenreItem = function (genreItem) {
+	switch (genreItem) {
 		case 'audiowalk':
 			return $elm$core$Result$Ok(0);
 		case 'ballett':
@@ -9317,12 +9301,29 @@ var $author$project$Data$Root$parseProductionGenre = function (productionGenre) 
 		case 'zeitgenoessischer-tanz':
 			return $elm$core$Result$Ok(29);
 		default:
-			return $elm$core$Result$Err('Unknown productionGenre type: ' + productionGenre);
+			return $elm$core$Result$Err('Unknown genreItem type: ' + genreItem);
 	}
 };
-var $author$project$Data$Root$productionGenreDecoder = A2(
+var $author$project$Data$Root$genreItemDecoder = A2(
 	$elm$json$Json$Decode$andThen,
-	A2($elm$core$Basics$composeR, $author$project$Data$Root$parseProductionGenre, $elm_community$json_extra$Json$Decode$Extra$fromResult),
+	A2($elm$core$Basics$composeR, $author$project$Data$Root$parseGenreItem, $elm_community$json_extra$Json$Decode$Extra$fromResult),
+	$elm$json$Json$Decode$string);
+var $author$project$Data$Root$genreDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$genreItemDecoder);
+var $author$project$Data$Root$CreativeWorkType = 0;
+var $author$project$Data$Root$PlayType = 1;
+var $author$project$Data$Root$parseProductionAttype = function (productionAttype) {
+	switch (productionAttype) {
+		case 'CreativeWork':
+			return $elm$core$Result$Ok(0);
+		case 'Play':
+			return $elm$core$Result$Ok(1);
+		default:
+			return $elm$core$Result$Err('Unknown productionAttype type: ' + productionAttype);
+	}
+};
+var $author$project$Data$Root$productionAttypeDecoder = A2(
+	$elm$json$Json$Decode$andThen,
+	A2($elm$core$Basics$composeR, $author$project$Data$Root$parseProductionAttype, $elm_community$json_extra$Json$Decode$Extra$fromResult),
 	$elm$json$Json$Decode$string);
 var $author$project$Data$Root$FirstPerformanceProduction = 1;
 var $author$project$Data$Root$RevivalProduction = 2;
@@ -9375,7 +9376,7 @@ var $author$project$Data$Root$productionDecoder = A4(
 						A4(
 							$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 							'genre',
-							$elm$json$Json$Decode$nullable($author$project$Data$Root$productionGenreDecoder),
+							$elm$json$Json$Decode$nullable($author$project$Data$Root$genreDecoder),
 							$elm$core$Maybe$Nothing,
 							A4(
 								$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,

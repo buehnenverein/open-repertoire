@@ -2,7 +2,7 @@ module View exposing (main)
 
 import Browser
 import Components.DataEntry as Entry exposing (asDate, asLink, asTime)
-import Data.Root exposing (CreatorEntry(..), CreatorRole, Event, EventEventStatus(..), EventTypeItem(..), LocationItem(..), Offer, Organization, PerformanceRole, Production, ProductionGenre, ProductionProductionType(..), Root, rootDecoder)
+import Data.Root exposing (CreatorEntry(..), CreatorRole, Event, EventEventStatus(..), EventTypeItem(..), GenreItem(..), LocationItem(..), Offer, Organization, PerformanceRole, Production, ProductionProductionType(..), Root, rootDecoder)
 import Helper.CustomValidations as CustomValidations
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -340,8 +340,8 @@ productionInfo production =
         ]
 
 
-humanReadableGenre : ProductionGenre -> String
-humanReadableGenre genre =
+humanReadableGenre : List GenreItem -> String
+humanReadableGenre genres =
     let
         firstToUpper string =
             case String.toList string of
@@ -352,11 +352,15 @@ humanReadableGenre genre =
                     Char.toUpper first
                         :: rest
                         |> String.fromList
+
+        convert genre =
+            Data.Root.genreItemToString genre
+                |> String.split "-"
+                |> List.map firstToUpper
+                |> String.join " "
     in
-    Data.Root.productionGenreToString genre
-        |> String.split "-"
-        |> List.map firstToUpper
-        |> String.join " "
+    List.map convert genres
+        |> String.join ", "
 
 
 humanReadableProductionType : ProductionProductionType -> String
