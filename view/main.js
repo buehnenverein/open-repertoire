@@ -30035,6 +30035,45 @@ var $author$project$View$viewFunders = function (production) {
 			}()
 			]));
 };
+var $author$project$View$viewOriginalWork = function (production) {
+	return A2(
+		$elm$html$Html$div,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('title is-5')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Informationen zum Werk')
+					])),
+				$author$project$Components$DataEntry$view(
+				_List_fromArray(
+					[
+						A2(
+						$author$project$Components$DataEntry$map,
+						function ($) {
+							return $.L;
+						},
+						A2($author$project$Components$DataEntry$optional, 'Titel', production.br)),
+						A2(
+						$author$project$Components$DataEntry$map,
+						function ($) {
+							return $.L;
+						},
+						A2(
+							$author$project$Components$DataEntry$nested,
+							function ($) {
+								return $.a_;
+							},
+							A2($author$project$Components$DataEntry$optional, 'Autor:in', production.br)))
+					]))
+			]));
+};
 var $author$project$Data$Root$accessModeSufficientItemToString = function (accessModeSufficientItem) {
 	switch (accessModeSufficientItem) {
 		case 0:
@@ -30287,11 +30326,21 @@ var $author$project$View$productionGrid = function (production) {
 						$elm$html$Html$div,
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$class('cell box mb-0 is-row-span-2')
+								$elm$html$Html$Attributes$class('cell box mb-0 is-row-span-3')
 							]),
 						_List_fromArray(
 							[
 								$author$project$View$viewProductionAudience(production)
+							])),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('cell box mb-0 is-col-span-2-widescreen')
+							]),
+						_List_fromArray(
+							[
+								$author$project$View$viewOriginalWork(production)
 							])),
 						A2(
 						$elm$html$Html$div,

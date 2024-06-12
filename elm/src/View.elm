@@ -303,8 +303,11 @@ productionGrid production =
             , div [ class "cell box mb-0 is-row-span-2" ]
                 [ viewCreators production.creator
                 ]
-            , div [ class "cell box mb-0 is-row-span-2" ]
+            , div [ class "cell box mb-0 is-row-span-3" ]
                 [ viewProductionAudience production
+                ]
+            , div [ class "cell box mb-0 is-col-span-2-widescreen" ]
+                [ viewOriginalWork production
                 ]
             , div [ class "cell box mb-0 is-col-span-2-widescreen" ]
                 [ viewProductionAccessibility production
@@ -397,6 +400,20 @@ viewProductionAudience production =
             , Entry.optional "Altersempfehlung" production.audience
                 |> Entry.withWarnings CustomValidations.minMaxAge
                 |> Entry.map formatAge
+            ]
+        ]
+
+
+viewOriginalWork : Production -> Html Msg
+viewOriginalWork production =
+    div []
+        [ div [ class "title is-5" ] [ text "Informationen zum Werk" ]
+        , Entry.view
+            [ Entry.optional "Titel" production.isBasedOn
+                |> Entry.map .name
+            , Entry.optional "Autor:in" production.isBasedOn
+                |> Entry.nested .author
+                |> Entry.map .name
             ]
         ]
 
