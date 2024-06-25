@@ -215,10 +215,18 @@ validPremiere allEvents path data =
                 Nothing ->
                     False
 
+        isPreview ev =
+            case ev.eventType of
+                Just types ->
+                    List.member PreviewEventType types
+
+                Nothing ->
+                    False
+
         isFirst ev =
             List.all
                 (\other ->
-                    other == ev || other.startDate > ev.startDate
+                    other == ev || other.startDate > ev.startDate || isPreview other
                 )
                 allEvents
     in

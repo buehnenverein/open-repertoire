@@ -8179,8 +8179,18 @@ var $author$project$Helper$CustomValidations$event = $author$project$Helper$Cust
 			$author$project$Helper$CustomValidations$startAndEndDates
 		]));
 var $author$project$Data$Root$PremiereEventType = 0;
+var $author$project$Data$Root$PreviewEventType = 3;
 var $author$project$Helper$CustomValidations$validPremiere = F3(
 	function (allEvents, path, data) {
+		var isPreview = function (ev) {
+			var _v1 = ev.a5;
+			if (!_v1.$) {
+				var types = _v1.a;
+				return A2($elm$core$List$member, 3, types);
+			} else {
+				return false;
+			}
+		};
 		var isPremiere = function (ev) {
 			var _v0 = ev.a5;
 			if (!_v0.$) {
@@ -8194,7 +8204,7 @@ var $author$project$Helper$CustomValidations$validPremiere = F3(
 			return A2(
 				$elm$core$List$all,
 				function (other) {
-					return _Utils_eq(other, ev) || (_Utils_cmp(other.ac, ev.ac) > 0);
+					return _Utils_eq(other, ev) || ((_Utils_cmp(other.ac, ev.ac) > 0) || isPreview(other));
 				},
 				allEvents);
 		};
@@ -8898,7 +8908,6 @@ var $author$project$Data$Root$eventEventStatusDecoder = A2(
 	A2($elm$core$Basics$composeR, $author$project$Data$Root$parseEventEventStatus, $elm_community$json_extra$Json$Decode$Extra$fromResult),
 	$elm$json$Json$Decode$string);
 var $author$project$Data$Root$GuestPerformanceEventType = 2;
-var $author$project$Data$Root$PreviewEventType = 3;
 var $author$project$Data$Root$parseEventTypeItem = function (eventTypeItem) {
 	switch (eventTypeItem) {
 		case 'Premiere':

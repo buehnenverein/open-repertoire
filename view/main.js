@@ -28296,6 +28296,15 @@ var $author$project$Helper$CustomValidations$event = $author$project$Helper$Cust
 		]));
 var $author$project$Helper$CustomValidations$validPremiere = F3(
 	function (allEvents, path, data) {
+		var isPreview = function (ev) {
+			var _v1 = ev.a9;
+			if (!_v1.$) {
+				var types = _v1.a;
+				return A2($elm$core$List$member, 3, types);
+			} else {
+				return false;
+			}
+		};
 		var isPremiere = function (ev) {
 			var _v0 = ev.a9;
 			if (!_v0.$) {
@@ -28309,7 +28318,7 @@ var $author$project$Helper$CustomValidations$validPremiere = F3(
 			return A2(
 				$elm$core$List$all,
 				function (other) {
-					return _Utils_eq(other, ev) || (_Utils_cmp(other.al, ev.al) > 0);
+					return _Utils_eq(other, ev) || ((_Utils_cmp(other.al, ev.al) > 0) || isPreview(other));
 				},
 				allEvents);
 		};
