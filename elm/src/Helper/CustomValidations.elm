@@ -4,14 +4,14 @@ import Data.Root
     exposing
         ( Audience
         , CreatorEntry(..)
-        , CreatorRole
+        , CreatorRoleItem
         , Event
         , EventEventStatus(..)
         , EventTypeItem(..)
         , LocationItem(..)
         , Offer
         , Organization
-        , PerformanceRole
+        , PerformanceRoleItem
         , Person
         , Place
         , PostalAddress
@@ -509,7 +509,7 @@ event =
         ]
 
 
-creator : Validator CreatorRole
+creator : Validator CreatorRoleItem
 creator =
     object
         [ field "/creator" .creator (list creatorEntry)
@@ -534,7 +534,7 @@ person =
         ]
 
 
-performer : Validator PerformanceRole
+performer : Validator PerformanceRoleItem
 performer =
     object
         [ field "/performer" .performer (list person)

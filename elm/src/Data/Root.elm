@@ -33,41 +33,24 @@ type OfferAttype
     = OfferType
 
 
-type OfferingAttype
-    = OfferingEventType
-
-
 type PriceSpecificationAttype
     = PriceSpecificationType
-
-
-type EventAttype
-    = EventType
-
-
-type ProductionAttype
-    = CreativeWorkType
-    | PlayType
 
 
 type OrganizationAttype
     = OrganizationType
 
 
-type OriginalWorkAttype
-    = OriginalWorkType
-
-
 type VirtualLocationAttype
     = VirtualLocationType
 
 
-type PerformanceRoleAttype
-    = PerformanceRoleType
-
-
 type CreatorRoleAttype
     = RoleType
+
+
+type PerformanceRoleAttype
+    = PerformanceRoleType
 
 
 type AudienceAttype
@@ -82,12 +65,21 @@ type alias Audience =
     }
 
 
+type DefinitionsCommonCreativeWorkType
+    = CreativeWorkDefinitions
+    | PlayDefinitions
+
+
+type DefinitionsCommonEventType
+    = EventDefinitions
+
+
 type CreatorEntry
     = CreatorEntryPe Person
     | CreatorEntryOr Organization
 
 
-type alias CreatorRole =
+type alias CreatorRoleItem =
     { atType : CreatorRoleAttype
     , creator : List CreatorEntry
     , roleName : Maybe String
@@ -95,7 +87,7 @@ type alias CreatorRole =
 
 
 type alias Event =
-    { atType : EventAttype
+    { atType : DefinitionsCommonEventType
     , additionalOffering : Maybe (List Offering)
     , duration : Maybe Int
     , endDate : Maybe String
@@ -105,7 +97,7 @@ type alias Event =
     , intermission : Maybe Int
     , location : Maybe (List LocationItem)
     , offers : Maybe (List Offer)
-    , performer : Maybe (List PerformanceRole)
+    , performer : Maybe (List PerformanceRoleItem)
     , previousStartDate : Maybe String
     , startDate : String
     , subtitleLanguage : Maybe String
@@ -122,7 +114,7 @@ type alias Offer =
 
 
 type alias Offering =
-    { atType : OfferingAttype
+    { atType : DefinitionsCommonEventType
     , description : Maybe String
     , duration : Maybe Int
     , endDate : Maybe String
@@ -141,13 +133,13 @@ type alias Organization =
 
 
 type alias OriginalWork =
-    { atType : OriginalWorkAttype
+    { atType : DefinitionsCommonCreativeWorkType
     , author : Maybe Person
     , name : String
     }
 
 
-type alias PerformanceRole =
+type alias PerformanceRoleItem =
     { atType : PerformanceRoleAttype
     , characterName : Maybe String
     , performer : List Person
@@ -179,14 +171,14 @@ type alias PostalAddress =
 
 
 type alias Production =
-    { atType : ProductionAttype
+    { atType : DefinitionsCommonCreativeWorkType
     , abstract : Maybe String
     , accessModeSufficient : Maybe (List AccessModeSufficientItem)
     , accessibilityHazard : Maybe (List AccessibilityHazardItem)
     , accessibilitySummary : Maybe String
     , additionalInfo : Maybe String
     , audience : Maybe Audience
-    , creator : Maybe (List CreatorRole)
+    , creator : Maybe (List CreatorRoleItem)
     , description : Maybe String
     , events : List Event
     , funder : Maybe (List Organization)
@@ -391,21 +383,6 @@ parseOfferAttype offerAttype =
             Err <| "Unknown offerAttype type: " ++ offerAttype
 
 
-offeringAttypeDecoder : Decoder OfferingAttype
-offeringAttypeDecoder =
-    Decode.string |> Decode.andThen (parseOfferingAttype >> Decode.fromResult)
-
-
-parseOfferingAttype : String -> Result String OfferingAttype
-parseOfferingAttype offeringAttype =
-    case offeringAttype of
-        "Event" ->
-            Ok OfferingEventType
-
-        _ ->
-            Err <| "Unknown offeringAttype type: " ++ offeringAttype
-
-
 priceSpecificationAttypeDecoder : Decoder PriceSpecificationAttype
 priceSpecificationAttypeDecoder =
     Decode.string |> Decode.andThen (parsePriceSpecificationAttype >> Decode.fromResult)
@@ -419,39 +396,6 @@ parsePriceSpecificationAttype priceSpecificationAttype =
 
         _ ->
             Err <| "Unknown priceSpecificationAttype type: " ++ priceSpecificationAttype
-
-
-eventAttypeDecoder : Decoder EventAttype
-eventAttypeDecoder =
-    Decode.string |> Decode.andThen (parseEventAttype >> Decode.fromResult)
-
-
-parseEventAttype : String -> Result String EventAttype
-parseEventAttype eventAttype =
-    case eventAttype of
-        "Event" ->
-            Ok EventType
-
-        _ ->
-            Err <| "Unknown eventAttype type: " ++ eventAttype
-
-
-productionAttypeDecoder : Decoder ProductionAttype
-productionAttypeDecoder =
-    Decode.string |> Decode.andThen (parseProductionAttype >> Decode.fromResult)
-
-
-parseProductionAttype : String -> Result String ProductionAttype
-parseProductionAttype productionAttype =
-    case productionAttype of
-        "CreativeWork" ->
-            Ok CreativeWorkType
-
-        "Play" ->
-            Ok PlayType
-
-        _ ->
-            Err <| "Unknown productionAttype type: " ++ productionAttype
 
 
 organizationAttypeDecoder : Decoder OrganizationAttype
@@ -469,21 +413,6 @@ parseOrganizationAttype organizationAttype =
             Err <| "Unknown organizationAttype type: " ++ organizationAttype
 
 
-originalWorkAttypeDecoder : Decoder OriginalWorkAttype
-originalWorkAttypeDecoder =
-    Decode.string |> Decode.andThen (parseOriginalWorkAttype >> Decode.fromResult)
-
-
-parseOriginalWorkAttype : String -> Result String OriginalWorkAttype
-parseOriginalWorkAttype originalWorkAttype =
-    case originalWorkAttype of
-        "CreativeWork" ->
-            Ok OriginalWorkType
-
-        _ ->
-            Err <| "Unknown originalWorkAttype type: " ++ originalWorkAttype
-
-
 virtualLocationAttypeDecoder : Decoder VirtualLocationAttype
 virtualLocationAttypeDecoder =
     Decode.string |> Decode.andThen (parseVirtualLocationAttype >> Decode.fromResult)
@@ -499,21 +428,6 @@ parseVirtualLocationAttype virtualLocationAttype =
             Err <| "Unknown virtualLocationAttype type: " ++ virtualLocationAttype
 
 
-performanceRoleAttypeDecoder : Decoder PerformanceRoleAttype
-performanceRoleAttypeDecoder =
-    Decode.string |> Decode.andThen (parsePerformanceRoleAttype >> Decode.fromResult)
-
-
-parsePerformanceRoleAttype : String -> Result String PerformanceRoleAttype
-parsePerformanceRoleAttype performanceRoleAttype =
-    case performanceRoleAttype of
-        "PerformanceRole" ->
-            Ok PerformanceRoleType
-
-        _ ->
-            Err <| "Unknown performanceRoleAttype type: " ++ performanceRoleAttype
-
-
 creatorRoleAttypeDecoder : Decoder CreatorRoleAttype
 creatorRoleAttypeDecoder =
     Decode.string |> Decode.andThen (parseCreatorRoleAttype >> Decode.fromResult)
@@ -527,6 +441,21 @@ parseCreatorRoleAttype creatorRoleAttype =
 
         _ ->
             Err <| "Unknown creatorRoleAttype type: " ++ creatorRoleAttype
+
+
+performanceRoleAttypeDecoder : Decoder PerformanceRoleAttype
+performanceRoleAttypeDecoder =
+    Decode.string |> Decode.andThen (parsePerformanceRoleAttype >> Decode.fromResult)
+
+
+parsePerformanceRoleAttype : String -> Result String PerformanceRoleAttype
+parsePerformanceRoleAttype performanceRoleAttype =
+    case performanceRoleAttype of
+        "PerformanceRole" ->
+            Ok PerformanceRoleType
+
+        _ ->
+            Err <| "Unknown performanceRoleAttype type: " ++ performanceRoleAttype
 
 
 audienceAttypeDecoder : Decoder AudienceAttype
@@ -553,26 +482,63 @@ audienceDecoder =
         |> optional "suggestedMinAge" (Decode.nullable Decode.int) Nothing
 
 
+definitionsCommonCreativeWorkTypeDecoder : Decoder DefinitionsCommonCreativeWorkType
+definitionsCommonCreativeWorkTypeDecoder =
+    Decode.string |> Decode.andThen (parseDefinitionsCommonCreativeWorkType >> Decode.fromResult)
+
+
+parseDefinitionsCommonCreativeWorkType : String -> Result String DefinitionsCommonCreativeWorkType
+parseDefinitionsCommonCreativeWorkType definitionsCommonCreativeWorkType =
+    case definitionsCommonCreativeWorkType of
+        "CreativeWork" ->
+            Ok CreativeWorkDefinitions
+
+        "Play" ->
+            Ok PlayDefinitions
+
+        _ ->
+            Err <| "Unknown definitionsCommonCreativeWorkType type: " ++ definitionsCommonCreativeWorkType
+
+
+definitionsCommonEventTypeDecoder : Decoder DefinitionsCommonEventType
+definitionsCommonEventTypeDecoder =
+    Decode.string |> Decode.andThen (parseDefinitionsCommonEventType >> Decode.fromResult)
+
+
+parseDefinitionsCommonEventType : String -> Result String DefinitionsCommonEventType
+parseDefinitionsCommonEventType definitionsCommonEventType =
+    case definitionsCommonEventType of
+        "Event" ->
+            Ok EventDefinitions
+
+        _ ->
+            Err <| "Unknown definitionsCommonEventType type: " ++ definitionsCommonEventType
+
+
 creatorEntryDecoder : Decoder CreatorEntry
 creatorEntryDecoder =
-    Decode.oneOf
-        [ personDecoder |> Decode.map CreatorEntryPe
-        , organizationDecoder |> Decode.map CreatorEntryOr
-        ]
+    Decode.oneOf [ personDecoder |> Decode.map CreatorEntryPe
+                 , organizationDecoder |> Decode.map CreatorEntryOr
+                 ]
 
 
-creatorRoleDecoder : Decoder CreatorRole
+creatorRoleDecoder : Decoder (List CreatorRoleItem)
 creatorRoleDecoder =
-    Decode.succeed CreatorRole
+    Decode.list creatorRoleItemDecoder
+
+
+creatorRoleItemDecoder : Decoder CreatorRoleItem
+creatorRoleItemDecoder =
+    Decode.succeed CreatorRoleItem
         |> required "@type" creatorRoleAttypeDecoder
-        |> required "creator" creatorEntriesDecoder
+        |> required "creator" creatorDecoder
         |> optional "roleName" (Decode.nullable Decode.string) Nothing
 
 
 eventDecoder : Decoder Event
 eventDecoder =
     Decode.succeed Event
-        |> required "@type" eventAttypeDecoder
+        |> required "@type" definitionsCommonEventTypeDecoder
         |> optional "additionalOffering" (Decode.nullable additionalOfferingDecoder) Nothing
         |> optional "duration" (Decode.nullable Decode.int) Nothing
         |> optional "endDate" (Decode.nullable Decode.string) Nothing
@@ -582,7 +548,7 @@ eventDecoder =
         |> optional "intermission" (Decode.nullable Decode.int) Nothing
         |> optional "location" (Decode.nullable locationDecoder) Nothing
         |> optional "offers" (Decode.nullable offersDecoder) Nothing
-        |> optional "performer" (Decode.nullable performerDecoder) Nothing
+        |> optional "performer" (Decode.nullable performanceRoleDecoder) Nothing
         |> optional "previousStartDate" (Decode.nullable Decode.string) Nothing
         |> required "startDate" Decode.string
         |> optional "subtitleLanguage" (Decode.nullable Decode.string) Nothing
@@ -601,7 +567,7 @@ offerDecoder =
 offeringDecoder : Decoder Offering
 offeringDecoder =
     Decode.succeed Offering
-        |> required "@type" offeringAttypeDecoder
+        |> required "@type" definitionsCommonEventTypeDecoder
         |> optional "description" (Decode.nullable Decode.string) Nothing
         |> optional "duration" (Decode.nullable Decode.int) Nothing
         |> optional "endDate" (Decode.nullable Decode.string) Nothing
@@ -622,17 +588,22 @@ organizationDecoder =
 originalWorkDecoder : Decoder OriginalWork
 originalWorkDecoder =
     Decode.succeed OriginalWork
-        |> required "@type" originalWorkAttypeDecoder
+        |> required "@type" definitionsCommonCreativeWorkTypeDecoder
         |> optional "author" (Decode.nullable personDecoder) Nothing
         |> required "name" Decode.string
 
 
-performanceRoleDecoder : Decoder PerformanceRole
+performanceRoleDecoder : Decoder (List PerformanceRoleItem)
 performanceRoleDecoder =
-    Decode.succeed PerformanceRole
+    Decode.list performanceRoleItemDecoder
+
+
+performanceRoleItemDecoder : Decoder PerformanceRoleItem
+performanceRoleItemDecoder =
+    Decode.succeed PerformanceRoleItem
         |> required "@type" performanceRoleAttypeDecoder
         |> optional "characterName" (Decode.nullable Decode.string) Nothing
-        |> required "performer" performersDecoder
+        |> required "performer" performerDecoder
 
 
 personDecoder : Decoder Person
@@ -665,14 +636,14 @@ postalAddressDecoder =
 productionDecoder : Decoder Production
 productionDecoder =
     Decode.succeed Production
-        |> required "@type" productionAttypeDecoder
+        |> required "@type" definitionsCommonCreativeWorkTypeDecoder
         |> optional "abstract" (Decode.nullable Decode.string) Nothing
         |> optional "accessModeSufficient" (Decode.nullable accessModeSufficientDecoder) Nothing
         |> optional "accessibilityHazard" (Decode.nullable accessibilityHazardDecoder) Nothing
         |> optional "accessibilitySummary" (Decode.nullable Decode.string) Nothing
         |> optional "additionalInfo" (Decode.nullable Decode.string) Nothing
         |> optional "audience" (Decode.nullable audienceDecoder) Nothing
-        |> optional "creator" (Decode.nullable creatorDecoder) Nothing
+        |> optional "creator" (Decode.nullable creatorRoleDecoder) Nothing
         |> optional "description" (Decode.nullable Decode.string) Nothing
         |> required "events" eventsDecoder
         |> optional "funder" (Decode.nullable funderDecoder) Nothing
@@ -796,13 +767,8 @@ additionalOfferingDecoder =
     Decode.list offeringDecoder
 
 
-creatorDecoder : Decoder (List CreatorRole)
+creatorDecoder : Decoder (List CreatorEntry)
 creatorDecoder =
-    Decode.list creatorRoleDecoder
-
-
-creatorEntriesDecoder : Decoder (List CreatorEntry)
-creatorEntriesDecoder =
     Decode.list creatorEntryDecoder
 
 
@@ -986,10 +952,9 @@ locationDecoder =
 
 locationItemDecoder : Decoder LocationItem
 locationItemDecoder =
-    Decode.oneOf
-        [ placeDecoder |> Decode.map LocationItemPl
-        , virtualLocationDecoder |> Decode.map LocationItemVi
-        ]
+    Decode.oneOf [ placeDecoder |> Decode.map LocationItemPl
+                 , virtualLocationDecoder |> Decode.map LocationItemVi
+                 ]
 
 
 offersDecoder : Decoder (List Offer)
@@ -997,14 +962,9 @@ offersDecoder =
     Decode.list offerDecoder
 
 
-performersDecoder : Decoder (List Person)
-performersDecoder =
-    Decode.list personDecoder
-
-
-performerDecoder : Decoder (List PerformanceRole)
+performerDecoder : Decoder (List Person)
 performerDecoder =
-    Decode.list performanceRoleDecoder
+    Decode.list personDecoder
 
 
 priceSpecificationDecoder : Decoder PriceSpecification
@@ -1122,18 +1082,6 @@ offerAttypeToString offerAttype =
             "Offer"
 
 
-encodeOfferingAttype : OfferingAttype -> Value
-encodeOfferingAttype offeringAttype =
-    offeringAttype |> offeringAttypeToString |> Encode.string
-
-
-offeringAttypeToString : OfferingAttype -> String
-offeringAttypeToString offeringAttype =
-    case offeringAttype of
-        OfferingEventType ->
-            "Event"
-
-
 encodePriceSpecificationAttype : PriceSpecificationAttype -> Value
 encodePriceSpecificationAttype priceSpecificationAttype =
     priceSpecificationAttype |> priceSpecificationAttypeToString |> Encode.string
@@ -1144,33 +1092,6 @@ priceSpecificationAttypeToString priceSpecificationAttype =
     case priceSpecificationAttype of
         PriceSpecificationType ->
             "PriceSpecification"
-
-
-encodeEventAttype : EventAttype -> Value
-encodeEventAttype eventAttype =
-    eventAttype |> eventAttypeToString |> Encode.string
-
-
-eventAttypeToString : EventAttype -> String
-eventAttypeToString eventAttype =
-    case eventAttype of
-        EventType ->
-            "Event"
-
-
-encodeProductionAttype : ProductionAttype -> Value
-encodeProductionAttype productionAttype =
-    productionAttype |> productionAttypeToString |> Encode.string
-
-
-productionAttypeToString : ProductionAttype -> String
-productionAttypeToString productionAttype =
-    case productionAttype of
-        CreativeWorkType ->
-            "CreativeWork"
-
-        PlayType ->
-            "Play"
 
 
 encodeOrganizationAttype : OrganizationAttype -> Value
@@ -1185,18 +1106,6 @@ organizationAttypeToString organizationAttype =
             "Organization"
 
 
-encodeOriginalWorkAttype : OriginalWorkAttype -> Value
-encodeOriginalWorkAttype originalWorkAttype =
-    originalWorkAttype |> originalWorkAttypeToString |> Encode.string
-
-
-originalWorkAttypeToString : OriginalWorkAttype -> String
-originalWorkAttypeToString originalWorkAttype =
-    case originalWorkAttype of
-        OriginalWorkType ->
-            "CreativeWork"
-
-
 encodeVirtualLocationAttype : VirtualLocationAttype -> Value
 encodeVirtualLocationAttype virtualLocationAttype =
     virtualLocationAttype |> virtualLocationAttypeToString |> Encode.string
@@ -1209,18 +1118,6 @@ virtualLocationAttypeToString virtualLocationAttype =
             "VirtualLocation"
 
 
-encodePerformanceRoleAttype : PerformanceRoleAttype -> Value
-encodePerformanceRoleAttype performanceRoleAttype =
-    performanceRoleAttype |> performanceRoleAttypeToString |> Encode.string
-
-
-performanceRoleAttypeToString : PerformanceRoleAttype -> String
-performanceRoleAttypeToString performanceRoleAttype =
-    case performanceRoleAttype of
-        PerformanceRoleType ->
-            "PerformanceRole"
-
-
 encodeCreatorRoleAttype : CreatorRoleAttype -> Value
 encodeCreatorRoleAttype creatorRoleAttype =
     creatorRoleAttype |> creatorRoleAttypeToString |> Encode.string
@@ -1231,6 +1128,18 @@ creatorRoleAttypeToString creatorRoleAttype =
     case creatorRoleAttype of
         RoleType ->
             "Role"
+
+
+encodePerformanceRoleAttype : PerformanceRoleAttype -> Value
+encodePerformanceRoleAttype performanceRoleAttype =
+    performanceRoleAttype |> performanceRoleAttypeToString |> Encode.string
+
+
+performanceRoleAttypeToString : PerformanceRoleAttype -> String
+performanceRoleAttypeToString performanceRoleAttype =
+    case performanceRoleAttype of
+        PerformanceRoleType ->
+            "PerformanceRole"
 
 
 encodeAudienceAttype : AudienceAttype -> Value
@@ -1255,6 +1164,33 @@ encodeAudience audience =
         |> Encode.object
 
 
+encodeDefinitionsCommonCreativeWorkType : DefinitionsCommonCreativeWorkType -> Value
+encodeDefinitionsCommonCreativeWorkType definitionsCommonCreativeWorkType =
+    definitionsCommonCreativeWorkType |> definitionsCommonCreativeWorkTypeToString |> Encode.string
+
+
+definitionsCommonCreativeWorkTypeToString : DefinitionsCommonCreativeWorkType -> String
+definitionsCommonCreativeWorkTypeToString definitionsCommonCreativeWorkType =
+    case definitionsCommonCreativeWorkType of
+        CreativeWorkDefinitions ->
+            "CreativeWork"
+
+        PlayDefinitions ->
+            "Play"
+
+
+encodeDefinitionsCommonEventType : DefinitionsCommonEventType -> Value
+encodeDefinitionsCommonEventType definitionsCommonEventType =
+    definitionsCommonEventType |> definitionsCommonEventTypeToString |> Encode.string
+
+
+definitionsCommonEventTypeToString : DefinitionsCommonEventType -> String
+definitionsCommonEventTypeToString definitionsCommonEventType =
+    case definitionsCommonEventType of
+        EventDefinitions ->
+            "Event"
+
+
 encodeCreatorEntry : CreatorEntry -> Value
 encodeCreatorEntry creatorEntry =
     case creatorEntry of
@@ -1265,19 +1201,25 @@ encodeCreatorEntry creatorEntry =
             encodeOrganization organization
 
 
-encodeCreatorRole : CreatorRole -> Value
+encodeCreatorRole : List CreatorRoleItem -> Value
 encodeCreatorRole creatorRole =
+    creatorRole
+        |> Encode.list encodeCreatorRoleItem
+
+
+encodeCreatorRoleItem : CreatorRoleItem -> Value
+encodeCreatorRoleItem creatorRoleItem =
     []
-        |> Encode.required "@type" creatorRole.atType encodeCreatorRoleAttype
-        |> Encode.required "creator" creatorRole.creator encodeCreatorEntries
-        |> Encode.optional "roleName" creatorRole.roleName Encode.string
+        |> Encode.required "@type" creatorRoleItem.atType encodeCreatorRoleAttype
+        |> Encode.required "creator" creatorRoleItem.creator encodeCreator
+        |> Encode.optional "roleName" creatorRoleItem.roleName Encode.string
         |> Encode.object
 
 
 encodeEvent : Event -> Value
 encodeEvent event =
     []
-        |> Encode.required "@type" event.atType encodeEventAttype
+        |> Encode.required "@type" event.atType encodeDefinitionsCommonEventType
         |> Encode.optional "additionalOffering" event.additionalOffering encodeAdditionalOffering
         |> Encode.optional "duration" event.duration Encode.int
         |> Encode.optional "endDate" event.endDate Encode.string
@@ -1287,7 +1229,7 @@ encodeEvent event =
         |> Encode.optional "intermission" event.intermission Encode.int
         |> Encode.optional "location" event.location encodeLocation
         |> Encode.optional "offers" event.offers encodeOffers
-        |> Encode.optional "performer" event.performer encodePerformer
+        |> Encode.optional "performer" event.performer encodePerformanceRole
         |> Encode.optional "previousStartDate" event.previousStartDate Encode.string
         |> Encode.required "startDate" event.startDate Encode.string
         |> Encode.optional "subtitleLanguage" event.subtitleLanguage Encode.string
@@ -1308,7 +1250,7 @@ encodeOffer offer =
 encodeOffering : Offering -> Value
 encodeOffering offering =
     []
-        |> Encode.required "@type" offering.atType encodeOfferingAttype
+        |> Encode.required "@type" offering.atType encodeDefinitionsCommonEventType
         |> Encode.optional "description" offering.description Encode.string
         |> Encode.optional "duration" offering.duration Encode.int
         |> Encode.optional "endDate" offering.endDate Encode.string
@@ -1331,18 +1273,24 @@ encodeOrganization organization =
 encodeOriginalWork : OriginalWork -> Value
 encodeOriginalWork originalWork =
     []
-        |> Encode.required "@type" originalWork.atType encodeOriginalWorkAttype
+        |> Encode.required "@type" originalWork.atType encodeDefinitionsCommonCreativeWorkType
         |> Encode.optional "author" originalWork.author encodePerson
         |> Encode.required "name" originalWork.name Encode.string
         |> Encode.object
 
 
-encodePerformanceRole : PerformanceRole -> Value
+encodePerformanceRole : List PerformanceRoleItem -> Value
 encodePerformanceRole performanceRole =
+    performanceRole
+        |> Encode.list encodePerformanceRoleItem
+
+
+encodePerformanceRoleItem : PerformanceRoleItem -> Value
+encodePerformanceRoleItem performanceRoleItem =
     []
-        |> Encode.required "@type" performanceRole.atType encodePerformanceRoleAttype
-        |> Encode.optional "characterName" performanceRole.characterName Encode.string
-        |> Encode.required "performer" performanceRole.performer encodePerformers
+        |> Encode.required "@type" performanceRoleItem.atType encodePerformanceRoleAttype
+        |> Encode.optional "characterName" performanceRoleItem.characterName Encode.string
+        |> Encode.required "performer" performanceRoleItem.performer encodePerformer
         |> Encode.object
 
 
@@ -1379,14 +1327,14 @@ encodePostalAddress postalAddress =
 encodeProduction : Production -> Value
 encodeProduction production =
     []
-        |> Encode.required "@type" production.atType encodeProductionAttype
+        |> Encode.required "@type" production.atType encodeDefinitionsCommonCreativeWorkType
         |> Encode.optional "abstract" production.abstract Encode.string
         |> Encode.optional "accessModeSufficient" production.accessModeSufficient encodeAccessModeSufficient
         |> Encode.optional "accessibilityHazard" production.accessibilityHazard encodeAccessibilityHazard
         |> Encode.optional "accessibilitySummary" production.accessibilitySummary Encode.string
         |> Encode.optional "additionalInfo" production.additionalInfo Encode.string
         |> Encode.optional "audience" production.audience encodeAudience
-        |> Encode.optional "creator" production.creator encodeCreator
+        |> Encode.optional "creator" production.creator encodeCreatorRole
         |> Encode.optional "description" production.description Encode.string
         |> Encode.required "events" production.events encodeEvents
         |> Encode.optional "funder" production.funder encodeFunder
@@ -1511,14 +1459,8 @@ encodeAdditionalOffering additionalOffering =
         |> Encode.list encodeOffering
 
 
-encodeCreator : List CreatorRole -> Value
+encodeCreator : List CreatorEntry -> Value
 encodeCreator creator =
-    creator
-        |> Encode.list encodeCreatorRole
-
-
-encodeCreatorEntries : List CreatorEntry -> Value
-encodeCreatorEntries creator =
     creator
         |> Encode.list encodeCreatorEntry
 
@@ -1713,16 +1655,10 @@ encodeOffers offers =
         |> Encode.list encodeOffer
 
 
-encodePerformers : List Person -> Value
-encodePerformers performer =
-    performer
-        |> Encode.list encodePerson
-
-
-encodePerformer : List PerformanceRole -> Value
+encodePerformer : List Person -> Value
 encodePerformer performer =
     performer
-        |> Encode.list encodePerformanceRole
+        |> Encode.list encodePerson
 
 
 encodePriceSpecification : PriceSpecification -> Value

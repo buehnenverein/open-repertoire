@@ -1,6 +1,17 @@
 "$schema": "http://json-schema.org/draft-07/schema#"
 "$id": https://peret.github.io/uc3-openapi/schema.json
 definitions: 
+    CommonEventType:
+      type: string
+      enum:
+        - "Event"
+
+    CommonCreativeWorkType:
+          type: string
+          enum:
+            - "CreativeWork"
+            - "Play"
+
     OriginalWork:
       type: object
       additionalProperties: false
@@ -9,9 +20,7 @@ definitions:
         - "name"
       properties:
         "@type":
-          type: string
-          enum:
-            - "CreativeWork"
+          $ref: "#/definitions/CommonCreativeWorkType"
         name:
           type: string
         author:
@@ -27,10 +36,7 @@ definitions:
         - events
       properties:
         "@type":
-          type: string
-          enum:
-            - "CreativeWork"
-            - "Play"
+          $ref: "#/definitions/CommonCreativeWorkType"
         identifier:
           type: string
           description: The unique ID of this production. This could be an internal database ID, for example.
@@ -141,16 +147,7 @@ definitions:
         audience:
           $ref: "#/definitions/Audience"
         creator:
-          description: |-
-            List of people and organizations that contributed to the creation of this production, e.g. directors, stage designers, musical directors, etc.
-            If this production is a collaboration with another organization, e.g. another theater or orchestra, this organization should also be included
-            in this field.
-
-            If multiple people perform the same role/function (e.g. there is multiple directors),
-            each person should get their own entry in the `creator` array.
-          type: array
-          items:
-            $ref: "#/definitions/CreatorRole"
+          $ref: "#/definitions/CreatorRole"
         funder:
           type: array
           description: A list of organization's that support this production through some kind of financial contribution.
@@ -204,9 +201,7 @@ definitions:
       additionalProperties: false
       properties:
         "@type":
-          type: string
-          enum:
-            - "Event"
+          $ref: "#/definitions/CommonEventType"
         identifier:
           type: string
           description: The unique ID of this event. This could be an internal database ID, for example.
@@ -248,14 +243,7 @@ definitions:
               - $ref: "#/definitions/Place"    
               - $ref: "#/definitions/VirtualLocation"    
         performer:
-          type: array
-          description: |-
-            A list of people performing at the event, e.g. actors, dancers, etc.
-            
-            If multiple people perform the same role on stage (e.g. there is multiple actors
-            performing the same character), each person should get their own entry in the `performer` array.
-          items:
-            $ref: "#/definitions/PerformanceRole"
+          $ref: "#/definitions/PerformanceRole"
             
         offers:
           type: array
@@ -308,9 +296,7 @@ definitions:
         - name
       properties:
         "@type":
-          type: string
-          enum:
-            - "Event"
+          $ref: "#/definitions/CommonEventType"
         name:
           type: string
           example: 30-minütige Einführung vor der Vorstellung
@@ -386,70 +372,79 @@ definitions:
           example: "https://webshop-tickets.staatstheater-augsburg.de/de/tickets/hedwig-and-the-angry-inch/brechtbuehne-im-gaswerk-14-12-2023-19-30"
 
     CreatorRole:
-      type: object
-      additionalProperties: false
-      required:
-        - "@type"
-        - creator
-      properties:
-        "@type":
-          type: string
-          enum:
-            - Role
-        creator:
-          type: array
-          items:
-            $ref: "#/definitions/CreatorEntry"
+      description: |-
+        List of people and organizations that contributed to the creation of this production, e.g. directors, stage designers, musical directors, etc.
+        If this production is a collaboration with another organization, e.g. another theater or orchestra, this organization should also be included
+        in this field.
 
-        roleName:
-          type: string
-          description: 'The name of the role this person played in the creation of the production.'
-          example: Regie
-          # enum:
-          #   - akrobatik
-          #   - alles
-          #   - assistenz
-          #   - beratung
-          #   - buehne
-          #   - choreographie
-          #   - clownerie
-          #   - dramaturgie
-          #   - expertin-des-alltags
-          #   - fotografie
-          #   - gebaerdensprache
-          #   - gesang
-          #   - grafik
-          #   - inszenierung
-          #   - jonglage
-          #   - kamera-video
-          #   - komposition
-          #   - konzept
-          #   - kostuem
-          #   - kuenstlerische-leitung
-          #   - licht
-          #   - live-musik
-          #   - marketing
-          #   - maske
-          #   - moderation
-          #   - musik
-          #   - musikalische-leitung
-          #   - performance
-          #   - produktion
-          #   - programmierung
-          #   - puppenbau
-          #   - puppenspiel
-          #   - regie
-          #   - rigging
-          #   - schauspiel
-          #   - sound
-          #   - tanz
-          #   - technik
-          #   - technische-leitung
-          #   - text
-          #   - ton
-          #   - uebersetzung
-          #   - vermittlung
-          #   - virtual-reality-design
+        If multiple people perform the same role/function (e.g. there is multiple directors),
+        each person should get their own entry in the `creator` array.
+      type: array
+      items:
+        type: object
+        additionalProperties: false
+        required:
+          - "@type"
+          - creator
+        properties:
+          "@type":
+            type: string
+            enum:
+              - Role
+          creator:
+            type: array
+            items:
+              $ref: "#/definitions/CreatorEntry"
+
+          roleName:
+            type: string
+            description: 'The name of the role this person played in the creation of the production.'
+            example: Regie
+            # enum:
+            #   - akrobatik
+            #   - alles
+            #   - assistenz
+            #   - beratung
+            #   - buehne
+            #   - choreographie
+            #   - clownerie
+            #   - dramaturgie
+            #   - expertin-des-alltags
+            #   - fotografie
+            #   - gebaerdensprache
+            #   - gesang
+            #   - grafik
+            #   - inszenierung
+            #   - jonglage
+            #   - kamera-video
+            #   - komposition
+            #   - konzept
+            #   - kostuem
+            #   - kuenstlerische-leitung
+            #   - licht
+            #   - live-musik
+            #   - marketing
+            #   - maske
+            #   - moderation
+            #   - musik
+            #   - musikalische-leitung
+            #   - performance
+            #   - produktion
+            #   - programmierung
+            #   - puppenbau
+            #   - puppenspiel
+            #   - regie
+            #   - rigging
+            #   - schauspiel
+            #   - sound
+            #   - tanz
+            #   - technik
+            #   - technische-leitung
+            #   - text
+            #   - ton
+            #   - uebersetzung
+            #   - vermittlung
+            #   - virtual-reality-design
 
     CreatorEntry:
       type: object
@@ -458,24 +453,31 @@ definitions:
         - $ref: "#/definitions/Organization"
 
     PerformanceRole:
-      type: object
-      additionalProperties: false
-      required:
-        - "@type"
-        - performer
-      properties:
-        "@type":
-          type: string
-          enum:
-            - PerformanceRole
-        characterName:
-          type: string
-          description: The name of the character performed on stage, if any.
-          example: Hedwig
-        performer:
-          type: array
-          items:
-            $ref: "#/definitions/Person"
+      type: array
+      description: |-
+        A list of people performing at the event, e.g. actors, dancers, etc.
+        
+        If multiple people perform the same role on stage (e.g. there is multiple actors
+        performing the same character), each person should get their own entry in the `performer` array.
+      items:
+        type: object
+        additionalProperties: false
+        required:
+          - "@type"
+          - performer
+        properties:
+          "@type":
+            type: string
+            enum:
+              - PerformanceRole
+          characterName:
+            type: string
+            description: The name of the character performed on stage, if any.
+            example: Hedwig
+          performer:
+            type: array
+            items:
+              $ref: "#/definitions/Person"
 
     Place:
       type: object

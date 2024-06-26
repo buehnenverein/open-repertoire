@@ -24984,7 +24984,7 @@ var $author$project$Data$Root$audienceDecoder = A4(
 				'@type',
 				$author$project$Data$Root$audienceAttypeDecoder,
 				$elm$json$Json$Decode$succeed($author$project$Data$Root$Audience)))));
-var $author$project$Data$Root$CreatorRole = F3(
+var $author$project$Data$Root$CreatorRoleItem = F3(
 	function (atType, creator, roleName) {
 		return {d: atType, aa: creator, bX: roleName};
 	});
@@ -25025,7 +25025,7 @@ var $author$project$Data$Root$creatorEntryDecoder = $elm$json$Json$Decode$oneOf(
 			A2($elm$json$Json$Decode$map, $author$project$Data$Root$CreatorEntryPe, $author$project$Data$Root$personDecoder),
 			A2($elm$json$Json$Decode$map, $author$project$Data$Root$CreatorEntryOr, $author$project$Data$Root$organizationDecoder)
 		]));
-var $author$project$Data$Root$creatorEntriesDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$creatorEntryDecoder);
+var $author$project$Data$Root$creatorDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$creatorEntryDecoder);
 var $author$project$Data$Root$RoleType = 0;
 var $author$project$Data$Root$parseCreatorRoleAttype = function (creatorRoleAttype) {
 	if (creatorRoleAttype === 'Role') {
@@ -25038,7 +25038,7 @@ var $author$project$Data$Root$creatorRoleAttypeDecoder = A2(
 	$elm$json$Json$Decode$andThen,
 	A2($elm$core$Basics$composeR, $author$project$Data$Root$parseCreatorRoleAttype, $elm_community$json_extra$Json$Decode$Extra$fromResult),
 	$elm$json$Json$Decode$string);
-var $author$project$Data$Root$creatorRoleDecoder = A4(
+var $author$project$Data$Root$creatorRoleItemDecoder = A4(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 	'roleName',
 	$elm$json$Json$Decode$nullable($elm$json$Json$Decode$string),
@@ -25046,13 +25046,29 @@ var $author$project$Data$Root$creatorRoleDecoder = A4(
 	A3(
 		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 		'creator',
-		$author$project$Data$Root$creatorEntriesDecoder,
+		$author$project$Data$Root$creatorDecoder,
 		A3(
 			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 			'@type',
 			$author$project$Data$Root$creatorRoleAttypeDecoder,
-			$elm$json$Json$Decode$succeed($author$project$Data$Root$CreatorRole))));
-var $author$project$Data$Root$creatorDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$creatorRoleDecoder);
+			$elm$json$Json$Decode$succeed($author$project$Data$Root$CreatorRoleItem))));
+var $author$project$Data$Root$creatorRoleDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$creatorRoleItemDecoder);
+var $author$project$Data$Root$CreativeWorkDefinitions = 0;
+var $author$project$Data$Root$PlayDefinitions = 1;
+var $author$project$Data$Root$parseDefinitionsCommonCreativeWorkType = function (definitionsCommonCreativeWorkType) {
+	switch (definitionsCommonCreativeWorkType) {
+		case 'CreativeWork':
+			return $elm$core$Result$Ok(0);
+		case 'Play':
+			return $elm$core$Result$Ok(1);
+		default:
+			return $elm$core$Result$Err('Unknown definitionsCommonCreativeWorkType type: ' + definitionsCommonCreativeWorkType);
+	}
+};
+var $author$project$Data$Root$definitionsCommonCreativeWorkTypeDecoder = A2(
+	$elm$json$Json$Decode$andThen,
+	A2($elm$core$Basics$composeR, $author$project$Data$Root$parseDefinitionsCommonCreativeWorkType, $elm_community$json_extra$Json$Decode$Extra$fromResult),
+	$elm$json$Json$Decode$string);
 var $author$project$Data$Root$Event = function (atType) {
 	return function (additionalOffering) {
 		return function (duration) {
@@ -25088,17 +25104,17 @@ var $author$project$Data$Root$Offering = F7(
 	function (atType, description, duration, endDate, location, name, startDate) {
 		return {d: atType, J: description, ab: duration, ac: endDate, ag: location, L: name, al: startDate};
 	});
-var $author$project$Data$Root$OfferingEventType = 0;
-var $author$project$Data$Root$parseOfferingAttype = function (offeringAttype) {
-	if (offeringAttype === 'Event') {
+var $author$project$Data$Root$EventDefinitions = 0;
+var $author$project$Data$Root$parseDefinitionsCommonEventType = function (definitionsCommonEventType) {
+	if (definitionsCommonEventType === 'Event') {
 		return $elm$core$Result$Ok(0);
 	} else {
-		return $elm$core$Result$Err('Unknown offeringAttype type: ' + offeringAttype);
+		return $elm$core$Result$Err('Unknown definitionsCommonEventType type: ' + definitionsCommonEventType);
 	}
 };
-var $author$project$Data$Root$offeringAttypeDecoder = A2(
+var $author$project$Data$Root$definitionsCommonEventTypeDecoder = A2(
 	$elm$json$Json$Decode$andThen,
-	A2($elm$core$Basics$composeR, $author$project$Data$Root$parseOfferingAttype, $elm_community$json_extra$Json$Decode$Extra$fromResult),
+	A2($elm$core$Basics$composeR, $author$project$Data$Root$parseDefinitionsCommonEventType, $elm_community$json_extra$Json$Decode$Extra$fromResult),
 	$elm$json$Json$Decode$string);
 var $author$project$Data$Root$offeringDecoder = A4(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
@@ -25132,21 +25148,9 @@ var $author$project$Data$Root$offeringDecoder = A4(
 						A3(
 							$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 							'@type',
-							$author$project$Data$Root$offeringAttypeDecoder,
+							$author$project$Data$Root$definitionsCommonEventTypeDecoder,
 							$elm$json$Json$Decode$succeed($author$project$Data$Root$Offering))))))));
 var $author$project$Data$Root$additionalOfferingDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$offeringDecoder);
-var $author$project$Data$Root$EventType = 0;
-var $author$project$Data$Root$parseEventAttype = function (eventAttype) {
-	if (eventAttype === 'Event') {
-		return $elm$core$Result$Ok(0);
-	} else {
-		return $elm$core$Result$Err('Unknown eventAttype type: ' + eventAttype);
-	}
-};
-var $author$project$Data$Root$eventAttypeDecoder = A2(
-	$elm$json$Json$Decode$andThen,
-	A2($elm$core$Basics$composeR, $author$project$Data$Root$parseEventAttype, $elm_community$json_extra$Json$Decode$Extra$fromResult),
-	$elm$json$Json$Decode$string);
 var $author$project$Data$Root$EventCancelledEvent = 1;
 var $author$project$Data$Root$EventMovedOnlineEvent = 2;
 var $author$project$Data$Root$EventPostponedEvent = 3;
@@ -25380,7 +25384,7 @@ var $author$project$Data$Root$offerDecoder = A4(
 				$author$project$Data$Root$offerAttypeDecoder,
 				$elm$json$Json$Decode$succeed($author$project$Data$Root$Offer)))));
 var $author$project$Data$Root$offersDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$offerDecoder);
-var $author$project$Data$Root$PerformanceRole = F3(
+var $author$project$Data$Root$PerformanceRoleItem = F3(
 	function (atType, characterName, performer) {
 		return {d: atType, a1: characterName, ah: performer};
 	});
@@ -25396,11 +25400,11 @@ var $author$project$Data$Root$performanceRoleAttypeDecoder = A2(
 	$elm$json$Json$Decode$andThen,
 	A2($elm$core$Basics$composeR, $author$project$Data$Root$parsePerformanceRoleAttype, $elm_community$json_extra$Json$Decode$Extra$fromResult),
 	$elm$json$Json$Decode$string);
-var $author$project$Data$Root$performersDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$personDecoder);
-var $author$project$Data$Root$performanceRoleDecoder = A3(
+var $author$project$Data$Root$performerDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$personDecoder);
+var $author$project$Data$Root$performanceRoleItemDecoder = A3(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 	'performer',
-	$author$project$Data$Root$performersDecoder,
+	$author$project$Data$Root$performerDecoder,
 	A4(
 		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 		'characterName',
@@ -25410,8 +25414,8 @@ var $author$project$Data$Root$performanceRoleDecoder = A3(
 			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 			'@type',
 			$author$project$Data$Root$performanceRoleAttypeDecoder,
-			$elm$json$Json$Decode$succeed($author$project$Data$Root$PerformanceRole))));
-var $author$project$Data$Root$performerDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$performanceRoleDecoder);
+			$elm$json$Json$Decode$succeed($author$project$Data$Root$PerformanceRoleItem))));
+var $author$project$Data$Root$performanceRoleDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$performanceRoleItemDecoder);
 var $author$project$Data$Root$eventDecoder = A4(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 	'url',
@@ -25434,7 +25438,7 @@ var $author$project$Data$Root$eventDecoder = A4(
 				A4(
 					$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 					'performer',
-					$elm$json$Json$Decode$nullable($author$project$Data$Root$performerDecoder),
+					$elm$json$Json$Decode$nullable($author$project$Data$Root$performanceRoleDecoder),
 					$elm$core$Maybe$Nothing,
 					A4(
 						$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
@@ -25483,7 +25487,7 @@ var $author$project$Data$Root$eventDecoder = A4(
 														A3(
 															$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 															'@type',
-															$author$project$Data$Root$eventAttypeDecoder,
+															$author$project$Data$Root$definitionsCommonEventTypeDecoder,
 															$elm$json$Json$Decode$succeed($author$project$Data$Root$Event))))))))))))))));
 var $author$project$Data$Root$eventsDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$eventDecoder);
 var $author$project$Data$Root$funderDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$organizationDecoder);
@@ -25592,18 +25596,6 @@ var $author$project$Data$Root$OriginalWork = F3(
 	function (atType, author, name) {
 		return {d: atType, a_: author, L: name};
 	});
-var $author$project$Data$Root$OriginalWorkType = 0;
-var $author$project$Data$Root$parseOriginalWorkAttype = function (originalWorkAttype) {
-	if (originalWorkAttype === 'CreativeWork') {
-		return $elm$core$Result$Ok(0);
-	} else {
-		return $elm$core$Result$Err('Unknown originalWorkAttype type: ' + originalWorkAttype);
-	}
-};
-var $author$project$Data$Root$originalWorkAttypeDecoder = A2(
-	$elm$json$Json$Decode$andThen,
-	A2($elm$core$Basics$composeR, $author$project$Data$Root$parseOriginalWorkAttype, $elm_community$json_extra$Json$Decode$Extra$fromResult),
-	$elm$json$Json$Decode$string);
 var $author$project$Data$Root$originalWorkDecoder = A3(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 	'name',
@@ -25616,24 +25608,8 @@ var $author$project$Data$Root$originalWorkDecoder = A3(
 		A3(
 			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 			'@type',
-			$author$project$Data$Root$originalWorkAttypeDecoder,
+			$author$project$Data$Root$definitionsCommonCreativeWorkTypeDecoder,
 			$elm$json$Json$Decode$succeed($author$project$Data$Root$OriginalWork))));
-var $author$project$Data$Root$CreativeWorkType = 0;
-var $author$project$Data$Root$PlayType = 1;
-var $author$project$Data$Root$parseProductionAttype = function (productionAttype) {
-	switch (productionAttype) {
-		case 'CreativeWork':
-			return $elm$core$Result$Ok(0);
-		case 'Play':
-			return $elm$core$Result$Ok(1);
-		default:
-			return $elm$core$Result$Err('Unknown productionAttype type: ' + productionAttype);
-	}
-};
-var $author$project$Data$Root$productionAttypeDecoder = A2(
-	$elm$json$Json$Decode$andThen,
-	A2($elm$core$Basics$composeR, $author$project$Data$Root$parseProductionAttype, $elm_community$json_extra$Json$Decode$Extra$fromResult),
-	$elm$json$Json$Decode$string);
 var $author$project$Data$Root$FirstPerformanceProduction = 1;
 var $author$project$Data$Root$RevivalProduction = 2;
 var $author$project$Data$Root$WorldPremiereProduction = 0;
@@ -25709,7 +25685,7 @@ var $author$project$Data$Root$productionDecoder = A4(
 											A4(
 												$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 												'creator',
-												$elm$json$Json$Decode$nullable($author$project$Data$Root$creatorDecoder),
+												$elm$json$Json$Decode$nullable($author$project$Data$Root$creatorRoleDecoder),
 												$elm$core$Maybe$Nothing,
 												A4(
 													$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
@@ -25744,7 +25720,7 @@ var $author$project$Data$Root$productionDecoder = A4(
 																		A3(
 																			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 																			'@type',
-																			$author$project$Data$Root$productionAttypeDecoder,
+																			$author$project$Data$Root$definitionsCommonCreativeWorkTypeDecoder,
 																			$elm$json$Json$Decode$succeed($author$project$Data$Root$Production))))))))))))))))))));
 var $author$project$Data$Root$productionsDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$productionDecoder);
 var $author$project$Data$Root$V2 = 0;

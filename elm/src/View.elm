@@ -2,7 +2,7 @@ module View exposing (main)
 
 import Browser
 import Components.DataEntry as Entry exposing (asDate, asLink, asTime)
-import Data.Root exposing (CreatorEntry(..), CreatorRole, Event, EventEventStatus(..), EventTypeItem(..), GenreItem(..), LocationItem(..), Offer, Organization, PerformanceRole, Production, ProductionProductionType(..), Root, rootDecoder)
+import Data.Root exposing (CreatorEntry(..), CreatorRoleItem, Event, EventEventStatus(..), EventTypeItem(..), GenreItem(..), LocationItem(..), Offer, Organization, PerformanceRoleItem, Production, ProductionProductionType(..), Root, rootDecoder)
 import Helper.CustomValidations as CustomValidations
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -710,7 +710,7 @@ osmUrl place =
 -- PARTICIPANTS
 
 
-viewCreators : Maybe (List CreatorRole) -> Html Msg
+viewCreators : Maybe (List CreatorRoleItem) -> Html Msg
 viewCreators creators =
     div []
         [ div [ class "title is-5" ] [ text "Team" ]
@@ -727,7 +727,7 @@ viewCreators creators =
         ]
 
 
-viewCreator : CreatorRole -> Html Msg
+viewCreator : CreatorRoleItem -> Html Msg
 viewCreator creator =
     tr []
         [ td [] [ text (Maybe.withDefault "" creator.roleName) ]
@@ -750,7 +750,7 @@ creatorNames creators =
         |> String.join ", "
 
 
-viewPerformers : Maybe (List PerformanceRole) -> Html Msg
+viewPerformers : Maybe (List PerformanceRoleItem) -> Html Msg
 viewPerformers performers =
     div []
         [ div [ class "title is-5" ] [ text "Besetzung" ]
@@ -767,7 +767,7 @@ viewPerformers performers =
         ]
 
 
-viewPerformer : PerformanceRole -> Html Msg
+viewPerformer : PerformanceRoleItem -> Html Msg
 viewPerformer performer =
     let
         namesString =

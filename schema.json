@@ -2,6 +2,19 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://peret.github.io/uc3-openapi/schema.json",
   "definitions": {
+    "CommonEventType": {
+      "type": "string",
+      "enum": [
+        "Event"
+      ]
+    },
+    "CommonCreativeWorkType": {
+      "type": "string",
+      "enum": [
+        "CreativeWork",
+        "Play"
+      ]
+    },
     "OriginalWork": {
       "type": "object",
       "additionalProperties": false,
@@ -11,10 +24,7 @@
       ],
       "properties": {
         "@type": {
-          "type": "string",
-          "enum": [
-            "CreativeWork"
-          ]
+          "$ref": "#/definitions/CommonCreativeWorkType"
         },
         "name": {
           "type": "string"
@@ -36,11 +46,7 @@
       ],
       "properties": {
         "@type": {
-          "type": "string",
-          "enum": [
-            "CreativeWork",
-            "Play"
-          ]
+          "$ref": "#/definitions/CommonCreativeWorkType"
         },
         "identifier": {
           "type": "string",
@@ -179,11 +185,7 @@
           "$ref": "#/definitions/Audience"
         },
         "creator": {
-          "description": "List of people and organizations that contributed to the creation of this production, e.g. directors, stage designers, musical directors, etc.\nIf this production is a collaboration with another organization, e.g. another theater or orchestra, this organization should also be included\nin this field.\n\nIf multiple people perform the same role/function (e.g. there is multiple directors),\neach person should get their own entry in the `creator` array.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/CreatorRole"
-          }
+          "$ref": "#/definitions/CreatorRole"
         },
         "funder": {
           "type": "array",
@@ -257,10 +259,7 @@
       "additionalProperties": false,
       "properties": {
         "@type": {
-          "type": "string",
-          "enum": [
-            "Event"
-          ]
+          "$ref": "#/definitions/CommonEventType"
         },
         "identifier": {
           "type": "string",
@@ -315,11 +314,7 @@
           }
         },
         "performer": {
-          "type": "array",
-          "description": "A list of people performing at the event, e.g. actors, dancers, etc.\n\nIf multiple people perform the same role on stage (e.g. there is multiple actors\nperforming the same character), each person should get their own entry in the `performer` array.",
-          "items": {
-            "$ref": "#/definitions/PerformanceRole"
-          }
+          "$ref": "#/definitions/PerformanceRole"
         },
         "offers": {
           "type": "array",
@@ -374,10 +369,7 @@
       ],
       "properties": {
         "@type": {
-          "type": "string",
-          "enum": [
-            "Event"
-          ]
+          "$ref": "#/definitions/CommonEventType"
         },
         "name": {
           "type": "string",
@@ -475,29 +467,33 @@
       }
     },
     "CreatorRole": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "@type",
-        "creator"
-      ],
-      "properties": {
-        "@type": {
-          "type": "string",
-          "enum": [
-            "Role"
-          ]
-        },
-        "creator": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/CreatorEntry"
+      "description": "List of people and organizations that contributed to the creation of this production, e.g. directors, stage designers, musical directors, etc.\nIf this production is a collaboration with another organization, e.g. another theater or orchestra, this organization should also be included\nin this field.\n\nIf multiple people perform the same role/function (e.g. there is multiple directors),\neach person should get their own entry in the `creator` array.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "@type",
+          "creator"
+        ],
+        "properties": {
+          "@type": {
+            "type": "string",
+            "enum": [
+              "Role"
+            ]
+          },
+          "creator": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/CreatorEntry"
+            }
+          },
+          "roleName": {
+            "type": "string",
+            "description": "The name of the role this person played in the creation of the production.",
+            "example": "Regie"
           }
-        },
-        "roleName": {
-          "type": "string",
-          "description": "The name of the role this person played in the creation of the production.",
-          "example": "Regie"
         }
       }
     },
@@ -513,28 +509,32 @@
       ]
     },
     "PerformanceRole": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "@type",
-        "performer"
-      ],
-      "properties": {
-        "@type": {
-          "type": "string",
-          "enum": [
-            "PerformanceRole"
-          ]
-        },
-        "characterName": {
-          "type": "string",
-          "description": "The name of the character performed on stage, if any.",
-          "example": "Hedwig"
-        },
-        "performer": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Person"
+      "type": "array",
+      "description": "A list of people performing at the event, e.g. actors, dancers, etc.\n\nIf multiple people perform the same role on stage (e.g. there is multiple actors\nperforming the same character), each person should get their own entry in the `performer` array.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "@type",
+          "performer"
+        ],
+        "properties": {
+          "@type": {
+            "type": "string",
+            "enum": [
+              "PerformanceRole"
+            ]
+          },
+          "characterName": {
+            "type": "string",
+            "description": "The name of the character performed on stage, if any.",
+            "example": "Hedwig"
+          },
+          "performer": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/Person"
+            }
           }
         }
       }
