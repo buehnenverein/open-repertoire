@@ -17,6 +17,7 @@
     },
     "OriginalWork": {
       "type": "object",
+      "description": "An object describing the work that this production is based on (if any).\nE.g. this could describe the original dramatic text that was used as the basis of a theater production.",
       "additionalProperties": false,
       "required": [
         "@type",
@@ -27,10 +28,26 @@
           "$ref": "#/definitions/CommonCreativeWorkType"
         },
         "name": {
-          "type": "string"
+          "type": "string",
+          "description": "The original work's name or title.",
+          "example": "Hedwig and the Angry Inch"
         },
         "author": {
-          "$ref": "#/definitions/Person"
+          "type": "array",
+          "description": "The original work's author(s).",
+          "example": [
+            {
+              "@type": "Person",
+              "name": "Stephen Trask"
+            },
+            {
+              "@type": "Person",
+              "name": "John Cameron Mitchell"
+            }
+          ],
+          "items": {
+            "$ref": "#/definitions/Person"
+          }
         }
       }
     },

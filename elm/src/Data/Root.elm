@@ -134,7 +134,7 @@ type alias Organization =
 
 type alias OriginalWork =
     { atType : DefinitionsCommonCreativeWorkType
-    , author : Maybe Person
+    , author : Maybe (List Person)
     , name : String
     }
 
@@ -589,7 +589,7 @@ originalWorkDecoder : Decoder OriginalWork
 originalWorkDecoder =
     Decode.succeed OriginalWork
         |> required "@type" definitionsCommonCreativeWorkTypeDecoder
-        |> optional "author" (Decode.nullable personDecoder) Nothing
+        |> optional "author" (Decode.nullable authorDecoder) Nothing
         |> required "name" Decode.string
 
 
@@ -765,6 +765,11 @@ parseAccessibilityHazardItem accessibilityHazardItem =
 additionalOfferingDecoder : Decoder (List Offering)
 additionalOfferingDecoder =
     Decode.list offeringDecoder
+
+
+authorDecoder : Decoder (List Person)
+authorDecoder =
+    Decode.list personDecoder
 
 
 creatorDecoder : Decoder (List CreatorEntry)
@@ -1274,7 +1279,7 @@ encodeOriginalWork : OriginalWork -> Value
 encodeOriginalWork originalWork =
     []
         |> Encode.required "@type" originalWork.atType encodeDefinitionsCommonCreativeWorkType
-        |> Encode.optional "author" originalWork.author encodePerson
+        |> Encode.optional "author" originalWork.author encodeAuthor
         |> Encode.required "name" originalWork.name Encode.string
         |> Encode.object
 
@@ -1457,6 +1462,12 @@ encodeAdditionalOffering : List Offering -> Value
 encodeAdditionalOffering additionalOffering =
     additionalOffering
         |> Encode.list encodeOffering
+
+
+encodeAuthor : List Person -> Value
+encodeAuthor author =
+    author
+        |> Encode.list encodePerson
 
 
 encodeCreator : List CreatorEntry -> Value

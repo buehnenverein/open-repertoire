@@ -25596,6 +25596,7 @@ var $author$project$Data$Root$OriginalWork = F3(
 	function (atType, author, name) {
 		return {d: atType, a_: author, L: name};
 	});
+var $author$project$Data$Root$authorDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$personDecoder);
 var $author$project$Data$Root$originalWorkDecoder = A3(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 	'name',
@@ -25603,7 +25604,7 @@ var $author$project$Data$Root$originalWorkDecoder = A3(
 	A4(
 		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 		'author',
-		$elm$json$Json$Decode$nullable($author$project$Data$Root$personDecoder),
+		$elm$json$Json$Decode$nullable($author$project$Data$Root$authorDecoder),
 		$elm$core$Maybe$Nothing,
 		A3(
 			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
@@ -30047,9 +30048,13 @@ var $author$project$View$viewOriginalWork = function (production) {
 						A2($author$project$Components$DataEntry$optional, 'Titel', production.br)),
 						A2(
 						$author$project$Components$DataEntry$map,
-						function ($) {
-							return $.L;
-						},
+						A2(
+							$elm$core$Basics$composeL,
+							$elm$core$String$join(', '),
+							$elm$core$List$map(
+								function ($) {
+									return $.L;
+								})),
 						A2(
 							$author$project$Components$DataEntry$nested,
 							function ($) {

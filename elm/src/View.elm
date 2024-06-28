@@ -413,7 +413,7 @@ viewOriginalWork production =
                 |> Entry.map .name
             , Entry.optional "Autor:in" production.isBasedOn
                 |> Entry.nested .author
-                |> Entry.map .name
+                |> Entry.map (String.join ", " << List.map .name)
             ]
         ]
 

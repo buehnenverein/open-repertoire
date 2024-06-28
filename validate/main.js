@@ -9328,6 +9328,7 @@ var $author$project$Data$Root$OriginalWork = F3(
 	function (atType, author, name) {
 		return {d: atType, aW: author, i: name};
 	});
+var $author$project$Data$Root$authorDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$personDecoder);
 var $author$project$Data$Root$originalWorkDecoder = A3(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 	'name',
@@ -9335,7 +9336,7 @@ var $author$project$Data$Root$originalWorkDecoder = A3(
 	A4(
 		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 		'author',
-		$elm$json$Json$Decode$nullable($author$project$Data$Root$personDecoder),
+		$elm$json$Json$Decode$nullable($author$project$Data$Root$authorDecoder),
 		$elm$core$Maybe$Nothing,
 		A3(
 			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
