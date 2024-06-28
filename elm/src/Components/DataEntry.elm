@@ -1,4 +1,4 @@
-module Components.DataEntry exposing (ZoneWithName, asDate, asLink, asTime, map, nested, optional, required, view, withHelp, withWarnings)
+module Components.DataEntry exposing (ZoneWithName, asDate, asLink, asTime, join, map, nested, optional, required, view, withHelp, withWarnings)
 
 import DateFormat
 import Helper.CustomValidations exposing (Validator, viewerMessage)
@@ -85,6 +85,13 @@ map f entry =
 nested : (a -> Maybe b) -> Model a -> Model b
 nested f entry =
     applyOne (Optional << f) (Optional << Maybe.andThen f) entry
+
+
+join : (a -> String) -> Model (List a) -> Model String
+join f entry =
+    entry
+        |> map (List.map f)
+        |> map (String.join ", ")
 
 
 asLink : Maybe String -> Model a -> Model a

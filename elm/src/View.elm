@@ -338,13 +338,13 @@ productionInfo production =
             |> Entry.withWarnings CustomValidations.abstractDifferentFromDescription
             |> Entry.nested .abstract
         , Entry.optional "Zusätzliche Informationen" production.additionalInfo
-        , Entry.optional "Genre" production.genre |> Entry.map humanReadableGenre
+        , Entry.optional "Genre" production.genre |> Entry.join humanReadableGenre
         , Entry.optional "Produktionstyp" production.productionType |> Entry.map humanReadableProductionType
         ]
 
 
-humanReadableGenre : List GenreItem -> String
-humanReadableGenre genres =
+humanReadableGenre : GenreItem -> String
+humanReadableGenre genre =
     let
         firstToUpper string =
             case String.toList string of
@@ -355,15 +355,11 @@ humanReadableGenre genres =
                     Char.toUpper first
                         :: rest
                         |> String.fromList
-
-        convert genre =
-            Data.Root.genreItemToString genre
-                |> String.split "-"
-                |> List.map firstToUpper
-                |> String.join " "
     in
-    List.map convert genres
-        |> String.join ", "
+    Data.Root.genreItemToString genre
+        |> String.split "-"
+        |> List.map firstToUpper
+        |> String.join " "
 
 
 humanReadableProductionType : ProductionProductionType -> String
@@ -413,7 +409,7 @@ viewOriginalWork production =
                 |> Entry.map .name
             , Entry.optional "Autor:in" production.isBasedOn
                 |> Entry.nested .author
-                |> Entry.map (String.join ", " << List.map .name)
+                |> Entry.join .name
             ]
         ]
 
@@ -424,27 +420,15 @@ viewProductionAccessibility production =
         [ div [ class "title is-5" ] [ text "Barrierefreiheit" ]
         , Entry.view
             [ Entry.optional "Zugangsmodus" production.accessModeSufficient
-                |> Entry.map viewAccessMode
+                |> Entry.join Data.Root.accessModeSufficientItemToString
                 |> Entry.withHelp "Eine Liste an Sinnen, die ausreichend sind um sich die Produktion inhaltlich zu erschließen."
             , Entry.optional "Inhaltswarnungen" production.accessibilityHazard
-                |> Entry.map viewAccessibilityHazards
+                |> Entry.join Data.Root.accessibilityHazardItemToString
                 |> Entry.withHelp "Eigenschaften der Produktion, die für bestimtme Personen gefährlich sein könnten (z.B. Lichtblitze/Stroboskoplicht)."
             , Entry.optional "Barrierefreiheitsbeschreibung" production.accessibilitySummary
                 |> Entry.withHelp "Eine textuelle Beschreibung möglicher Barrieren bei dieser Produktion."
             ]
         ]
-
-
-viewAccessibilityHazards : List Data.Root.AccessibilityHazardItem -> String
-viewAccessibilityHazards hazards =
-    List.map Data.Root.accessibilityHazardItemToString hazards
-        |> String.join ", "
-
-
-viewAccessMode : List Data.Root.AccessModeSufficientItem -> String
-viewAccessMode items =
-    List.map Data.Root.accessModeSufficientItemToString items
-        |> String.join ", "
 
 
 viewFunders : Production -> Html Msg
@@ -548,7 +532,7 @@ viewEventTable zone allEvents event =
             |> Entry.withWarnings (CustomValidations.validPremiere allEvents)
             |> Entry.withWarnings (CustomValidations.validDerniere allEvents)
             |> Entry.nested .eventType
-            |> Entry.map humanReadableEventTypes
+            |> Entry.join humanReadableEventType
         , Entry.optional "Untertitel in" event.subtitleLanguage
             |> Entry.withWarnings CustomValidations.languageTagValid
         , Entry.required "Status" (eventStatusToString event.eventStatus)
@@ -564,25 +548,20 @@ viewEventTable zone allEvents event =
         ]
 
 
-humanReadableEventTypes : List EventTypeItem -> String
-humanReadableEventTypes eventTypes =
-    let
-        translation eventType =
-            case eventType of
-                PremiereEventType ->
-                    "Premiere"
+humanReadableEventType : EventTypeItem -> String
+humanReadableEventType eventType =
+    case eventType of
+        PremiereEventType ->
+            "Premiere"
 
-                LastShowEventType ->
-                    "Derniere"
+        LastShowEventType ->
+            "Derniere"
 
-                GuestPerformanceEventType ->
-                    "Gastspiel"
+        GuestPerformanceEventType ->
+            "Gastspiel"
 
-                PreviewEventType ->
-                    "Preview"
-    in
-    List.map translation eventTypes
-        |> String.join ", "
+        PreviewEventType ->
+            "Preview"
 
 
 intermissionCountToString : Int -> String

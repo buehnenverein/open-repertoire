@@ -28642,7 +28642,7 @@ var $author$project$Data$Root$genreItemToString = function (genreItem) {
 	}
 };
 var $elm$core$Char$toUpper = _Char_toUpper;
-var $author$project$View$humanReadableGenre = function (genres) {
+var $author$project$View$humanReadableGenre = function (genre) {
 	var firstToUpper = function (string) {
 		var _v0 = $elm$core$String$toList(string);
 		if (!_v0.b) {
@@ -28657,22 +28657,16 @@ var $author$project$View$humanReadableGenre = function (genres) {
 					rest));
 		}
 	};
-	var convert = function (genre) {
-		return A2(
-			$elm$core$String$join,
-			' ',
-			A2(
-				$elm$core$List$map,
-				firstToUpper,
-				A2(
-					$elm$core$String$split,
-					'-',
-					$author$project$Data$Root$genreItemToString(genre))));
-	};
 	return A2(
 		$elm$core$String$join,
-		', ',
-		A2($elm$core$List$map, convert, genres));
+		' ',
+		A2(
+			$elm$core$List$map,
+			firstToUpper,
+			A2(
+				$elm$core$String$split,
+				'-',
+				$author$project$Data$Root$genreItemToString(genre))));
 };
 var $author$project$View$humanReadableProductionType = function (productionType) {
 	switch (productionType) {
@@ -28719,6 +28713,16 @@ var $author$project$Components$DataEntry$map = F2(
 				$author$project$Components$DataEntry$Optional,
 				$elm$core$Maybe$map(f)),
 			entry);
+	});
+var $author$project$Components$DataEntry$join = F2(
+	function (f, entry) {
+		return A2(
+			$author$project$Components$DataEntry$map,
+			$elm$core$String$join(', '),
+			A2(
+				$author$project$Components$DataEntry$map,
+				$elm$core$List$map(f),
+				entry));
 	});
 var $author$project$Components$DataEntry$nested = F2(
 	function (f, entry) {
@@ -29849,7 +29853,7 @@ var $author$project$View$productionInfo = function (production) {
 					A2($author$project$Components$DataEntry$required, 'Kurzbeschreibung', production))),
 				A2($author$project$Components$DataEntry$optional, 'Zusätzliche Informationen', production.aU),
 				A2(
-				$author$project$Components$DataEntry$map,
+				$author$project$Components$DataEntry$join,
 				$author$project$View$humanReadableGenre,
 				A2($author$project$Components$DataEntry$optional, 'Genre', production.bg)),
 				A2(
@@ -30047,14 +30051,10 @@ var $author$project$View$viewOriginalWork = function (production) {
 						},
 						A2($author$project$Components$DataEntry$optional, 'Titel', production.br)),
 						A2(
-						$author$project$Components$DataEntry$map,
-						A2(
-							$elm$core$Basics$composeL,
-							$elm$core$String$join(', '),
-							$elm$core$List$map(
-								function ($) {
-									return $.L;
-								})),
+						$author$project$Components$DataEntry$join,
+						function ($) {
+							return $.L;
+						},
 						A2(
 							$author$project$Components$DataEntry$nested,
 							function ($) {
@@ -30075,12 +30075,6 @@ var $author$project$Data$Root$accessModeSufficientItemToString = function (acces
 		default:
 			return 'visual';
 	}
-};
-var $author$project$View$viewAccessMode = function (items) {
-	return A2(
-		$elm$core$String$join,
-		', ',
-		A2($elm$core$List$map, $author$project$Data$Root$accessModeSufficientItemToString, items));
 };
 var $author$project$Data$Root$accessibilityHazardItemToString = function (accessibilityHazardItem) {
 	switch (accessibilityHazardItem) {
@@ -30107,12 +30101,6 @@ var $author$project$Data$Root$accessibilityHazardItemToString = function (access
 		default:
 			return 'unknownSoundHazard';
 	}
-};
-var $author$project$View$viewAccessibilityHazards = function (hazards) {
-	return A2(
-		$elm$core$String$join,
-		', ',
-		A2($elm$core$List$map, $author$project$Data$Root$accessibilityHazardItemToString, hazards));
 };
 var $author$project$Components$DataEntry$withHelp = F2(
 	function (message, entry) {
@@ -30145,15 +30133,15 @@ var $author$project$View$viewProductionAccessibility = function (production) {
 						$author$project$Components$DataEntry$withHelp,
 						'Eine Liste an Sinnen, die ausreichend sind um sich die Produktion inhaltlich zu erschließen.',
 						A2(
-							$author$project$Components$DataEntry$map,
-							$author$project$View$viewAccessMode,
+							$author$project$Components$DataEntry$join,
+							$author$project$Data$Root$accessModeSufficientItemToString,
 							A2($author$project$Components$DataEntry$optional, 'Zugangsmodus', production.aQ))),
 						A2(
 						$author$project$Components$DataEntry$withHelp,
 						'Eigenschaften der Produktion, die für bestimtme Personen gefährlich sein könnten (z.B. Lichtblitze/Stroboskoplicht).',
 						A2(
-							$author$project$Components$DataEntry$map,
-							$author$project$View$viewAccessibilityHazards,
+							$author$project$Components$DataEntry$join,
+							$author$project$Data$Root$accessibilityHazardItemToString,
 							A2($author$project$Components$DataEntry$optional, 'Inhaltswarnungen', production.aR))),
 						A2(
 						$author$project$Components$DataEntry$withHelp,
@@ -30434,23 +30422,17 @@ var $author$project$View$formatDuration = function (duration) {
 	var hours = (duration / 60) | 0;
 	return (minutes >= 10) ? ($elm$core$String$fromInt(hours) + (':' + ($elm$core$String$fromInt(minutes) + 'h'))) : ((minutes > 0) ? ($elm$core$String$fromInt(hours) + (':0' + ($elm$core$String$fromInt(minutes) + 'h'))) : ($elm$core$String$fromInt(hours) + (':00' + 'h')));
 };
-var $author$project$View$humanReadableEventTypes = function (eventTypes) {
-	var translation = function (eventType) {
-		switch (eventType) {
-			case 0:
-				return 'Premiere';
-			case 1:
-				return 'Derniere';
-			case 2:
-				return 'Gastspiel';
-			default:
-				return 'Preview';
-		}
-	};
-	return A2(
-		$elm$core$String$join,
-		', ',
-		A2($elm$core$List$map, translation, eventTypes));
+var $author$project$View$humanReadableEventType = function (eventType) {
+	switch (eventType) {
+		case 0:
+			return 'Premiere';
+		case 1:
+			return 'Derniere';
+		case 2:
+			return 'Gastspiel';
+		default:
+			return 'Preview';
+	}
 };
 var $author$project$View$intermissionCountToString = function (intermissionCount) {
 	return (intermissionCount < 1) ? 'Nein' : ('Ja (' + ($elm$core$String$fromInt(intermissionCount) + ')'));
@@ -30505,8 +30487,8 @@ var $author$project$View$viewEventTable = F3(
 					$author$project$View$intermissionCountToString,
 					A2($author$project$Components$DataEntry$optional, 'Mit Pause?', event.bq)),
 					A2(
-					$author$project$Components$DataEntry$map,
-					$author$project$View$humanReadableEventTypes,
+					$author$project$Components$DataEntry$join,
+					$author$project$View$humanReadableEventType,
 					A2(
 						$author$project$Components$DataEntry$nested,
 						function ($) {
