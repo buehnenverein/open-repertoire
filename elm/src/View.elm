@@ -693,69 +693,58 @@ viewCreators : Maybe (List CreatorRoleItem) -> Html Msg
 viewCreators creators =
     div []
         [ div [ class "title is-5" ] [ text "Team" ]
-        , table [ class "table" ]
-            [ tbody []
-                (case creators of
-                    Nothing ->
-                        [ em [] [ text "Die Daten enthalten keine Informationen zum Produktionsteam" ] ]
+        , case creators of
+            Nothing ->
+                div [] [ em [] [ text "Die Daten enthalten keine Informationen zum Produktionsteam" ] ]
 
-                    Just list ->
-                        List.map viewCreator list
-                )
-            ]
+            Just list ->
+                Entry.view
+                    (List.map viewCreator list)
         ]
 
 
-viewCreator : CreatorRoleItem -> Html Msg
+viewCreator : CreatorRoleItem -> Entry.Model String
 viewCreator creator =
-    tr []
-        [ td [] [ text (Maybe.withDefault "" creator.roleName) ]
-        , td [] [ text (creatorNames creator.creator) ]
-        ]
-
-
-creatorNames : List CreatorEntry -> String
-creatorNames creators =
     let
-        getName creator =
-            case creator of
-                CreatorEntryPe person ->
-                    person.name
-
-                CreatorEntryOr organization ->
-                    organization.name
+        roleName =
+            Maybe.withDefault "" creator.roleName
     in
-    List.map getName creators
-        |> String.join ", "
+    Entry.required roleName creator.creator
+        |> Entry.join creatorName
+
+
+creatorName : CreatorEntry -> String
+creatorName creator =
+    case creator of
+        CreatorEntryPe person ->
+            person.name
+
+        CreatorEntryOr organization ->
+            organization.name
 
 
 viewPerformers : Maybe (List PerformanceRoleItem) -> Html Msg
 viewPerformers performers =
     div []
-        [ div [ class "title is-5" ] [ text "Besetzung" ]
-        , table [ class "table" ]
-            [ tbody []
-                (case performers of
-                    Nothing ->
-                        [ em [] [ text "Die Daten enthalten keine Informationen zur Besetzung" ] ]
+        [ div [ class "title is-5" ] [ text "Team" ]
+        , case performers of
+            Nothing ->
+                div [] [ em [] [ text "Die Daten enthalten keine Informationen zur Besetzung" ] ]
 
-                    Just list ->
-                        List.map viewPerformer list
-                )
-            ]
+            Just list ->
+                Entry.view
+                    (List.map viewPerformer list)
         ]
 
 
-viewPerformer : PerformanceRoleItem -> Html Msg
+viewPerformer : PerformanceRoleItem -> Entry.Model String
 viewPerformer performer =
     let
-        namesString =
-            List.map .name performer.performer |> String.join ", "
+        characterName =
+            Maybe.withDefault "" performer.characterName
     in
-    tr []
-        [ td [] [ text (Maybe.withDefault "" performer.characterName) ]
-        , td [] [ text namesString ]
-        ]
+    Entry.required characterName performer.performer
+        |> Entry.join .name
 
 
 

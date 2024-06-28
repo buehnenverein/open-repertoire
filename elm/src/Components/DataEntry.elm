@@ -1,4 +1,4 @@
-module Components.DataEntry exposing (ZoneWithName, asDate, asLink, asTime, join, map, nested, optional, required, view, withHelp, withWarnings)
+module Components.DataEntry exposing (Model, ZoneWithName, asDate, asLink, asTime, join, map, nested, optional, required, view, withHelp, withWarnings)
 
 import DateFormat
 import Helper.CustomValidations exposing (Validator, viewerMessage)

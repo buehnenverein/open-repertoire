@@ -29863,44 +29863,21 @@ var $author$project$View$productionInfo = function (production) {
 			]));
 };
 var $elm$html$Html$em = _VirtualDom_node('em');
-var $author$project$View$creatorNames = function (creators) {
-	var getName = function (creator) {
-		if (!creator.$) {
-			var person = creator.a;
-			return person.L;
-		} else {
-			var organization = creator.a;
-			return organization.L;
-		}
-	};
-	return A2(
-		$elm$core$String$join,
-		', ',
-		A2($elm$core$List$map, getName, creators));
+var $author$project$View$creatorName = function (creator) {
+	if (!creator.$) {
+		var person = creator.a;
+		return person.L;
+	} else {
+		var organization = creator.a;
+		return organization.L;
+	}
 };
 var $author$project$View$viewCreator = function (creator) {
+	var roleName = A2($elm$core$Maybe$withDefault, '', creator.bX);
 	return A2(
-		$elm$html$Html$tr,
-		_List_Nil,
-		_List_fromArray(
-			[
-				A2(
-				$elm$html$Html$td,
-				_List_Nil,
-				_List_fromArray(
-					[
-						$elm$html$Html$text(
-						A2($elm$core$Maybe$withDefault, '', creator.bX))
-					])),
-				A2(
-				$elm$html$Html$td,
-				_List_Nil,
-				_List_fromArray(
-					[
-						$elm$html$Html$text(
-						$author$project$View$creatorNames(creator.aa))
-					]))
-			]));
+		$author$project$Components$DataEntry$join,
+		$author$project$View$creatorName,
+		A2($author$project$Components$DataEntry$required, roleName, creator.aa));
 };
 var $author$project$View$viewCreators = function (creators) {
 	return A2(
@@ -29918,35 +29895,27 @@ var $author$project$View$viewCreators = function (creators) {
 					[
 						$elm$html$Html$text('Team')
 					])),
-				A2(
-				$elm$html$Html$table,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$class('table')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						$elm$html$Html$tbody,
+				function () {
+				if (creators.$ === 1) {
+					return A2(
+						$elm$html$Html$div,
 						_List_Nil,
-						function () {
-							if (creators.$ === 1) {
-								return _List_fromArray(
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$em,
+								_List_Nil,
+								_List_fromArray(
 									[
-										A2(
-										$elm$html$Html$em,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('Die Daten enthalten keine Informationen zum Produktionsteam')
-											]))
-									]);
-							} else {
-								var list = creators.a;
-								return A2($elm$core$List$map, $author$project$View$viewCreator, list);
-							}
-						}())
-					]))
+										$elm$html$Html$text('Die Daten enthalten keine Informationen zum Produktionsteam')
+									]))
+							]));
+				} else {
+					var list = creators.a;
+					return $author$project$Components$DataEntry$view(
+						A2($elm$core$List$map, $author$project$View$viewCreator, list));
+				}
+			}()
 			]));
 };
 var $author$project$Components$DataEntry$Link = function (a) {
@@ -30790,36 +30759,13 @@ var $author$project$View$viewOffers = function (offers) {
 			]));
 };
 var $author$project$View$viewPerformer = function (performer) {
-	var namesString = A2(
-		$elm$core$String$join,
-		', ',
-		A2(
-			$elm$core$List$map,
-			function ($) {
-				return $.L;
-			},
-			performer.ah));
+	var characterName = A2($elm$core$Maybe$withDefault, '', performer.a1);
 	return A2(
-		$elm$html$Html$tr,
-		_List_Nil,
-		_List_fromArray(
-			[
-				A2(
-				$elm$html$Html$td,
-				_List_Nil,
-				_List_fromArray(
-					[
-						$elm$html$Html$text(
-						A2($elm$core$Maybe$withDefault, '', performer.a1))
-					])),
-				A2(
-				$elm$html$Html$td,
-				_List_Nil,
-				_List_fromArray(
-					[
-						$elm$html$Html$text(namesString)
-					]))
-			]));
+		$author$project$Components$DataEntry$join,
+		function ($) {
+			return $.L;
+		},
+		A2($author$project$Components$DataEntry$required, characterName, performer.ah));
 };
 var $author$project$View$viewPerformers = function (performers) {
 	return A2(
@@ -30835,37 +30781,29 @@ var $author$project$View$viewPerformers = function (performers) {
 					]),
 				_List_fromArray(
 					[
-						$elm$html$Html$text('Besetzung')
+						$elm$html$Html$text('Team')
 					])),
-				A2(
-				$elm$html$Html$table,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$class('table')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						$elm$html$Html$tbody,
+				function () {
+				if (performers.$ === 1) {
+					return A2(
+						$elm$html$Html$div,
 						_List_Nil,
-						function () {
-							if (performers.$ === 1) {
-								return _List_fromArray(
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$em,
+								_List_Nil,
+								_List_fromArray(
 									[
-										A2(
-										$elm$html$Html$em,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('Die Daten enthalten keine Informationen zur Besetzung')
-											]))
-									]);
-							} else {
-								var list = performers.a;
-								return A2($elm$core$List$map, $author$project$View$viewPerformer, list);
-							}
-						}())
-					]))
+										$elm$html$Html$text('Die Daten enthalten keine Informationen zur Besetzung')
+									]))
+							]));
+				} else {
+					var list = performers.a;
+					return $author$project$Components$DataEntry$view(
+						A2($elm$core$List$map, $author$project$View$viewPerformer, list));
+				}
+			}()
 			]));
 };
 var $author$project$View$viewEvent = F3(
