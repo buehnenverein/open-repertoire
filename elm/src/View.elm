@@ -2,7 +2,7 @@ module View exposing (main)
 
 import Browser
 import Components.DataEntry as Entry exposing (asDate, asLink, asTime)
-import Data.Root exposing (CreatorEntry(..), CreatorRoleItem, Event, EventEventStatus(..), EventTypeItem(..), GenreItem(..), LocationItem(..), Offer, Organization, PerformanceRoleItem, Production, ProductionProductionType(..), Root, rootDecoder)
+import Data.Root exposing (CreatorEntry(..), CreatorRoleItem, DataFeedItem, Event, EventEventStatus(..), EventTypeItem(..), GenreItem(..), LocationItem(..), Offer, Organization, PerformanceRoleItem, Production, ProductionProductionType(..), Root, rootDecoder)
 import Helper.CustomValidations as CustomValidations
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -210,20 +210,20 @@ viewJsonData data zone =
             not
                 (Set.member index data.hiddenEvents)
 
-        viewProduction : Int -> Production -> Html Msg
-        viewProduction index production =
-            div [ class "block mt-6", classList [ ( "is-hidden", not (isProductionVisible data production) ) ] ]
+        viewProduction : Int -> DataFeedItem -> Html Msg
+        viewProduction index feedItem =
+            div [ class "block mt-6", classList [ ( "is-hidden", not (isProductionVisible data feedItem.item) ) ] ]
                 [ div [ class "hero is-dark is-small sticky-header" ]
                     [ div [ class "hero-body" ]
-                        [ p [ class "title" ] [ text production.name ]
+                        [ p [ class "title" ] [ text feedItem.item.name ]
                         ]
                     ]
                 , card (text "Info")
-                    (productionGrid production)
+                    (productionGrid feedItem.item)
                     (productionOpen index)
                     (ProductionCardClicked index (not (productionOpen index)))
                 , card (text "Veranstaltungen")
-                    (div [] <| viewEvents production.events zone)
+                    (div [] <| viewEvents feedItem.item.events zone)
                     (eventOpen index)
                     (EventCardClicked index (not (eventOpen index)))
                 ]
@@ -232,7 +232,7 @@ viewJsonData data zone =
         [ controlBar data
         , div
             [ class "block" ]
-            (data.root.productions
+            (data.root.dataFeedElement
                 |> List.indexedMap (lazy2 viewProduction)
             )
         ]
@@ -866,7 +866,7 @@ collapseAll remoteData =
         Success data ->
             let
                 allIds =
-                    List.range 0 (List.length data.root.productions - 1)
+                    List.range 0 (List.length data.root.dataFeedElement - 1)
                         |> Set.fromList
             in
             Success { data | hiddenProductions = allIds, hiddenEvents = allIds }
@@ -1118,10 +1118,10 @@ viewProductionCount : Data -> Html Msg
 viewProductionCount data =
     let
         count =
-            List.length data.root.productions
+            List.length data.root.dataFeedElement
 
         visibleCount =
-            List.filter (isProductionVisible data) data.root.productions
+            List.filter (isProductionVisible data) (List.map .item data.root.dataFeedElement)
                 |> List.length
     in
     text (String.fromInt visibleCount ++ " von " ++ String.fromInt count ++ " Produktionen werden angezeigt")
@@ -1154,7 +1154,7 @@ warningsFilterButton : { a | root : Root, showOnlyWarning : Bool } -> Html Msg
 warningsFilterButton data =
     let
         count =
-            List.filter hasWarnings data.root.productions
+            List.filter hasWarnings (List.map .item data.root.dataFeedElement)
                 |> List.length
 
         buttonText =

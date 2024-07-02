@@ -735,12 +735,35 @@
           "description": "A link to the organization's logo."
         }
       }
+    },
+    "DataFeedItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "@type",
+        "item"
+      ],
+      "properties": {
+        "@type": {
+          "type": "string",
+          "enum": [
+            "DataFeedItem"
+          ]
+        },
+        "dateModified": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "item": {
+          "$ref": "#/definitions/Production"
+        }
+      }
     }
   },
   "required": [
     "@context",
-    "organization",
-    "productions",
+    "publisher",
+    "dataFeedElement",
     "version"
   ],
   "additionalProperties": false,
@@ -752,6 +775,25 @@
         "https://schema.org"
       ]
     },
+    "@type": {
+      "type": "string",
+      "enum": [
+        "CompleteDataFeed"
+      ]
+    },
+    "name": {
+      "type": "string",
+      "description": "Name of the Dataset"
+    },
+    "dateModified": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "license": {
+      "type": "string",
+      "format": "uri",
+      "example": "https://creativecommons.org/licenses/by-sa/4.0/"
+    },
     "version": {
       "type": "string",
       "description": "The API version that is being used. MUST be the string \"v2\" for now.",
@@ -759,15 +801,15 @@
         "v2"
       ]
     },
-    "organization": {
+    "publisher": {
       "description": "Information about the organization that is hosting and/or producing the events, i.e. the theater (group).",
       "$ref": "#/definitions/Organization"
     },
-    "productions": {
+    "dataFeedElement": {
       "type": "array",
       "description": "A list of all current productions in the repertoire.",
       "items": {
-        "$ref": "#/definitions/Production"
+        "$ref": "#/definitions/DataFeedItem"
       }
     }
   }

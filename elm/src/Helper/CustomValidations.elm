@@ -5,6 +5,7 @@ import Data.Root
         ( Audience
         , CreatorEntry(..)
         , CreatorRoleItem
+        , DataFeedItem
         , Event
         , EventEventStatus(..)
         , EventTypeItem(..)
@@ -75,11 +76,20 @@ type alias Validator value =
 checkAll : Root -> List ValidationMessage
 checkAll data =
     object
-        [ field "/organization" .organization organization
-        , field "/productions" .productions (list production)
-        , field "/productions" .productions (uniqueIdsFor "productions")
+        [ field "/publisher" .publisher organization
+        , field "/dataFeedElement" .dataFeedElement (list dataFeedItem)
         ]
         |> check data ""
+
+
+dataFeedItem : Validator DataFeedItem
+dataFeedItem =
+    object
+        [ field "/item" .item production
+
+        -- TODO: Figure out how to reinstantiate this check
+        -- , field "/item" .item (uniqueIdsFor "productions")
+        ]
 
 
 organization : Validator Organization

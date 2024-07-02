@@ -17,6 +17,10 @@ type AtContext
     = HttpsColonSlashSlashschemaDotorg
 
 
+type AtType
+    = CompleteDataFeedType
+
+
 type PersonAttype
     = PersonType
 
@@ -31,6 +35,10 @@ type PostalAddressAttype
 
 type OfferAttype
     = OfferType
+
+
+type DataFeedItemAttype
+    = DataFeedItemType
 
 
 type PriceSpecificationAttype
@@ -83,6 +91,13 @@ type alias CreatorRoleItem =
     { atType : CreatorRoleAttype
     , creator : List CreatorEntry
     , roleName : Maybe String
+    }
+
+
+type alias DataFeedItem =
+    { atType : DataFeedItemAttype
+    , dateModified : Maybe String
+    , item : Production
     }
 
 
@@ -195,8 +210,12 @@ type alias Production =
 
 type alias Root =
     { atContext : AtContext
-    , organization : Organization
-    , productions : List Production
+    , atType : Maybe AtType
+    , dataFeedElement : List DataFeedItem
+    , dateModified : Maybe String
+    , license : Maybe String
+    , name : Maybe String
+    , publisher : Organization
     , version : Version
     }
 
@@ -323,6 +342,21 @@ parseAtContext atContext =
             Err <| "Unknown atContext type: " ++ atContext
 
 
+atTypeDecoder : Decoder AtType
+atTypeDecoder =
+    Decode.string |> Decode.andThen (parseAtType >> Decode.fromResult)
+
+
+parseAtType : String -> Result String AtType
+parseAtType atType =
+    case atType of
+        "CompleteDataFeed" ->
+            Ok CompleteDataFeedType
+
+        _ ->
+            Err <| "Unknown atType type: " ++ atType
+
+
 personAttypeDecoder : Decoder PersonAttype
 personAttypeDecoder =
     Decode.string |> Decode.andThen (parsePersonAttype >> Decode.fromResult)
@@ -381,6 +415,21 @@ parseOfferAttype offerAttype =
 
         _ ->
             Err <| "Unknown offerAttype type: " ++ offerAttype
+
+
+dataFeedItemAttypeDecoder : Decoder DataFeedItemAttype
+dataFeedItemAttypeDecoder =
+    Decode.string |> Decode.andThen (parseDataFeedItemAttype >> Decode.fromResult)
+
+
+parseDataFeedItemAttype : String -> Result String DataFeedItemAttype
+parseDataFeedItemAttype dataFeedItemAttype =
+    case dataFeedItemAttype of
+        "DataFeedItem" ->
+            Ok DataFeedItemType
+
+        _ ->
+            Err <| "Unknown dataFeedItemAttype type: " ++ dataFeedItemAttype
 
 
 priceSpecificationAttypeDecoder : Decoder PriceSpecificationAttype
@@ -535,6 +584,14 @@ creatorRoleItemDecoder =
         |> optional "roleName" (Decode.nullable Decode.string) Nothing
 
 
+dataFeedItemDecoder : Decoder DataFeedItem
+dataFeedItemDecoder =
+    Decode.succeed DataFeedItem
+        |> required "@type" dataFeedItemAttypeDecoder
+        |> optional "dateModified" (Decode.nullable Decode.string) Nothing
+        |> required "item" productionDecoder
+
+
 eventDecoder : Decoder Event
 eventDecoder =
     Decode.succeed Event
@@ -661,8 +718,12 @@ rootDecoder : Decoder Root
 rootDecoder =
     Decode.succeed Root
         |> required "@context" atContextDecoder
-        |> required "organization" organizationDecoder
-        |> required "productions" productionsDecoder
+        |> optional "@type" (Decode.nullable atTypeDecoder) Nothing
+        |> required "dataFeedElement" dataFeedElementDecoder
+        |> optional "dateModified" (Decode.nullable Decode.string) Nothing
+        |> optional "license" (Decode.nullable Decode.string) Nothing
+        |> optional "name" (Decode.nullable Decode.string) Nothing
+        |> required "publisher" organizationDecoder
         |> required "version" versionDecoder
 
 
@@ -775,6 +836,11 @@ authorDecoder =
 creatorDecoder : Decoder (List CreatorEntry)
 creatorDecoder =
     Decode.list creatorEntryDecoder
+
+
+dataFeedElementDecoder : Decoder (List DataFeedItem)
+dataFeedElementDecoder =
+    Decode.list dataFeedItemDecoder
 
 
 eventEventStatusDecoder : Decoder EventEventStatus
@@ -1002,11 +1068,6 @@ parseProductionProductionType productionProductionType =
             Err <| "Unknown productionProductionType type: " ++ productionProductionType
 
 
-productionsDecoder : Decoder (List Production)
-productionsDecoder =
-    Decode.list productionDecoder
-
-
 sponsorDecoder : Decoder (List Organization)
 sponsorDecoder =
     Decode.list organizationDecoder
@@ -1037,6 +1098,18 @@ atContextToString atContext =
     case atContext of
         HttpsColonSlashSlashschemaDotorg ->
             "https://schema.org"
+
+
+encodeAtType : AtType -> Value
+encodeAtType atType =
+    atType |> atTypeToString |> Encode.string
+
+
+atTypeToString : AtType -> String
+atTypeToString atType =
+    case atType of
+        CompleteDataFeedType ->
+            "CompleteDataFeed"
 
 
 encodePersonAttype : PersonAttype -> Value
@@ -1085,6 +1158,18 @@ offerAttypeToString offerAttype =
     case offerAttype of
         OfferType ->
             "Offer"
+
+
+encodeDataFeedItemAttype : DataFeedItemAttype -> Value
+encodeDataFeedItemAttype dataFeedItemAttype =
+    dataFeedItemAttype |> dataFeedItemAttypeToString |> Encode.string
+
+
+dataFeedItemAttypeToString : DataFeedItemAttype -> String
+dataFeedItemAttypeToString dataFeedItemAttype =
+    case dataFeedItemAttype of
+        DataFeedItemType ->
+            "DataFeedItem"
 
 
 encodePriceSpecificationAttype : PriceSpecificationAttype -> Value
@@ -1218,6 +1303,15 @@ encodeCreatorRoleItem creatorRoleItem =
         |> Encode.required "@type" creatorRoleItem.atType encodeCreatorRoleAttype
         |> Encode.required "creator" creatorRoleItem.creator encodeCreator
         |> Encode.optional "roleName" creatorRoleItem.roleName Encode.string
+        |> Encode.object
+
+
+encodeDataFeedItem : DataFeedItem -> Value
+encodeDataFeedItem dataFeedItem =
+    []
+        |> Encode.required "@type" dataFeedItem.atType encodeDataFeedItemAttype
+        |> Encode.optional "dateModified" dataFeedItem.dateModified Encode.string
+        |> Encode.required "item" dataFeedItem.item encodeProduction
         |> Encode.object
 
 
@@ -1358,8 +1452,12 @@ encodeRoot : Root -> Value
 encodeRoot root =
     []
         |> Encode.required "@context" root.atContext encodeAtContext
-        |> Encode.required "organization" root.organization encodeOrganization
-        |> Encode.required "productions" root.productions encodeProductions
+        |> Encode.optional "@type" root.atType encodeAtType
+        |> Encode.required "dataFeedElement" root.dataFeedElement encodeDataFeedElement
+        |> Encode.optional "dateModified" root.dateModified Encode.string
+        |> Encode.optional "license" root.license Encode.string
+        |> Encode.optional "name" root.name Encode.string
+        |> Encode.required "publisher" root.publisher encodeOrganization
         |> Encode.required "version" root.version encodeVersion
         |> Encode.object
 
@@ -1474,6 +1572,12 @@ encodeCreator : List CreatorEntry -> Value
 encodeCreator creator =
     creator
         |> Encode.list encodeCreatorEntry
+
+
+encodeDataFeedElement : List DataFeedItem -> Value
+encodeDataFeedElement dataFeedElement =
+    dataFeedElement
+        |> Encode.list encodeDataFeedItem
 
 
 encodeEventEventStatus : EventEventStatus -> Value
@@ -1698,12 +1802,6 @@ productionProductionTypeToString productionProductionType =
 
         RevivalProduction ->
             "Revival"
-
-
-encodeProductions : List Production -> Value
-encodeProductions productions =
-    productions
-        |> Encode.list encodeProduction
 
 
 encodeSponsor : List Organization -> Value
