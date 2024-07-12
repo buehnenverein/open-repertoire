@@ -30363,6 +30363,87 @@ var $author$project$Components$DataEntry$asTime = F2(
 				r: $author$project$Components$DataEntry$Time(zone)
 			});
 	});
+var $author$project$View$formatDuration = function (duration) {
+	var minutes = A2($elm$core$Basics$modBy, 60, duration);
+	var hours = (duration / 60) | 0;
+	return (minutes >= 10) ? ($elm$core$String$fromInt(hours) + (':' + ($elm$core$String$fromInt(minutes) + 'h'))) : ((minutes > 0) ? ($elm$core$String$fromInt(hours) + (':0' + ($elm$core$String$fromInt(minutes) + 'h'))) : ($elm$core$String$fromInt(hours) + (':00' + 'h')));
+};
+var $author$project$View$viewAdditionalOffering = F2(
+	function (zone, offering) {
+		return $author$project$Components$DataEntry$view(
+			_List_fromArray(
+				[
+					A2($author$project$Components$DataEntry$required, 'Titel', offering.L),
+					A2($author$project$Components$DataEntry$optional, 'Beschreibung', offering.J),
+					A2(
+					$author$project$Components$DataEntry$asDate,
+					zone,
+					A2($author$project$Components$DataEntry$optional, 'Startdatum', offering.al)),
+					A2(
+					$author$project$Components$DataEntry$asTime,
+					zone,
+					A2($author$project$Components$DataEntry$optional, 'Startzeit', offering.al)),
+					A2(
+					$author$project$Components$DataEntry$asDate,
+					zone,
+					A2($author$project$Components$DataEntry$optional, 'Enddatum', offering.ac)),
+					A2(
+					$author$project$Components$DataEntry$asTime,
+					zone,
+					A2($author$project$Components$DataEntry$optional, 'Endzeit', offering.ac)),
+					A2(
+					$author$project$Components$DataEntry$map,
+					$author$project$View$formatDuration,
+					A2($author$project$Components$DataEntry$optional, 'Dauer', offering.ab))
+				]));
+	});
+var $author$project$View$viewAdditionalOfferings = F2(
+	function (zone, additionalOfferings) {
+		if (additionalOfferings.$ === 1) {
+			return A2(
+				$elm$html$Html$em,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text('In den Daten sind keine zusätzlichen Angebote für diese Veranstaltung angegeben.')
+					]));
+		} else {
+			if (!additionalOfferings.a.b) {
+				return A2(
+					$elm$html$Html$em,
+					_List_Nil,
+					_List_fromArray(
+						[
+							$elm$html$Html$text('In den Daten sind keine zusätzlichen Angebote für diese Veranstaltung angegeben.')
+						]));
+			} else {
+				var list = additionalOfferings.a;
+				return A2(
+					$elm$html$Html$div,
+					_List_Nil,
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$div,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$class('title is-5')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Zusätzliche Angebote')
+								])),
+							A2(
+							$elm$html$Html$div,
+							_List_Nil,
+							A2(
+								$elm$core$List$map,
+								$author$project$View$viewAdditionalOffering(zone),
+								list))
+						]));
+			}
+		}
+	});
 var $author$project$View$eventStatusToString = function (eventStatus) {
 	if (eventStatus.$ === 1) {
 		return 'Findet statt';
@@ -30385,11 +30466,6 @@ var $author$project$View$eventStatusToString = function (eventStatus) {
 				return 'Geändertes Datum';
 		}
 	}
-};
-var $author$project$View$formatDuration = function (duration) {
-	var minutes = A2($elm$core$Basics$modBy, 60, duration);
-	var hours = (duration / 60) | 0;
-	return (minutes >= 10) ? ($elm$core$String$fromInt(hours) + (':' + ($elm$core$String$fromInt(minutes) + 'h'))) : ((minutes > 0) ? ($elm$core$String$fromInt(hours) + (':0' + ($elm$core$String$fromInt(minutes) + 'h'))) : ($elm$core$String$fromInt(hours) + (':00' + 'h')));
 };
 var $author$project$View$humanReadableEventType = function (eventType) {
 	switch (eventType) {
@@ -30828,7 +30904,7 @@ var $author$project$View$viewEvent = F3(
 							$elm$html$Html$div,
 							_List_fromArray(
 								[
-									$elm$html$Html$Attributes$class('cell box mb-0 is-col-span-2 is-col-span-1-widescreen')
+									$elm$html$Html$Attributes$class('cell box mb-0 is-col-span-2 is-row-span-2-widescreen is-col-span-1-widescreen')
 								]),
 							_List_fromArray(
 								[
@@ -30842,7 +30918,17 @@ var $author$project$View$viewEvent = F3(
 								]),
 							_List_fromArray(
 								[
-									$author$project$View$viewLocations(event.ag)
+									$author$project$View$viewOffers(event.bD)
+								])),
+							A2(
+							$elm$html$Html$div,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$class('cell box mb-0 is-col-span-2 is-col-span-1-widescreen')
+								]),
+							_List_fromArray(
+								[
+									A2($author$project$View$viewAdditionalOfferings, zone, event.aV)
 								])),
 							A2(
 							$elm$html$Html$div,
@@ -30862,7 +30948,7 @@ var $author$project$View$viewEvent = F3(
 								]),
 							_List_fromArray(
 								[
-									$author$project$View$viewOffers(event.bD)
+									$author$project$View$viewLocations(event.ag)
 								]))
 						]))
 				]));
