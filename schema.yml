@@ -620,6 +620,7 @@ definitions:
         
     Organization:
       type: object
+      additionalProperties: false
       required:
         - "@type"
         - name
