@@ -89,6 +89,7 @@ type alias CreatorRoleItem =
 type alias Event =
     { atType : DefinitionsCommonEventType
     , additionalOffering : Maybe (List Offering)
+    , doorTime : Maybe String
     , duration : Maybe Int
     , endDate : Maybe String
     , eventStatus : Maybe EventEventStatus
@@ -540,6 +541,7 @@ eventDecoder =
     Decode.succeed Event
         |> required "@type" definitionsCommonEventTypeDecoder
         |> optional "additionalOffering" (Decode.nullable additionalOfferingDecoder) Nothing
+        |> optional "doorTime" (Decode.nullable Decode.string) Nothing
         |> optional "duration" (Decode.nullable Decode.int) Nothing
         |> optional "endDate" (Decode.nullable Decode.string) Nothing
         |> optional "eventStatus" (Decode.nullable eventEventStatusDecoder) Nothing
@@ -1226,6 +1228,7 @@ encodeEvent event =
     []
         |> Encode.required "@type" event.atType encodeDefinitionsCommonEventType
         |> Encode.optional "additionalOffering" event.additionalOffering encodeAdditionalOffering
+        |> Encode.optional "doorTime" event.doorTime Encode.string
         |> Encode.optional "duration" event.duration Encode.int
         |> Encode.optional "endDate" event.endDate Encode.string
         |> Encode.optional "eventStatus" event.eventStatus encodeEventEventStatus

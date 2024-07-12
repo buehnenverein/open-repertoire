@@ -1,7 +1,7 @@
 module View exposing (main)
 
 import Browser
-import Components.DataEntry as Entry exposing (asDate, asLink, asTime)
+import Components.DataEntry as Entry exposing (asDate, asDateAndTime, asLink, asTime)
 import Data.Root exposing (CreatorEntry(..), CreatorRoleItem, Event, EventEventStatus(..), EventTypeItem(..), GenreItem(..), LocationItem(..), Offer, Offering, Organization, PerformanceRoleItem, Production, ProductionProductionType(..), Root, rootDecoder)
 import Helper.CustomValidations as CustomValidations
 import Html exposing (..)
@@ -529,6 +529,7 @@ viewEventTable zone allEvents event =
         , Entry.optional "Dauer" event.duration
             |> Entry.withWarnings CustomValidations.duration
             |> Entry.map formatDuration
+        , Entry.optional "Einlass" event.doorTime |> asDateAndTime zone
         , Entry.optional "Mit Pause?" event.intermission
             |> Entry.map intermissionCountToString
         , Entry.required "Veranstaltungstyp" event

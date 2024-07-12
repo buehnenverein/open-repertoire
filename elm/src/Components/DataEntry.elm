@@ -1,4 +1,4 @@
-module Components.DataEntry exposing (Model, ZoneWithName, asDate, asLink, asTime, join, map, nested, optional, required, view, withHelp, withWarnings)
+module Components.DataEntry exposing (Model, ZoneWithName, asDate, asDateAndTime, asLink, asTime, join, map, nested, optional, required, view, withHelp, withWarnings)
 
 import DateFormat
 import Helper.CustomValidations exposing (Validator, viewerMessage)
@@ -27,6 +27,7 @@ type Options
     | Link (Maybe String)
     | Date ZoneWithName
     | Time ZoneWithName
+    | DateTime ZoneWithName
 
 
 type alias ZoneWithName =
@@ -109,6 +110,11 @@ asTime zone entry =
     { entry | options = Time zone }
 
 
+asDateAndTime : ZoneWithName -> Model a -> Model a
+asDateAndTime zone entry =
+    { entry | options = DateTime zone }
+
+
 withHelp : String -> Model a -> Model a
 withHelp message entry =
     { entry | helpText = Just message }
@@ -186,6 +192,10 @@ viewRequired value options =
             td []
                 [ text (formatTime value zone) ]
 
+        DateTime zone ->
+            td []
+                [ text (formatDateTime value zone) ]
+
 
 viewOptional : Maybe String -> Options -> Html msg
 viewOptional value options =
@@ -212,6 +222,12 @@ viewOptional value options =
             td
                 []
                 [ text (formatTime v zone)
+                ]
+
+        ( Just v, DateTime zone ) ->
+            td
+                []
+                [ text (formatDateTime v zone)
                 ]
 
         ( Nothing, _ ) ->
@@ -284,6 +300,33 @@ formatTime isoString ( name, timezone ) =
         Ok result ->
             DateFormat.format
                 [ DateFormat.hourMilitaryFixed
+                , DateFormat.text ":"
+                , DateFormat.minuteFixed
+                , DateFormat.text (" (" ++ name ++ ")")
+                ]
+                timezone
+                result
+
+        Err _ ->
+            if String.trim isoString == "" then
+                ""
+
+            else
+                "Ungültige Zeitangabe (" ++ isoString ++ ")"
+
+
+formatDateTime : String -> ZoneWithName -> String
+formatDateTime isoString ( name, timezone ) =
+    case Iso8601.toTime isoString of
+        Ok result ->
+            DateFormat.format
+                [ DateFormat.dayOfMonthFixed
+                , DateFormat.text "."
+                , DateFormat.monthFixed
+                , DateFormat.text "."
+                , DateFormat.yearNumber
+                , DateFormat.text ", "
+                , DateFormat.hourMilitaryFixed
                 , DateFormat.text ":"
                 , DateFormat.minuteFixed
                 , DateFormat.text (" (" ++ name ++ ")")

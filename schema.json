@@ -293,6 +293,11 @@
           "description": "The end date and time of the event (in ISO 8601 date format).",
           "format": "date-time"
         },
+        "doorTime": {
+          "type": "string",
+          "description": "The time admission will commence.",
+          "format": "date-time"
+        },
         "duration": {
           "type": "integer",
           "format": "int64",
