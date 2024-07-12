@@ -2,7 +2,7 @@ module View exposing (main)
 
 import Browser
 import Components.DataEntry as Entry exposing (asDate, asLink, asTime)
-import Data.Root exposing (CreatorEntry(..), CreatorRoleItem, Event, EventEventStatus(..), EventTypeItem(..), GenreItem(..), LocationItem(..), Offer, Organization, PerformanceRoleItem, Production, ProductionProductionType(..), Root, rootDecoder)
+import Data.Root exposing (CreatorEntry(..), CreatorRoleItem, Event, EventEventStatus(..), EventTypeItem(..), GenreItem(..), LocationItem(..), Offer, Offering, Organization, PerformanceRoleItem, Production, ProductionProductionType(..), Root, rootDecoder)
 import Helper.CustomValidations as CustomValidations
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -493,17 +493,20 @@ viewEvent : Entry.ZoneWithName -> List Event -> Event -> Html Msg
 viewEvent zone allEvents event =
     div [ class "fixed-grid has-2-cols" ]
         [ div [ class "grid" ]
-            [ div [ class "cell box mb-0 is-col-span-2 is-col-span-1-widescreen" ]
+            [ div [ class "cell box mb-0 is-col-span-2 is-row-span-2-widescreen is-col-span-1-widescreen" ]
                 [ viewEventTable zone allEvents event
                 ]
             , div [ class "cell box mb-0 is-col-span-2 is-col-span-1-widescreen" ]
-                [ viewLocations event.location
+                [ viewOffers event.offers
+                ]
+            , div [ class "cell box mb-0 is-col-span-2 is-col-span-1-widescreen" ]
+                [ viewAdditionalOfferings zone event.additionalOffering
                 ]
             , div [ class "cell box mb-0 is-col-span-2 is-col-span-1-widescreen" ]
                 [ viewPerformers event.performer
                 ]
             , div [ class "cell box mb-0 is-col-span-2 is-col-span-1-widescreen" ]
-                [ viewOffers event.offers
+                [ viewLocations event.location
                 ]
             ]
         ]
@@ -593,6 +596,39 @@ eventStatusToString eventStatus =
 
         Just EventRescheduledEvent ->
             "Geändertes Datum"
+
+
+viewAdditionalOfferings : Entry.ZoneWithName -> Maybe (List Offering) -> Html Msg
+viewAdditionalOfferings zone additionalOfferings =
+    case additionalOfferings of
+        Nothing ->
+            em [] [ text "In den Daten sind keine zusätzlichen Angebote für diese Veranstaltung angegeben." ]
+
+        Just [] ->
+            em [] [ text "In den Daten sind keine zusätzlichen Angebote für diese Veranstaltung angegeben." ]
+
+        Just list ->
+            div []
+                [ div [ class "title is-5" ]
+                    [ text "Zusätzliche Angebote"
+                    ]
+                , div [] (List.map (viewAdditionalOffering zone) list)
+                ]
+
+
+
+viewAdditionalOffering : Entry.ZoneWithName -> Offering -> Html Msg
+viewAdditionalOffering zone offering =
+    Entry.view
+        [ Entry.required "Titel" offering.name
+        , Entry.optional "Beschreibung" offering.description
+        , Entry.optional "Startdatum" offering.startDate |> asDate zone
+        , Entry.optional "Startzeit" offering.startDate |> asTime zone
+        , Entry.optional "Enddatum" offering.endDate |> asDate zone
+        , Entry.optional "Endzeit" offering.endDate |> asTime zone
+        , Entry.optional "Dauer" offering.duration
+            |> Entry.map formatDuration
+        ]
 
 
 
