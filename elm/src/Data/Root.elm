@@ -108,6 +108,7 @@ type alias Event =
 
 type alias Offer =
     { atType : OfferAttype
+    , availability : Maybe OfferAvailability
     , name : Maybe String
     , priceSpecification : PriceSpecification
     , url : Maybe String
@@ -236,6 +237,11 @@ type AccessibilityHazardItem
     | UnknownFlashingHazardAccessibilityHazard
     | UnknownMotionSimulationHazardAccessibilityHazard
     | UnknownSoundHazardAccessibilityHazard
+
+
+type OfferAvailability
+    = InStockOffer
+    | SoldOutOffer
 
 
 type EventEventStatus
@@ -561,6 +567,7 @@ offerDecoder : Decoder Offer
 offerDecoder =
     Decode.succeed Offer
         |> required "@type" offerAttypeDecoder
+        |> optional "availability" (Decode.nullable offerAvailabilityDecoder) Nothing
         |> optional "name" (Decode.nullable Decode.string) Nothing
         |> required "priceSpecification" priceSpecificationDecoder
         |> optional "url" (Decode.nullable Decode.string) Nothing
@@ -772,6 +779,24 @@ additionalOfferingDecoder =
 authorDecoder : Decoder (List Person)
 authorDecoder =
     Decode.list personDecoder
+
+
+offerAvailabilityDecoder : Decoder OfferAvailability
+offerAvailabilityDecoder =
+    Decode.string |> Decode.andThen (parseOfferAvailability >> Decode.fromResult)
+
+
+parseOfferAvailability : String -> Result String OfferAvailability
+parseOfferAvailability offerAvailability =
+    case offerAvailability of
+        "InStock" ->
+            Ok InStockOffer
+
+        "SoldOut" ->
+            Ok SoldOutOffer
+
+        _ ->
+            Err <| "Unknown offerAvailability type: " ++ offerAvailability
 
 
 creatorDecoder : Decoder (List CreatorEntry)
@@ -1249,6 +1274,7 @@ encodeOffer : Offer -> Value
 encodeOffer offer =
     []
         |> Encode.required "@type" offer.atType encodeOfferAttype
+        |> Encode.optional "availability" offer.availability encodeOfferAvailability
         |> Encode.optional "name" offer.name Encode.string
         |> Encode.required "priceSpecification" offer.priceSpecification encodePriceSpecification
         |> Encode.optional "url" offer.url Encode.string
@@ -1471,6 +1497,21 @@ encodeAuthor : List Person -> Value
 encodeAuthor author =
     author
         |> Encode.list encodePerson
+
+
+encodeOfferAvailability : OfferAvailability -> Value
+encodeOfferAvailability offerAvailability =
+    offerAvailability |> offerAvailabilityToString |> Encode.string
+
+
+offerAvailabilityToString : OfferAvailability -> String
+offerAvailabilityToString offerAvailability =
+    case offerAvailability of
+        InStockOffer ->
+            "InStock"
+
+        SoldOutOffer ->
+            "SoldOut"
 
 
 encodeCreator : List CreatorEntry -> Value

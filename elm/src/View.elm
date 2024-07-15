@@ -2,7 +2,7 @@ module View exposing (main)
 
 import Browser
 import Components.DataEntry as Entry exposing (asDate, asDateAndTime, asLink, asTime)
-import Data.Root exposing (CreatorEntry(..), CreatorRoleItem, Event, EventEventStatus(..), EventTypeItem(..), GenreItem(..), LocationItem(..), Offer, Offering, Organization, PerformanceRoleItem, Production, ProductionProductionType(..), Root, rootDecoder)
+import Data.Root exposing (CreatorEntry(..), CreatorRoleItem, Event, EventEventStatus(..), EventTypeItem(..), GenreItem(..), LocationItem(..), Offer, OfferAvailability(..), Offering, Organization, PerformanceRoleItem, Production, ProductionProductionType(..), Root, rootDecoder)
 import Helper.CustomValidations as CustomValidations
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -820,9 +820,21 @@ viewOffer offer =
         , Entry.required "Preis" offer.priceSpecification
             |> Entry.withWarnings CustomValidations.minMaxPrice
             |> Entry.map formatPrice
+        , Entry.optional "Verfügbarkeit" offer.availability
+            |> Entry.map humanReadableAvailability
         , Entry.optional "Link" offer.url
             |> asLink Nothing
         ]
+
+
+humanReadableAvailability : OfferAvailability -> String
+humanReadableAvailability availability =
+    case availability of
+        InStockOffer ->
+            "Verfügbar"
+
+        SoldOutOffer ->
+            "Ausverkauft"
 
 
 

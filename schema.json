@@ -445,6 +445,15 @@
           "example": "Normalpreis",
           "description": "A descriptive name for this offer, e.g. \"Normalpreis\", \"Ermäßigt\", \"Preisgruppe A\", usw."
         },
+        "availability": {
+          "type": "string",
+          "example": "InStock",
+          "description": "A string indicating the ticket availability of this offer.\nRight now, only the values `InStock` or `SoldOut` are used.",
+          "enum": [
+            "InStock",
+            "SoldOut"
+          ]
+        },
         "priceSpecification": {
           "type": "object",
           "required": [
