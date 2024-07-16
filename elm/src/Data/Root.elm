@@ -145,7 +145,7 @@ type alias OriginalWork =
 type alias PerformanceRoleItem =
     { atType : PerformanceRoleAttype
     , characterName : Maybe String
-    , performer : List Person
+    , performer : List PerformerItem
     }
 
 
@@ -296,6 +296,11 @@ type GenreItem
 type LocationItem
     = LocationItemPl Place
     | LocationItemVi VirtualLocation
+
+
+type PerformerItem
+    = PerformerItemPe Person
+    | PerformerItemOr Organization
 
 
 type alias PriceSpecification =
@@ -1001,9 +1006,16 @@ offersDecoder =
     Decode.list offerDecoder
 
 
-performerDecoder : Decoder (List Person)
+performerDecoder : Decoder (List PerformerItem)
 performerDecoder =
-    Decode.list personDecoder
+    Decode.list performerItemDecoder
+
+
+performerItemDecoder : Decoder PerformerItem
+performerItemDecoder =
+    Decode.oneOf [ personDecoder |> Decode.map PerformerItemPe
+                 , organizationDecoder |> Decode.map PerformerItemOr
+                 ]
 
 
 priceSpecificationDecoder : Decoder PriceSpecification
@@ -1730,10 +1742,20 @@ encodeOffers offers =
         |> Encode.list encodeOffer
 
 
-encodePerformer : List Person -> Value
+encodePerformer : List PerformerItem -> Value
 encodePerformer performer =
     performer
-        |> Encode.list encodePerson
+        |> Encode.list encodePerformerItem
+
+
+encodePerformerItem : PerformerItem -> Value
+encodePerformerItem performerItem =
+    case performerItem of
+        PerformerItemPe person ->
+            encodePerson person
+
+        PerformerItemOr organization ->
+            encodeOrganization organization
 
 
 encodePriceSpecification : PriceSpecification -> Value

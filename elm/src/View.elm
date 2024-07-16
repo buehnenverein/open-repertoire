@@ -2,7 +2,7 @@ module View exposing (main)
 
 import Browser
 import Components.DataEntry as Entry exposing (asDate, asDateAndTime, asLink, asTime)
-import Data.Root exposing (CreatorEntry(..), CreatorRoleItem, Event, EventEventStatus(..), EventTypeItem(..), GenreItem(..), LocationItem(..), Offer, OfferAvailability(..), Offering, Organization, PerformanceRoleItem, Production, ProductionProductionType(..), Root, TranslatorItem(..), rootDecoder)
+import Data.Root exposing (CreatorEntry(..), CreatorRoleItem, Event, EventEventStatus(..), EventTypeItem(..), GenreItem(..), LocationItem(..), Offer, OfferAvailability(..), Offering, Organization, PerformanceRoleItem, PerformerItem(..), Production, ProductionProductionType(..), Root, TranslatorItem(..), rootDecoder)
 import Helper.CustomValidations as CustomValidations
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -794,7 +794,17 @@ viewPerformer performer =
             Maybe.withDefault "" performer.characterName
     in
     Entry.required characterName performer.performer
-        |> Entry.join .name
+        |> Entry.join performerName
+
+
+performerName : PerformerItem -> String
+performerName performer =
+    case performer of
+        PerformerItemPe person ->
+            person.name
+
+        PerformerItemOr organization ->
+            organization.name
 
 
 

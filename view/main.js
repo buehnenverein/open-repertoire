@@ -25423,7 +25423,19 @@ var $author$project$Data$Root$performanceRoleAttypeDecoder = A2(
 	$elm$json$Json$Decode$andThen,
 	A2($elm$core$Basics$composeR, $author$project$Data$Root$parsePerformanceRoleAttype, $elm_community$json_extra$Json$Decode$Extra$fromResult),
 	$elm$json$Json$Decode$string);
-var $author$project$Data$Root$performerDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$personDecoder);
+var $author$project$Data$Root$PerformerItemOr = function (a) {
+	return {$: 1, a: a};
+};
+var $author$project$Data$Root$PerformerItemPe = function (a) {
+	return {$: 0, a: a};
+};
+var $author$project$Data$Root$performerItemDecoder = $elm$json$Json$Decode$oneOf(
+	_List_fromArray(
+		[
+			A2($elm$json$Json$Decode$map, $author$project$Data$Root$PerformerItemPe, $author$project$Data$Root$personDecoder),
+			A2($elm$json$Json$Decode$map, $author$project$Data$Root$PerformerItemOr, $author$project$Data$Root$organizationDecoder)
+		]));
+var $author$project$Data$Root$performerDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$performerItemDecoder);
 var $author$project$Data$Root$performanceRoleItemDecoder = A3(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 	'performer',
@@ -27419,6 +27431,16 @@ var $author$project$Helper$CustomValidations$offer = $author$project$Helper$Cust
 			},
 			$author$project$Helper$CustomValidations$optional)
 		]));
+var $author$project$Helper$CustomValidations$performerItem = F2(
+	function (path, data) {
+		if (!data.$) {
+			var personInfo = data.a;
+			return A2($author$project$Helper$CustomValidations$person, path, personInfo);
+		} else {
+			var organizationInfo = data.a;
+			return A2($author$project$Helper$CustomValidations$organization, path, organizationInfo);
+		}
+	});
 var $author$project$Helper$CustomValidations$performer = $author$project$Helper$CustomValidations$object(
 	_List_fromArray(
 		[
@@ -27428,7 +27450,7 @@ var $author$project$Helper$CustomValidations$performer = $author$project$Helper$
 			function ($) {
 				return $.ah;
 			},
-			$author$project$Helper$CustomValidations$list($author$project$Helper$CustomValidations$person)),
+			$author$project$Helper$CustomValidations$list($author$project$Helper$CustomValidations$performerItem)),
 			A3(
 			$author$project$Helper$CustomValidations$field,
 			'/characterName',
@@ -31017,13 +31039,20 @@ var $author$project$View$viewOffers = function (offers) {
 			}()
 			]));
 };
+var $author$project$View$performerName = function (performer) {
+	if (!performer.$) {
+		var person = performer.a;
+		return person.L;
+	} else {
+		var organization = performer.a;
+		return organization.L;
+	}
+};
 var $author$project$View$viewPerformer = function (performer) {
 	var characterName = A2($elm$core$Maybe$withDefault, '', performer.a2);
 	return A2(
 		$author$project$Components$DataEntry$join,
-		function ($) {
-			return $.L;
-		},
+		$author$project$View$performerName,
 		A2($author$project$Components$DataEntry$required, characterName, performer.ah));
 };
 var $author$project$View$viewPerformers = function (performers) {

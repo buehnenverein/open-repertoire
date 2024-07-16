@@ -513,7 +513,9 @@ definitions:
           performer:
             type: array
             items:
-              $ref: "#/definitions/Person"
+              oneOf:
+                - $ref: "#/definitions/Person"
+                - $ref: "#/definitions/Organization"
 
     Place:
       type: object

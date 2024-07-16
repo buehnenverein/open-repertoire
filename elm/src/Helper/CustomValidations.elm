@@ -12,6 +12,7 @@ import Data.Root
         , Offer
         , Organization
         , PerformanceRoleItem
+        , PerformerItem(..)
         , Person
         , Place
         , PostalAddress
@@ -548,9 +549,19 @@ person =
 performer : Validator PerformanceRoleItem
 performer =
     object
-        [ field "/performer" .performer (list person)
+        [ field "/performer" .performer (list performerItem)
         , field "/characterName" .characterName optional
         ]
+
+
+performerItem : Validator PerformerItem
+performerItem path data =
+    case data of
+        PerformerItemPe personInfo ->
+            person path personInfo
+
+        PerformerItemOr organizationInfo ->
+            organization path organizationInfo
 
 
 offer : Validator Offer
