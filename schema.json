@@ -48,6 +48,26 @@
           "items": {
             "$ref": "#/definitions/Person"
           }
+        },
+        "translator": {
+          "type": "array",
+          "description": "Person or Organization whose translation of the original work is the basis for this production.",
+          "example": [
+            {
+              "@type": "Person",
+              "name": "Mona Mustermann"
+            }
+          ],
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/definitions/Person"
+              },
+              {
+                "$ref": "#/definitions/Organization"
+              }
+            ]
+          }
         }
       }
     },

@@ -138,6 +138,7 @@ type alias OriginalWork =
     { atType : DefinitionsCommonCreativeWorkType
     , author : Maybe (List Person)
     , name : String
+    , translator : Maybe (List TranslatorItem)
     }
 
 
@@ -309,6 +310,11 @@ type ProductionProductionType
     = WorldPremiereProduction
     | FirstPerformanceProduction
     | RevivalProduction
+
+
+type TranslatorItem
+    = TranslatorItemPe Person
+    | TranslatorItemOr Organization
 
 
 type Version
@@ -600,6 +606,7 @@ originalWorkDecoder =
         |> required "@type" definitionsCommonCreativeWorkTypeDecoder
         |> optional "author" (Decode.nullable authorDecoder) Nothing
         |> required "name" Decode.string
+        |> optional "translator" (Decode.nullable translatorDecoder) Nothing
 
 
 performanceRoleDecoder : Decoder (List PerformanceRoleItem)
@@ -1039,6 +1046,18 @@ sponsorDecoder =
     Decode.list organizationDecoder
 
 
+translatorDecoder : Decoder (List TranslatorItem)
+translatorDecoder =
+    Decode.list translatorItemDecoder
+
+
+translatorItemDecoder : Decoder TranslatorItem
+translatorItemDecoder =
+    Decode.oneOf [ personDecoder |> Decode.map TranslatorItemPe
+                 , organizationDecoder |> Decode.map TranslatorItemOr
+                 ]
+
+
 versionDecoder : Decoder Version
 versionDecoder =
     Decode.string |> Decode.andThen (parseVersion >> Decode.fromResult)
@@ -1310,6 +1329,7 @@ encodeOriginalWork originalWork =
         |> Encode.required "@type" originalWork.atType encodeDefinitionsCommonCreativeWorkType
         |> Encode.optional "author" originalWork.author encodeAuthor
         |> Encode.required "name" originalWork.name Encode.string
+        |> Encode.optional "translator" originalWork.translator encodeTranslator
         |> Encode.object
 
 
@@ -1754,6 +1774,22 @@ encodeSponsor : List Organization -> Value
 encodeSponsor sponsor =
     sponsor
         |> Encode.list encodeOrganization
+
+
+encodeTranslator : List TranslatorItem -> Value
+encodeTranslator translator =
+    translator
+        |> Encode.list encodeTranslatorItem
+
+
+encodeTranslatorItem : TranslatorItem -> Value
+encodeTranslatorItem translatorItem =
+    case translatorItem of
+        TranslatorItemPe person ->
+            encodePerson person
+
+        TranslatorItemOr organization ->
+            encodeOrganization organization
 
 
 encodeVersion : Version -> Value

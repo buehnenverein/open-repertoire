@@ -18,6 +18,7 @@ import Data.Root
         , PriceSpecification
         , Production
         , Root
+        , TranslatorItem(..)
         , VirtualLocation
         )
 import Helper.LanguageCodes as LanguageCodes
@@ -527,6 +528,16 @@ creatorEntry path data =
             organization path organizationInfo
 
 
+translatorItem : Validator TranslatorItem
+translatorItem path data =
+    case data of
+        TranslatorItemPe personInfo ->
+            person path personInfo
+
+        TranslatorItemOr organizationInfo ->
+            organization path organizationInfo
+
+
 person : Validator Person
 person =
     object
@@ -575,8 +586,18 @@ production =
         , field "/subtitle" .subtitle optional
         , field "/abstract" .abstract optional
         , field "/name" .name required
+        , field "/isBasedOn" .isBasedOn (maybe originalWork)
         , abstractOrDescription
         , abstractDifferentFromDescription
+        ]
+
+
+originalWork : Validator Data.Root.OriginalWork
+originalWork =
+    object
+        [ field "/author" .author (maybe (list person))
+        , field "/name" .name required
+        , field "/translator" .translator (maybe (list translatorItem))
         ]
 
 

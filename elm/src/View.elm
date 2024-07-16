@@ -2,7 +2,7 @@ module View exposing (main)
 
 import Browser
 import Components.DataEntry as Entry exposing (asDate, asDateAndTime, asLink, asTime)
-import Data.Root exposing (CreatorEntry(..), CreatorRoleItem, Event, EventEventStatus(..), EventTypeItem(..), GenreItem(..), LocationItem(..), Offer, OfferAvailability(..), Offering, Organization, PerformanceRoleItem, Production, ProductionProductionType(..), Root, rootDecoder)
+import Data.Root exposing (CreatorEntry(..), CreatorRoleItem, Event, EventEventStatus(..), EventTypeItem(..), GenreItem(..), LocationItem(..), Offer, OfferAvailability(..), Offering, Organization, PerformanceRoleItem, Production, ProductionProductionType(..), Root, TranslatorItem(..), rootDecoder)
 import Helper.CustomValidations as CustomValidations
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -410,8 +410,21 @@ viewOriginalWork production =
             , Entry.optional "Autor:in" production.isBasedOn
                 |> Entry.nested .author
                 |> Entry.join .name
+            , Entry.optional "Übersetzung" production.isBasedOn
+                |> Entry.nested .translator
+                |> Entry.join translatorName
             ]
         ]
+
+
+translatorName : TranslatorItem -> String
+translatorName creator =
+    case creator of
+        TranslatorItemPe person ->
+            person.name
+
+        TranslatorItemOr organization ->
+            organization.name
 
 
 viewProductionAccessibility : Production -> Html Msg

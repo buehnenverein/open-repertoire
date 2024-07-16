@@ -1857,9 +1857,9 @@ var _Platform_worker = F4(function(impl, flagDecoder, debugMetadata, args)
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.cw,
-		impl.cQ,
-		impl.cI,
+		impl.cx,
+		impl.cR,
+		impl.cJ,
 		function() { return function() {} }
 	);
 });
@@ -3943,11 +3943,11 @@ var _Browser_element = _Debugger_element || F4(function(impl, flagDecoder, debug
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.cw,
-		impl.cQ,
-		impl.cI,
+		impl.cx,
+		impl.cR,
+		impl.cJ,
 		function(sendToApp, initialModel) {
-			var view = impl.cR;
+			var view = impl.cS;
 			/**/
 			var domNode = args['node'];
 			//*/
@@ -3979,12 +3979,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.cw,
-		impl.cQ,
-		impl.cI,
+		impl.cx,
+		impl.cR,
+		impl.cJ,
 		function(sendToApp, initialModel) {
 			var divertHrefToApp = impl.ay && impl.ay(sendToApp)
-			var view = impl.cR;
+			var view = impl.cS;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
 			var currNode = _VirtualDom_virtualize(bodyNode);
@@ -3992,12 +3992,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 			{
 				_VirtualDom_divertHrefToApp = divertHrefToApp;
 				var doc = view(model);
-				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.cm);
+				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.cn);
 				var patches = _VirtualDom_diff(currNode, nextNode);
 				bodyNode = _VirtualDom_applyPatches(bodyNode, currNode, patches, sendToApp);
 				currNode = nextNode;
 				_VirtualDom_divertHrefToApp = 0;
-				(title !== doc.cK) && (_VirtualDom_doc.title = title = doc.cK);
+				(title !== doc.cL) && (_VirtualDom_doc.title = title = doc.cL);
 			});
 		}
 	);
@@ -4053,8 +4053,8 @@ function _Browser_makeAnimator(model, draw)
 
 function _Browser_application(impl)
 {
-	var onUrlChange = impl.cz;
-	var onUrlRequest = impl.cA;
+	var onUrlChange = impl.cA;
+	var onUrlRequest = impl.cB;
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
@@ -4084,13 +4084,13 @@ function _Browser_application(impl)
 				}
 			});
 		},
-		cw: function(flags)
+		cx: function(flags)
 		{
-			return A3(impl.cw, flags, _Browser_getUrl(), key);
+			return A3(impl.cx, flags, _Browser_getUrl(), key);
 		},
+		cS: impl.cS,
 		cR: impl.cR,
-		cQ: impl.cQ,
-		cI: impl.cI
+		cJ: impl.cJ
 	});
 }
 
@@ -4156,17 +4156,17 @@ var _Browser_decodeEvent = F2(function(decoder, event)
 function _Browser_visibilityInfo()
 {
 	return (typeof _VirtualDom_doc.hidden !== 'undefined')
-		? { cu: 'hidden', cn: 'visibilitychange' }
+		? { cv: 'hidden', co: 'visibilitychange' }
 		:
 	(typeof _VirtualDom_doc.mozHidden !== 'undefined')
-		? { cu: 'mozHidden', cn: 'mozvisibilitychange' }
+		? { cv: 'mozHidden', co: 'mozvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.msHidden !== 'undefined')
-		? { cu: 'msHidden', cn: 'msvisibilitychange' }
+		? { cv: 'msHidden', co: 'msvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.webkitHidden !== 'undefined')
-		? { cu: 'webkitHidden', cn: 'webkitvisibilitychange' }
-		: { cu: 'hidden', cn: 'visibilitychange' };
+		? { cv: 'webkitHidden', co: 'webkitvisibilitychange' }
+		: { cv: 'hidden', co: 'visibilitychange' };
 }
 
 
@@ -4248,10 +4248,10 @@ function _Browser_getViewport()
 {
 	return {
 		bX: _Browser_getScene(),
-		cc: {
-			cg: _Browser_window.pageXOffset,
-			ch: _Browser_window.pageYOffset,
-			cf: _Browser_doc.documentElement.clientWidth,
+		cd: {
+			ch: _Browser_window.pageXOffset,
+			ci: _Browser_window.pageYOffset,
+			cg: _Browser_doc.documentElement.clientWidth,
 			bh: _Browser_doc.documentElement.clientHeight
 		}
 	};
@@ -4262,7 +4262,7 @@ function _Browser_getScene()
 	var body = _Browser_doc.body;
 	var elem = _Browser_doc.documentElement;
 	return {
-		cf: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
+		cg: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
 		bh: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
@@ -4287,13 +4287,13 @@ function _Browser_getViewportOf(id)
 	{
 		return {
 			bX: {
-				cf: node.scrollWidth,
+				cg: node.scrollWidth,
 				bh: node.scrollHeight
 			},
-			cc: {
-				cg: node.scrollLeft,
-				ch: node.scrollTop,
-				cf: node.clientWidth,
+			cd: {
+				ch: node.scrollLeft,
+				ci: node.scrollTop,
+				cg: node.clientWidth,
 				bh: node.clientHeight
 			}
 		};
@@ -4325,16 +4325,16 @@ function _Browser_getElement(id)
 		var y = _Browser_window.pageYOffset;
 		return {
 			bX: _Browser_getScene(),
-			cc: {
-				cg: x,
-				ch: y,
-				cf: _Browser_doc.documentElement.clientWidth,
+			cd: {
+				ch: x,
+				ci: y,
+				cg: _Browser_doc.documentElement.clientWidth,
 				bh: _Browser_doc.documentElement.clientHeight
 			},
-			cq: {
-				cg: x + rect.left,
-				ch: y + rect.top,
-				cf: rect.width,
+			cr: {
+				ch: x + rect.left,
+				ci: y + rect.top,
+				cg: rect.width,
 				bh: rect.height
 			}
 		};
@@ -4380,25 +4380,25 @@ var _Http_toTask = F3(function(router, toTask, request)
 	return _Scheduler_binding(function(callback)
 	{
 		function done(response) {
-			callback(toTask(request.cr.a(response)));
+			callback(toTask(request.cs.a(response)));
 		}
 
 		var xhr = new XMLHttpRequest();
 		xhr.addEventListener('error', function() { done($elm$http$Http$NetworkError_); });
 		xhr.addEventListener('timeout', function() { done($elm$http$Http$Timeout_); });
-		xhr.addEventListener('load', function() { done(_Http_toResponse(request.cr.b, xhr)); });
+		xhr.addEventListener('load', function() { done(_Http_toResponse(request.cs.b, xhr)); });
 		$elm$core$Maybe$isJust(request.b9) && _Http_track(router, xhr, request.b9.a);
 
 		try {
-			xhr.open(request.cy, request.I, true);
+			xhr.open(request.cz, request.I, true);
 		} catch (e) {
 			return done($elm$http$Http$BadUrl_(request.I));
 		}
 
 		_Http_configureRequest(xhr, request);
 
-		request.cm.a && xhr.setRequestHeader('Content-Type', request.cm.a);
-		xhr.send(request.cm.b);
+		request.cn.a && xhr.setRequestHeader('Content-Type', request.cn.a);
+		xhr.send(request.cn.b);
 
 		return function() { xhr.c = true; xhr.abort(); };
 	});
@@ -4413,9 +4413,9 @@ function _Http_configureRequest(xhr, request)
 	{
 		xhr.setRequestHeader(headers.a.a, headers.a.b);
 	}
-	xhr.timeout = request.cJ.a || 0;
-	xhr.responseType = request.cr.d;
-	xhr.withCredentials = request.ck;
+	xhr.timeout = request.cK.a || 0;
+	xhr.responseType = request.cs.d;
+	xhr.withCredentials = request.cl;
 }
 
 
@@ -4437,8 +4437,8 @@ function _Http_toMetadata(xhr)
 {
 	return {
 		I: xhr.responseURL,
-		cG: xhr.status,
-		cH: xhr.statusText,
+		cH: xhr.status,
+		cI: xhr.statusText,
 		bg: _Http_parseHeaders(xhr.getAllResponseHeaders())
 	};
 }
@@ -4534,14 +4534,14 @@ function _Http_track(router, xhr, tracker)
 	xhr.upload.addEventListener('progress', function(event) {
 		if (xhr.c) { return; }
 		_Scheduler_rawSpawn(A2($elm$core$Platform$sendToSelf, router, _Utils_Tuple2(tracker, $elm$http$Http$Sending({
-			cF: event.loaded,
+			cG: event.loaded,
 			b_: event.total
 		}))));
 	});
 	xhr.addEventListener('progress', function(event) {
 		if (xhr.c) { return; }
 		_Scheduler_rawSpawn(A2($elm$core$Platform$sendToSelf, router, _Utils_Tuple2(tracker, $elm$http$Http$Receiving({
-			cC: event.loaded,
+			cD: event.loaded,
 			b_: event.lengthComputable ? $elm$core$Maybe$Just(event.total) : $elm$core$Maybe$Nothing
 		}))));
 	});
@@ -6126,7 +6126,7 @@ var $elm$http$Http$resolve = F2(
 			case 3:
 				var metadata = response.a;
 				return $elm$core$Result$Err(
-					$elm$http$Http$BadStatus(metadata.cG));
+					$elm$http$Http$BadStatus(metadata.cH));
 			default:
 				var body = response.b;
 				return A2(
@@ -6285,12 +6285,12 @@ var $elm$http$Http$cmdMap = F2(
 			var r = cmd.a;
 			return $elm$http$Http$Request(
 				{
-					ck: r.ck,
-					cm: r.cm,
-					cr: A2(_Http_mapExpect, func, r.cr),
+					cl: r.cl,
+					cn: r.cn,
+					cs: A2(_Http_mapExpect, func, r.cs),
 					bg: r.bg,
-					cy: r.cy,
-					cJ: r.cJ,
+					cz: r.cz,
+					cK: r.cK,
 					b9: r.b9,
 					I: r.I
 				});
@@ -6315,11 +6315,11 @@ var $elm$http$Http$subscription = _Platform_leaf('Http');
 var $elm$http$Http$request = function (r) {
 	return $elm$http$Http$command(
 		$elm$http$Http$Request(
-			{ck: false, cm: r.cm, cr: r.cr, bg: r.bg, cy: r.cy, cJ: r.cJ, b9: r.b9, I: r.I}));
+			{cl: false, cn: r.cn, cs: r.cs, bg: r.bg, cz: r.cz, cK: r.cK, b9: r.b9, I: r.I}));
 };
 var $elm$http$Http$get = function (r) {
 	return $elm$http$Http$request(
-		{cm: $elm$http$Http$emptyBody, cr: r.cr, bg: _List_Nil, cy: 'GET', cJ: $elm$core$Maybe$Nothing, b9: $elm$core$Maybe$Nothing, I: r.I});
+		{cn: $elm$http$Http$emptyBody, cs: r.cs, bg: _List_Nil, cz: 'GET', cK: $elm$core$Maybe$Nothing, b9: $elm$core$Maybe$Nothing, I: r.I});
 };
 var $author$project$Validate$getInputs = function (model) {
 	return model.L;
@@ -7374,7 +7374,7 @@ var $elm$parser$Parser$Advanced$AddRight = F2(
 	});
 var $elm$parser$Parser$Advanced$DeadEnd = F4(
 	function (row, col, problem, contextStack) {
-		return {a$: col, co: contextStack, bJ: problem, bW: row};
+		return {a$: col, cp: contextStack, bJ: problem, bW: row};
 	});
 var $elm$parser$Parser$Advanced$Empty = {$: 0};
 var $elm$parser$Parser$Advanced$fromState = F2(
@@ -8178,6 +8178,43 @@ var $author$project$Helper$CustomValidations$event = $author$project$Helper$Cust
 			$author$project$Helper$CustomValidations$eventStatusAndDate,
 			$author$project$Helper$CustomValidations$startAndEndDates
 		]));
+var $author$project$Helper$CustomValidations$translatorItem = F2(
+	function (path, data) {
+		if (!data.$) {
+			var personInfo = data.a;
+			return A2($author$project$Helper$CustomValidations$person, path, personInfo);
+		} else {
+			var organizationInfo = data.a;
+			return A2($author$project$Helper$CustomValidations$organization, path, organizationInfo);
+		}
+	});
+var $author$project$Helper$CustomValidations$originalWork = $author$project$Helper$CustomValidations$object(
+	_List_fromArray(
+		[
+			A3(
+			$author$project$Helper$CustomValidations$field,
+			'/author',
+			function ($) {
+				return $.aW;
+			},
+			$author$project$Helper$CustomValidations$maybe(
+				$author$project$Helper$CustomValidations$list($author$project$Helper$CustomValidations$person))),
+			A3(
+			$author$project$Helper$CustomValidations$field,
+			'/name',
+			function ($) {
+				return $.i;
+			},
+			$author$project$Helper$CustomValidations$required),
+			A3(
+			$author$project$Helper$CustomValidations$field,
+			'/translator',
+			function ($) {
+				return $.cb;
+			},
+			$author$project$Helper$CustomValidations$maybe(
+				$author$project$Helper$CustomValidations$list($author$project$Helper$CustomValidations$translatorItem)))
+		]));
 var $author$project$Data$Root$PremiereEventType = 0;
 var $author$project$Data$Root$PreviewEventType = 3;
 var $author$project$Helper$CustomValidations$validPremiere = F3(
@@ -8372,6 +8409,13 @@ var $author$project$Helper$CustomValidations$production = $author$project$Helper
 				return $.i;
 			},
 			$author$project$Helper$CustomValidations$required),
+			A3(
+			$author$project$Helper$CustomValidations$field,
+			'/isBasedOn',
+			function ($) {
+				return $.bp;
+			},
+			$author$project$Helper$CustomValidations$maybe($author$project$Helper$CustomValidations$originalWork)),
 			$author$project$Helper$CustomValidations$abstractOrDescription,
 			$author$project$Helper$CustomValidations$abstractDifferentFromDescription
 		]));
@@ -8409,7 +8453,7 @@ var $author$project$Helper$CustomValidations$checkAll = function (data) {
 var $elm$json$Json$Decode$decodeValue = _Json_run;
 var $author$project$Data$Root$Root = F4(
 	function (atContext, organization, productions, version) {
-		return {aT: atContext, bC: organization, bN: productions, cb: version};
+		return {aT: atContext, bC: organization, bN: productions, cc: version};
 	});
 var $elm$json$Json$Decode$andThen = _Json_andThen;
 var $elm$json$Json$Decode$fail = _Json_fail;
@@ -8941,7 +8985,7 @@ var $author$project$Data$Root$LocationItemVi = function (a) {
 };
 var $author$project$Data$Root$Place = F6(
 	function (atType, address, latitude, longitude, name, wheelChairPlaces) {
-		return {S: address, d: atType, bs: latitude, bu: longitude, i: name, cd: wheelChairPlaces};
+		return {S: address, d: atType, bs: latitude, bu: longitude, i: name, ce: wheelChairPlaces};
 	});
 var $elm$json$Json$Decode$float = _Json_decodeFloat;
 var $author$project$Data$Root$PlaceType = 0;
@@ -8958,7 +9002,7 @@ var $author$project$Data$Root$placeAttypeDecoder = A2(
 	$elm$json$Json$Decode$string);
 var $author$project$Data$Root$WheelChairPlace = F3(
 	function (count, hasSpaceForAssistant, wheelchairUserCapacity) {
-		return {a0: count, bf: hasSpaceForAssistant, ce: wheelchairUserCapacity};
+		return {a0: count, bf: hasSpaceForAssistant, cf: wheelchairUserCapacity};
 	});
 var $elm$json$Json$Decode$bool = _Json_decodeBool;
 var $author$project$Data$Root$wheelChairPlaceDecoder = A4(
@@ -9352,25 +9396,43 @@ var $author$project$Data$Root$genreItemDecoder = A2(
 	A2($elm$core$Basics$composeR, $author$project$Data$Root$parseGenreItem, $elm_community$json_extra$Json$Decode$Extra$fromResult),
 	$elm$json$Json$Decode$string);
 var $author$project$Data$Root$genreDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$genreItemDecoder);
-var $author$project$Data$Root$OriginalWork = F3(
-	function (atType, author, name) {
-		return {d: atType, aW: author, i: name};
+var $author$project$Data$Root$OriginalWork = F4(
+	function (atType, author, name, translator) {
+		return {d: atType, aW: author, i: name, cb: translator};
 	});
 var $author$project$Data$Root$authorDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$personDecoder);
-var $author$project$Data$Root$originalWorkDecoder = A3(
-	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-	'name',
-	$elm$json$Json$Decode$string,
-	A4(
-		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-		'author',
-		$elm$json$Json$Decode$nullable($author$project$Data$Root$authorDecoder),
-		$elm$core$Maybe$Nothing,
-		A3(
-			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-			'@type',
-			$author$project$Data$Root$definitionsCommonCreativeWorkTypeDecoder,
-			$elm$json$Json$Decode$succeed($author$project$Data$Root$OriginalWork))));
+var $author$project$Data$Root$TranslatorItemOr = function (a) {
+	return {$: 1, a: a};
+};
+var $author$project$Data$Root$TranslatorItemPe = function (a) {
+	return {$: 0, a: a};
+};
+var $author$project$Data$Root$translatorItemDecoder = $elm$json$Json$Decode$oneOf(
+	_List_fromArray(
+		[
+			A2($elm$json$Json$Decode$map, $author$project$Data$Root$TranslatorItemPe, $author$project$Data$Root$personDecoder),
+			A2($elm$json$Json$Decode$map, $author$project$Data$Root$TranslatorItemOr, $author$project$Data$Root$organizationDecoder)
+		]));
+var $author$project$Data$Root$translatorDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$translatorItemDecoder);
+var $author$project$Data$Root$originalWorkDecoder = A4(
+	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+	'translator',
+	$elm$json$Json$Decode$nullable($author$project$Data$Root$translatorDecoder),
+	$elm$core$Maybe$Nothing,
+	A3(
+		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+		'name',
+		$elm$json$Json$Decode$string,
+		A4(
+			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+			'author',
+			$elm$json$Json$Decode$nullable($author$project$Data$Root$authorDecoder),
+			$elm$core$Maybe$Nothing,
+			A3(
+				$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+				'@type',
+				$author$project$Data$Root$definitionsCommonCreativeWorkTypeDecoder,
+				$elm$json$Json$Decode$succeed($author$project$Data$Root$OriginalWork)))));
 var $author$project$Data$Root$FirstPerformanceProduction = 1;
 var $author$project$Data$Root$RevivalProduction = 2;
 var $author$project$Data$Root$WorldPremiereProduction = 0;
@@ -9798,7 +9860,7 @@ var $author$project$Validate$update = F2(
 						}),
 					$elm$http$Http$get(
 						{
-							cr: A2($elm$http$Http$expectJson, $author$project$Validate$Response, $author$project$Validate$jsonDecoder),
+							cs: A2($elm$http$Http$expectJson, $author$project$Validate$Response, $author$project$Validate$jsonDecoder),
 							I: url
 						}));
 			case 1:
@@ -10672,6 +10734,6 @@ var $author$project$Validate$view = function (model) {
 			]));
 };
 var $author$project$Validate$main = $elm$browser$Browser$element(
-	{cw: $author$project$Validate$init, cI: $author$project$Validate$subscriptions, cQ: $author$project$Validate$update, cR: $author$project$Validate$view});
+	{cx: $author$project$Validate$init, cJ: $author$project$Validate$subscriptions, cR: $author$project$Validate$update, cS: $author$project$Validate$view});
 _Platform_export({'Validate':{'init':$author$project$Validate$main(
 	$elm$json$Json$Decode$succeed(0))(0)}});}(this));
