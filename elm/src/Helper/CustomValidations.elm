@@ -3,7 +3,6 @@ module Helper.CustomValidations exposing (MessageType(..), ValidationMessage, Va
 import Data.Root
     exposing
         ( Audience
-        , CreatorEntry(..)
         , CreatorRoleItem
         , Event
         , EventEventStatus(..)
@@ -12,14 +11,13 @@ import Data.Root
         , Offer
         , Organization
         , PerformanceRoleItem
-        , PerformerItem(..)
         , Person
+        , PersonOrOrganization(..)
         , Place
         , PostalAddress
         , PriceSpecification
         , Production
         , Root
-        , TranslatorItem(..)
         , VirtualLocation
         )
 import Helper.LanguageCodes as LanguageCodes
@@ -514,28 +512,18 @@ event =
 creator : Validator CreatorRoleItem
 creator =
     object
-        [ field "/creator" .creator (list creatorEntry)
+        [ field "/creator" .creator (list personOrOrganization)
         , field "/roleName" .roleName optional
         ]
 
 
-creatorEntry : Validator CreatorEntry
-creatorEntry path data =
+personOrOrganization : Validator PersonOrOrganization
+personOrOrganization path data =
     case data of
-        CreatorEntryPe personInfo ->
+        PersonOrOrganizationPe personInfo ->
             person path personInfo
 
-        CreatorEntryOr organizationInfo ->
-            organization path organizationInfo
-
-
-translatorItem : Validator TranslatorItem
-translatorItem path data =
-    case data of
-        TranslatorItemPe personInfo ->
-            person path personInfo
-
-        TranslatorItemOr organizationInfo ->
+        PersonOrOrganizationOr organizationInfo ->
             organization path organizationInfo
 
 
@@ -549,19 +537,9 @@ person =
 performer : Validator PerformanceRoleItem
 performer =
     object
-        [ field "/performer" .performer (list performerItem)
+        [ field "/performer" .performer (list personOrOrganization)
         , field "/characterName" .characterName optional
         ]
-
-
-performerItem : Validator PerformerItem
-performerItem path data =
-    case data of
-        PerformerItemPe personInfo ->
-            person path personInfo
-
-        PerformerItemOr organizationInfo ->
-            organization path organizationInfo
 
 
 offer : Validator Offer
@@ -608,7 +586,7 @@ originalWork =
     object
         [ field "/author" .author (maybe (list person))
         , field "/name" .name required
-        , field "/translator" .translator (maybe (list translatorItem))
+        , field "/translator" .translator (maybe (list personOrOrganization))
         ]
 
 

@@ -74,14 +74,9 @@ type DefinitionsCommonEventType
     = EventDefinitions
 
 
-type CreatorEntry
-    = CreatorEntryPe Person
-    | CreatorEntryOr Organization
-
-
 type alias CreatorRoleItem =
     { atType : CreatorRoleAttype
-    , creator : List CreatorEntry
+    , creator : List PersonOrOrganization
     , roleName : Maybe String
     }
 
@@ -138,14 +133,14 @@ type alias OriginalWork =
     { atType : DefinitionsCommonCreativeWorkType
     , author : Maybe (List Person)
     , name : String
-    , translator : Maybe (List TranslatorItem)
+    , translator : Maybe (List PersonOrOrganization)
     }
 
 
 type alias PerformanceRoleItem =
     { atType : PerformanceRoleAttype
     , characterName : Maybe String
-    , performer : List PerformerItem
+    , performer : List PersonOrOrganization
     }
 
 
@@ -153,6 +148,11 @@ type alias Person =
     { atType : PersonAttype
     , name : String
     }
+
+
+type PersonOrOrganization
+    = PersonOrOrganizationPe Person
+    | PersonOrOrganizationOr Organization
 
 
 type alias Place =
@@ -298,11 +298,6 @@ type LocationItem
     | LocationItemVi VirtualLocation
 
 
-type PerformerItem
-    = PerformerItemPe Person
-    | PerformerItemOr Organization
-
-
 type alias PriceSpecification =
     { atType : PriceSpecificationAttype
     , maxPrice : Maybe Float
@@ -315,11 +310,6 @@ type ProductionProductionType
     = WorldPremiereProduction
     | FirstPerformanceProduction
     | RevivalProduction
-
-
-type TranslatorItem
-    = TranslatorItemPe Person
-    | TranslatorItemOr Organization
 
 
 type Version
@@ -533,13 +523,6 @@ parseDefinitionsCommonEventType definitionsCommonEventType =
             Err <| "Unknown definitionsCommonEventType type: " ++ definitionsCommonEventType
 
 
-creatorEntryDecoder : Decoder CreatorEntry
-creatorEntryDecoder =
-    Decode.oneOf [ personDecoder |> Decode.map CreatorEntryPe
-                 , organizationDecoder |> Decode.map CreatorEntryOr
-                 ]
-
-
 creatorRoleDecoder : Decoder (List CreatorRoleItem)
 creatorRoleDecoder =
     Decode.list creatorRoleItemDecoder
@@ -632,6 +615,13 @@ personDecoder =
     Decode.succeed Person
         |> required "@type" personAttypeDecoder
         |> required "name" Decode.string
+
+
+personOrOrganizationDecoder : Decoder PersonOrOrganization
+personOrOrganizationDecoder =
+    Decode.oneOf [ personDecoder |> Decode.map PersonOrOrganizationPe
+                 , organizationDecoder |> Decode.map PersonOrOrganizationOr
+                 ]
 
 
 placeDecoder : Decoder Place
@@ -811,9 +801,9 @@ parseOfferAvailability offerAvailability =
             Err <| "Unknown offerAvailability type: " ++ offerAvailability
 
 
-creatorDecoder : Decoder (List CreatorEntry)
+creatorDecoder : Decoder (List PersonOrOrganization)
 creatorDecoder =
-    Decode.list creatorEntryDecoder
+    Decode.list personOrOrganizationDecoder
 
 
 eventEventStatusDecoder : Decoder EventEventStatus
@@ -1006,16 +996,9 @@ offersDecoder =
     Decode.list offerDecoder
 
 
-performerDecoder : Decoder (List PerformerItem)
+performerDecoder : Decoder (List PersonOrOrganization)
 performerDecoder =
-    Decode.list performerItemDecoder
-
-
-performerItemDecoder : Decoder PerformerItem
-performerItemDecoder =
-    Decode.oneOf [ personDecoder |> Decode.map PerformerItemPe
-                 , organizationDecoder |> Decode.map PerformerItemOr
-                 ]
+    Decode.list personOrOrganizationDecoder
 
 
 priceSpecificationDecoder : Decoder PriceSpecification
@@ -1058,16 +1041,9 @@ sponsorDecoder =
     Decode.list organizationDecoder
 
 
-translatorDecoder : Decoder (List TranslatorItem)
+translatorDecoder : Decoder (List PersonOrOrganization)
 translatorDecoder =
-    Decode.list translatorItemDecoder
-
-
-translatorItemDecoder : Decoder TranslatorItem
-translatorItemDecoder =
-    Decode.oneOf [ personDecoder |> Decode.map TranslatorItemPe
-                 , organizationDecoder |> Decode.map TranslatorItemOr
-                 ]
+    Decode.list personOrOrganizationDecoder
 
 
 versionDecoder : Decoder Version
@@ -1254,16 +1230,6 @@ definitionsCommonEventTypeToString definitionsCommonEventType =
             "Event"
 
 
-encodeCreatorEntry : CreatorEntry -> Value
-encodeCreatorEntry creatorEntry =
-    case creatorEntry of
-        CreatorEntryPe person ->
-            encodePerson person
-
-        CreatorEntryOr organization ->
-            encodeOrganization organization
-
-
 encodeCreatorRole : List CreatorRoleItem -> Value
 encodeCreatorRole creatorRole =
     creatorRole
@@ -1366,6 +1332,16 @@ encodePerson person =
         |> Encode.required "@type" person.atType encodePersonAttype
         |> Encode.required "name" person.name Encode.string
         |> Encode.object
+
+
+encodePersonOrOrganization : PersonOrOrganization -> Value
+encodePersonOrOrganization personOrOrganization =
+    case personOrOrganization of
+        PersonOrOrganizationPe person ->
+            encodePerson person
+
+        PersonOrOrganizationOr organization ->
+            encodeOrganization organization
 
 
 encodePlace : Place -> Value
@@ -1546,10 +1522,10 @@ offerAvailabilityToString offerAvailability =
             "SoldOut"
 
 
-encodeCreator : List CreatorEntry -> Value
+encodeCreator : List PersonOrOrganization -> Value
 encodeCreator creator =
     creator
-        |> Encode.list encodeCreatorEntry
+        |> Encode.list encodePersonOrOrganization
 
 
 encodeEventEventStatus : EventEventStatus -> Value
@@ -1742,20 +1718,10 @@ encodeOffers offers =
         |> Encode.list encodeOffer
 
 
-encodePerformer : List PerformerItem -> Value
+encodePerformer : List PersonOrOrganization -> Value
 encodePerformer performer =
     performer
-        |> Encode.list encodePerformerItem
-
-
-encodePerformerItem : PerformerItem -> Value
-encodePerformerItem performerItem =
-    case performerItem of
-        PerformerItemPe person ->
-            encodePerson person
-
-        PerformerItemOr organization ->
-            encodeOrganization organization
+        |> Encode.list encodePersonOrOrganization
 
 
 encodePriceSpecification : PriceSpecification -> Value
@@ -1798,20 +1764,10 @@ encodeSponsor sponsor =
         |> Encode.list encodeOrganization
 
 
-encodeTranslator : List TranslatorItem -> Value
+encodeTranslator : List PersonOrOrganization -> Value
 encodeTranslator translator =
     translator
-        |> Encode.list encodeTranslatorItem
-
-
-encodeTranslatorItem : TranslatorItem -> Value
-encodeTranslatorItem translatorItem =
-    case translatorItem of
-        TranslatorItemPe person ->
-            encodePerson person
-
-        TranslatorItemOr organization ->
-            encodeOrganization organization
+        |> Encode.list encodePersonOrOrganization
 
 
 encodeVersion : Version -> Value

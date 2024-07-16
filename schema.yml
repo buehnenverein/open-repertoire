@@ -45,9 +45,7 @@ definitions:
             - "@type": "Person"
               name: Mona Mustermann
           items:
-            oneOf:
-              - $ref: "#/definitions/Person"
-              - $ref: "#/definitions/Organization"
+            $ref: "#/definitions/PersonOrOrganization"
     Production:
       type: object
       description: "An object containing information about the production and its events."
@@ -430,7 +428,7 @@ definitions:
           creator:
             type: array
             items:
-              $ref: "#/definitions/CreatorEntry"
+              $ref: "#/definitions/PersonOrOrganization"
 
           roleName:
             type: string
@@ -482,11 +480,11 @@ definitions:
             #   - vermittlung
             #   - virtual-reality-design
 
-    CreatorEntry:
-      type: object
-      oneOf:
-        - $ref: "#/definitions/Person"
-        - $ref: "#/definitions/Organization"
+    # CreatorEntry:
+    #   type: object
+    #   oneOf:
+    #     - $ref: "#/definitions/Person"
+    #     - $ref: "#/definitions/Organization"
 
     PerformanceRole:
       type: array
@@ -513,9 +511,7 @@ definitions:
           performer:
             type: array
             items:
-              oneOf:
-                - $ref: "#/definitions/Person"
-                - $ref: "#/definitions/Organization"
+              $ref: "#/definitions/PersonOrOrganization"
 
     Place:
       type: object
@@ -626,6 +622,11 @@ definitions:
         wheelchairUserCapacity:
           type: integer
           description: The number of people using a wheelchair that can be accomodated at the same time. Use this when there is no designated space for wheelchair users, but the number is known.
+
+    PersonOrOrganization:
+      oneOf:
+        - $ref: "#/definitions/Person"
+        - $ref: "#/definitions/Organization"
 
     Person: 
       type: object

@@ -24988,10 +24988,10 @@ var $author$project$Data$Root$CreatorRoleItem = F3(
 	function (atType, creator, roleName) {
 		return {d: atType, aa: creator, bZ: roleName};
 	});
-var $author$project$Data$Root$CreatorEntryOr = function (a) {
+var $author$project$Data$Root$PersonOrOrganizationOr = function (a) {
 	return {$: 1, a: a};
 };
-var $author$project$Data$Root$CreatorEntryPe = function (a) {
+var $author$project$Data$Root$PersonOrOrganizationPe = function (a) {
 	return {$: 0, a: a};
 };
 var $author$project$Data$Root$Person = F2(
@@ -25019,13 +25019,13 @@ var $author$project$Data$Root$personDecoder = A3(
 		'@type',
 		$author$project$Data$Root$personAttypeDecoder,
 		$elm$json$Json$Decode$succeed($author$project$Data$Root$Person)));
-var $author$project$Data$Root$creatorEntryDecoder = $elm$json$Json$Decode$oneOf(
+var $author$project$Data$Root$personOrOrganizationDecoder = $elm$json$Json$Decode$oneOf(
 	_List_fromArray(
 		[
-			A2($elm$json$Json$Decode$map, $author$project$Data$Root$CreatorEntryPe, $author$project$Data$Root$personDecoder),
-			A2($elm$json$Json$Decode$map, $author$project$Data$Root$CreatorEntryOr, $author$project$Data$Root$organizationDecoder)
+			A2($elm$json$Json$Decode$map, $author$project$Data$Root$PersonOrOrganizationPe, $author$project$Data$Root$personDecoder),
+			A2($elm$json$Json$Decode$map, $author$project$Data$Root$PersonOrOrganizationOr, $author$project$Data$Root$organizationDecoder)
 		]));
-var $author$project$Data$Root$creatorDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$creatorEntryDecoder);
+var $author$project$Data$Root$creatorDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$personOrOrganizationDecoder);
 var $author$project$Data$Root$RoleType = 0;
 var $author$project$Data$Root$parseCreatorRoleAttype = function (creatorRoleAttype) {
 	if (creatorRoleAttype === 'Role') {
@@ -25423,19 +25423,7 @@ var $author$project$Data$Root$performanceRoleAttypeDecoder = A2(
 	$elm$json$Json$Decode$andThen,
 	A2($elm$core$Basics$composeR, $author$project$Data$Root$parsePerformanceRoleAttype, $elm_community$json_extra$Json$Decode$Extra$fromResult),
 	$elm$json$Json$Decode$string);
-var $author$project$Data$Root$PerformerItemOr = function (a) {
-	return {$: 1, a: a};
-};
-var $author$project$Data$Root$PerformerItemPe = function (a) {
-	return {$: 0, a: a};
-};
-var $author$project$Data$Root$performerItemDecoder = $elm$json$Json$Decode$oneOf(
-	_List_fromArray(
-		[
-			A2($elm$json$Json$Decode$map, $author$project$Data$Root$PerformerItemPe, $author$project$Data$Root$personDecoder),
-			A2($elm$json$Json$Decode$map, $author$project$Data$Root$PerformerItemOr, $author$project$Data$Root$organizationDecoder)
-		]));
-var $author$project$Data$Root$performerDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$performerItemDecoder);
+var $author$project$Data$Root$performerDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$personOrOrganizationDecoder);
 var $author$project$Data$Root$performanceRoleItemDecoder = A3(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 	'performer',
@@ -25637,19 +25625,7 @@ var $author$project$Data$Root$OriginalWork = F4(
 		return {d: atType, a_: author, L: name, cf: translator};
 	});
 var $author$project$Data$Root$authorDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$personDecoder);
-var $author$project$Data$Root$TranslatorItemOr = function (a) {
-	return {$: 1, a: a};
-};
-var $author$project$Data$Root$TranslatorItemPe = function (a) {
-	return {$: 0, a: a};
-};
-var $author$project$Data$Root$translatorItemDecoder = $elm$json$Json$Decode$oneOf(
-	_List_fromArray(
-		[
-			A2($elm$json$Json$Decode$map, $author$project$Data$Root$TranslatorItemPe, $author$project$Data$Root$personDecoder),
-			A2($elm$json$Json$Decode$map, $author$project$Data$Root$TranslatorItemOr, $author$project$Data$Root$organizationDecoder)
-		]));
-var $author$project$Data$Root$translatorDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$translatorItemDecoder);
+var $author$project$Data$Root$translatorDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$personOrOrganizationDecoder);
 var $author$project$Data$Root$originalWorkDecoder = A4(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 	'translator',
@@ -26625,6 +26601,23 @@ var $author$project$Helper$CustomValidations$audience = $author$project$Helper$C
 			$author$project$Helper$CustomValidations$optional),
 			$author$project$Helper$CustomValidations$minMaxAge
 		]));
+var $author$project$Helper$CustomValidations$list = F3(
+	function (validator, basePath, model) {
+		return A3(
+			$elm$core$List$foldr,
+			$elm$core$Basics$append,
+			_List_Nil,
+			A2(
+				$elm$core$List$indexedMap,
+				F2(
+					function (idx, data) {
+						return A2(
+							validator,
+							basePath + ('/' + $elm$core$String$fromInt(idx)),
+							data);
+					}),
+				model));
+	});
 var $author$project$Helper$CustomValidations$required = F2(
 	function (path, value) {
 		return $author$project$Helper$CustomValidations$isEmptyString(value) ? _List_fromArray(
@@ -26695,7 +26688,7 @@ var $author$project$Helper$CustomValidations$person = $author$project$Helper$Cus
 			},
 			$author$project$Helper$CustomValidations$required)
 		]));
-var $author$project$Helper$CustomValidations$creatorEntry = F2(
+var $author$project$Helper$CustomValidations$personOrOrganization = F2(
 	function (path, data) {
 		if (!data.$) {
 			var personInfo = data.a;
@@ -26704,23 +26697,6 @@ var $author$project$Helper$CustomValidations$creatorEntry = F2(
 			var organizationInfo = data.a;
 			return A2($author$project$Helper$CustomValidations$organization, path, organizationInfo);
 		}
-	});
-var $author$project$Helper$CustomValidations$list = F3(
-	function (validator, basePath, model) {
-		return A3(
-			$elm$core$List$foldr,
-			$elm$core$Basics$append,
-			_List_Nil,
-			A2(
-				$elm$core$List$indexedMap,
-				F2(
-					function (idx, data) {
-						return A2(
-							validator,
-							basePath + ('/' + $elm$core$String$fromInt(idx)),
-							data);
-					}),
-				model));
 	});
 var $author$project$Helper$CustomValidations$creator = $author$project$Helper$CustomValidations$object(
 	_List_fromArray(
@@ -26731,7 +26707,7 @@ var $author$project$Helper$CustomValidations$creator = $author$project$Helper$Cu
 			function ($) {
 				return $.aa;
 			},
-			$author$project$Helper$CustomValidations$list($author$project$Helper$CustomValidations$creatorEntry)),
+			$author$project$Helper$CustomValidations$list($author$project$Helper$CustomValidations$personOrOrganization)),
 			A3(
 			$author$project$Helper$CustomValidations$field,
 			'/roleName',
@@ -27431,16 +27407,6 @@ var $author$project$Helper$CustomValidations$offer = $author$project$Helper$Cust
 			},
 			$author$project$Helper$CustomValidations$optional)
 		]));
-var $author$project$Helper$CustomValidations$performerItem = F2(
-	function (path, data) {
-		if (!data.$) {
-			var personInfo = data.a;
-			return A2($author$project$Helper$CustomValidations$person, path, personInfo);
-		} else {
-			var organizationInfo = data.a;
-			return A2($author$project$Helper$CustomValidations$organization, path, organizationInfo);
-		}
-	});
 var $author$project$Helper$CustomValidations$performer = $author$project$Helper$CustomValidations$object(
 	_List_fromArray(
 		[
@@ -27450,7 +27416,7 @@ var $author$project$Helper$CustomValidations$performer = $author$project$Helper$
 			function ($) {
 				return $.ah;
 			},
-			$author$project$Helper$CustomValidations$list($author$project$Helper$CustomValidations$performerItem)),
+			$author$project$Helper$CustomValidations$list($author$project$Helper$CustomValidations$personOrOrganization)),
 			A3(
 			$author$project$Helper$CustomValidations$field,
 			'/characterName',
@@ -28339,16 +28305,6 @@ var $author$project$Helper$CustomValidations$event = $author$project$Helper$Cust
 			$author$project$Helper$CustomValidations$eventStatusAndDate,
 			$author$project$Helper$CustomValidations$startAndEndDates
 		]));
-var $author$project$Helper$CustomValidations$translatorItem = F2(
-	function (path, data) {
-		if (!data.$) {
-			var personInfo = data.a;
-			return A2($author$project$Helper$CustomValidations$person, path, personInfo);
-		} else {
-			var organizationInfo = data.a;
-			return A2($author$project$Helper$CustomValidations$organization, path, organizationInfo);
-		}
-	});
 var $author$project$Helper$CustomValidations$originalWork = $author$project$Helper$CustomValidations$object(
 	_List_fromArray(
 		[
@@ -28374,7 +28330,7 @@ var $author$project$Helper$CustomValidations$originalWork = $author$project$Help
 				return $.cf;
 			},
 			$author$project$Helper$CustomValidations$maybe(
-				$author$project$Helper$CustomValidations$list($author$project$Helper$CustomValidations$translatorItem)))
+				$author$project$Helper$CustomValidations$list($author$project$Helper$CustomValidations$personOrOrganization)))
 		]));
 var $author$project$Helper$CustomValidations$validPremiere = F3(
 	function (allEvents, path, data) {
@@ -30024,7 +29980,7 @@ var $author$project$View$productionInfo = function (production) {
 			]));
 };
 var $elm$html$Html$em = _VirtualDom_node('em');
-var $author$project$View$creatorName = function (creator) {
+var $author$project$View$personOrOrganizationName = function (creator) {
 	if (!creator.$) {
 		var person = creator.a;
 		return person.L;
@@ -30037,7 +29993,7 @@ var $author$project$View$viewCreator = function (creator) {
 	var roleName = A2($elm$core$Maybe$withDefault, '', creator.bZ);
 	return A2(
 		$author$project$Components$DataEntry$join,
-		$author$project$View$creatorName,
+		$author$project$View$personOrOrganizationName,
 		A2($author$project$Components$DataEntry$required, roleName, creator.aa));
 };
 var $author$project$View$viewCreators = function (creators) {
@@ -30155,15 +30111,6 @@ var $author$project$View$viewFunders = function (production) {
 			}()
 			]));
 };
-var $author$project$View$translatorName = function (creator) {
-	if (!creator.$) {
-		var person = creator.a;
-		return person.L;
-	} else {
-		var organization = creator.a;
-		return organization.L;
-	}
-};
 var $author$project$View$viewOriginalWork = function (production) {
 	return A2(
 		$elm$html$Html$div,
@@ -30202,7 +30149,7 @@ var $author$project$View$viewOriginalWork = function (production) {
 							A2($author$project$Components$DataEntry$optional, 'Autor:in', production.bt))),
 						A2(
 						$author$project$Components$DataEntry$join,
-						$author$project$View$translatorName,
+						$author$project$View$personOrOrganizationName,
 						A2(
 							$author$project$Components$DataEntry$nested,
 							function ($) {
@@ -31039,20 +30986,11 @@ var $author$project$View$viewOffers = function (offers) {
 			}()
 			]));
 };
-var $author$project$View$performerName = function (performer) {
-	if (!performer.$) {
-		var person = performer.a;
-		return person.L;
-	} else {
-		var organization = performer.a;
-		return organization.L;
-	}
-};
 var $author$project$View$viewPerformer = function (performer) {
 	var characterName = A2($elm$core$Maybe$withDefault, '', performer.a2);
 	return A2(
 		$author$project$Components$DataEntry$join,
-		$author$project$View$performerName,
+		$author$project$View$personOrOrganizationName,
 		A2($author$project$Components$DataEntry$required, characterName, performer.ah));
 };
 var $author$project$View$viewPerformers = function (performers) {

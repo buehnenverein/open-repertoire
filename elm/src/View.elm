@@ -2,7 +2,7 @@ module View exposing (main)
 
 import Browser
 import Components.DataEntry as Entry exposing (asDate, asDateAndTime, asLink, asTime)
-import Data.Root exposing (CreatorEntry(..), CreatorRoleItem, Event, EventEventStatus(..), EventTypeItem(..), GenreItem(..), LocationItem(..), Offer, OfferAvailability(..), Offering, Organization, PerformanceRoleItem, PerformerItem(..), Production, ProductionProductionType(..), Root, TranslatorItem(..), rootDecoder)
+import Data.Root exposing (CreatorRoleItem, Event, EventEventStatus(..), EventTypeItem(..), GenreItem(..), LocationItem(..), Offer, OfferAvailability(..), Offering, Organization, PerformanceRoleItem, PersonOrOrganization(..), Production, ProductionProductionType(..), Root, rootDecoder)
 import Helper.CustomValidations as CustomValidations
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -412,19 +412,9 @@ viewOriginalWork production =
                 |> Entry.join .name
             , Entry.optional "Übersetzung" production.isBasedOn
                 |> Entry.nested .translator
-                |> Entry.join translatorName
+                |> Entry.join personOrOrganizationName
             ]
         ]
-
-
-translatorName : TranslatorItem -> String
-translatorName creator =
-    case creator of
-        TranslatorItemPe person ->
-            person.name
-
-        TranslatorItemOr organization ->
-            organization.name
 
 
 viewProductionAccessibility : Production -> Html Msg
@@ -760,16 +750,16 @@ viewCreator creator =
             Maybe.withDefault "" creator.roleName
     in
     Entry.required roleName creator.creator
-        |> Entry.join creatorName
+        |> Entry.join personOrOrganizationName
 
 
-creatorName : CreatorEntry -> String
-creatorName creator =
+personOrOrganizationName : PersonOrOrganization -> String
+personOrOrganizationName creator =
     case creator of
-        CreatorEntryPe person ->
+        PersonOrOrganizationPe person ->
             person.name
 
-        CreatorEntryOr organization ->
+        PersonOrOrganizationOr organization ->
             organization.name
 
 
@@ -794,17 +784,7 @@ viewPerformer performer =
             Maybe.withDefault "" performer.characterName
     in
     Entry.required characterName performer.performer
-        |> Entry.join performerName
-
-
-performerName : PerformerItem -> String
-performerName performer =
-    case performer of
-        PerformerItemPe person ->
-            person.name
-
-        PerformerItemOr organization ->
-            organization.name
+        |> Entry.join personOrOrganizationName
 
 
 
