@@ -244,6 +244,12 @@
           "items": {
             "$ref": "#/definitions/Organization"
           }
+        },
+        "image": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ImageObject"
+          }
         }
       }
     },
@@ -276,6 +282,46 @@
           "type": "string",
           "description": "A short textual description of the production's intended target audience.",
           "example": "Kinder und Jugendliche"
+        }
+      }
+    },
+    "ImageObject": {
+      "type": "object",
+      "required": [
+        "@type"
+      ],
+      "properties": {
+        "@type": {
+          "type": "string",
+          "enum": [
+            "ImageObject"
+          ]
+        },
+        "contentUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "Link to the image file.",
+          "example": "https://example.com/example.jpg"
+        },
+        "caption": {
+          "type": "string",
+          "description": "The caption for this image."
+        },
+        "license": {
+          "type": "string",
+          "format": "uri",
+          "example": "https://creativecommons.org/licenses/by/4.0/deed"
+        },
+        "copyrightHolder": {
+          "$ref": "#/definitions/PersonOrOrganization"
+        },
+        "copyrightNotice": {
+          "type": "string"
+        },
+        "copyrightYear": {
+          "type": "number",
+          "format": "int32",
+          "example": 2024
         }
       }
     },

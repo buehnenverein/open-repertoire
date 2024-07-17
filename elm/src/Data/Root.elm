@@ -57,6 +57,10 @@ type AudienceAttype
     = PeopleAudienceType
 
 
+type ImageObjectAttype
+    = ImageObjectType
+
+
 type alias Audience =
     { atType : AudienceAttype
     , audienceType : Maybe String
@@ -98,6 +102,17 @@ type alias Event =
     , startDate : String
     , subtitleLanguage : Maybe String
     , url : Maybe String
+    }
+
+
+type alias ImageObject =
+    { atType : ImageObjectAttype
+    , caption : Maybe String
+    , contentUrl : Maybe String
+    , copyrightHolder : Maybe PersonOrOrganization
+    , copyrightNotice : Maybe String
+    , copyrightYear : Maybe Float
+    , license : Maybe String
     }
 
 
@@ -187,6 +202,7 @@ type alias Production =
     , funder : Maybe (List Organization)
     , genre : Maybe (List GenreItem)
     , identifier : String
+    , image : Maybe (List ImageObject)
     , inLanguage : Maybe String
     , isBasedOn : Maybe OriginalWork
     , name : String
@@ -481,6 +497,21 @@ parseAudienceAttype audienceAttype =
             Err <| "Unknown audienceAttype type: " ++ audienceAttype
 
 
+imageObjectAttypeDecoder : Decoder ImageObjectAttype
+imageObjectAttypeDecoder =
+    Decode.string |> Decode.andThen (parseImageObjectAttype >> Decode.fromResult)
+
+
+parseImageObjectAttype : String -> Result String ImageObjectAttype
+parseImageObjectAttype imageObjectAttype =
+    case imageObjectAttype of
+        "ImageObject" ->
+            Ok ImageObjectType
+
+        _ ->
+            Err <| "Unknown imageObjectAttype type: " ++ imageObjectAttype
+
+
 audienceDecoder : Decoder Audience
 audienceDecoder =
     Decode.succeed Audience
@@ -555,6 +586,18 @@ eventDecoder =
         |> required "startDate" Decode.string
         |> optional "subtitleLanguage" (Decode.nullable Decode.string) Nothing
         |> optional "url" (Decode.nullable Decode.string) Nothing
+
+
+imageObjectDecoder : Decoder ImageObject
+imageObjectDecoder =
+    Decode.succeed ImageObject
+        |> required "@type" imageObjectAttypeDecoder
+        |> optional "caption" (Decode.nullable Decode.string) Nothing
+        |> optional "contentUrl" (Decode.nullable Decode.string) Nothing
+        |> optional "copyrightHolder" (Decode.nullable personOrOrganizationDecoder) Nothing
+        |> optional "copyrightNotice" (Decode.nullable Decode.string) Nothing
+        |> optional "copyrightYear" (Decode.nullable Decode.float) Nothing
+        |> optional "license" (Decode.nullable Decode.string) Nothing
 
 
 offerDecoder : Decoder Offer
@@ -660,6 +703,7 @@ productionDecoder =
         |> optional "funder" (Decode.nullable funderDecoder) Nothing
         |> optional "genre" (Decode.nullable genreDecoder) Nothing
         |> required "identifier" Decode.string
+        |> optional "image" (Decode.nullable imageDecoder) Nothing
         |> optional "inLanguage" (Decode.nullable Decode.string) Nothing
         |> optional "isBasedOn" (Decode.nullable originalWorkDecoder) Nothing
         |> required "name" Decode.string
@@ -979,6 +1023,11 @@ parseGenreItem genreItem =
             Err <| "Unknown genreItem type: " ++ genreItem
 
 
+imageDecoder : Decoder (List ImageObject)
+imageDecoder =
+    Decode.list imageObjectDecoder
+
+
 locationDecoder : Decoder (List LocationItem)
 locationDecoder =
     Decode.list locationItemDecoder
@@ -1193,6 +1242,18 @@ audienceAttypeToString audienceAttype =
             "PeopleAudience"
 
 
+encodeImageObjectAttype : ImageObjectAttype -> Value
+encodeImageObjectAttype imageObjectAttype =
+    imageObjectAttype |> imageObjectAttypeToString |> Encode.string
+
+
+imageObjectAttypeToString : ImageObjectAttype -> String
+imageObjectAttypeToString imageObjectAttype =
+    case imageObjectAttype of
+        ImageObjectType ->
+            "ImageObject"
+
+
 encodeAudience : Audience -> Value
 encodeAudience audience =
     []
@@ -1264,6 +1325,19 @@ encodeEvent event =
         |> Encode.required "startDate" event.startDate Encode.string
         |> Encode.optional "subtitleLanguage" event.subtitleLanguage Encode.string
         |> Encode.optional "url" event.url Encode.string
+        |> Encode.object
+
+
+encodeImageObject : ImageObject -> Value
+encodeImageObject imageObject =
+    []
+        |> Encode.required "@type" imageObject.atType encodeImageObjectAttype
+        |> Encode.optional "caption" imageObject.caption Encode.string
+        |> Encode.optional "contentUrl" imageObject.contentUrl Encode.string
+        |> Encode.optional "copyrightHolder" imageObject.copyrightHolder encodePersonOrOrganization
+        |> Encode.optional "copyrightNotice" imageObject.copyrightNotice Encode.string
+        |> Encode.optional "copyrightYear" imageObject.copyrightYear Encode.float
+        |> Encode.optional "license" imageObject.license Encode.string
         |> Encode.object
 
 
@@ -1382,6 +1456,7 @@ encodeProduction production =
         |> Encode.optional "funder" production.funder encodeFunder
         |> Encode.optional "genre" production.genre encodeGenre
         |> Encode.required "identifier" production.identifier Encode.string
+        |> Encode.optional "image" production.image encodeImage
         |> Encode.optional "inLanguage" production.inLanguage Encode.string
         |> Encode.optional "isBasedOn" production.isBasedOn encodeOriginalWork
         |> Encode.required "name" production.name Encode.string
@@ -1694,6 +1769,12 @@ genreItemToString genreItem =
 
         ZeitgenoessischerTanzGenre ->
             "zeitgenoessischer-tanz"
+
+
+encodeImage : List ImageObject -> Value
+encodeImage image =
+    image
+        |> Encode.list encodeImageObject
 
 
 encodeLocation : List LocationItem -> Value
