@@ -304,16 +304,16 @@ definitions:
           type: string
           description: "This field should contain the old `startDate`, if the `eventStatus` is either `EventPostponed` or `EventRescheduled`"
           format: date-time
-        additionalOffering:
+        subEvent:
           type: array
           description: |-
-            A list of additional offerings related to this event. E.g.
-            a panel discussion following the performance/event or an optional introduction before the
-            event starts.
+            A list of additional events that are part of this event. This field can also be used to include additional offerings
+            related to this event. I.e. a panel discussion following the performance/event or an optional introduction before the
+            event starts can both be modelled as sub-events.
           items:
-            $ref: "#/definitions/Offering"
+            $ref: "#/definitions/SubEventType"
 
-    Offering:
+    SubEventType:
       type: object
       additionalProperties: false
       required:
@@ -325,26 +325,26 @@ definitions:
         name:
           type: string
           example: 30-minütige Einführung vor der Vorstellung
-          description: A descriptive name for this offering.
+          description: A descriptive name for this sub-event.
         description:
           type: string
-          description: A short description of this offering.
+          description: A short description of this sub-event.
         location:
           type: string
-          description: A textual description of the location, where this offering is taking place.
+          description: A textual description of the location, where this sub-event is taking place, e.g. "Foyer".
           example: Foyer
         startDate:
           type: string
-          description: "The start date and time of this offering (in ISO 8601 date format)."
+          description: "The start date and time of this sub-event (in ISO 8601 date format)."
           format: date-time
         endDate:
           type: string
-          description: "The end date and time of this offering (in ISO 8601 date format)."
+          description: "The end date and time of this sub-event (in ISO 8601 date format)."
           format: date-time
         duration:
           type: integer
           format: int64
-          description: The duration of the event in minutes.
+          description: The duration of the sub-event in minutes.
           example: 30
           minimum: 0
 

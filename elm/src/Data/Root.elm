@@ -83,7 +83,6 @@ type alias CreatorRoleItem =
 
 type alias Event =
     { atType : DefinitionsCommonEventType
-    , additionalOffering : Maybe (List Offering)
     , doorTime : Maybe String
     , duration : Maybe Int
     , endDate : Maybe String
@@ -96,6 +95,7 @@ type alias Event =
     , performer : Maybe (List PerformanceRoleItem)
     , previousStartDate : Maybe String
     , startDate : String
+    , subEvent : Maybe (List SubEventType)
     , subtitleLanguage : Maybe String
     , url : Maybe String
     }
@@ -107,17 +107,6 @@ type alias Offer =
     , name : Maybe String
     , priceSpecification : PriceSpecification
     , url : Maybe String
-    }
-
-
-type alias Offering =
-    { atType : DefinitionsCommonEventType
-    , description : Maybe String
-    , duration : Maybe Int
-    , endDate : Maybe String
-    , location : Maybe String
-    , name : String
-    , startDate : Maybe String
     }
 
 
@@ -202,6 +191,17 @@ type alias Root =
     , organization : Organization
     , productions : List Production
     , version : Version
+    }
+
+
+type alias SubEventType =
+    { atType : DefinitionsCommonEventType
+    , description : Maybe String
+    , duration : Maybe Int
+    , endDate : Maybe String
+    , location : Maybe String
+    , name : String
+    , startDate : Maybe String
     }
 
 
@@ -541,7 +541,6 @@ eventDecoder : Decoder Event
 eventDecoder =
     Decode.succeed Event
         |> required "@type" definitionsCommonEventTypeDecoder
-        |> optional "additionalOffering" (Decode.nullable additionalOfferingDecoder) Nothing
         |> optional "doorTime" (Decode.nullable Decode.string) Nothing
         |> optional "duration" (Decode.nullable Decode.int) Nothing
         |> optional "endDate" (Decode.nullable Decode.string) Nothing
@@ -554,6 +553,7 @@ eventDecoder =
         |> optional "performer" (Decode.nullable performanceRoleDecoder) Nothing
         |> optional "previousStartDate" (Decode.nullable Decode.string) Nothing
         |> required "startDate" Decode.string
+        |> optional "subEvent" (Decode.nullable subEventDecoder) Nothing
         |> optional "subtitleLanguage" (Decode.nullable Decode.string) Nothing
         |> optional "url" (Decode.nullable Decode.string) Nothing
 
@@ -566,18 +566,6 @@ offerDecoder =
         |> optional "name" (Decode.nullable Decode.string) Nothing
         |> required "priceSpecification" priceSpecificationDecoder
         |> optional "url" (Decode.nullable Decode.string) Nothing
-
-
-offeringDecoder : Decoder Offering
-offeringDecoder =
-    Decode.succeed Offering
-        |> required "@type" definitionsCommonEventTypeDecoder
-        |> optional "description" (Decode.nullable Decode.string) Nothing
-        |> optional "duration" (Decode.nullable Decode.int) Nothing
-        |> optional "endDate" (Decode.nullable Decode.string) Nothing
-        |> optional "location" (Decode.nullable Decode.string) Nothing
-        |> required "name" Decode.string
-        |> optional "startDate" (Decode.nullable Decode.string) Nothing
 
 
 organizationDecoder : Decoder Organization
@@ -679,6 +667,18 @@ rootDecoder =
         |> required "version" versionDecoder
 
 
+subEventTypeDecoder : Decoder SubEventType
+subEventTypeDecoder =
+    Decode.succeed SubEventType
+        |> required "@type" definitionsCommonEventTypeDecoder
+        |> optional "description" (Decode.nullable Decode.string) Nothing
+        |> optional "duration" (Decode.nullable Decode.int) Nothing
+        |> optional "endDate" (Decode.nullable Decode.string) Nothing
+        |> optional "location" (Decode.nullable Decode.string) Nothing
+        |> required "name" Decode.string
+        |> optional "startDate" (Decode.nullable Decode.string) Nothing
+
+
 virtualLocationDecoder : Decoder VirtualLocation
 virtualLocationDecoder =
     Decode.succeed VirtualLocation
@@ -773,11 +773,6 @@ parseAccessibilityHazardItem accessibilityHazardItem =
 
         _ ->
             Err <| "Unknown accessibilityHazardItem type: " ++ accessibilityHazardItem
-
-
-additionalOfferingDecoder : Decoder (List Offering)
-additionalOfferingDecoder =
-    Decode.list offeringDecoder
 
 
 authorDecoder : Decoder (List Person)
@@ -1043,6 +1038,11 @@ sponsorDecoder =
     Decode.list organizationDecoder
 
 
+subEventDecoder : Decoder (List SubEventType)
+subEventDecoder =
+    Decode.list subEventTypeDecoder
+
+
 translatorDecoder : Decoder (List PersonOrOrganization)
 translatorDecoder =
     Decode.list personOrOrganizationDecoder
@@ -1251,7 +1251,6 @@ encodeEvent : Event -> Value
 encodeEvent event =
     []
         |> Encode.required "@type" event.atType encodeDefinitionsCommonEventType
-        |> Encode.optional "additionalOffering" event.additionalOffering encodeAdditionalOffering
         |> Encode.optional "doorTime" event.doorTime Encode.string
         |> Encode.optional "duration" event.duration Encode.int
         |> Encode.optional "endDate" event.endDate Encode.string
@@ -1264,6 +1263,7 @@ encodeEvent event =
         |> Encode.optional "performer" event.performer encodePerformanceRole
         |> Encode.optional "previousStartDate" event.previousStartDate Encode.string
         |> Encode.required "startDate" event.startDate Encode.string
+        |> Encode.optional "subEvent" event.subEvent encodeSubEvent
         |> Encode.optional "subtitleLanguage" event.subtitleLanguage Encode.string
         |> Encode.optional "url" event.url Encode.string
         |> Encode.object
@@ -1277,19 +1277,6 @@ encodeOffer offer =
         |> Encode.optional "name" offer.name Encode.string
         |> Encode.required "priceSpecification" offer.priceSpecification encodePriceSpecification
         |> Encode.optional "url" offer.url Encode.string
-        |> Encode.object
-
-
-encodeOffering : Offering -> Value
-encodeOffering offering =
-    []
-        |> Encode.required "@type" offering.atType encodeDefinitionsCommonEventType
-        |> Encode.optional "description" offering.description Encode.string
-        |> Encode.optional "duration" offering.duration Encode.int
-        |> Encode.optional "endDate" offering.endDate Encode.string
-        |> Encode.optional "location" offering.location Encode.string
-        |> Encode.required "name" offering.name Encode.string
-        |> Encode.optional "startDate" offering.startDate Encode.string
         |> Encode.object
 
 
@@ -1404,6 +1391,19 @@ encodeRoot root =
         |> Encode.object
 
 
+encodeSubEventType : SubEventType -> Value
+encodeSubEventType subEventType =
+    []
+        |> Encode.required "@type" subEventType.atType encodeDefinitionsCommonEventType
+        |> Encode.optional "description" subEventType.description Encode.string
+        |> Encode.optional "duration" subEventType.duration Encode.int
+        |> Encode.optional "endDate" subEventType.endDate Encode.string
+        |> Encode.optional "location" subEventType.location Encode.string
+        |> Encode.required "name" subEventType.name Encode.string
+        |> Encode.optional "startDate" subEventType.startDate Encode.string
+        |> Encode.object
+
+
 encodeVirtualLocation : VirtualLocation -> Value
 encodeVirtualLocation virtualLocation =
     []
@@ -1496,12 +1496,6 @@ accessibilityHazardItemToString accessibilityHazardItem =
 
         UnknownSoundHazardAccessibilityHazard ->
             "unknownSoundHazard"
-
-
-encodeAdditionalOffering : List Offering -> Value
-encodeAdditionalOffering additionalOffering =
-    additionalOffering
-        |> Encode.list encodeOffering
 
 
 encodeAuthor : List Person -> Value
@@ -1765,6 +1759,12 @@ encodeSponsor : List Organization -> Value
 encodeSponsor sponsor =
     sponsor
         |> Encode.list encodeOrganization
+
+
+encodeSubEvent : List SubEventType -> Value
+encodeSubEvent subEvent =
+    subEvent
+        |> Encode.list encodeSubEventType
 
 
 encodeTranslator : List PersonOrOrganization -> Value

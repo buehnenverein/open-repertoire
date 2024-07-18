@@ -2,7 +2,7 @@ module View exposing (main)
 
 import Browser
 import Components.DataEntry as Entry exposing (asDate, asDateAndTime, asLink, asTime)
-import Data.Root exposing (CreatorRoleItem, Event, EventEventStatus(..), EventTypeItem(..), GenreItem(..), LocationItem(..), Offer, OfferAvailability(..), Offering, Organization, PerformanceRoleItem, PersonOrOrganization(..), Production, ProductionProductionType(..), Root, rootDecoder)
+import Data.Root exposing (CreatorRoleItem, Event, EventEventStatus(..), EventTypeItem(..), GenreItem(..), LocationItem(..), Offer, OfferAvailability(..), Organization, PerformanceRoleItem, PersonOrOrganization(..), Production, ProductionProductionType(..), Root, SubEventType, rootDecoder)
 import Helper.CustomValidations as CustomValidations
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -503,7 +503,7 @@ viewEvent zone allEvents event =
                 [ viewOffers event.offers
                 ]
             , div [ class "cell box mb-0 is-col-span-2 is-col-span-1-widescreen" ]
-                [ viewAdditionalOfferings zone event.additionalOffering
+                [ viewAdditionalOfferings zone event.subEvent
                 ]
             , div [ class "cell box mb-0 is-col-span-2 is-col-span-1-widescreen" ]
                 [ viewPerformers event.performer
@@ -602,7 +602,7 @@ eventStatusToString eventStatus =
             "Geändertes Datum"
 
 
-viewAdditionalOfferings : Entry.ZoneWithName -> Maybe (List Offering) -> Html Msg
+viewAdditionalOfferings : Entry.ZoneWithName -> Maybe (List SubEventType) -> Html Msg
 viewAdditionalOfferings zone additionalOfferings =
     case additionalOfferings of
         Nothing ->
@@ -620,7 +620,7 @@ viewAdditionalOfferings zone additionalOfferings =
                 ]
 
 
-viewAdditionalOffering : Entry.ZoneWithName -> Offering -> Html Msg
+viewAdditionalOffering : Entry.ZoneWithName -> SubEventType -> Html Msg
 viewAdditionalOffering zone offering =
     Entry.view
         [ Entry.required "Titel" offering.name
