@@ -488,6 +488,20 @@ startAndEndDates path data =
             []
 
 
+onlyOneOf : ( String, PerformanceRoleItem -> Maybe String ) -> ( String, PerformanceRoleItem -> Maybe String ) -> Validator PerformanceRoleItem
+onlyOneOf ( path1, f1 ) ( path2, f2 ) path data =
+    let
+        warningMsg =
+            "Both " ++ path1 ++ " and " ++ path2 ++ " are set. You should only set one of them per entry."
+    in
+    case ( f1 data, f2 data ) of
+        ( Just _, Just _ ) ->
+            [ warning (path ++ path1) warningMsg ]
+
+        _ ->
+            []
+
+
 
 -- MODEL VALIDATORS
 
@@ -539,6 +553,8 @@ performer =
     object
         [ field "/performer" .performer (list personOrOrganization)
         , field "/characterName" .characterName optional
+        , field "/roleName" .roleName optional
+        , onlyOneOf ( "/roleName", .roleName ) ( "/characterName", .characterName )
         ]
 
 

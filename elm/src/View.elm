@@ -620,7 +620,6 @@ viewAdditionalOfferings zone additionalOfferings =
                 ]
 
 
-
 viewAdditionalOffering : Entry.ZoneWithName -> Offering -> Html Msg
 viewAdditionalOffering zone offering =
     Entry.view
@@ -781,7 +780,9 @@ viewPerformer : PerformanceRoleItem -> Entry.Model String
 viewPerformer performer =
     let
         characterName =
-            Maybe.withDefault "" performer.characterName
+            [ performer.characterName, performer.roleName ]
+                |> List.filterMap identity
+                |> String.join " | "
     in
     Entry.required characterName performer.performer
         |> Entry.join personOrOrganizationName

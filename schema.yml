@@ -493,6 +493,17 @@ definitions:
         
         If multiple people perform the same role on stage (e.g. there is multiple actors
         performing the same character), each person should get their own entry in the `performer` array.
+      example:
+        - "@type": "PerformanceRole"
+          performer:
+            "@type": Person
+            name: Max Mustermann
+          characterName: Hedwig
+        - "@type": "PerformanceRole"
+          performer:
+            "@type": Organization
+            name: Dÿse
+          roleName: Band
       items:
         type: object
         additionalProperties: false
@@ -507,7 +518,9 @@ definitions:
           characterName:
             type: string
             description: The name of the character performed on stage, if any.
-            example: Hedwig
+          roleName:
+            type: string
+            description: The role performed or filled by a person or organization. If the person or organization is playing a specific character, `characterName` should be used instead.
           performer:
             type: array
             items:

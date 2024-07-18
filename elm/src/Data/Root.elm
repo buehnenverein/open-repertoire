@@ -141,6 +141,7 @@ type alias PerformanceRoleItem =
     { atType : PerformanceRoleAttype
     , characterName : Maybe String
     , performer : List PersonOrOrganization
+    , roleName : Maybe String
     }
 
 
@@ -608,6 +609,7 @@ performanceRoleItemDecoder =
         |> required "@type" performanceRoleAttypeDecoder
         |> optional "characterName" (Decode.nullable Decode.string) Nothing
         |> required "performer" performerDecoder
+        |> optional "roleName" (Decode.nullable Decode.string) Nothing
 
 
 personDecoder : Decoder Person
@@ -1323,6 +1325,7 @@ encodePerformanceRoleItem performanceRoleItem =
         |> Encode.required "@type" performanceRoleItem.atType encodePerformanceRoleAttype
         |> Encode.optional "characterName" performanceRoleItem.characterName Encode.string
         |> Encode.required "performer" performanceRoleItem.performer encodePerformer
+        |> Encode.optional "roleName" performanceRoleItem.roleName Encode.string
         |> Encode.object
 
 
