@@ -25523,7 +25523,7 @@ var $author$project$Data$Root$eventDecoder = A4(
 																$author$project$Data$Root$definitionsCommonEventTypeDecoder,
 																$elm$json$Json$Decode$succeed($author$project$Data$Root$Event)))))))))))))))));
 var $author$project$Data$Root$eventsDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$eventDecoder);
-var $author$project$Data$Root$funderDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$organizationDecoder);
+var $author$project$Data$Root$funderDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$personOrOrganizationDecoder);
 var $author$project$Data$Root$AudiowalkGenre = 0;
 var $author$project$Data$Root$BallettGenre = 1;
 var $author$project$Data$Root$DigitaltheaterGenre = 2;
@@ -25669,7 +25669,7 @@ var $author$project$Data$Root$productionProductionTypeDecoder = A2(
 	$elm$json$Json$Decode$andThen,
 	A2($elm$core$Basics$composeR, $author$project$Data$Root$parseProductionProductionType, $elm_community$json_extra$Json$Decode$Extra$fromResult),
 	$elm$json$Json$Decode$string);
-var $author$project$Data$Root$sponsorDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$organizationDecoder);
+var $author$project$Data$Root$sponsorDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$personOrOrganizationDecoder);
 var $author$project$Data$Root$productionDecoder = A4(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 	'subtitle',
@@ -30092,34 +30092,44 @@ var $author$project$Components$DataEntry$asLink = F2(
 				q: $author$project$Components$DataEntry$Link(linkText)
 			});
 	});
-var $author$project$View$viewFunder = function (organization) {
-	return $author$project$Components$DataEntry$view(
-		_List_fromArray(
-			[
-				A2($author$project$Components$DataEntry$required, 'Name', organization.L),
-				A2(
-				$author$project$Components$DataEntry$nested,
-				function ($) {
-					return $.b4;
-				},
-				A2($author$project$Components$DataEntry$optional, 'Addresse', organization._)),
-				A2(
-				$author$project$Components$DataEntry$map,
-				function ($) {
-					return $.bJ;
-				},
-				A2($author$project$Components$DataEntry$optional, 'Postleitzahl', organization._)),
-				A2(
-				$author$project$Components$DataEntry$map,
-				function ($) {
-					return $.aW;
-				},
-				A2($author$project$Components$DataEntry$optional, 'Stadt', organization._)),
-				A2(
-				$author$project$Components$DataEntry$asLink,
-				$elm$core$Maybe$Just('Link'),
-				A2($author$project$Components$DataEntry$optional, 'Logo', organization.bx))
-			]));
+var $author$project$View$viewPersonOrOrganization = function (agent) {
+	if (agent.$ === 1) {
+		var organization = agent.a;
+		return $author$project$Components$DataEntry$view(
+			_List_fromArray(
+				[
+					A2($author$project$Components$DataEntry$required, 'Name', organization.L),
+					A2(
+					$author$project$Components$DataEntry$nested,
+					function ($) {
+						return $.b4;
+					},
+					A2($author$project$Components$DataEntry$optional, 'Addresse', organization._)),
+					A2(
+					$author$project$Components$DataEntry$map,
+					function ($) {
+						return $.bJ;
+					},
+					A2($author$project$Components$DataEntry$optional, 'Postleitzahl', organization._)),
+					A2(
+					$author$project$Components$DataEntry$map,
+					function ($) {
+						return $.aW;
+					},
+					A2($author$project$Components$DataEntry$optional, 'Stadt', organization._)),
+					A2(
+					$author$project$Components$DataEntry$asLink,
+					$elm$core$Maybe$Just('Link'),
+					A2($author$project$Components$DataEntry$optional, 'Logo', organization.bx))
+				]));
+	} else {
+		var person = agent.a;
+		return $author$project$Components$DataEntry$view(
+			_List_fromArray(
+				[
+					A2($author$project$Components$DataEntry$required, 'Name', person.L)
+				]));
+	}
 };
 var $author$project$View$viewFunders = function (production) {
 	return A2(
@@ -30152,7 +30162,7 @@ var $author$project$View$viewFunders = function (production) {
 					return A2(
 						$elm$html$Html$div,
 						_List_Nil,
-						A2($elm$core$List$map, $author$project$View$viewFunder, list));
+						A2($elm$core$List$map, $author$project$View$viewPersonOrOrganization, list));
 				}
 			}()
 			]));
@@ -30339,35 +30349,6 @@ var $author$project$View$viewProductionAudience = function (production) {
 					]))
 			]));
 };
-var $author$project$View$viewSponsor = function (organization) {
-	return $author$project$Components$DataEntry$view(
-		_List_fromArray(
-			[
-				A2($author$project$Components$DataEntry$required, 'Name', organization.L),
-				A2(
-				$author$project$Components$DataEntry$nested,
-				function ($) {
-					return $.b4;
-				},
-				A2($author$project$Components$DataEntry$optional, 'Addresse', organization._)),
-				A2(
-				$author$project$Components$DataEntry$map,
-				function ($) {
-					return $.bJ;
-				},
-				A2($author$project$Components$DataEntry$optional, 'Postleitzahl', organization._)),
-				A2(
-				$author$project$Components$DataEntry$map,
-				function ($) {
-					return $.aW;
-				},
-				A2($author$project$Components$DataEntry$optional, 'Stadt', organization._)),
-				A2(
-				$author$project$Components$DataEntry$asLink,
-				$elm$core$Maybe$Just('Link'),
-				A2($author$project$Components$DataEntry$optional, 'Logo', organization.bx))
-			]));
-};
 var $author$project$View$viewSponsors = function (production) {
 	return A2(
 		$elm$html$Html$div,
@@ -30399,7 +30380,7 @@ var $author$project$View$viewSponsors = function (production) {
 					return A2(
 						$elm$html$Html$div,
 						_List_Nil,
-						A2($elm$core$List$map, $author$project$View$viewSponsor, list));
+						A2($elm$core$List$map, $author$project$View$viewPersonOrOrganization, list));
 				}
 			}()
 			]));

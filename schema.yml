@@ -173,7 +173,7 @@ definitions:
           type: array
           description: A list of organization's that support this production through some kind of financial contribution.
           items:
-            $ref: "#/definitions/Organization"
+            $ref: "#/definitions/PersonOrOrganization"
           example:
             - "@type": Organization
               name: A Funding Organization
@@ -186,7 +186,7 @@ definitions:
               name: A Sponsoring Organization
               logo: https://example.com/logos/logo2.png
           items:
-            $ref: "#/definitions/Organization"
+            $ref: "#/definitions/PersonOrOrganization"
 
     Audience:
       type: object

@@ -221,7 +221,7 @@
           "type": "array",
           "description": "A list of organization's that support this production through some kind of financial contribution.",
           "items": {
-            "$ref": "#/definitions/Organization"
+            "$ref": "#/definitions/PersonOrOrganization"
           },
           "example": [
             {
@@ -242,7 +242,7 @@
             }
           ],
           "items": {
-            "$ref": "#/definitions/Organization"
+            "$ref": "#/definitions/PersonOrOrganization"
           }
         }
       }

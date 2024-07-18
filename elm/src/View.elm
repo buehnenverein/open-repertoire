@@ -443,18 +443,7 @@ viewFunders production =
                 em [] [ text "Die Daten enthalten keine Informationen zu Förderern" ]
 
             Just list ->
-                div [] (List.map viewFunder list)
-        ]
-
-
-viewFunder : Organization -> Html Msg
-viewFunder organization =
-    Entry.view
-        [ Entry.required "Name" organization.name
-        , Entry.optional "Addresse" organization.address |> Entry.nested .streetAddress
-        , Entry.optional "Postleitzahl" organization.address |> Entry.map .postalCode
-        , Entry.optional "Stadt" organization.address |> Entry.map .addressLocality
-        , Entry.optional "Logo" organization.logo |> asLink (Just "Link")
+                div [] (List.map viewPersonOrOrganization list)
         ]
 
 
@@ -467,19 +456,26 @@ viewSponsors production =
                 em [] [ text "Die Daten enthalten keine Informationen zu Sponsoren" ]
 
             Just list ->
-                div [] (List.map viewSponsor list)
+                div [] (List.map viewPersonOrOrganization list)
         ]
 
 
-viewSponsor : Organization -> Html Msg
-viewSponsor organization =
-    Entry.view
-        [ Entry.required "Name" organization.name
-        , Entry.optional "Addresse" organization.address |> Entry.nested .streetAddress
-        , Entry.optional "Postleitzahl" organization.address |> Entry.map .postalCode
-        , Entry.optional "Stadt" organization.address |> Entry.map .addressLocality
-        , Entry.optional "Logo" organization.logo |> asLink (Just "Link")
-        ]
+viewPersonOrOrganization : PersonOrOrganization -> Html Msg
+viewPersonOrOrganization agent =
+    case agent of
+        PersonOrOrganizationOr organization ->
+            Entry.view
+                [ Entry.required "Name" organization.name
+                , Entry.optional "Addresse" organization.address |> Entry.nested .streetAddress
+                , Entry.optional "Postleitzahl" organization.address |> Entry.map .postalCode
+                , Entry.optional "Stadt" organization.address |> Entry.map .addressLocality
+                , Entry.optional "Logo" organization.logo |> asLink (Just "Link")
+                ]
+
+        PersonOrOrganizationPe person ->
+            Entry.view
+                [ Entry.required "Name" person.name
+                ]
 
 
 

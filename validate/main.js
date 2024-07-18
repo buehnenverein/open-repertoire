@@ -9330,7 +9330,7 @@ var $author$project$Data$Root$eventDecoder = A4(
 																$author$project$Data$Root$definitionsCommonEventTypeDecoder,
 																$elm$json$Json$Decode$succeed($author$project$Data$Root$Event)))))))))))))))));
 var $author$project$Data$Root$eventsDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$eventDecoder);
-var $author$project$Data$Root$funderDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$organizationDecoder);
+var $author$project$Data$Root$funderDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$personOrOrganizationDecoder);
 var $author$project$Data$Root$AudiowalkGenre = 0;
 var $author$project$Data$Root$BallettGenre = 1;
 var $author$project$Data$Root$DigitaltheaterGenre = 2;
@@ -9476,7 +9476,7 @@ var $author$project$Data$Root$productionProductionTypeDecoder = A2(
 	$elm$json$Json$Decode$andThen,
 	A2($elm$core$Basics$composeR, $author$project$Data$Root$parseProductionProductionType, $elm_community$json_extra$Json$Decode$Extra$fromResult),
 	$elm$json$Json$Decode$string);
-var $author$project$Data$Root$sponsorDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$organizationDecoder);
+var $author$project$Data$Root$sponsorDecoder = $elm$json$Json$Decode$list($author$project$Data$Root$personOrOrganizationDecoder);
 var $author$project$Data$Root$productionDecoder = A4(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 	'subtitle',

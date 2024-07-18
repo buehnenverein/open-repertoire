@@ -174,14 +174,14 @@ type alias Production =
     , creator : Maybe (List CreatorRoleItem)
     , description : Maybe String
     , events : List Event
-    , funder : Maybe (List Organization)
+    , funder : Maybe (List PersonOrOrganization)
     , genre : Maybe (List GenreItem)
     , identifier : String
     , inLanguage : Maybe String
     , isBasedOn : Maybe OriginalWork
     , name : String
     , productionType : Maybe ProductionProductionType
-    , sponsor : Maybe (List Organization)
+    , sponsor : Maybe (List PersonOrOrganization)
     , subtitle : Maybe String
     }
 
@@ -864,9 +864,9 @@ eventsDecoder =
     Decode.list eventDecoder
 
 
-funderDecoder : Decoder (List Organization)
+funderDecoder : Decoder (List PersonOrOrganization)
 funderDecoder =
-    Decode.list organizationDecoder
+    Decode.list personOrOrganizationDecoder
 
 
 genreDecoder : Decoder (List GenreItem)
@@ -1033,9 +1033,9 @@ productionsDecoder =
     Decode.list productionDecoder
 
 
-sponsorDecoder : Decoder (List Organization)
+sponsorDecoder : Decoder (List PersonOrOrganization)
 sponsorDecoder =
-    Decode.list organizationDecoder
+    Decode.list personOrOrganizationDecoder
 
 
 subEventDecoder : Decoder (List SubEventType)
@@ -1582,10 +1582,10 @@ encodeEvents events =
         |> Encode.list encodeEvent
 
 
-encodeFunder : List Organization -> Value
+encodeFunder : List PersonOrOrganization -> Value
 encodeFunder funder =
     funder
-        |> Encode.list encodeOrganization
+        |> Encode.list encodePersonOrOrganization
 
 
 encodeGenre : List GenreItem -> Value
@@ -1755,10 +1755,10 @@ encodeProductions productions =
         |> Encode.list encodeProduction
 
 
-encodeSponsor : List Organization -> Value
+encodeSponsor : List PersonOrOrganization -> Value
 encodeSponsor sponsor =
     sponsor
-        |> Encode.list encodeOrganization
+        |> Encode.list encodePersonOrOrganization
 
 
 encodeSubEvent : List SubEventType -> Value
