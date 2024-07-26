@@ -1,8 +1,8 @@
 module View exposing (main)
 
 import Browser
-import Components.DataEntry as Entry exposing (asDate, asDateAndTime, asLink, asTime)
-import Data.Root exposing (CreatorRoleItem, Event, EventEventStatus(..), EventTypeItem(..), GenreItem(..), LocationItem(..), Offer, OfferAvailability(..), Organization, PerformanceRoleItem, PersonOrOrganization(..), Production, ProductionProductionType(..), Root, SubEventType, rootDecoder)
+import Components.DataEntry as Entry exposing (asDate, asDateAndTime, asLink, asLogo, asTime)
+import Data.Root exposing (CreatorRoleItem, Event, EventEventStatus(..), EventTypeItem(..), GenreItem(..), LocationItem(..), Offer, OfferAvailability(..), PerformanceRoleItem, PersonOrOrganization(..), Production, ProductionProductionType(..), Root, SubEventType, rootDecoder)
 import Helper.CustomValidations as CustomValidations
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -469,7 +469,7 @@ viewPersonOrOrganization agent =
                 , Entry.optional "Addresse" organization.address |> Entry.nested .streetAddress
                 , Entry.optional "Postleitzahl" organization.address |> Entry.map .postalCode
                 , Entry.optional "Stadt" organization.address |> Entry.map .addressLocality
-                , Entry.optional "Logo" organization.logo |> asLink (Just "Link")
+                , Entry.optional "Logo" organization.logo |> asLogo
                 ]
 
         PersonOrOrganizationPe person ->

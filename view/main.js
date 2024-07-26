@@ -5562,7 +5562,7 @@ var $justinmimbs$timezone_data$TimeZone$Specification$Save = function (a) {
 };
 var $justinmimbs$timezone_data$TimeZone$Specification$Zone = F2(
 	function (history, current) {
-		return {ap: current, p: history};
+		return {ap: current, q: history};
 	});
 var $justinmimbs$timezone_data$TimeZone$Specification$ZoneState = F2(
 	function (standardOffset, zoneRules) {
@@ -5936,7 +5936,7 @@ var $justinmimbs$timezone_data$TimeZone$Specification$zoneToRanges = F3(
 							ranges));
 				}),
 			_Utils_Tuple2(zoneStart, _List_Nil),
-			zone.p);
+			zone.q);
 		var currentStart = _v0.a;
 		var historyRanges = _v0.b;
 		return $elm$core$List$reverse(
@@ -5948,7 +5948,7 @@ var $justinmimbs$timezone_data$TimeZone$Specification$zoneToRanges = F3(
 var $justinmimbs$timezone_data$TimeZone$Specification$toOffsets = F3(
 	function (minYear, maxYear, zone) {
 		var initialState = function () {
-			var _v5 = zone.p;
+			var _v5 = zone.q;
 			if (_v5.b) {
 				var _v6 = _v5.a;
 				var earliest = _v6.a;
@@ -28803,7 +28803,7 @@ var $author$project$Components$DataEntry$applyOne = F3(
 		return {
 			D: entry.D,
 			L: entry.L,
-			q: entry.q,
+			p: entry.p,
 			H: function () {
 				var _v0 = entry.H;
 				if (!_v0.$) {
@@ -28855,7 +28855,7 @@ var $author$project$Components$DataEntry$optional = F2(
 		return {
 			D: $elm$core$Maybe$Nothing,
 			L: name,
-			q: $author$project$Components$DataEntry$Default,
+			p: $author$project$Components$DataEntry$Default,
 			H: $author$project$Components$DataEntry$Optional(value),
 			t: _List_Nil
 		};
@@ -28865,7 +28865,7 @@ var $author$project$Components$DataEntry$required = F2(
 		return {
 			D: $elm$core$Maybe$Nothing,
 			L: name,
-			q: $author$project$Components$DataEntry$Default,
+			p: $author$project$Components$DataEntry$Default,
 			H: $author$project$Components$DataEntry$Required(value),
 			t: _List_Nil
 		};
@@ -29714,6 +29714,13 @@ var $elm$html$Html$Attributes$href = function (url) {
 		'href',
 		_VirtualDom_noJavaScriptUri(url));
 };
+var $elm$html$Html$img = _VirtualDom_node('img');
+var $elm$html$Html$Attributes$src = function (url) {
+	return A2(
+		$elm$html$Html$Attributes$stringProperty,
+		'src',
+		_VirtualDom_noJavaScriptOrHtmlUri(url));
+};
 var $elm$html$Html$Attributes$target = $elm$html$Html$Attributes$stringProperty('target');
 var $elm$html$Html$td = _VirtualDom_node('td');
 var $author$project$Components$DataEntry$viewOptional = F2(
@@ -29757,6 +29764,33 @@ var $author$project$Components$DataEntry$viewOptional = F2(
 							]));
 				case 2:
 					var v = _v0.a.a;
+					var _v2 = _v0.b;
+					return A2(
+						$elm$html$Html$td,
+						_List_Nil,
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$a,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$href(v),
+										$elm$html$Html$Attributes$target('_blank')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$img,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('logo'),
+												$elm$html$Html$Attributes$src(v)
+											]),
+										_List_Nil)
+									]))
+							]));
+				case 3:
+					var v = _v0.a.a;
 					var zone = _v0.b.a;
 					return A2(
 						$elm$html$Html$td,
@@ -29766,7 +29800,7 @@ var $author$project$Components$DataEntry$viewOptional = F2(
 								$elm$html$Html$text(
 								A2($author$project$Components$DataEntry$formatDate, v, zone))
 							]));
-				case 3:
+				case 4:
 					var v = _v0.a.a;
 					var zone = _v0.b.a;
 					return A2(
@@ -29790,7 +29824,7 @@ var $author$project$Components$DataEntry$viewOptional = F2(
 							]));
 			}
 		} else {
-			var _v2 = _v0.a;
+			var _v3 = _v0.a;
 			return A2(
 				$elm$html$Html$td,
 				_List_Nil,
@@ -29835,6 +29869,31 @@ var $author$project$Components$DataEntry$viewRequired = F2(
 								]))
 						]));
 			case 2:
+				return A2(
+					$elm$html$Html$td,
+					_List_Nil,
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$a,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$href(value),
+									$elm$html$Html$Attributes$target('_blank')
+								]),
+							_List_fromArray(
+								[
+									A2(
+									$elm$html$Html$img,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$class('logo'),
+											$elm$html$Html$Attributes$src(value)
+										]),
+									_List_Nil)
+								]))
+						]));
+			case 3:
 				var zone = options.a;
 				return A2(
 					$elm$html$Html$td,
@@ -29844,7 +29903,7 @@ var $author$project$Components$DataEntry$viewRequired = F2(
 							$elm$html$Html$text(
 							A2($author$project$Components$DataEntry$formatDate, value, zone))
 						]));
-			case 3:
+			case 4:
 				var zone = options.a;
 				return A2(
 					$elm$html$Html$td,
@@ -29925,10 +29984,10 @@ var $author$project$Components$DataEntry$viewEntry = function (entry) {
 				var _v1 = entry.H;
 				if (!_v1.$) {
 					var value = _v1.a;
-					return A2($author$project$Components$DataEntry$viewRequired, value, entry.q);
+					return A2($author$project$Components$DataEntry$viewRequired, value, entry.p);
 				} else {
 					var value = _v1.a;
-					return A2($author$project$Components$DataEntry$viewOptional, value, entry.q);
+					return A2($author$project$Components$DataEntry$viewOptional, value, entry.p);
 				}
 			}()
 			]));
@@ -30081,17 +30140,12 @@ var $author$project$View$viewCreators = function (creators) {
 			}()
 			]));
 };
-var $author$project$Components$DataEntry$Link = function (a) {
-	return {$: 1, a: a};
+var $author$project$Components$DataEntry$Logo = {$: 2};
+var $author$project$Components$DataEntry$asLogo = function (entry) {
+	return _Utils_update(
+		entry,
+		{p: $author$project$Components$DataEntry$Logo});
 };
-var $author$project$Components$DataEntry$asLink = F2(
-	function (linkText, entry) {
-		return _Utils_update(
-			entry,
-			{
-				q: $author$project$Components$DataEntry$Link(linkText)
-			});
-	});
 var $author$project$View$viewPersonOrOrganization = function (agent) {
 	if (agent.$ === 1) {
 		var organization = agent.a;
@@ -30117,9 +30171,7 @@ var $author$project$View$viewPersonOrOrganization = function (agent) {
 						return $.aW;
 					},
 					A2($author$project$Components$DataEntry$optional, 'Stadt', organization._)),
-					A2(
-					$author$project$Components$DataEntry$asLink,
-					$elm$core$Maybe$Just('Link'),
+					$author$project$Components$DataEntry$asLogo(
 					A2($author$project$Components$DataEntry$optional, 'Logo', organization.bx))
 				]));
 	} else {
@@ -30495,25 +30547,25 @@ var $elm$core$List$intersperse = F2(
 		}
 	});
 var $author$project$Components$DataEntry$Date = function (a) {
-	return {$: 2, a: a};
+	return {$: 3, a: a};
 };
 var $author$project$Components$DataEntry$asDate = F2(
 	function (zone, entry) {
 		return _Utils_update(
 			entry,
 			{
-				q: $author$project$Components$DataEntry$Date(zone)
+				p: $author$project$Components$DataEntry$Date(zone)
 			});
 	});
 var $author$project$Components$DataEntry$Time = function (a) {
-	return {$: 3, a: a};
+	return {$: 4, a: a};
 };
 var $author$project$Components$DataEntry$asTime = F2(
 	function (zone, entry) {
 		return _Utils_update(
 			entry,
 			{
-				q: $author$project$Components$DataEntry$Time(zone)
+				p: $author$project$Components$DataEntry$Time(zone)
 			});
 	});
 var $author$project$View$formatDuration = function (duration) {
@@ -30598,14 +30650,25 @@ var $author$project$View$viewAdditionalOfferings = F2(
 		}
 	});
 var $author$project$Components$DataEntry$DateTime = function (a) {
-	return {$: 4, a: a};
+	return {$: 5, a: a};
 };
 var $author$project$Components$DataEntry$asDateAndTime = F2(
 	function (zone, entry) {
 		return _Utils_update(
 			entry,
 			{
-				q: $author$project$Components$DataEntry$DateTime(zone)
+				p: $author$project$Components$DataEntry$DateTime(zone)
+			});
+	});
+var $author$project$Components$DataEntry$Link = function (a) {
+	return {$: 1, a: a};
+};
+var $author$project$Components$DataEntry$asLink = F2(
+	function (linkText, entry) {
+		return _Utils_update(
+			entry,
+			{
+				p: $author$project$Components$DataEntry$Link(linkText)
 			});
 	});
 var $author$project$View$eventStatusToString = function (eventStatus) {

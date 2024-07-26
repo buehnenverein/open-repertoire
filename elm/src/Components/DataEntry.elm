@@ -1,9 +1,9 @@
-module Components.DataEntry exposing (Model, ZoneWithName, asDate, asDateAndTime, asLink, asTime, join, map, nested, optional, required, view, withHelp, withWarnings)
+module Components.DataEntry exposing (Model, ZoneWithName, asDate, asDateAndTime, asLink, asLogo, asTime, join, map, nested, optional, required, view, withHelp, withWarnings)
 
 import DateFormat
 import Helper.CustomValidations exposing (Validator, viewerMessage)
 import Html exposing (..)
-import Html.Attributes exposing (attribute, class, href, style, target)
+import Html.Attributes exposing (attribute, class, href, src, style, target)
 import Iso8601
 import Time
 
@@ -25,6 +25,7 @@ type Value a
 type Options
     = Default
     | Link (Maybe String)
+    | Logo
     | Date ZoneWithName
     | Time ZoneWithName
     | DateTime ZoneWithName
@@ -98,6 +99,11 @@ join f entry =
 asLink : Maybe String -> Model a -> Model a
 asLink linkText entry =
     { entry | options = Link linkText }
+
+
+asLogo : Model a -> Model a
+asLogo entry =
+    { entry | options = Logo }
 
 
 asDate : ZoneWithName -> Model a -> Model a
@@ -184,6 +190,11 @@ viewRequired value options =
                 [ Html.a [ href value, target "_blank" ] [ text (Maybe.withDefault value linkText) ]
                 ]
 
+        Logo ->
+            td []
+                [ Html.a [ href value, target "_blank" ] [ img [ class "logo", src value ] [] ]
+                ]
+
         Date zone ->
             td []
                 [ text (formatDate value zone) ]
@@ -210,6 +221,12 @@ viewOptional value options =
             td
                 []
                 [ Html.a [ href v, target "_blank" ] [ text (Maybe.withDefault v linkText) ]
+                ]
+
+        ( Just v, Logo ) ->
+            td
+                []
+                [ Html.a [ href v, target "_blank" ] [ img [ class "logo", src v ] [] ]
                 ]
 
         ( Just v, Date zone ) ->

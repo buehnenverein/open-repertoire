@@ -44,3 +44,7 @@ ol {
 .preserve-newlines {
 	white-space: pre-line;
 }
+
+img.logo {
+	max-height: 100px;
+}
