@@ -547,18 +547,22 @@
       "example": [
         {
           "@type": "PerformanceRole",
-          "performer": {
-            "@type": "Person",
-            "name": "Max Mustermann"
-          },
+          "performer": [
+            {
+              "@type": "Person",
+              "name": "Max Mustermann"
+            }
+          ],
           "characterName": "Hedwig"
         },
         {
           "@type": "PerformanceRole",
-          "performer": {
-            "@type": "Organization",
-            "name": "Dÿse"
-          },
+          "performer": [
+            {
+              "@type": "Organization",
+              "name": "Dÿse"
+            }
+          ],
           "roleName": "Band"
         }
       ],

@@ -496,13 +496,13 @@ definitions:
       example:
         - "@type": "PerformanceRole"
           performer:
-            "@type": Person
-            name: Max Mustermann
+            - "@type": Person
+              name: Max Mustermann
           characterName: Hedwig
         - "@type": "PerformanceRole"
           performer:
-            "@type": Organization
-            name: Dÿse
+            - "@type": Organization
+              name: Dÿse
           roleName: Band
       items:
         type: object
