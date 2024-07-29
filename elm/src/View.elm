@@ -503,7 +503,7 @@ viewEvent zone allEvents event =
                 [ viewOffers event.offers
                 ]
             , div [ class "cell box mb-0 is-col-span-2 is-col-span-1-widescreen" ]
-                [ viewAdditionalOfferings zone event.subEvent
+                [ viewSubEvents zone event.subEvent
                 ]
             , div [ class "cell box mb-0 is-col-span-2 is-col-span-1-widescreen" ]
                 [ viewPerformers event.performer
@@ -602,11 +602,11 @@ eventStatusToString eventStatus =
             "Geändertes Datum"
 
 
-viewAdditionalOfferings : Entry.ZoneWithName -> Maybe (List SubEventType) -> Html Msg
-viewAdditionalOfferings zone additionalOfferings =
+viewSubEvents : Entry.ZoneWithName -> Maybe (List SubEventType) -> Html Msg
+viewSubEvents zone subEvents =
     div []
         [ div [ class "title is-5" ] [ text "Zusatzangebote" ]
-        , case additionalOfferings of
+        , case subEvents of
             Nothing ->
                 em [] [ text "In den Daten sind keine zusätzlichen Angebote für diese Veranstaltung angegeben." ]
 
@@ -614,20 +614,20 @@ viewAdditionalOfferings zone additionalOfferings =
                 em [] [ text "In den Daten sind keine zusätzlichen Angebote für diese Veranstaltung angegeben." ]
 
             Just list ->
-                div [] (List.map (viewAdditionalOffering zone) list)
+                div [] (List.map (viewSubEvent zone) list)
         ]
 
 
-viewAdditionalOffering : Entry.ZoneWithName -> SubEventType -> Html Msg
-viewAdditionalOffering zone offering =
+viewSubEvent : Entry.ZoneWithName -> SubEventType -> Html Msg
+viewSubEvent zone subEvent =
     Entry.view
-        [ Entry.required "Titel" offering.name
-        , Entry.optional "Beschreibung" offering.description
-        , Entry.optional "Startdatum" offering.startDate |> asDate zone
-        , Entry.optional "Startzeit" offering.startDate |> asTime zone
-        , Entry.optional "Enddatum" offering.endDate |> asDate zone
-        , Entry.optional "Endzeit" offering.endDate |> asTime zone
-        , Entry.optional "Dauer" offering.duration
+        [ Entry.required "Titel" subEvent.name
+        , Entry.optional "Beschreibung" subEvent.description
+        , Entry.optional "Startdatum" subEvent.startDate |> asDate zone
+        , Entry.optional "Startzeit" subEvent.startDate |> asTime zone
+        , Entry.optional "Enddatum" subEvent.endDate |> asDate zone
+        , Entry.optional "Endzeit" subEvent.endDate |> asTime zone
+        , Entry.optional "Dauer" subEvent.duration
             |> Entry.map formatDuration
         ]
 
