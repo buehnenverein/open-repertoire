@@ -191,6 +191,7 @@ definitions:
     Audience:
       type: object
       description: Object describing the intended target audience of this production.
+      additionalProperties: false
       required:
         - "@type"
       properties:

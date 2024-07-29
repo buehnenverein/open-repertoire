@@ -30355,17 +30355,28 @@ var $author$project$View$viewProductionAccessibility = function (production) {
 };
 var $author$project$View$viewProductionAudience = function (production) {
 	var formatAge = function (audience) {
-		return A2(
-			$elm$core$String$join,
-			' - ',
-			A2(
-				$elm$core$List$map,
-				$elm$core$String$fromInt,
-				A2(
-					$elm$core$List$filterMap,
-					$elm$core$Basics$identity,
-					_List_fromArray(
-						[audience.ca, audience.b9])))) + ' Jahre';
+		var _v0 = _Utils_Tuple2(audience.ca, audience.b9);
+		if (!_v0.a.$) {
+			if (!_v0.b.$) {
+				var minAge = _v0.a.a;
+				var maxAge = _v0.b.a;
+				return $elm$core$String$fromInt(minAge) + (' - ' + ($elm$core$String$fromInt(maxAge) + ' Jahre'));
+			} else {
+				var minAge = _v0.a.a;
+				var _v1 = _v0.b;
+				return 'ab ' + ($elm$core$String$fromInt(minAge) + ' Jahre');
+			}
+		} else {
+			if (!_v0.b.$) {
+				var _v2 = _v0.a;
+				var maxAge = _v0.b.a;
+				return 'bis ' + ($elm$core$String$fromInt(maxAge) + ' Jahre');
+			} else {
+				var _v3 = _v0.a;
+				var _v4 = _v0.b;
+				return '';
+			}
+		}
 	};
 	return A2(
 		$elm$html$Html$div,

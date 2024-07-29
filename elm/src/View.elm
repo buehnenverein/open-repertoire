@@ -379,14 +379,18 @@ viewProductionAudience : Production -> Html Msg
 viewProductionAudience production =
     let
         formatAge audience =
-            ([ audience.suggestedMinAge
-             , audience.suggestedMaxAge
-             ]
-                |> List.filterMap identity
-                |> List.map String.fromInt
-                |> String.join " - "
-            )
-                ++ " Jahre"
+            case ( audience.suggestedMinAge, audience.suggestedMaxAge ) of
+                ( Just minAge, Just maxAge ) ->
+                    String.fromInt minAge ++ " - " ++ String.fromInt maxAge ++ " Jahre"
+
+                ( Just minAge, Nothing ) ->
+                    "ab " ++ String.fromInt minAge ++ " Jahre"
+
+                ( Nothing, Just maxAge ) ->
+                    "bis " ++ String.fromInt maxAge ++ " Jahre"
+
+                ( Nothing, Nothing ) ->
+                    ""
     in
     div []
         [ div [ class "title is-5" ] [ text "Zielgruppe" ]
