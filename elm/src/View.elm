@@ -604,20 +604,18 @@ eventStatusToString eventStatus =
 
 viewAdditionalOfferings : Entry.ZoneWithName -> Maybe (List SubEventType) -> Html Msg
 viewAdditionalOfferings zone additionalOfferings =
-    case additionalOfferings of
-        Nothing ->
-            em [] [ text "In den Daten sind keine zusätzlichen Angebote für diese Veranstaltung angegeben." ]
+    div []
+        [ div [ class "title is-5" ] [ text "Zusatzangebote" ]
+        , case additionalOfferings of
+            Nothing ->
+                em [] [ text "In den Daten sind keine zusätzlichen Angebote für diese Veranstaltung angegeben." ]
 
-        Just [] ->
-            em [] [ text "In den Daten sind keine zusätzlichen Angebote für diese Veranstaltung angegeben." ]
+            Just [] ->
+                em [] [ text "In den Daten sind keine zusätzlichen Angebote für diese Veranstaltung angegeben." ]
 
-        Just list ->
-            div []
-                [ div [ class "title is-5" ]
-                    [ text "Zusätzliche Angebote"
-                    ]
-                , div [] (List.map (viewAdditionalOffering zone) list)
-                ]
+            Just list ->
+                div [] (List.map (viewAdditionalOffering zone) list)
+        ]
 
 
 viewAdditionalOffering : Entry.ZoneWithName -> SubEventType -> Html Msg
@@ -641,19 +639,23 @@ viewAdditionalOffering zone offering =
 viewLocations : Maybe (List LocationItem) -> Html Msg
 viewLocations locations =
     case locations of
-        Nothing ->
-            em [] [ text "In den Daten ist kein Ort für diese Veranstaltung angegeben." ]
-
-        Just [] ->
-            em [] [ text "In den Daten ist kein Ort für diese Veranstaltung angegeben." ]
-
-        Just list ->
+        Just (x :: xs) ->
             div []
                 [ div [ class "title is-5" ]
                     [ text "Aufführungsort"
-                    , locationTag list
+                    , locationTag (x :: xs)
                     ]
-                , div [] (List.map locationTable list)
+                , div [] (List.map locationTable (x :: xs))
+                ]
+
+        _ ->
+            div []
+                [ div [ class "title is-5" ]
+                    [ text "Aufführungsort"
+                    ]
+                , em
+                    []
+                    [ text "In den Daten ist kein Ort für diese Veranstaltung angegeben." ]
                 ]
 
 

@@ -30615,50 +30615,52 @@ var $author$project$View$viewAdditionalOffering = F2(
 	});
 var $author$project$View$viewAdditionalOfferings = F2(
 	function (zone, additionalOfferings) {
-		if (additionalOfferings.$ === 1) {
-			return A2(
-				$elm$html$Html$em,
-				_List_Nil,
-				_List_fromArray(
-					[
-						$elm$html$Html$text('In den Daten sind keine zusätzlichen Angebote für diese Veranstaltung angegeben.')
-					]));
-		} else {
-			if (!additionalOfferings.a.b) {
-				return A2(
-					$elm$html$Html$em,
-					_List_Nil,
-					_List_fromArray(
-						[
-							$elm$html$Html$text('In den Daten sind keine zusätzlichen Angebote für diese Veranstaltung angegeben.')
-						]));
-			} else {
-				var list = additionalOfferings.a;
-				return A2(
+		return A2(
+			$elm$html$Html$div,
+			_List_Nil,
+			_List_fromArray(
+				[
+					A2(
 					$elm$html$Html$div,
-					_List_Nil,
 					_List_fromArray(
 						[
-							A2(
-							$elm$html$Html$div,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('title is-5')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Zusätzliche Angebote')
-								])),
-							A2(
-							$elm$html$Html$div,
+							$elm$html$Html$Attributes$class('title is-5')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text('Zusatzangebote')
+						])),
+					function () {
+					if (additionalOfferings.$ === 1) {
+						return A2(
+							$elm$html$Html$em,
 							_List_Nil,
-							A2(
-								$elm$core$List$map,
-								$author$project$View$viewAdditionalOffering(zone),
-								list))
-						]));
-			}
-		}
+							_List_fromArray(
+								[
+									$elm$html$Html$text('In den Daten sind keine zusätzlichen Angebote für diese Veranstaltung angegeben.')
+								]));
+					} else {
+						if (!additionalOfferings.a.b) {
+							return A2(
+								$elm$html$Html$em,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text('In den Daten sind keine zusätzlichen Angebote für diese Veranstaltung angegeben.')
+									]));
+						} else {
+							var list = additionalOfferings.a;
+							return A2(
+								$elm$html$Html$div,
+								_List_Nil,
+								A2(
+									$elm$core$List$map,
+									$author$project$View$viewAdditionalOffering(zone),
+									list));
+						}
+					}
+				}()
+				]));
 	});
 var $author$project$Components$DataEntry$DateTime = function (a) {
 	return {$: 5, a: a};
@@ -30952,47 +30954,59 @@ var $author$project$View$locationTag = function (locations) {
 	}
 };
 var $author$project$View$viewLocations = function (locations) {
-	if (locations.$ === 1) {
+	if ((!locations.$) && locations.a.b) {
+		var _v1 = locations.a;
+		var x = _v1.a;
+		var xs = _v1.b;
 		return A2(
-			$elm$html$Html$em,
+			$elm$html$Html$div,
 			_List_Nil,
 			_List_fromArray(
 				[
-					$elm$html$Html$text('In den Daten ist kein Ort für diese Veranstaltung angegeben.')
+					A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('title is-5')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text('Aufführungsort'),
+							$author$project$View$locationTag(
+							A2($elm$core$List$cons, x, xs))
+						])),
+					A2(
+					$elm$html$Html$div,
+					_List_Nil,
+					A2(
+						$elm$core$List$map,
+						$author$project$View$locationTable,
+						A2($elm$core$List$cons, x, xs)))
 				]));
 	} else {
-		if (!locations.a.b) {
-			return A2(
-				$elm$html$Html$em,
-				_List_Nil,
-				_List_fromArray(
-					[
-						$elm$html$Html$text('In den Daten ist kein Ort für diese Veranstaltung angegeben.')
-					]));
-		} else {
-			var list = locations.a;
-			return A2(
-				$elm$html$Html$div,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						$elm$html$Html$div,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('title is-5')
-							]),
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Aufführungsort'),
-								$author$project$View$locationTag(list)
-							])),
-						A2(
-						$elm$html$Html$div,
-						_List_Nil,
-						A2($elm$core$List$map, $author$project$View$locationTable, list))
-					]));
-		}
+		return A2(
+			$elm$html$Html$div,
+			_List_Nil,
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('title is-5')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text('Aufführungsort')
+						])),
+					A2(
+					$elm$html$Html$em,
+					_List_Nil,
+					_List_fromArray(
+						[
+							$elm$html$Html$text('In den Daten ist kein Ort für diese Veranstaltung angegeben.')
+						]))
+				]));
 	}
 };
 var $author$project$View$humanReadableAvailability = function (availability) {
