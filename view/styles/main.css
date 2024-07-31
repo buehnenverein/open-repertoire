@@ -48,3 +48,7 @@ ol {
 img.logo {
 	max-height: 100px;
 }
+
+.production-info-grid {
+	--bulma-grid-column-min: 30%;
+}

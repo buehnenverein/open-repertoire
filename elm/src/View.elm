@@ -295,29 +295,27 @@ productionNameMatches filter production =
 
 productionGrid : Production -> Html Msg
 productionGrid production =
-    div [ class "fixed-grid has-3-cols has-1-cols-mobile has-1-cols-tablet has-1-cols-desktop" ]
-        [ div [ class "grid" ]
-            [ div [ class "cell box mb-0 is-col-span-2-widescreen is-row-span-3" ]
-                [ productionInfo production
-                ]
-            , div [ class "cell box mb-0 is-row-span-2" ]
-                [ viewCreators production.creator
-                ]
-            , div [ class "cell box mb-0 is-row-span-3" ]
-                [ viewProductionAudience production
-                ]
-            , div [ class "cell box mb-0 is-col-span-2-widescreen" ]
-                [ viewOriginalWork production
-                ]
-            , div [ class "cell box mb-0 is-col-span-2-widescreen" ]
-                [ viewProductionAccessibility production
-                ]
-            , div [ class "cell box mb-0 is-col-span-3-widescreen" ]
-                [ viewFunders production
-                ]
-            , div [ class "cell box mb-0 is-col-span-3-widescreen" ]
-                [ viewSponsors production
-                ]
+    div [ class "grid production-info-grid" ]
+        [ div [ class "cell box mb-0 is-col-span-2-widescreen is-col-span-3 is-row-span-3" ]
+            [ productionInfo production
+            ]
+        , div [ class "cell box mb-0 is-col-span-1-widescreen is-col-span-3 is-row-span-2" ]
+            [ viewCreators production.creator
+            ]
+        , div [ class "cell box mb-0 is-col-span-1-widescreen is-col-span-3 is-row-span-3" ]
+            [ viewProductionAudience production
+            ]
+        , div [ class "cell box mb-0 is-col-span-2-widescreen is-col-span-3" ]
+            [ viewOriginalWork production
+            ]
+        , div [ class "cell box mb-0 is-col-span-2-widescreen is-col-span-3" ]
+            [ viewProductionAccessibility production
+            ]
+        , div [ class "cell box mb-0 is-col-span-3-widescreen is-col-span-3" ]
+            [ viewFunders production
+            ]
+        , div [ class "cell box mb-0 is-col-span-3-widescreen is-col-span-3" ]
+            [ viewSponsors production
             ]
         ]
 

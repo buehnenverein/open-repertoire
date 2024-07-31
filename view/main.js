@@ -30453,7 +30453,7 @@ var $author$project$View$productionGrid = function (production) {
 		$elm$html$Html$div,
 		_List_fromArray(
 			[
-				$elm$html$Html$Attributes$class('fixed-grid has-3-cols has-1-cols-mobile has-1-cols-tablet has-1-cols-desktop')
+				$elm$html$Html$Attributes$class('grid production-info-grid')
 			]),
 		_List_fromArray(
 			[
@@ -30461,80 +30461,71 @@ var $author$project$View$productionGrid = function (production) {
 				$elm$html$Html$div,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$class('grid')
+						$elm$html$Html$Attributes$class('cell box mb-0 is-col-span-2-widescreen is-col-span-3 is-row-span-3')
 					]),
 				_List_fromArray(
 					[
-						A2(
-						$elm$html$Html$div,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('cell box mb-0 is-col-span-2-widescreen is-row-span-3')
-							]),
-						_List_fromArray(
-							[
-								$author$project$View$productionInfo(production)
-							])),
-						A2(
-						$elm$html$Html$div,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('cell box mb-0 is-row-span-2')
-							]),
-						_List_fromArray(
-							[
-								$author$project$View$viewCreators(production.aa)
-							])),
-						A2(
-						$elm$html$Html$div,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('cell box mb-0 is-row-span-3')
-							]),
-						_List_fromArray(
-							[
-								$author$project$View$viewProductionAudience(production)
-							])),
-						A2(
-						$elm$html$Html$div,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('cell box mb-0 is-col-span-2-widescreen')
-							]),
-						_List_fromArray(
-							[
-								$author$project$View$viewOriginalWork(production)
-							])),
-						A2(
-						$elm$html$Html$div,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('cell box mb-0 is-col-span-2-widescreen')
-							]),
-						_List_fromArray(
-							[
-								$author$project$View$viewProductionAccessibility(production)
-							])),
-						A2(
-						$elm$html$Html$div,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('cell box mb-0 is-col-span-3-widescreen')
-							]),
-						_List_fromArray(
-							[
-								$author$project$View$viewFunders(production)
-							])),
-						A2(
-						$elm$html$Html$div,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('cell box mb-0 is-col-span-3-widescreen')
-							]),
-						_List_fromArray(
-							[
-								$author$project$View$viewSponsors(production)
-							]))
+						$author$project$View$productionInfo(production)
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('cell box mb-0 is-col-span-1-widescreen is-col-span-3 is-row-span-2')
+					]),
+				_List_fromArray(
+					[
+						$author$project$View$viewCreators(production.aa)
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('cell box mb-0 is-col-span-1-widescreen is-col-span-3 is-row-span-3')
+					]),
+				_List_fromArray(
+					[
+						$author$project$View$viewProductionAudience(production)
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('cell box mb-0 is-col-span-2-widescreen is-col-span-3')
+					]),
+				_List_fromArray(
+					[
+						$author$project$View$viewOriginalWork(production)
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('cell box mb-0 is-col-span-2-widescreen is-col-span-3')
+					]),
+				_List_fromArray(
+					[
+						$author$project$View$viewProductionAccessibility(production)
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('cell box mb-0 is-col-span-3-widescreen is-col-span-3')
+					]),
+				_List_fromArray(
+					[
+						$author$project$View$viewFunders(production)
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('cell box mb-0 is-col-span-3-widescreen is-col-span-3')
+					]),
+				_List_fromArray(
+					[
+						$author$project$View$viewSponsors(production)
 					]))
 			]));
 };
