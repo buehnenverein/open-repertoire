@@ -20,7 +20,7 @@
             "justinmimbs/timezone-data": "10.1.1",
             "krisajenkins/remotedata": "6.0.1",
             "rtfeldman/elm-iso8601-date-strings": "1.1.4",
-            "ryannhg/date-format": "2.3.0"
+            "ryan-haskell/date-format": "1.0.0"
         },
         "indirect": {
             "elm/bytes": "1.0.8",
