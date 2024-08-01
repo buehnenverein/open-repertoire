@@ -39,6 +39,8 @@
               ];
               languages = {
                 javascript.enable = true;
+                javascript.npm.install.enable = true;
+
                 elm.enable = true;
                 erlang.enable = true;
               };
