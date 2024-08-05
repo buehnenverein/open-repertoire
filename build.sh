@@ -17,13 +17,9 @@ npx js-yaml schema.yml > schema.json
 # Build static JSON schema validator script.
 npx ajv compile -s schema.json -o ./validate/validator.js --spec=draft7 -c ajv-cli-custom -c ajv-formats --all-errors
 
-if  ! git diff --exit-code schema.json
-then
-  ./js2e schema.json
-  cp ./js2e_output/src/Data/Root.elm ./elm/src/Data/Root.elm
-  cp ./js2e_output/src/Helper/Encode.elm ./elm/src/Helper/Encode.elm
-  echo "schema.json has changed and the Elm models were automatically generated. Make sure everything is correct, stage schema.json and re-run the build script"
-fi
+./js2e schema.json
+cp ./js2e_output/src/Data/Root.elm ./elm/src/Data/Root.elm
+cp ./js2e_output/src/Helper/Encode.elm ./elm/src/Helper/Encode.elm
 
 # Compile validator app.
 cd elm
