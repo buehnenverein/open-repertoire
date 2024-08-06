@@ -1,4 +1,4 @@
-module Helper.CustomValidations exposing (MessageType(..), ValidationMessage, Validator, abstractDifferentFromDescription, abstractOrDescription, checkAll, duration, eventStatusAndDate, languageTagValid, minMaxAge, minMaxPrice, production, startAndEndDates, validDerniere, validPremiere, viewerMessage)
+module Helper.CustomValidations exposing (MessageType(..), ValidationMessage, Validator, checkAll, duration, eventStatusAndDate, languageTagValid, minMaxAge, minMaxPrice, production, startAndEndDates, validDerniere, validPremiere, viewerMessage)
 
 import Data.Event
     exposing
@@ -18,10 +18,16 @@ import Data.PersonOrOrganization exposing (PersonOrOrganization(..))
 import Data.PostalAddress exposing (PostalAddress)
 import Data.Root
     exposing
-        ( Audience
+        ( Abstract(..)
+        , AdditionalInfo(..)
+        , Audience
         , CreatorRoleItem
+        , Description(..)
+        , InternationalizedString
+        , Name(..)
         , Production
         , Root
+        , Subtitle(..)
         )
 import Helper.LanguageCodes as LanguageCodes
 import Iso8601
@@ -307,45 +313,47 @@ geocoordinates path data =
             []
 
 
-abstractOrDescription : Validator Production
-abstractOrDescription path data =
-    let
-        -- If either abstract or description contains actual text, then the combined
-        -- string will also contain actual text
-        combinedString =
-            Maybe.withDefault "" data.abstract
-                ++ Maybe.withDefault "" data.description
 
-        message =
-            [ warning path "has neither a description nor an abstract. You should set at least one of these fields."
-                |> forView "Diese Produktion hat weder eine Beschreibung noch eine Kurzbeschreibung. Wenigstens eines der beiden Felder sollte gesetzt sein."
-            ]
-    in
-    if isEmptyString combinedString then
-        message
-
-    else
-        []
-
-
-abstractDifferentFromDescription : Validator Production
-abstractDifferentFromDescription path data =
-    let
-        sameText text1 text2 =
-            String.trim text1 == String.trim text2 && not (isEmptyString text1)
-    in
-    case ( data.description, data.abstract ) of
-        ( Just description, Just abstract ) ->
-            if sameText description abstract then
-                [ warning (path ++ "/abstract") "is the same"
-                    |> forView "Kurzbeschreibung und Beschreibung enthalten den selben Text. Vermeiden Sie es, Ihre Beschreibungstexte zu doppeln."
-                ]
-
-            else
-                []
-
-        _ ->
-            []
+-- abstractOrDescription : Validator Production
+-- abstractOrDescription path data =
+--     let
+--         -- If either abstract or description contains actual text, then the combined
+--         -- string will also contain actual text
+--         combinedString =
+--             Maybe.withDefault "" data.abstract
+--                 ++ Maybe.withDefault "" data.description
+--         message =
+--             [ warning path "has neither a description nor an abstract. You should set at least one of these fields."
+--                 |> forView "Diese Produktion hat weder eine Beschreibung noch eine Kurzbeschreibung. Wenigstens eines der beiden Felder sollte gesetzt sein."
+--             ]
+--     in
+--     if isEmptyString combinedString then
+--         message
+--     else
+--         []
+-- getAbstractText : Abstract -> (InternationalizedString -> Maybe String) -> Maybe String
+-- getAbstractText abstract languageAccessor =
+--     case abstract of
+--         AbstractCo string ->
+--             Just string
+--         AbstractIn internationalizedString ->
+--             languageAccessor internationalizedString
+-- abstractDifferentFromDescription : Validator Production
+-- abstractDifferentFromDescription path data =
+--     let
+--         sameText text1 text2 =
+--             String.trim text1 == String.trim text2 && not (isEmptyString text1)
+--     in
+--     case ( data.description, data.abstract ) of
+--         ( Just description, Just abstract ) ->
+--             if sameText description abstract then
+--                 [ warning (path ++ "/abstract") "is the same"
+--                     |> forView "Kurzbeschreibung und Beschreibung enthalten den selben Text. Vermeiden Sie es, Ihre Beschreibungstexte zu doppeln."
+--                 ]
+--             else
+--                 []
+--         _ ->
+--             []
 
 
 eventStatusAndDate : Validator Event
@@ -582,21 +590,81 @@ production : Validator Production
 production =
     object
         [ field "/accessibilitySummary" .accessibilitySummary optional
-        , field "/additionalInfo" .additionalInfo optional
+        , field "/additionalInfo" .additionalInfo (maybe productionAdditionalInfo)
         , field "/audience" .audience (maybe audience)
         , field "/creator" .creator (maybe (list creator))
-        , field "/description" .description optional
+        , field "/description" .description (maybe productionDescription)
         , field "/events" .events (list event)
         , field "/events" .events (uniqueIdsFor "events")
         , field "/events" .events premiereValid
         , field "/events" .events derniereValid
         , field "/inLanguage" .inLanguage (maybe languageTagValid)
-        , field "/subtitle" .subtitle optional
-        , field "/abstract" .abstract optional
-        , field "/name" .name required
+        , field "/subtitle" .subtitle (maybe productionSubtitle)
+        , field "/abstract" .abstract (maybe productionAbstract)
+        , field "/name" .name productionName
         , field "/isBasedOn" .isBasedOn (maybe originalWork)
-        , abstractOrDescription
-        , abstractDifferentFromDescription
+
+        -- , abstractOrDescription
+        -- , abstractDifferentFromDescription
+        ]
+
+
+productionAbstract : Validator Abstract
+productionAbstract path data =
+    case data of
+        AbstractSt string ->
+            optional path (Just string)
+
+        AbstractIn i18nString ->
+            internationalizedString path i18nString
+
+
+productionDescription : Validator Description
+productionDescription path data =
+    case data of
+        DescriptionSt string ->
+            optional path (Just string)
+
+        DescriptionIn i18nString ->
+            internationalizedString path i18nString
+
+
+productionName : Validator Name
+productionName path data =
+    case data of
+        NameSt string ->
+            optional path (Just string)
+
+        NameIn i18nString ->
+            internationalizedString path i18nString
+
+
+productionSubtitle : Validator Subtitle
+productionSubtitle path data =
+    case data of
+        SubtitleSt string ->
+            optional path (Just string)
+
+        SubtitleIn i18nString ->
+            internationalizedString path i18nString
+
+
+productionAdditionalInfo : Validator AdditionalInfo
+productionAdditionalInfo path data =
+    case data of
+        AdditionalInfoSt string ->
+            optional path (Just string)
+
+        AdditionalInfoIn i18nString ->
+            internationalizedString path i18nString
+
+
+internationalizedString : Validator InternationalizedString
+internationalizedString =
+    object
+        [ field "/en" .en optional
+        , field "/de" .de optional
+        , field "/fr" .fr optional
         ]
 
 

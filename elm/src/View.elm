@@ -4,7 +4,7 @@ import Browser
 import Components.DataEntry as Entry exposing (asDate, asDateAndTime, asLink, asLogo, asTime)
 import Data.Event exposing (Event, EventStatus(..), EventTypeItem(..), LocationItem(..), Offer, OfferAvailability(..), PerformanceRoleItem, SubEventType)
 import Data.PersonOrOrganization exposing (PersonOrOrganization(..))
-import Data.Root exposing (CreatorRoleItem, GenreItem(..), Production, ProductionProductionType(..), Root, rootDecoder)
+import Data.Root exposing (CreatorRoleItem, GenreItem(..), Name(..), Production, ProductionProductionType(..), Root, rootDecoder)
 import Helper.CustomValidations as CustomValidations
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -12,6 +12,7 @@ import Html.Events exposing (onClick, onInput)
 import Html.Lazy exposing (lazy2)
 import Http exposing (Error(..))
 import Json.Decode as Decode
+import Maybe.Extra
 import RemoteData exposing (RemoteData(..))
 import Set exposing (Set)
 import Task
@@ -217,7 +218,7 @@ viewJsonData data zone =
             div [ class "block mt-6", classList [ ( "is-hidden", not (isProductionVisible data production) ) ] ]
                 [ div [ class "hero is-dark is-small sticky-header" ]
                     [ div [ class "hero-body" ]
-                        [ p [ class "title" ] [ text production.name ]
+                        [ p [ class "title" ] [ text (getProductionName production) ]
                         ]
                     ]
                 , card (text "Info")
@@ -238,6 +239,20 @@ viewJsonData data zone =
                 |> List.indexedMap (lazy2 viewProduction)
             )
         ]
+
+
+getProductionName : Production -> String
+getProductionName production =
+    case production.name of
+        NameSt string ->
+            string
+
+        NameIn i18nString ->
+            [ i18nString.de, i18nString.en, i18nString.fr ]
+                |> Maybe.Extra.values
+                |> List.filter (not << String.isEmpty)
+                |> List.head
+                |> Maybe.withDefault ""
 
 
 isProductionVisible : Data -> Production -> Bool
@@ -292,7 +307,18 @@ isJson string =
 
 productionNameMatches : String -> Production -> Bool
 productionNameMatches filter production =
-    String.contains (String.toLower filter) (String.toLower production.name)
+    let
+        isMatch value =
+            String.contains (String.toLower filter) (String.toLower value)
+    in
+    case production.name of
+        NameSt string ->
+            isMatch string
+
+        NameIn i18nString ->
+            [ i18nString.de, i18nString.en, i18nString.fr ]
+                |> Maybe.Extra.values
+                |> List.any isMatch
 
 
 productionGrid : Production -> Html Msg
@@ -324,22 +350,29 @@ productionGrid production =
 
 productionInfo : Production -> Html Msg
 productionInfo production =
-    Entry.view
-        [ Entry.required "ID" production.identifier
+    Entry.viewConcat
+        [ [ Entry.required "ID" production.identifier ]
         , Entry.required "Titel" production.name
-        , Entry.optional "Sprache" production.inLanguage
-            |> Entry.withWarnings CustomValidations.languageTagValid
+            |> Entry.productionName
+        , [ Entry.optional "Sprache" production.inLanguage
+                |> Entry.withWarnings CustomValidations.languageTagValid
+          ]
         , Entry.optional "Untertitel" production.subtitle
+            |> Entry.productionSubtitle
         , Entry.required "Beschreibung" production
-            |> Entry.withWarnings CustomValidations.abstractOrDescription
-            |> Entry.withWarnings CustomValidations.abstractDifferentFromDescription
+            -- |> Entry.withWarnings CustomValidations.abstractOrDescription
+            -- |> Entry.withWarnings CustomValidations.abstractDifferentFromDescription
             |> Entry.nested .description
+            |> Entry.productionDescription
         , Entry.required "Kurzbeschreibung" production
-            |> Entry.withWarnings CustomValidations.abstractDifferentFromDescription
+            -- |> Entry.withWarnings CustomValidations.abstractDifferentFromDescription
             |> Entry.nested .abstract
+            |> Entry.abstract
         , Entry.optional "Zusätzliche Informationen" production.additionalInfo
-        , Entry.optional "Genre" production.genre |> Entry.join humanReadableGenre
-        , Entry.optional "Produktionstyp" production.productionType |> Entry.map humanReadableProductionType
+            |> Entry.productionAdditionalInfo
+        , [ Entry.optional "Genre" production.genre |> Entry.join humanReadableGenre
+          , Entry.optional "Produktionstyp" production.productionType |> Entry.map humanReadableProductionType
+          ]
         ]
 
 

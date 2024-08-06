@@ -1,5 +1,6 @@
-module Components.DataEntry exposing (Model, ZoneWithName, asDate, asDateAndTime, asLink, asLogo, asTime, join, map, nested, optional, required, view, withHelp, withWarnings)
+module Components.DataEntry exposing (Model, ZoneWithName, abstract, asDate, asDateAndTime, asLink, asLogo, asTime, join, map, nested, optional, productionAdditionalInfo, productionDescription, productionName, productionSubtitle, required, view, viewConcat, withHelp, withWarnings)
 
+import Data.Root exposing (Abstract(..), AdditionalInfo(..), Description(..), InternationalizedString, Name(..), Subtitle(..))
 import DateFormat
 import Helper.CustomValidations exposing (Validator, viewerMessage)
 import Html exposing (..)
@@ -84,6 +85,19 @@ map f entry =
     applyOne (Required << f) (Optional << Maybe.map f) entry
 
 
+mapValue : (a -> b) -> Model a -> Maybe b
+mapValue f entry =
+    case entry.value of
+        Required value ->
+            Just (f value)
+
+        Optional (Just value) ->
+            Just (f value)
+
+        Optional Nothing ->
+            Nothing
+
+
 nested : (a -> Maybe b) -> Model a -> Model b
 nested f entry =
     applyOne (Optional << f) (Optional << Maybe.andThen f) entry
@@ -153,6 +167,13 @@ view entries =
         [ tbody []
             (List.map viewEntry entries)
         ]
+
+
+viewConcat : List (List (Model String)) -> Html msg
+viewConcat entries =
+    entries
+        |> List.concat
+        |> view
 
 
 viewEntry : Model String -> Html msg
@@ -357,3 +378,96 @@ formatDateTime isoString ( name, timezone ) =
 
             else
                 "Ungültige Zeitangabe (" ++ isoString ++ ")"
+
+
+expandInternationalizedString : String -> InternationalizedString -> List (Model String)
+expandInternationalizedString name i18nString =
+    [ optional (name ++ " (de)") i18nString.de
+    , optional (name ++ " (en)") i18nString.en
+    , optional (name ++ " (fr)") i18nString.fr
+    ]
+
+
+abstract : Model Abstract -> List (Model String)
+abstract entry =
+    let
+        mapAbstract name value =
+            case value of
+                AbstractSt string ->
+                    [ required name string ]
+
+                AbstractIn string ->
+                    expandInternationalizedString name string
+    in
+    mapValue
+        (mapAbstract entry.name)
+        entry
+        |> Maybe.withDefault [ optional entry.name Nothing ]
+
+
+productionName : Model Name -> List (Model String)
+productionName entry =
+    let
+        mapName name value =
+            case value of
+                NameSt string ->
+                    [ required name string ]
+
+                NameIn string ->
+                    expandInternationalizedString name string
+    in
+    mapValue
+        (mapName entry.name)
+        entry
+        |> Maybe.withDefault [ optional entry.name Nothing ]
+
+
+productionSubtitle : Model Subtitle -> List (Model String)
+productionSubtitle entry =
+    let
+        mapSubtitle name value =
+            case value of
+                SubtitleSt string ->
+                    [ required name string ]
+
+                SubtitleIn string ->
+                    expandInternationalizedString name string
+    in
+    mapValue
+        (mapSubtitle entry.name)
+        entry
+        |> Maybe.withDefault [ optional entry.name Nothing ]
+
+
+productionAdditionalInfo : Model AdditionalInfo -> List (Model String)
+productionAdditionalInfo entry =
+    let
+        mapAdditionalInfo name value =
+            case value of
+                AdditionalInfoSt string ->
+                    [ required name string ]
+
+                AdditionalInfoIn string ->
+                    expandInternationalizedString name string
+    in
+    mapValue
+        (mapAdditionalInfo entry.name)
+        entry
+        |> Maybe.withDefault [ optional entry.name Nothing ]
+
+
+productionDescription : Model Description -> List (Model String)
+productionDescription entry =
+    let
+        mapDescription name value =
+            case value of
+                DescriptionSt string ->
+                    [ required name string ]
+
+                DescriptionIn string ->
+                    expandInternationalizedString name string
+    in
+    mapValue
+        (mapDescription entry.name)
+        entry
+        |> Maybe.withDefault [ optional entry.name Nothing ]
