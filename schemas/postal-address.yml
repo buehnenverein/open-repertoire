@@ -1,0 +1,28 @@
+"$schema": "http://json-schema.org/draft-07/schema#"
+"$id": https://peret.github.io/uc3-openapi/postal-address.json
+title: PostalAddress
+
+type: object
+description: The address of e.g. an organization or event location.
+additionalProperties: false
+required:
+  - "@type"
+  - postalCode
+  - addressLocality
+properties:
+  "@type":
+    type: string
+    enum:
+      - PostalAddress
+  postalCode:
+    type: string
+    example: "86156"
+    description: The postal code.
+  streetAddress:
+    type: string
+    example: Am Alten Gaswerk 7
+    description: The street address.
+  addressLocality:
+    type: string
+    example: Augsburg
+    description: The locality in which the street address is, i.e. the city.

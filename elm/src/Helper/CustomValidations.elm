@@ -1,24 +1,27 @@
 module Helper.CustomValidations exposing (MessageType(..), ValidationMessage, Validator, abstractDifferentFromDescription, abstractOrDescription, checkAll, duration, eventStatusAndDate, languageTagValid, minMaxAge, minMaxPrice, production, startAndEndDates, validDerniere, validPremiere, viewerMessage)
 
+import Data.Event
+    exposing
+        ( Event
+        , EventStatus(..)
+        , EventTypeItem(..)
+        , LocationItem(..)
+        , Offer
+        , PerformanceRoleItem
+        , Place
+        , PriceSpecification
+        , VirtualLocation
+        )
+import Data.Organization exposing (Organization)
+import Data.Person exposing (Person)
+import Data.PersonOrOrganization exposing (PersonOrOrganization(..))
+import Data.PostalAddress exposing (PostalAddress)
 import Data.Root
     exposing
         ( Audience
         , CreatorRoleItem
-        , Event
-        , EventEventStatus(..)
-        , EventTypeItem(..)
-        , LocationItem(..)
-        , Offer
-        , Organization
-        , PerformanceRoleItem
-        , Person
-        , PersonOrOrganization(..)
-        , Place
-        , PostalAddress
-        , PriceSpecification
         , Production
         , Root
-        , VirtualLocation
         )
 import Helper.LanguageCodes as LanguageCodes
 import Iso8601
@@ -373,12 +376,12 @@ previousStartDateDifferentFromCurrent path data =
 previousStartPresent : Validator Event
 previousStartPresent path data =
     case ( data.eventStatus, data.previousStartDate ) of
-        ( Just EventPostponedEvent, Nothing ) ->
+        ( Just EventPostponed, Nothing ) ->
             [ warning (path ++ "/previousStartDate") "should be set for postponed events"
                 |> forView "Die vorherige Startzeit sollte bei verschobenen Veranstaltungen angegeben werden."
             ]
 
-        ( Just EventRescheduledEvent, Nothing ) ->
+        ( Just EventRescheduled, Nothing ) ->
             [ warning (path ++ "/previousStartDate") "should be set for rescheduled events"
                 |> forView "Die vorherige Startzeit sollte bei verschobenen Veranstaltungen angegeben werden."
             ]
@@ -390,12 +393,12 @@ previousStartPresent path data =
 previousStartNotRequired : Validator Event
 previousStartNotRequired path data =
     case ( data.eventStatus, data.previousStartDate ) of
-        ( Just EventScheduledEvent, Just _ ) ->
+        ( Just EventScheduled, Just _ ) ->
             [ warning (path ++ "/previousStartDate") "should only be set if the event status is either 'rescheduled, 'postponed', or 'cancelled'"
                 |> forView "Die vorherige Startzeit sollte nur bei verschobenen oder abgesagten Veranstaltungen angegeben werden."
             ]
 
-        ( Just EventMovedOnlineEvent, Just _ ) ->
+        ( Just EventMovedOnline, Just _ ) ->
             [ warning (path ++ "/previousStartDate") "should only be set if the event status is either 'rescheduled, 'postponed', or 'cancelled'"
                 |> forView "Die vorherige Startzeit sollte nur bei verschobenen oder abgesagten Veranstaltungen angegeben werden."
             ]
@@ -600,7 +603,7 @@ production =
 originalWork : Validator Data.Root.OriginalWork
 originalWork =
     object
-        [ field "/author" .author (maybe (list person))
+        [ field "/author" .author (maybe (list personOrOrganization))
         , field "/name" .name required
         , field "/translator" .translator (maybe (list personOrOrganization))
         ]

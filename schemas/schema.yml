@@ -1,0 +1,312 @@
+"$schema": "http://json-schema.org/draft-07/schema#"
+"$id": https://peret.github.io/uc3-openapi/schema.json
+definitions: 
+    CommonCreativeWorkType:
+          type: string
+          enum:
+            - "CreativeWork"
+            - "Play"
+
+    OriginalWork:
+      type: object
+      description: |-
+        An object describing the work that this production is based on (if any).
+        E.g. this could describe the original dramatic text that was used as the basis of a theater production.
+      additionalProperties: false
+      required:
+        - "@type"
+        - "name"
+      properties:
+        "@type":
+          $ref: "#/definitions/CommonCreativeWorkType"
+        name:
+          type: string
+          description: The original work's name or title.
+          example: Hedwig and the Angry Inch
+        author:
+          type: array
+          description: The original work's author(s).
+          example:
+            - "@type": "Person"
+              name: Stephen Trask
+            - "@type": "Person"
+              name: John Cameron Mitchell
+          items:
+            $ref: "./person-or-organization.yml"
+        translator:
+          type: array
+          description: Person or Organization whose translation of the original work is the basis for this production.
+          example:
+            - "@type": "Person"
+              name: Mona Mustermann
+          items:
+            $ref: "./person-or-organization.yml"
+    Production:
+      type: object
+      description: "An object containing information about the production and its events."
+      additionalProperties: false
+      required:
+        - "@type"
+        - identifier
+        - name
+        - events
+      properties:
+        "@type":
+          $ref: "#/definitions/CommonCreativeWorkType"
+        identifier:
+          type: string
+          description: The unique ID of this production. This could be an internal database ID, for example.
+          example: "123"
+        name:
+          type: string
+          description: The production's title.
+          example: Hedwig and the Angry Inch
+        subtitle:
+          type: string
+          description: The production's optional subtitle.
+          example: US-amerikanisches Off-Broadway-Rock-Musical
+        description:
+          type: string
+          description: A text describing the production.
+          example: Hedwig, die Queen des Glamrock, kommt auf ihrer Tournee in Augsburg vorbei! Gemeinsam mit ihrer Band The Angry Inch gibt sie eines ihrer mitreißenden Konzerte. Zwischen den Songs, die – mal Rocknummer, mal Country-Ballade – von ihrem Leben und der Suche nach der eigenen Identität erzählen, kommt sie dem Publikum so nah wie nie.\nDiese Show sollten Sie nicht verpassen!
+        abstract:
+          type: string
+          description: A short abstract or teaser text describing the production.
+          example: "Das Kult-Rockmusical »Hedwig and the Angry Inch« wurde innerhalb weniger Jahre vom Off-Broadway-Geheimtipp zu einem Hit am Broadway selbst. 2023 erobert Hedwig, die »weltweit ignorierte Queen of Glamrock« endlich auch die Herzen des Augsburger Publikums – mit dem langjährigen Schauspiel-Ensemble-Mitglied Thomas Prazak in der Hauptrolle. Die Live-Musik steuern Stefan Leibold, Jonas Horche, Tilman Herpichböhm und Niklas Rehle als Band »The Angry Inch« bei."
+        additionalInfo:
+          type: string
+          description: Additional information about the production.
+        isBasedOn:
+          $ref: "#/definitions/OriginalWork"
+        events:
+          type: array
+          description: A list of events at which this production will be performed. 
+          items:
+            $ref: "./event.yml"
+        genre:
+          type: array
+          description: The genre of this production. Must use one of the pre-defined values.
+          example: ["musical"]
+          items:
+            type: string
+            enum:
+              - audiowalk
+              - ballett
+              - digitaltheater
+              - figurentheater
+              - game-theater
+              - hoerspiel
+              - improtheater
+              - installation
+              - kabarett-comedy
+              - kammerkonzert
+              - konzert
+              - lecture-performance
+              - lesung
+              - musical
+              - musiktheater
+              - objekttheater
+              - oper
+              - operette
+              - performance
+              - physical-theatre
+              - podcast
+              - puppentheater
+              - sinfoniekonzert
+              - sprechtheater
+              - szenische-lesung
+              - szenisches-konzert
+              - tanz
+              - theater-im-oeffentlichen-raum
+              - workshop
+              - zeitgenoessischer-tanz
+        productionType:
+          type: string
+          enum:
+            - WorldPremiere
+            - FirstPerformance
+            - Revival
+        accessModeSufficient:
+          type: array
+          description: A list of single or combined accessModes that are sufficient to understand all the intellectual content of this production.
+          items:
+            type: string
+            enum: [auditory, tactile, textual, visual]
+        accessibilityHazard:
+          type: array
+          description: A list of characteristics of the production that are physiologically dangerous to some users.
+          items:
+            type: string
+            example: flashingHazard
+            enum:
+              [
+                none,
+                unknown,
+                flashingHazard,
+                motionSimulationHazard,
+                soundHazard,
+                noFlashingHazard,
+                noMotionSimulationHazard,
+                noSoundHazard,
+                unknownFlashingHazard,
+                unknownMotionSimulationHazard,
+                unknownSoundHazard,
+              ]
+        accessibilitySummary:
+          type: string
+          description: A human-readable summary of specific accessibility features or deficiencies of the production.
+          example: "Dieses Stück enthält Stroboskoplicht"
+        inLanguage:
+          type: string
+          description: Primary language of this production. Should contain a BCP 47 Language Tag.
+          example: de
+        audience:
+          $ref: "#/definitions/Audience"
+        creator:
+          $ref: "#/definitions/CreatorRole"
+        funder:
+          type: array
+          description: A list of organization's that support this production through some kind of financial contribution.
+          items:
+            $ref: "./person-or-organization.yml"
+          example:
+            - "@type": Organization
+              name: A Funding Organization
+              logo: https://example.com/logos/logo.png
+        sponsor:
+          type: array
+          description: A list of organization's that support this production through a pledge, promise, or financial contribution.
+          example:
+            - "@type": Organization
+              name: A Sponsoring Organization
+              logo: https://example.com/logos/logo2.png
+          items:
+            $ref: "./person-or-organization.yml"
+
+    Audience:
+      type: object
+      description: Object describing the intended target audience of this production.
+      additionalProperties: false
+      required:
+        - "@type"
+      properties:
+        "@type":
+          type: string
+          enum:
+            - "PeopleAudience"
+        suggestedMinAge:
+          type: integer
+          description: Minimum recommended age in years.
+          example: 8
+          minimum: 0
+        suggestedMaxAge:
+          type: integer
+          description: Maximum recommended age in years.
+          example: 15
+          minimum: 0
+        audienceType:
+          type: string
+          description: A short textual description of the production's intended target audience.
+          example: Kinder und Jugendliche
+
+    CreatorRole:
+      description: |-
+        List of people and organizations that contributed to the creation of this production, e.g. directors, stage designers, musical directors, etc.
+        If this production is a collaboration with another organization, e.g. another theater or orchestra, this organization should also be included
+        in this field.
+
+        If multiple people perform the same role/function (e.g. there is multiple directors),
+        each person should get their own entry in the `creator` array.
+      type: array
+      items:
+        type: object
+        additionalProperties: false
+        required:
+          - "@type"
+          - creator
+        properties:
+          "@type":
+            type: string
+            enum:
+              - Role
+          creator:
+            type: array
+            items:
+              $ref: "./person-or-organization.yml"
+
+          roleName:
+            type: string
+            description: 'The name of the role this person played in the creation of the production.'
+            example: Regie
+            # enum:
+            #   - akrobatik
+            #   - alles
+            #   - assistenz
+            #   - beratung
+            #   - buehne
+            #   - choreographie
+            #   - clownerie
+            #   - dramaturgie
+            #   - expertin-des-alltags
+            #   - fotografie
+            #   - gebaerdensprache
+            #   - gesang
+            #   - grafik
+            #   - inszenierung
+            #   - jonglage
+            #   - kamera-video
+            #   - komposition
+            #   - konzept
+            #   - kostuem
+            #   - kuenstlerische-leitung
+            #   - licht
+            #   - live-musik
+            #   - marketing
+            #   - maske
+            #   - moderation
+            #   - musik
+            #   - musikalische-leitung
+            #   - performance
+            #   - produktion
+            #   - programmierung
+            #   - puppenbau
+            #   - puppenspiel
+            #   - regie
+            #   - rigging
+            #   - schauspiel
+            #   - sound
+            #   - tanz
+            #   - technik
+            #   - technische-leitung
+            #   - text
+            #   - ton
+            #   - uebersetzung
+            #   - vermittlung
+            #   - virtual-reality-design
+
+required:
+  - "@context"
+  - organization
+  - productions
+  - version
+additionalProperties: false
+type: object
+properties:
+  "@context":
+    type: string
+    enum: 
+      - "https://schema.org"
+  version:
+    type: string
+    description: The API version that is being used. MUST be the string "v2" for now.
+    enum:
+      - v2
+  organization:
+    description: Information about the organization that is hosting and/or producing the events, i.e. the theater (group).
+    $ref: "./organization.yml"
+  productions:
+    type: array
+    description: "A list of all current productions in the repertoire."
+    items:
+      $ref: "#/definitions/Production"
+
