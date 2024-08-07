@@ -2,7 +2,9 @@ module View exposing (main)
 
 import Browser
 import Components.DataEntry as Entry exposing (asDate, asDateAndTime, asLink, asLogo, asTime)
-import Data.Root exposing (CreatorRoleItem, Event, EventEventStatus(..), EventTypeItem(..), GenreItem(..), LocationItem(..), Offer, OfferAvailability(..), PerformanceRoleItem, PersonOrOrganization(..), Production, ProductionProductionType(..), Root, SubEventType, rootDecoder)
+import Data.Event exposing (Event, EventStatus(..), EventTypeItem(..), LocationItem(..), Offer, OfferAvailability(..), PerformanceRoleItem, SubEventType)
+import Data.PersonOrOrganization exposing (PersonOrOrganization(..))
+import Data.Root exposing (CreatorRoleItem, GenreItem(..), Production, ProductionProductionType(..), Root, rootDecoder)
 import Helper.CustomValidations as CustomValidations
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -411,7 +413,7 @@ viewOriginalWork production =
                 |> Entry.map .name
             , Entry.optional "Autor:in" production.isBasedOn
                 |> Entry.nested .author
-                |> Entry.join .name
+                |> Entry.join personOrOrganizationName
             , Entry.optional "Übersetzung" production.isBasedOn
                 |> Entry.nested .translator
                 |> Entry.join personOrOrganizationName
@@ -578,25 +580,25 @@ intermissionCountToString intermissionCount =
         "Ja (" ++ String.fromInt intermissionCount ++ ")"
 
 
-eventStatusToString : Maybe EventEventStatus -> String
+eventStatusToString : Maybe EventStatus -> String
 eventStatusToString eventStatus =
     case eventStatus of
         Nothing ->
             "Findet statt"
 
-        Just EventScheduledEvent ->
+        Just EventScheduled ->
             "Findet statt"
 
-        Just EventCancelledEvent ->
+        Just EventCancelled ->
             "Abgesagt"
 
-        Just EventMovedOnlineEvent ->
+        Just EventMovedOnline ->
             "Findet online statt"
 
-        Just EventPostponedEvent ->
+        Just EventPostponed ->
             "Verschoben"
 
-        Just EventRescheduledEvent ->
+        Just EventRescheduled ->
             "Geändertes Datum"
 
 
