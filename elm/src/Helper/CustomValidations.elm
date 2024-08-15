@@ -12,6 +12,7 @@ import Data.Event
         , PriceSpecification
         , VirtualLocation
         )
+import Data.InternationalizedString exposing (InternationalizedString)
 import Data.Organization exposing (Organization)
 import Data.Person exposing (Person)
 import Data.PersonOrOrganization exposing (PersonOrOrganization(..))
@@ -23,7 +24,6 @@ import Data.Root
         , Audience
         , CreatorRoleItem
         , Description(..)
-        , InternationalizedString
         , Name(..)
         , Production
         , Root

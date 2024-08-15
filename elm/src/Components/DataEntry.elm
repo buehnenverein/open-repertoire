@@ -1,6 +1,8 @@
-module Components.DataEntry exposing (Model, ZoneWithName, abstract, asDate, asDateAndTime, asLink, asLogo, asTime, join, map, nested, optional, productionAdditionalInfo, productionDescription, productionName, productionSubtitle, required, view, viewConcat, withHelp, withWarnings)
+module Components.DataEntry exposing (Model, ZoneWithName, abstract, asDate, asDateAndTime, asLink, asLogo, asTime, eventDescription, eventName, join, map, nested, optional, productionAdditionalInfo, productionDescription, productionName, productionSubtitle, required, view, viewConcat, withHelp, withWarnings)
 
-import Data.Root exposing (Abstract(..), AdditionalInfo(..), Description(..), InternationalizedString, Name(..), Subtitle(..))
+import Data.Event as Event
+import Data.InternationalizedString exposing (InternationalizedString)
+import Data.Root exposing (Abstract(..), AdditionalInfo(..), Description(..), Name(..), Subtitle(..))
 import DateFormat
 import Helper.CustomValidations exposing (Validator, viewerMessage)
 import Html exposing (..)
@@ -465,6 +467,40 @@ productionDescription entry =
                     [ required name string ]
 
                 DescriptionIn string ->
+                    expandInternationalizedString name string
+    in
+    mapValue
+        (mapDescription entry.name)
+        entry
+        |> Maybe.withDefault [ optional entry.name Nothing ]
+
+
+eventDescription : Model Event.Description -> List (Model String)
+eventDescription entry =
+    let
+        mapDescription name value =
+            case value of
+                Event.DescriptionSt string ->
+                    [ required name string ]
+
+                Event.DescriptionIn string ->
+                    expandInternationalizedString name string
+    in
+    mapValue
+        (mapDescription entry.name)
+        entry
+        |> Maybe.withDefault [ optional entry.name Nothing ]
+
+
+eventName : Model Event.Name -> List (Model String)
+eventName entry =
+    let
+        mapDescription name value =
+            case value of
+                Event.NameSt string ->
+                    [ required name string ]
+
+                Event.NameIn string ->
                     expandInternationalizedString name string
     in
     mapValue

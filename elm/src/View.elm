@@ -653,15 +653,18 @@ viewSubEvents zone subEvents =
 
 viewSubEvent : Entry.ZoneWithName -> SubEventType -> Html Msg
 viewSubEvent zone subEvent =
-    Entry.view
+    Entry.viewConcat
         [ Entry.required "Titel" subEvent.name
+            |> Entry.eventName
         , Entry.optional "Beschreibung" subEvent.description
-        , Entry.optional "Startdatum" subEvent.startDate |> asDate zone
-        , Entry.optional "Startzeit" subEvent.startDate |> asTime zone
-        , Entry.optional "Enddatum" subEvent.endDate |> asDate zone
-        , Entry.optional "Endzeit" subEvent.endDate |> asTime zone
-        , Entry.optional "Dauer" subEvent.duration
-            |> Entry.map formatDuration
+            |> Entry.eventDescription
+        , [ Entry.optional "Startdatum" subEvent.startDate |> asDate zone
+          , Entry.optional "Startzeit" subEvent.startDate |> asTime zone
+          , Entry.optional "Enddatum" subEvent.endDate |> asDate zone
+          , Entry.optional "Endzeit" subEvent.endDate |> asTime zone
+          , Entry.optional "Dauer" subEvent.duration
+                |> Entry.map formatDuration
+          ]
         ]
 
 

@@ -7,6 +7,9 @@ definitions:
     enum:
       - "Event"
 
+  StringType:
+    type: string
+
   SubEventType:
     type: object
     additionalProperties: false
@@ -17,11 +20,15 @@ definitions:
       "@type":
         $ref: "#/definitions/CommonEventType"
       name:
-        type: string
+        oneOf:
+          - $ref: "#/definitions/StringType"
+          - $ref: "./internationalized-string.yml"
         example: 30-minütige Einführung vor der Vorstellung
         description: A descriptive name for this sub-event.
       description:
-        type: string
+        oneOf:
+          - $ref: "#/definitions/StringType"
+          - $ref: "./internationalized-string.yml"
         description: A short description of this sub-event.
       location:
         type: string

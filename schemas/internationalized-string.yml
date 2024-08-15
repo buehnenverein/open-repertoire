@@ -1,0 +1,19 @@
+"$schema": "http://json-schema.org/draft-07/schema#"
+"$id": https://peret.github.io/uc3-openapi/internationalized-string.json
+title: InternationalizedString
+
+type: object
+required:
+  - "@type"
+additionalProperties: false
+properties:
+  "@type":
+    type: string
+    enum: 
+      - "Text"
+  de:
+    type: string
+  en:
+    type: string
+  fr:
+    type: string

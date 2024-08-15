@@ -23,6 +23,7 @@ compile_schema () {
 }
 
 SUB_SCHEMAS=(
+  "internationalized-string"
   "postal-address"
   "person"
   "organization"
