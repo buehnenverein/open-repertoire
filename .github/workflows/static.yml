@@ -38,7 +38,7 @@ jobs:
       - name: Install devenv.sh
         run: nix profile install nixpkgs#devenv
       - name: Compile files
-        run: nix develop --impure --command ./build.sh
+        run: nix develop --impure --command make
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ strategy.job-index }}
