@@ -50,6 +50,7 @@ jobs:
             .
             !node_modules/
             !elm/
+            !.*
 
   deploy:
     runs-on: ubuntu-latest
