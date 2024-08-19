@@ -47,10 +47,12 @@ jobs:
         with:
           name: ${{ strategy.job-index }}
           path: |
-            .
-            !node_modules/
-            !elm/
-            !.*
+            view/
+            validate/
+            index.html
+            openapi.yml
+            schema.json
+            schemas/
 
   deploy:
     runs-on: ubuntu-latest
@@ -78,6 +80,11 @@ jobs:
           # Index 1 is the release-v2 branch
           mkdir -p v2
           mv ../branches/1/* ./v2
+
+          # Copy schema definitions to the top-level of the v2 folder
+          cp ./v2/schemas/*.json ./v2
+
+          # Copy v2 folder to the top-level
           cp -R ./v2/* ./
 
           # Index 0 is the release branch
