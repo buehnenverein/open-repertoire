@@ -146,12 +146,6 @@ definitions:
             - WorldPremiere
             - FirstPerformance
             - Revival
-        accessModeSufficient:
-          type: array
-          description: A list of single or combined accessModes that are sufficient to understand all the intellectual content of this production.
-          items:
-            type: string
-            enum: [auditory, tactile, textual, visual]
         accessibilityHazard:
           type: array
           description: A list of characteristics of the production that are physiologically dangerous to some users.
