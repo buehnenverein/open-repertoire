@@ -271,9 +271,15 @@ properties:
     format: uri
     example: "https://example.com/events/123"
   subtitleLanguage:
-    type: string
-    description: Language of the sub-/surtitles for this event, if any. Use the BCP 47 Language Tags.
-    example: en-US
+    type: array
+    description: |-
+      Language(s) of the sub-/surtitles for this event, if any. Should use BCP 47 Language Tags.
+      This field can also be used to indicate the fact that the event will be translated to/interpreted
+      in sign language. In this case, the sign language's language tag should be included in the list of
+      `subtitleLanguage`s, e.g. `gsg` for German Sign Language or `ase` for American Sign Language. 
+    items:
+      type: string
+      example: en-US
   
   location:
     description: The location of this event. An event can take place at one or more physical locations,

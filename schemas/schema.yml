@@ -177,9 +177,11 @@ definitions:
           description: A human-readable summary of specific accessibility features or deficiencies of the production.
           example: "Dieses Stück enthält Stroboskoplicht"
         inLanguage:
-          type: string
-          description: Primary language of this production. Should contain a BCP 47 Language Tag.
-          example: de
+          type: array
+          description: Primary language(s) of this production. Should contain a BCP 47 Language Tag.
+          items:
+            type: string
+            example: de
         audience:
           $ref: "#/definitions/Audience"
         creator:

@@ -355,7 +355,8 @@ productionInfo production =
         , Entry.required "Titel" production.name
             |> Entry.productionName
         , [ Entry.optional "Sprache" production.inLanguage
-                |> Entry.withWarnings CustomValidations.languageTagValid
+                |> Entry.withWarnings (CustomValidations.list CustomValidations.languageTagValid)
+                |> Entry.join identity
           ]
         , Entry.optional "Untertitel" production.subtitle
             |> Entry.productionSubtitle
@@ -574,7 +575,8 @@ viewEventTable zone allEvents event =
             |> Entry.nested .eventType
             |> Entry.join humanReadableEventType
         , Entry.optional "Untertitel in" event.subtitleLanguage
-            |> Entry.withWarnings CustomValidations.languageTagValid
+            |> Entry.withWarnings (CustomValidations.list CustomValidations.languageTagValid)
+            |> Entry.join identity
         , Entry.required "Status" (eventStatusToString event.eventStatus)
         , Entry.required "Vorheriges Startdatum" event
             |> Entry.withWarnings CustomValidations.eventStatusAndDate

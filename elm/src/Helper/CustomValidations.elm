@@ -1,4 +1,4 @@
-module Helper.CustomValidations exposing (MessageType(..), ValidationMessage, Validator, checkAll, duration, eventStatusAndDate, languageTagValid, minMaxAge, minMaxPrice, production, startAndEndDates, validDerniere, validPremiere, viewerMessage)
+module Helper.CustomValidations exposing (MessageType(..), ValidationMessage, Validator, checkAll, duration, eventStatusAndDate, languageTagValid, list, minMaxAge, minMaxPrice, production, startAndEndDates, validDerniere, validPremiere, viewerMessage)
 
 import Data.Event
     exposing
@@ -527,7 +527,7 @@ event =
         , field "/performer" .performer (maybe (list performer))
         , field "/previousStartDate" .previousStartDate optional
         , field "/startDate" .startDate required
-        , field "/subtitleLanguage" .subtitleLanguage (maybe languageTagValid)
+        , field "/subtitleLanguage" .subtitleLanguage (maybe (list languageTagValid))
         , field "/url" .url optional
         , eventStatusAndDate
         , startAndEndDates
@@ -598,7 +598,7 @@ production =
         , field "/events" .events (uniqueIdsFor "events")
         , field "/events" .events premiereValid
         , field "/events" .events derniereValid
-        , field "/inLanguage" .inLanguage (maybe languageTagValid)
+        , field "/inLanguage" .inLanguage (maybe (list languageTagValid))
         , field "/subtitle" .subtitle (maybe productionSubtitle)
         , field "/abstract" .abstract (maybe productionAbstract)
         , field "/name" .name productionName
