@@ -29,7 +29,7 @@ clean :
 		rm -rf js2e_output/*
 		rm -rf elm/src/Data/*
 
-index.html : openapi.yml
+index.html : openapi.yml $(schema_files)
 	npx @redocly/cli build-docs openapi.yml -o index.html \
 		--theme.openapi.disableSearch \
 		--theme.openapi.expandResponses=all \
@@ -47,8 +47,11 @@ schemas/%.json : schemas/%.yml
 	jq '(..|objects|select(has("$$ref"))).["$$ref"] |= sub("\\.(?<n>.*)\\.yml"; "https://peret.github.io/uc3-openapi\(.n).json")' $@ > $@.tmp
 	mv $@.tmp $@
 
-validate/bundle.js view/bundle.js : %/bundle.js : %/interop.js
-	npx browserify $< | npx uglifyjs --mangle --compress --output $@
+validate/bundle.js : validate/interop.js validate/validator.js
+	npx browserify validate/interop.js | npx uglifyjs --mangle --compress --output validate/bundle.js
+
+view/bundle.js : view/interop.js
+	npx browserify view/interop.js | npx uglifyjs --mangle --compress --output view/bundle.js
 
 validate/main.js : elm/src/Validate.elm $(src_files)
 	cd elm; \
