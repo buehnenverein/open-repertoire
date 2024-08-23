@@ -369,8 +369,6 @@ productionInfo production =
             -- |> Entry.withWarnings CustomValidations.abstractDifferentFromDescription
             |> Entry.nested .abstract
             |> Entry.abstract
-        , Entry.optional "Zusätzliche Informationen" production.additionalInfo
-            |> Entry.productionAdditionalInfo
         , [ Entry.optional "Genre" production.genre |> Entry.join humanReadableGenre
           , Entry.optional "Produktionstyp" production.productionType |> Entry.map humanReadableProductionType
           ]

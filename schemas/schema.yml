@@ -89,11 +89,6 @@ definitions:
             - $ref: "./internationalized-string.yml"
           description: A short abstract or teaser text describing the production.
           example: "Das Kult-Rockmusical »Hedwig and the Angry Inch« wurde innerhalb weniger Jahre vom Off-Broadway-Geheimtipp zu einem Hit am Broadway selbst. 2023 erobert Hedwig, die »weltweit ignorierte Queen of Glamrock« endlich auch die Herzen des Augsburger Publikums – mit dem langjährigen Schauspiel-Ensemble-Mitglied Thomas Prazak in der Hauptrolle. Die Live-Musik steuern Stefan Leibold, Jonas Horche, Tilman Herpichböhm und Niklas Rehle als Band »The Angry Inch« bei."
-        additionalInfo:
-          oneOf:
-            - $ref: "#/definitions/StringType"
-            - $ref: "./internationalized-string.yml"
-          description: Additional information about the production.
         isBasedOn:
           $ref: "#/definitions/OriginalWork"
         events:

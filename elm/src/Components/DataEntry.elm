@@ -1,8 +1,8 @@
-module Components.DataEntry exposing (Model, ZoneWithName, abstract, asDate, asDateAndTime, asLink, asLogo, asTime, eventDescription, eventName, join, map, nested, optional, productionAdditionalInfo, productionDescription, productionName, productionSubtitle, required, view, viewConcat, withHelp, withWarnings)
+module Components.DataEntry exposing (Model, ZoneWithName, abstract, asDate, asDateAndTime, asLink, asLogo, asTime, eventDescription, eventName, join, map, nested, optional, productionDescription, productionName, productionSubtitle, required, view, viewConcat, withHelp, withWarnings)
 
 import Data.Event as Event
 import Data.InternationalizedString exposing (InternationalizedString)
-import Data.Root exposing (Abstract(..), AdditionalInfo(..), Description(..), Name(..), Subtitle(..))
+import Data.Root exposing (Abstract(..), Description(..), Name(..), Subtitle(..))
 import DateFormat
 import Helper.CustomValidations exposing (Validator, viewerMessage)
 import Html exposing (..)
@@ -437,23 +437,6 @@ productionSubtitle entry =
     in
     mapValue
         (mapSubtitle entry.name)
-        entry
-        |> Maybe.withDefault [ optional entry.name Nothing ]
-
-
-productionAdditionalInfo : Model AdditionalInfo -> List (Model String)
-productionAdditionalInfo entry =
-    let
-        mapAdditionalInfo name value =
-            case value of
-                AdditionalInfoSt string ->
-                    [ required name string ]
-
-                AdditionalInfoIn string ->
-                    expandInternationalizedString name string
-    in
-    mapValue
-        (mapAdditionalInfo entry.name)
         entry
         |> Maybe.withDefault [ optional entry.name Nothing ]
 

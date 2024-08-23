@@ -20,7 +20,6 @@ import Data.PostalAddress exposing (PostalAddress)
 import Data.Root
     exposing
         ( Abstract(..)
-        , AdditionalInfo(..)
         , Audience
         , CreatorRoleItem
         , Description(..)
@@ -590,7 +589,6 @@ production : Validator Production
 production =
     object
         [ field "/accessibilitySummary" .accessibilitySummary optional
-        , field "/additionalInfo" .additionalInfo (maybe productionAdditionalInfo)
         , field "/audience" .audience (maybe audience)
         , field "/creator" .creator (maybe (list creator))
         , field "/description" .description (maybe productionDescription)
@@ -646,16 +644,6 @@ productionSubtitle path data =
             optional path (Just string)
 
         SubtitleIn i18nString ->
-            internationalizedString path i18nString
-
-
-productionAdditionalInfo : Validator AdditionalInfo
-productionAdditionalInfo path data =
-    case data of
-        AdditionalInfoSt string ->
-            optional path (Just string)
-
-        AdditionalInfoIn i18nString ->
             internationalizedString path i18nString
 
 
