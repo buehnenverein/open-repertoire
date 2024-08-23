@@ -791,15 +791,21 @@ locationTable location =
                 , Entry.required "Koordinaten" place
                     |> Entry.nested osmUrl
                     |> asLink (Just "Karte anzeigen")
-                , Entry.optional "Rollstuhlplätze" place.wheelChairPlaces
+                , Entry.optional "Rollstuhlplätze" place.accessibility
+                    |> Entry.nested .wheelChairPlaces
                     |> Entry.map .count
                     |> Entry.map String.fromInt
-                , Entry.optional "Platz für Assistent:in?" place.wheelChairPlaces
+                , Entry.optional "Platz für Assistent:in?" place.accessibility
+                    |> Entry.nested .wheelChairPlaces
                     |> Entry.nested .hasSpaceForAssistant
                     |> Entry.map boolString
-                , Entry.optional "Rollstuhlkapazität" place.wheelChairPlaces
+                , Entry.optional "Rollstuhlkapazität" place.accessibility
+                    |> Entry.nested .wheelChairPlaces
                     |> Entry.nested .wheelchairUserCapacity
                     |> Entry.map String.fromInt
+                , Entry.optional "Wheelmap Link" place.accessibility
+                    |> Entry.nested wheelmapUrl
+                    |> Entry.asLink Nothing
                 ]
 
         LocationItemVi info ->
@@ -808,6 +814,19 @@ locationTable location =
                 , Entry.optional "Link" info.url
                 , Entry.optional "Beschreibung" info.description
                 ]
+
+
+wheelmapUrl : { a | wheelmapNodeId : Maybe String, wheelmapWayId : Maybe String } -> Maybe String
+wheelmapUrl accessibility =
+    case ( accessibility.wheelmapNodeId, accessibility.wheelmapWayId ) of
+        ( Just nodeId, _ ) ->
+            Just ("https://wheelmap.org/node/" ++ nodeId)
+
+        ( Nothing, Just wayId ) ->
+            Just ("https://wheelmap.org/way/" ++ wayId)
+
+        ( Nothing, Nothing ) ->
+            Nothing
 
 
 osmUrl : { a | latitude : Maybe Float, longitude : Maybe Float } -> Maybe String

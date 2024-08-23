@@ -67,10 +67,26 @@ definitions:
         description: The location's name
       address:
         $ref: "./postal-address.yml"
-      wheelChairPlaces:
+      accessibility:
         type: object
-        description: Describes the presence of reserved spots for wheelchairs in the location, as defined by [a11yjson](https://sozialhelden.github.io/a11yjson/describing-objects/interfaces/#wheelchairplaces).
-        $ref: "#/definitions/WheelChairPlace"
+        additionalProperties: false
+        properties:
+          wheelmapNodeId:
+            type: string
+            description: |-
+              Node ID of this place on wheelmap.org. Using this ID to link to wheelmap.org is a way to provide up-to-date information on wheelchair accessibility.
+              E.g. the URL to access a location with node ID 472473473 is https://wheelmap.org/node/472473473
+            example: "472473473"
+          wheelmapWayId:
+            type: string
+            description: |-
+              Way ID of this place on wheelmap.org. Using this ID to link to wheelmap.org is a way to provide up-to-date information on wheelchair accessibility.
+              E.g. the URL to access a location with way ID 39448648 is https://wheelmap.org/way/39448648
+            example: "39448648"
+          wheelChairPlaces:
+            type: object
+            description: Describes the presence of reserved spots for wheelchairs in the location, as defined by [a11yjson](https://sozialhelden.github.io/a11yjson/describing-objects/interfaces/#wheelchairplaces).
+            $ref: "#/definitions/WheelChairPlace"
       latitude:
         type: number
         description: "The location's latitude."
