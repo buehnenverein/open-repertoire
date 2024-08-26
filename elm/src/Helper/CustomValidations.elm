@@ -21,6 +21,7 @@ import Data.Root
     exposing
         ( Abstract(..)
         , Audience
+        , ContentWarningItem(..)
         , CreatorRoleItem
         , Description(..)
         , Name(..)
@@ -590,6 +591,7 @@ production =
     object
         [ field "/accessibilitySummary" .accessibilitySummary optional
         , field "/audience" .audience (maybe audience)
+        , field "/contentWarning" .contentWarning (maybe (list productionContentWarning))
         , field "/creator" .creator (maybe (list creator))
         , field "/description" .description (maybe productionDescription)
         , field "/events" .events (list event)
@@ -644,6 +646,16 @@ productionSubtitle path data =
             optional path (Just string)
 
         SubtitleIn i18nString ->
+            internationalizedString path i18nString
+
+
+productionContentWarning : Validator ContentWarningItem
+productionContentWarning path data =
+    case data of
+        ContentWarningItemSt string ->
+            optional path (Just string)
+
+        ContentWarningItemIn i18nString ->
             internationalizedString path i18nString
 
 

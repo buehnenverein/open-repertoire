@@ -4,7 +4,7 @@ import Browser
 import Components.DataEntry as Entry exposing (asDate, asDateAndTime, asLink, asLogo, asTime)
 import Data.Event exposing (Event, EventStatus(..), EventTypeItem(..), LocationItem(..), Offer, OfferAvailability(..), PerformanceRoleItem, SubEventType)
 import Data.PersonOrOrganization exposing (PersonOrOrganization(..))
-import Data.Root exposing (CreatorRoleItem, GenreItem(..), Name(..), Production, ProductionProductionType(..), Root, rootDecoder)
+import Data.Root exposing (ContentWarningItem, CreatorRoleItem, GenreItem(..), Name(..), Production, ProductionProductionType(..), Root, rootDecoder)
 import Helper.CustomValidations as CustomValidations
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -330,14 +330,17 @@ productionGrid production =
         , div [ class "cell box mb-0 is-col-span-1-widescreen is-col-span-3 is-row-span-2" ]
             [ viewCreators production.creator
             ]
-        , div [ class "cell box mb-0 is-col-span-1-widescreen is-col-span-3 is-row-span-3" ]
+        , div [ class "cell box mb-0 is-col-span-1-widescreen is-col-span-3 is-row-span-1" ]
             [ viewProductionAudience production
             ]
-        , div [ class "cell box mb-0 is-col-span-2-widescreen is-col-span-3" ]
+        , div [ class "cell box mb-0 is-col-span-3-widescreen is-col-span-3" ]
             [ viewOriginalWork production
             ]
         , div [ class "cell box mb-0 is-col-span-2-widescreen is-col-span-3" ]
             [ viewProductionAccessibility production
+            ]
+        , div [ class "cell box mb-0 is-col-span-1-widescreen is-col-span-3" ]
+            [ viewContentWarnings production
             ]
         , div [ class "cell box mb-0 is-col-span-3-widescreen is-col-span-3" ]
             [ viewFunders production
@@ -465,6 +468,25 @@ viewProductionAccessibility production =
                 |> Entry.withHelp "Eine textuelle Beschreibung möglicher Barrieren bei dieser Produktion."
             ]
         ]
+
+
+viewContentWarnings : Production -> Html Msg
+viewContentWarnings production =
+    div []
+        [ div [ class "title is-5" ] [ text "Inhaltswarnungen" ]
+        , case production.contentWarning of
+            Nothing ->
+                em [] [ text "Die Daten enthalten keine Informationen zu Inhaltswarnungen" ]
+
+            Just list ->
+                div [] (List.map viewContentWarning list)
+        ]
+
+
+viewContentWarning : ContentWarningItem -> Html Msg
+viewContentWarning contentWarning =
+    Entry.view
+        (Entry.required "Text" contentWarning |> Entry.productionContentWarning)
 
 
 viewFunders : Production -> Html Msg
