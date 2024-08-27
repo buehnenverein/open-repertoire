@@ -3,12 +3,14 @@ schemas = internationalized-string \
 		  person \
 		  organization \
 		  person-or-organization \
+		  super-event \
 		  event
 sources = InternationalizedString \
 		  PostalAddress \
 		  Person \
 		  Organization \
 		  PersonOrOrganization \
+		  SuperEvent \
 		  Event
 schema_files = $(foreach schema,$(schemas),schemas/$(schema).json)
 

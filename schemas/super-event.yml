@@ -1,0 +1,50 @@
+"$schema": "http://json-schema.org/draft-07/schema#"
+"$id": https://peret.github.io/uc3-openapi/super-event.json
+title: SuperEvent
+definitions:
+  StringType:
+    type: string
+
+type: object
+additionalProperties: false
+required:
+  - "@type"
+  - name
+description:
+  An event that this event is a part of. E.g. this event might be a performance of the production as part of a theater festival.
+properties:
+  "@type":
+    type: string
+    enum:
+      - "Event"
+
+  name:
+    oneOf:
+      - $ref: "#/definitions/StringType"
+      - $ref: "./internationalized-string.yml"
+    example: Festival
+    description: A descriptive name for this super-event.
+  description:
+    oneOf:
+      - $ref: "#/definitions/StringType"
+      - $ref: "./internationalized-string.yml"
+    description: A short description of this super-event.
+  location:
+    type: string
+    description: A textual description of the location, where this super-event is taking place.
+    example: Ballhaus
+  startDate:
+    type: string
+    description: "The start date and time of this super-event (in ISO 8601 date format)."
+    format: date-time
+  endDate:
+    type: string
+    description: "The end date and time of this super-event (in ISO 8601 date format)."
+    format: date-time
+  duration:
+    type: integer
+    format: int64
+    description: The duration of the super-event in minutes.
+    example: 2880
+    minimum: 0
+

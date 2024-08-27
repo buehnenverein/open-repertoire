@@ -1,8 +1,9 @@
-module Components.DataEntry exposing (Model, ZoneWithName, abstract, asDate, asDateAndTime, asLink, asLogo, asTime, eventDescription, eventName, join, map, nested, optional, productionContentWarning, productionDescription, productionName, productionSubtitle, required, view, viewConcat, withHelp, withWarnings)
+module Components.DataEntry exposing (Model, ZoneWithName, abstract, asDate, asDateAndTime, asLink, asLogo, asTime, eventDescription, eventName, join, map, nested, optional, productionContentWarning, productionDescription, productionName, productionSubtitle, required, superEventDescription, superEventName, view, viewConcat, withHelp, withWarnings)
 
 import Data.Event as Event
 import Data.InternationalizedString exposing (InternationalizedString)
 import Data.Root exposing (Abstract(..), ContentWarningItem(..), Description(..), Name(..), Subtitle(..))
+import Data.SuperEvent as SuperEvent
 import DateFormat
 import Helper.CustomValidations exposing (Validator, viewerMessage)
 import Html exposing (..)
@@ -501,6 +502,40 @@ eventName entry =
                     [ required name string ]
 
                 Event.NameIn string ->
+                    expandInternationalizedString name string
+    in
+    mapValue
+        (mapDescription entry.name)
+        entry
+        |> Maybe.withDefault [ optional entry.name Nothing ]
+
+
+superEventDescription : Model SuperEvent.Description -> List (Model String)
+superEventDescription entry =
+    let
+        mapDescription name value =
+            case value of
+                SuperEvent.DescriptionSt string ->
+                    [ required name string ]
+
+                SuperEvent.DescriptionIn string ->
+                    expandInternationalizedString name string
+    in
+    mapValue
+        (mapDescription entry.name)
+        entry
+        |> Maybe.withDefault [ optional entry.name Nothing ]
+
+
+superEventName : Model SuperEvent.Name -> List (Model String)
+superEventName entry =
+    let
+        mapDescription name value =
+            case value of
+                SuperEvent.NameSt string ->
+                    [ required name string ]
+
+                SuperEvent.NameIn string ->
                     expandInternationalizedString name string
     in
     mapValue

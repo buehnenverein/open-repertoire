@@ -5,6 +5,7 @@ import Components.DataEntry as Entry exposing (asDate, asDateAndTime, asLink, as
 import Data.Event exposing (Event, EventStatus(..), EventTypeItem(..), LocationItem(..), Offer, OfferAvailability(..), PerformanceRoleItem, SubEventType)
 import Data.PersonOrOrganization exposing (PersonOrOrganization(..))
 import Data.Root exposing (ContentWarningItem, CreatorRoleItem, GenreItem(..), Name(..), Production, ProductionProductionType(..), Root, rootDecoder)
+import Data.SuperEvent exposing (SuperEvent)
 import Helper.CustomValidations as CustomValidations
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -557,6 +558,9 @@ viewEvent zone allEvents event =
                 [ viewSubEvents zone event.subEvent
                 ]
             , div [ class "cell box mb-0 is-col-span-2 is-col-span-1-widescreen" ]
+                [ viewSuperEvent zone event.superEvent
+                ]
+            , div [ class "cell box mb-0 is-col-span-2 is-col-span-1-widescreen" ]
                 [ viewPerformers event.performer
                 ]
             , div [ class "cell box mb-0 is-col-span-2 is-col-span-1-widescreen" ]
@@ -684,6 +688,31 @@ viewSubEvent zone subEvent =
           , Entry.optional "Dauer" subEvent.duration
                 |> Entry.map formatDuration
           ]
+        ]
+
+
+viewSuperEvent : Entry.ZoneWithName -> Maybe SuperEvent -> Html Msg
+viewSuperEvent zone superEvent =
+    div []
+        [ div [ class "title is-5" ] [ text "Übergeordnete Veranstaltung" ]
+        , case superEvent of
+            Nothing ->
+                em [] [ text "In den Daten ist keine übergeordnete Veranstaltung angegeben." ]
+
+            Just event ->
+                Entry.viewConcat
+                    [ Entry.required "Titel" event.name
+                        |> Entry.superEventName
+                    , Entry.optional "Beschreibung" event.description
+                        |> Entry.superEventDescription
+                    , [ Entry.optional "Startdatum" event.startDate |> asDate zone
+                      , Entry.optional "Startzeit" event.startDate |> asTime zone
+                      , Entry.optional "Enddatum" event.endDate |> asDate zone
+                      , Entry.optional "Endzeit" event.endDate |> asTime zone
+                      , Entry.optional "Dauer" event.duration
+                            |> Entry.map formatDuration
+                      ]
+                    ]
         ]
 
 
