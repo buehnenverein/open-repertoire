@@ -69,7 +69,7 @@ view/main.js : elm/src/View.elm $(elm_src_files) $(generated_elm_files)
 %/main.min.js : %/main.js
 	npx uglifyjs $< --compress 'pure_funcs=[F2,F3,F4,F5,F6,F7,F8,F9,A2,A3,A4,A5,A6,A7,A8,A9],pure_getters,keep_fargs=false,unsafe_comps,unsafe' | npx uglifyjs --mangle --output $@
 
-js2e_output/src/Data/%.elm &: schemas/
+js2e_output/src/%.elm &: schemas/
 	./js2e schemas/
 
 $(generated_elm_files) : elm/src/%.elm : js2e_output/src/%.elm
