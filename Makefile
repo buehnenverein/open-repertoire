@@ -11,9 +11,13 @@ sources = InternationalizedString \
 		  PersonOrOrganization \
 		  Event
 schema_files = $(foreach schema,$(schemas),schemas/$(schema).json)
-src_files = $(foreach source,$(sources),elm/src/Data/$(source).elm)
-src_files += elm/src/Data/Root.elm
-src_files += elm/src/Helper/Encode.elm
+
+generated_elm_files = $(foreach source,$(sources),elm/src/Data/$(source).elm)
+generated_elm_files += elm/src/Data/Root.elm
+generated_elm_files += elm/src/Helper/Encode.elm
+
+elm_src_files = $(wildcard elm/src/Components/*)
+elm_src_files += $(wildcard elm/src/Helper/*)
 
 .PHONY : all
 all : index.html \
@@ -28,6 +32,7 @@ clean :
 		rm -f schemas/*.json
 		rm -rf js2e_output/*
 		rm -rf elm/src/Data/*
+		rm -rf elm/src/Helper/Encode.elm
 
 index.html : openapi.yml $(schema_files)
 	npx @redocly/cli build-docs openapi.yml -o index.html \
@@ -53,11 +58,11 @@ validate/bundle.js : validate/interop.js validate/validator.js
 view/bundle.js : view/interop.js
 	npx browserify view/interop.js | npx uglifyjs --mangle --compress --output view/bundle.js
 
-validate/main.js : elm/src/Validate.elm $(src_files)
+validate/main.js : elm/src/Validate.elm $(elm_src_files) $(generated_elm_files)
 	cd elm; \
 	elm make src/Validate.elm --optimize --output=../validate/main.js
 
-view/main.js : elm/src/View.elm $(src_files)
+view/main.js : elm/src/View.elm $(elm_src_files) $(generated_elm_files)
 	cd elm; \
 	elm make src/View.elm --optimize --output=../view/main.js
 
@@ -67,6 +72,6 @@ view/main.js : elm/src/View.elm $(src_files)
 js2e_output/src/Data/%.elm &: schemas/
 	./js2e schemas/
 
-$(src_files) : elm/src/%.elm : js2e_output/src/%.elm
+$(generated_elm_files) : elm/src/%.elm : js2e_output/src/%.elm
 	mkdir -p elm/src/Data
 	cp $< $@
