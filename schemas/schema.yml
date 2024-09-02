@@ -224,6 +224,16 @@ definitions:
           description: Maximum recommended age in years.
           example: 15
           minimum: 0
+        requiredMinAge:
+          type: integer
+          description: Minimum required age in years.
+          example: 16
+          minimum: 0
+        requiredMaxAge:
+          type: integer
+          description: Maximum required age in years.
+          example: 65
+          minimum: 0
         audienceType:
           type: string
           description: A short textual description of the production's intended target audience.

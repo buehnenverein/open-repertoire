@@ -414,16 +414,16 @@ humanReadableProductionType productionType =
 viewProductionAudience : Production -> Html Msg
 viewProductionAudience production =
     let
-        formatAge audience =
-            case ( audience.suggestedMinAge, audience.suggestedMaxAge ) of
-                ( Just minAge, Just maxAge ) ->
-                    String.fromInt minAge ++ " - " ++ String.fromInt maxAge ++ " Jahre"
+        formatAge ( minAge, maxAge ) =
+            case ( minAge, maxAge ) of
+                ( Just min, Just max ) ->
+                    String.fromInt min ++ " - " ++ String.fromInt max ++ " Jahre"
 
-                ( Just minAge, Nothing ) ->
-                    "ab " ++ String.fromInt minAge ++ " Jahre"
+                ( Just min, Nothing ) ->
+                    "ab " ++ String.fromInt min ++ " Jahre"
 
-                ( Nothing, Just maxAge ) ->
-                    "bis " ++ String.fromInt maxAge ++ " Jahre"
+                ( Nothing, Just max ) ->
+                    "bis " ++ String.fromInt max ++ " Jahre"
 
                 ( Nothing, Nothing ) ->
                     ""
@@ -434,6 +434,11 @@ viewProductionAudience production =
             [ Entry.optional "Beschreibung" production.audience
                 |> Entry.nested .audienceType
             , Entry.optional "Altersempfehlung" production.audience
+                |> Entry.map (\audience -> ( audience.suggestedMinAge, audience.suggestedMaxAge ))
+                |> Entry.withWarnings CustomValidations.minMaxAge
+                |> Entry.map formatAge
+            , Entry.optional "Altersfreigabe" production.audience
+                |> Entry.map (\audience -> ( audience.requiredMinAge, audience.requiredMaxAge ))
                 |> Entry.withWarnings CustomValidations.minMaxAge
                 |> Entry.map formatAge
             ]

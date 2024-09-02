@@ -457,12 +457,12 @@ minMaxPrice path data =
             []
 
 
-minMaxAge : Validator Audience
-minMaxAge path data =
-    case ( data.suggestedMinAge, data.suggestedMaxAge ) of
-        ( Just minAge, Just maxAge ) ->
-            if minAge > maxAge then
-                [ warning (path ++ "/suggestedMinAge") "should be smaller than suggestedMaxAge"
+minMaxAge : Validator ( Maybe Int, Maybe Int )
+minMaxAge path ( minAge, maxAge ) =
+    case ( minAge, maxAge ) of
+        ( Just min, Just max ) ->
+            if min > max then
+                [ warning path "should be smaller than the maximum age"
                     |> forView "Das Mindestalter sollte niedriger sein als das Höchstalter."
                 ]
 
@@ -744,7 +744,8 @@ audience : Validator Audience
 audience =
     object
         [ field "/audienceType" .audienceType optional
-        , minMaxAge
+        , field "/suggestedMinAge" (\data -> ( data.suggestedMinAge, data.suggestedMaxAge )) minMaxAge
+        , field "/requiredMinAge" (\data -> ( data.requiredMinAge, data.requiredMaxAge )) minMaxAge
         ]
 
 
