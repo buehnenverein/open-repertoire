@@ -137,6 +137,12 @@ definitions:
               - zeitgenoessischer-tanz
         productionType:
           type: string
+          description: |-
+            A value that indicates whether this production has special characteristics:
+            * `WorldPremiere`: This is the first time that this creative work is publicly performed anywhere in the world.
+            * `FirstPerformance`: This is the first time that this creative work is publicly performed in another context. E.g. the first time it is is performed in a specific language or country.
+            * `Revival`: A new production (restaging) of an existing play or similar creative work.
+          
           enum:
             - WorldPremiere
             - FirstPerformance

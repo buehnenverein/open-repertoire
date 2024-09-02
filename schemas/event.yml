@@ -299,6 +299,13 @@ properties:
       $ref: "#/definitions/Offer"
   eventType:
     type: array
+    description: |-
+      A list of values indicating special characteristics of this event:
+      * `Premiere`: The first public performance of a theatrical production.
+      * `LastShow`: The final performance of a theatrical production at a specific venue.
+      * `GuestPerformance`: A performance by a theater company or artist presented at a venue where they are not the resident performers.
+      * `Preview`: A public performance of a theatrical production that precede its official opening, e.g. a public rehearsal.
+    
     items:
       type: string
       enum:
