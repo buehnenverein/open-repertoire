@@ -410,6 +410,15 @@ humanReadableProductionType productionType =
         RevivalProduction ->
             "Wiederaufnahme"
 
+        LanguagePremiereProduction ->
+            "Erstaufführung (in einer bestimmten Sprache)"
+
+        LocalPremiereProduction ->
+            "Erstaufführung (in Bezug auf einen Ort oder eine Region)"
+
+        CountryPremiereProduction ->
+            "Erstaufführung (in einem bestimmten Land)"
+
 
 viewProductionAudience : Production -> Html Msg
 viewProductionAudience production =
