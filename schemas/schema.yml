@@ -196,6 +196,14 @@ definitions:
           $ref: "#/definitions/Audience"
         creator:
           $ref: "#/definitions/CreatorRole"
+        creditText:
+          oneOf:
+            - $ref: "#/definitions/StringType"
+            - $ref: "./internationalized-string.yml"
+          description: |-
+            Text that can be used to credit persons and/or organizations that are associated with this production. 
+            This field can be used to include a text snippet on, e.g., funding organizations that needs to be included on platforms advertising the production.
+          example: Dieses Projekt wurde gefördert durch Mittel aus dem Fonds Darstellende Künste.
         funder:
           type: array
           description: A list of organization's that support this production through some kind of financial contribution.
