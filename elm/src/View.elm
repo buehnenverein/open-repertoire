@@ -661,13 +661,13 @@ eventStatusToString eventStatus =
 viewSubEvents : Entry.ZoneWithName -> Maybe (List SubEventType) -> Html Msg
 viewSubEvents zone subEvents =
     div []
-        [ div [ class "title is-5" ] [ text "Zusatzangebote" ]
+        [ div [ class "title is-5" ] [ text "Zusatzveranstaltungen" ]
         , case subEvents of
             Nothing ->
-                em [] [ text "In den Daten sind keine zusätzlichen Angebote für diese Veranstaltung angegeben." ]
+                em [] [ text "Die Daten enthalten keine Informationen zu Zusatzveranstaltungen." ]
 
             Just [] ->
-                em [] [ text "In den Daten sind keine zusätzlichen Angebote für diese Veranstaltung angegeben." ]
+                em [] [ text "Die Daten enthalten keine Informationen zu Zusatzveranstaltungen." ]
 
             Just list ->
                 div [] (List.map (viewSubEvent zone) list)
