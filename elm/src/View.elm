@@ -575,11 +575,11 @@ viewEventTable zone allEvents event =
     Entry.view
         [ Entry.required "ID" event.identifier
         , Entry.required "Startdatum" event
-            |> Entry.withWarnings CustomValidations.startAndEndDates
+            |> Entry.withWarnings CustomValidations.eventStartAndEndDates
             |> Entry.map .startDate
             |> asDate zone
         , Entry.required "Startzeit" event
-            |> Entry.withWarnings CustomValidations.startAndEndDates
+            |> Entry.withWarnings CustomValidations.eventStartAndEndDates
             |> Entry.map .startDate
             |> asTime zone
         , Entry.optional "Enddatum" event.endDate |> asDate zone

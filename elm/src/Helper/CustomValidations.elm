@@ -1,6 +1,6 @@
-module Helper.CustomValidations exposing (MessageType(..), ValidationMessage, Validator, checkAll, duration, eventStatusAndDate, languageTagValid, list, minMaxAge, minMaxPrice, production, startAndEndDates, validDerniere, validPremiere, viewerMessage)
+module Helper.CustomValidations exposing (MessageType(..), ValidationMessage, Validator, checkAll, duration, eventStartAndEndDates, eventStatusAndDate, languageTagValid, list, minMaxAge, minMaxPrice, production, validDerniere, validPremiere, viewerMessage)
 
-import Data.Event
+import Data.Event as Event
     exposing
         ( Event
         , EventStatus(..)
@@ -10,6 +10,7 @@ import Data.Event
         , PerformanceRoleItem
         , Place
         , PriceSpecification
+        , SubEventType
         , VirtualLocation
         )
 import Data.InternationalizedString exposing (InternationalizedString)
@@ -29,6 +30,7 @@ import Data.Root
         , Root
         , Subtitle(..)
         )
+import Data.SuperEvent as SuperEvent exposing (SuperEvent)
 import Helper.LanguageCodes as LanguageCodes
 import Iso8601
 import LanguageTag.Parser
@@ -471,12 +473,18 @@ minMaxAge path data =
             []
 
 
-startAndEndDates : Validator Event
+eventStartAndEndDates : Validator Event
+eventStartAndEndDates path data =
+    startAndEndDates path { startDate = Just data.startDate, endDate = data.endDate }
+
+
+startAndEndDates : Validator { a | startDate : Maybe String, endDate : Maybe String }
 startAndEndDates path data =
     let
         startMillis =
             data.startDate
-                |> Iso8601.toTime
+                |> Result.fromMaybe []
+                |> Result.andThen Iso8601.toTime
                 |> Result.map Time.posixToMillis
 
         endMillis =
@@ -529,7 +537,33 @@ event =
         , field "/startDate" .startDate required
         , field "/subtitleLanguage" .subtitleLanguage (maybe (list languageTagValid))
         , field "/url" .url optional
+        , field "/subEvent" .subEvent (maybe (list subEvent))
+        , field "/superEvent" .superEvent (maybe superEvent)
         , eventStatusAndDate
+        , eventStartAndEndDates
+        ]
+
+
+subEvent : Validator SubEventType
+subEvent =
+    object
+        [ field "/duration" .duration (maybe duration)
+        , field "/endDate" .endDate optional
+        , field "/location" .location optional
+        , field "/startDate" .startDate optional
+        , field "/description" .description (maybe subEventDescription)
+        , startAndEndDates
+        ]
+
+
+superEvent : Validator SuperEvent
+superEvent =
+    object
+        [ field "/duration" .duration (maybe duration)
+        , field "/endDate" .endDate optional
+        , field "/location" .location optional
+        , field "/startDate" .startDate optional
+        , field "/description" .description (maybe superEventDescription)
         , startAndEndDates
         ]
 
@@ -656,6 +690,26 @@ productionContentWarning path data =
             optional path (Just string)
 
         ContentWarningItemIn i18nString ->
+            internationalizedString path i18nString
+
+
+superEventDescription : Validator SuperEvent.Description
+superEventDescription path data =
+    case data of
+        SuperEvent.DescriptionSt string ->
+            optional path (Just string)
+
+        SuperEvent.DescriptionIn i18nString ->
+            internationalizedString path i18nString
+
+
+subEventDescription : Validator Event.Description
+subEventDescription path data =
+    case data of
+        Event.DescriptionSt string ->
+            optional path (Just string)
+
+        Event.DescriptionIn i18nString ->
             internationalizedString path i18nString
 
 
