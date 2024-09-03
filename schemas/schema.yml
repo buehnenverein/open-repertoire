@@ -105,18 +105,19 @@ definitions:
             enum:
               - audiowalk
               - ballett
+              - comedy
               - digitaltheater
               - figurentheater
               - game-theater
-              - hoerspiel
               - improtheater
               - inklusives-theater
               - installation
-              - kabarett-comedy
+              - kabarett
               - kammerkonzert
               - konzert
               - lecture-performance
               - lesung
+              - live-hoerspiel
               - musical
               - musiktheater
               - objekttheater
@@ -124,7 +125,6 @@ definitions:
               - operette
               - performance
               - physical-theatre
-              - podcast
               - postmigrantisches-theater
               - puppentheater
               - sinfoniekonzert
