@@ -734,7 +734,8 @@ originalWork =
 address : Validator PostalAddress
 address =
     object
-        [ field "/addressLocality" .addressLocality required
+        [ field "/addressCountry" .addressCountry optional
+        , field "/addressLocality" .addressLocality required
         , field "/postalCode" .postalCode required
         , field "/streetAddress" .streetAddress optional
         ]

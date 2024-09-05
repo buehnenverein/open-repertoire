@@ -787,6 +787,7 @@ locationTable location =
                 , Entry.optional "Addresse" place.address.streetAddress
                 , Entry.required "Postleitzahl" place.address.postalCode
                 , Entry.required "Stadt" place.address.addressLocality
+                , Entry.optional "Land" place.address.addressCountry
                 , Entry.required "Koordinaten" place
                     |> Entry.nested osmUrl
                     |> asLink (Just "Karte anzeigen")

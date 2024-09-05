@@ -26,3 +26,7 @@ properties:
     type: string
     example: Augsburg
     description: The locality in which the street address is, i.e. the city.
+  addressCountry:
+    type: string
+    example: Germany
+    description: The country of this address.
