@@ -5,5 +5,6 @@ elm/elm-stuff
 tmp/
 .direnv
 js2e_output/
-elm/src/Data/Root.elm
+build/
+elm/src/Data/
 elm/src/Helper/Encode.elm
