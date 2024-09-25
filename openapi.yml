@@ -4,6 +4,7 @@ info:
   description: |-
     ### WIP: This document is a work in progress. The API documented here is subject to change and should not be widely adopted yet.
     This document describes the public API implemented by theaters to provide their current repertoire.
+    The data structure is based on [schema.org](https://schema.org) types, in particular [CreativeWork](https://schema.org/CreativeWork) and [Event](https://schema.org/Event).
 
     This document is intended as documentation for consumers of the API *as well as* anyone who intends to implement an API endpoint that is compatible with Use Case 3. 
 
