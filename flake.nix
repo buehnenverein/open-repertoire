@@ -47,10 +47,10 @@
 
               processes = {
                 elmwatch.exec = ''
-                  cd elm && npx elm-watch hot
+                  make && cd elm && npx elm-watch hot
                 '';
                 httpserver.exec = ''
-                  npx http-server
+                  npx http-server build/
                 '';
               };
             }

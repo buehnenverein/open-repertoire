@@ -41,11 +41,11 @@ clean :
 $(SCHEMA_DIR) :
 	mkdir -p $(SCHEMA_DIR)
 
-$(VIEW_DIR) :
-	mkdir -p $(VIEW_DIR)
+$(VIEW_DIR) : | view/
+	cp -R view/ $(VIEW_DIR)
 
-$(VALIDATE_DIR) :
-	mkdir -p $(VALIDATE_DIR)
+$(VALIDATE_DIR) : | validate/
+	cp -R validate/ $(VALIDATE_DIR)
 
 $(BUILD_DIR)/index.html : openapi.yml $(schema_files)
 	npx @redocly/cli build-docs openapi.yml -o $(BUILD_DIR)/index.html \

@@ -2,11 +2,11 @@
   "targets": {
     "validator": {
       "inputs": ["src/Validate.elm"],
-      "output": "../validate/main.min.js"
+      "output": "../build/validate/main.min.js"
     },
     "viewer": {
       "inputs": ["src/View.elm"],
-      "output": "../view/main.min.js"
+      "output": "../build/view/main.min.js"
     }
   }
 }
