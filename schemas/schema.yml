@@ -40,7 +40,7 @@ definitions:
             - "@type": "Person"
               name: John Cameron Mitchell
           items:
-            $ref: "./person-or-organization.yml"
+            $ref: "./agent.yml"
         translator:
           type: array
           description: Person or Organization whose translation of the original work is the basis for this production.
@@ -48,7 +48,7 @@ definitions:
             - "@type": "Person"
               name: Mona Mustermann
           items:
-            $ref: "./person-or-organization.yml"
+            $ref: "./agent.yml"
     Production:
       type: object
       description: "An object containing information about the production and its events."
@@ -208,7 +208,7 @@ definitions:
           type: array
           description: A list of organization's that support this production through some kind of financial contribution.
           items:
-            $ref: "./person-or-organization.yml"
+            $ref: "./agent.yml"
           example:
             - "@type": Organization
               name: A Funding Organization
@@ -221,7 +221,7 @@ definitions:
               name: A Sponsoring Organization
               logo: https://example.com/logos/logo2.png
           items:
-            $ref: "./person-or-organization.yml"
+            $ref: "./agent.yml"
 
     Audience:
       type: object
@@ -282,7 +282,7 @@ definitions:
           creator:
             type: array
             items:
-              $ref: "./person-or-organization.yml"
+              $ref: "./agent.yml"
 
           roleName:
             type: string

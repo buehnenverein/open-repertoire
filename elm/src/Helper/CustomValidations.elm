@@ -1,5 +1,6 @@
 module Helper.CustomValidations exposing (MessageType(..), ValidationMessage, Validator, checkAll, duration, eventStartAndEndDates, eventStatusAndDate, languageTagValid, list, minMaxAge, minMaxPrice, production, validDerniere, validPremiere, viewerMessage)
 
+import Data.Agent exposing (Agent(..))
 import Data.Event as Event
     exposing
         ( Event
@@ -16,7 +17,6 @@ import Data.Event as Event
 import Data.InternationalizedString exposing (InternationalizedString)
 import Data.Organization exposing (Organization)
 import Data.Person exposing (Person)
-import Data.PersonOrOrganization exposing (PersonOrOrganization(..))
 import Data.PostalAddress exposing (PostalAddress)
 import Data.Root
     exposing
@@ -571,18 +571,18 @@ superEvent =
 creator : Validator CreatorRoleItem
 creator =
     object
-        [ field "/creator" .creator (list personOrOrganization)
+        [ field "/creator" .creator (list agent)
         , field "/roleName" .roleName optional
         ]
 
 
-personOrOrganization : Validator PersonOrOrganization
-personOrOrganization path data =
+agent : Validator Agent
+agent path data =
     case data of
-        PersonOrOrganizationPe personInfo ->
+        AgentPe personInfo ->
             person path personInfo
 
-        PersonOrOrganizationOr organizationInfo ->
+        AgentOr organizationInfo ->
             organization path organizationInfo
 
 
@@ -596,7 +596,7 @@ person =
 performer : Validator PerformanceRoleItem
 performer =
     object
-        [ field "/performer" .performer (list personOrOrganization)
+        [ field "/performer" .performer (list agent)
         , field "/characterName" .characterName optional
         , field "/roleName" .roleName optional
         , onlyOneOf ( "/roleName", .roleName ) ( "/characterName", .characterName )
@@ -725,9 +725,9 @@ internationalizedString =
 originalWork : Validator Data.Root.OriginalWork
 originalWork =
     object
-        [ field "/author" .author (maybe (list personOrOrganization))
+        [ field "/author" .author (maybe (list agent))
         , field "/name" .name required
-        , field "/translator" .translator (maybe (list personOrOrganization))
+        , field "/translator" .translator (maybe (list agent))
         ]
 
 

@@ -228,7 +228,7 @@ definitions:
         performer:
           type: array
           items:
-            $ref: "./person-or-organization.yml"
+            $ref: "./agent.yml"
 
 type: object
 required:

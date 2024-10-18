@@ -2,8 +2,8 @@ module View exposing (main)
 
 import Browser
 import Components.DataEntry as Entry exposing (asDate, asDateAndTime, asLink, asLogo, asTime)
+import Data.Agent exposing (Agent(..))
 import Data.Event exposing (Event, EventStatus(..), EventTypeItem(..), LocationItem(..), Offer, OfferAvailability(..), PerformanceRoleItem, SubEventType)
-import Data.PersonOrOrganization exposing (PersonOrOrganization(..))
 import Data.Root exposing (ContentWarningItem, CreatorRoleItem, GenreItem(..), Name(..), Production, ProductionProductionType(..), Root, rootDecoder)
 import Data.SuperEvent exposing (SuperEvent)
 import Helper.CustomValidations as CustomValidations
@@ -463,10 +463,10 @@ viewOriginalWork production =
                 |> Entry.map .name
             , Entry.optional "Autor:in" production.isBasedOn
                 |> Entry.nested .author
-                |> Entry.join personOrOrganizationName
+                |> Entry.join agent
             , Entry.optional "Übersetzung" production.isBasedOn
                 |> Entry.nested .translator
-                |> Entry.join personOrOrganizationName
+                |> Entry.join agent
             ]
         ]
 
@@ -513,7 +513,7 @@ viewFunders production =
                 em [] [ text "Die Daten enthalten keine Informationen zu Förderern" ]
 
             Just list ->
-                div [] (List.map viewPersonOrOrganization list)
+                div [] (List.map viewAgent list)
         ]
 
 
@@ -526,14 +526,14 @@ viewSponsors production =
                 em [] [ text "Die Daten enthalten keine Informationen zu Sponsoren" ]
 
             Just list ->
-                div [] (List.map viewPersonOrOrganization list)
+                div [] (List.map viewAgent list)
         ]
 
 
-viewPersonOrOrganization : PersonOrOrganization -> Html Msg
-viewPersonOrOrganization agent =
-    case agent of
-        PersonOrOrganizationOr organization ->
+viewAgent : Agent -> Html Msg
+viewAgent personOrOrg =
+    case personOrOrg of
+        AgentOr organization ->
             Entry.view
                 [ Entry.required "Name" organization.name
                 , Entry.optional "Addresse" organization.address |> Entry.nested .streetAddress
@@ -542,7 +542,7 @@ viewPersonOrOrganization agent =
                 , Entry.optional "Logo" organization.logo |> asLogo
                 ]
 
-        PersonOrOrganizationPe person ->
+        AgentPe person ->
             Entry.view
                 [ Entry.required "Name" person.name
                 ]
@@ -850,16 +850,16 @@ viewCreator creator =
             Maybe.withDefault "" creator.roleName
     in
     Entry.required roleName creator.creator
-        |> Entry.join personOrOrganizationName
+        |> Entry.join agent
 
 
-personOrOrganizationName : PersonOrOrganization -> String
-personOrOrganizationName creator =
+agent : Agent -> String
+agent creator =
     case creator of
-        PersonOrOrganizationPe person ->
+        AgentPe person ->
             person.name
 
-        PersonOrOrganizationOr organization ->
+        AgentOr organization ->
             organization.name
 
 
@@ -886,7 +886,7 @@ viewPerformer performer =
                 |> String.join " | "
     in
     Entry.required characterName performer.performer
-        |> Entry.join personOrOrganizationName
+        |> Entry.join agent
 
 
 
