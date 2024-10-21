@@ -701,6 +701,9 @@ viewSubEvent zone subEvent =
           , Entry.optional "Endzeit" subEvent.endDate |> asTime zone
           , Entry.optional "Dauer" subEvent.duration
                 |> Entry.map formatDuration
+          , Entry.optional "Sprache" subEvent.inLanguage
+                |> Entry.withWarnings (CustomValidations.list CustomValidations.languageTagValid)
+                |> Entry.join identity
           ]
         ]
 
@@ -725,6 +728,9 @@ viewSuperEvent zone superEvent =
                       , Entry.optional "Endzeit" event.endDate |> asTime zone
                       , Entry.optional "Dauer" event.duration
                             |> Entry.map formatDuration
+                      , Entry.optional "Sprache" event.inLanguage
+                            |> Entry.withWarnings (CustomValidations.list CustomValidations.languageTagValid)
+                            |> Entry.join identity
                       ]
                     ]
         ]

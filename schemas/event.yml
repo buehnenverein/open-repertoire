@@ -48,6 +48,13 @@ definitions:
         description: The duration of the sub-event in minutes.
         example: 30
         minimum: 0
+      inLanguage:
+          type: array
+          description: The language(s) of this sub-event. Should contain BCP 47 Language Tags.
+          items:
+            type: string
+            example: de
+
 
   Place:
     type: object

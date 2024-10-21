@@ -47,4 +47,11 @@ properties:
     description: The duration of the super-event in minutes.
     example: 2880
     minimum: 0
+  inLanguage:
+      type: array
+      description: The language(s) of this super-event. Should contain BCP 47 Language Tags.
+      items:
+        type: string
+        example: de
+
 

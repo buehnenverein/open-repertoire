@@ -552,6 +552,7 @@ subEvent =
         , field "/location" .location optional
         , field "/startDate" .startDate optional
         , field "/description" .description (maybe subEventDescription)
+        , field "/inLanguage" .inLanguage (maybe (list languageTagValid))
         , startAndEndDates
         ]
 
@@ -564,6 +565,7 @@ superEvent =
         , field "/location" .location optional
         , field "/startDate" .startDate optional
         , field "/description" .description (maybe superEventDescription)
+        , field "/inLanguage" .inLanguage (maybe (list languageTagValid))
         , startAndEndDates
         ]
 

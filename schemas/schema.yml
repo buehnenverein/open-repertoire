@@ -188,7 +188,7 @@ definitions:
               - $ref: "./internationalized-string.yml"
         inLanguage:
           type: array
-          description: Primary language(s) of this production. Should contain a BCP 47 Language Tag.
+          description: Primary language(s) of this production. Should contain BCP 47 Language Tags.
           items:
             type: string
             example: de
