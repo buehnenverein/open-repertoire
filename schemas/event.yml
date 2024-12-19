@@ -231,7 +231,12 @@ definitions:
           description: The name of the character performed on stage, if any.
         roleName:
           type: string
-          description: The role performed or filled by a person or organization. If the person or organization is playing a specific character, `characterName` should be used instead.
+          description: |-
+            The role performed or filled by a person or organization.
+            If the person or organization is playing a specific character, `characterName` should be used instead.
+            Both `characterName` and `roleName` might be specified in some cases. E.g. an opera singer can be said to
+            perform "Figaro" (`characterName`) or can be said to sing the "Bass" (`roleName`) voice.  
+            Either fields or both fields might be specified, in this case.
         performer:
           type: array
           items:
