@@ -462,17 +462,30 @@ viewProductionImages : Maybe (List ImageObject) -> Html Msg
 viewProductionImages images =
     div []
         [ div [ class "title is-5" ] [ text "Bilder" ]
-
         , viewList "Die Daten enthalten keine Bilder für diese Produktion" viewProductionImage images
         ]
 
 
 viewProductionImage : ImageObject -> Html Msg
 viewProductionImage image =
+    let
+        imageDimensions =
+            case ( image.width, image.height ) of
+                ( Nothing, Nothing ) ->
+                    ""
+
+                ( Just w, Nothing ) ->
+                    String.fromInt w ++ "px breit"
+
+                ( Nothing, Just h ) ->
+                    String.fromInt h ++ "px hoch"
+
+                ( Just w, Just h ) ->
+                    String.fromInt w ++ "x" ++ String.fromInt h ++ "px"
+    in
     Entry.view
         [ Entry.required "Bild" image.contentUrl
             |> Entry.asImage
-
         , Entry.required "Urheber" image.copyrightHolder
             |> Entry.map agent
         , Entry.optional "Jahr" image.copyrightYear
@@ -480,7 +493,7 @@ viewProductionImage image =
         , Entry.optional "Urheberrechtshinweis" image.copyrightNotice
         , Entry.optional "Lizenz" image.license
             |> Entry.asLink Nothing
-
+        , Entry.required "Auflösung" imageDimensions
         ]
 
 
