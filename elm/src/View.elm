@@ -463,12 +463,7 @@ viewProductionImages images =
     div []
         [ div [ class "title is-5" ] [ text "Bilder" ]
 
-        , case images of
-            Nothing ->
-                em [] [ text "Die Daten enthalten keine Bilder für diese Produktion" ]
-
-            Just list ->
-                div [] (List.map viewProductionImage list)
+        , viewList "Die Daten enthalten keine Bilder für diese Produktion" viewProductionImage images
         ]
 
 
@@ -524,12 +519,7 @@ viewContentWarnings : Production -> Html Msg
 viewContentWarnings production =
     div []
         [ div [ class "title is-5" ] [ text "Inhaltswarnungen" ]
-        , case production.contentWarning of
-            Nothing ->
-                em [] [ text "Die Daten enthalten keine Informationen zu Inhaltswarnungen" ]
-
-            Just list ->
-                div [] (List.map viewContentWarning list)
+        , viewList "Die Daten enthalten keine Informationen zu Inhaltswarnungen" viewContentWarning production.contentWarning
         ]
 
 
@@ -543,12 +533,7 @@ viewFunders : Production -> Html Msg
 viewFunders production =
     div []
         [ div [ class "title is-5" ] [ text "Förderer" ]
-        , case production.funder of
-            Nothing ->
-                em [] [ text "Die Daten enthalten keine Informationen zu Förderern" ]
-
-            Just list ->
-                div [] (List.map viewAgent list)
+        , viewList "Die Daten enthalten keine Informationen zu Förderern" viewAgent production.funder
         ]
 
 
@@ -556,12 +541,7 @@ viewSponsors : Production -> Html Msg
 viewSponsors production =
     div []
         [ div [ class "title is-5" ] [ text "Sponsoren" ]
-        , case production.sponsor of
-            Nothing ->
-                em [] [ text "Die Daten enthalten keine Informationen zu Sponsoren" ]
-
-            Just list ->
-                div [] (List.map viewAgent list)
+        , viewList "Die Daten enthalten keine Informationen zu Sponsoren" viewAgent production.sponsor
         ]
 
 
@@ -711,15 +691,7 @@ viewSubEvents : Entry.ZoneWithName -> Maybe (List SubEventType) -> Html Msg
 viewSubEvents zone subEvents =
     div []
         [ div [ class "title is-5" ] [ text "Zusatzveranstaltungen" ]
-        , case subEvents of
-            Nothing ->
-                em [] [ text "Die Daten enthalten keine Informationen zu Zusatzveranstaltungen." ]
-
-            Just [] ->
-                em [] [ text "Die Daten enthalten keine Informationen zu Zusatzveranstaltungen." ]
-
-            Just list ->
-                div [] (List.map (viewSubEvent zone) list)
+        , viewList "Die Daten enthalten keine Informationen zu Zusatzveranstaltungen" (viewSubEvent zone) subEvents
         ]
 
 
@@ -938,15 +910,7 @@ viewOffers : Maybe (List Offer) -> Html Msg
 viewOffers offers =
     div []
         [ div [ class "title is-5" ] [ text "Ticketinformationen" ]
-        , case offers of
-            Nothing ->
-                em [] [ text "Die Daten enthalten keine Ticketinformationen für diese Veranstaltung" ]
-
-            Just [] ->
-                em [] [ text "Die Daten enthalten keine Ticketinformationen für diese Veranstaltung" ]
-
-            Just list ->
-                div [] (List.map viewOffer list)
+        , viewList "Die Daten enthalten keine Ticketinformationen für diese Veranstaltung" viewOffer offers
         ]
 
 
@@ -985,6 +949,23 @@ humanReadableAvailability availability =
 
 
 -- HELPERS
+
+
+viewList : String -> (a -> Html Msg) -> Maybe (List a) -> Html Msg
+viewList emptyMsg f maybeList =
+    let
+        emptyMarkup =
+            div [] [ em [] [ text emptyMsg ] ]
+    in
+    case maybeList of
+        Nothing ->
+            emptyMarkup
+
+        Just [] ->
+            emptyMarkup
+
+        Just list ->
+            div [] (List.map f list)
 
 
 hasWarnings : Production -> Bool
