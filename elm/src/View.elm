@@ -872,7 +872,7 @@ agent creator =
 viewPerformers : Maybe (List PerformanceRoleItem) -> Html Msg
 viewPerformers performers =
     div []
-        [ div [ class "title is-5" ] [ text "Team" ]
+        [ div [ class "title is-5" ] [ text "Besetzung" ]
         , case performers of
             Nothing ->
                 div [] [ em [] [ text "Die Daten enthalten keine Informationen zur Besetzung" ] ]
