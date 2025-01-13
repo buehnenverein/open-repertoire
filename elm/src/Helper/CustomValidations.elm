@@ -14,6 +14,7 @@ import Data.Event as Event
         , SubEventType
         , VirtualLocation
         )
+import Data.ImageObject exposing (ImageObject)
 import Data.InternationalizedString exposing (InternationalizedString)
 import Data.Organization exposing (Organization)
 import Data.Person exposing (Person)
@@ -624,9 +625,20 @@ production =
         , field "/abstract" .abstract (maybe productionAbstract)
         , field "/name" .name productionName
         , field "/isBasedOn" .isBasedOn (maybe originalWork)
+        , field "/image" .image (maybe (list imageObject))
 
         -- , abstractOrDescription
         -- , abstractDifferentFromDescription
+        ]
+
+
+imageObject : Validator ImageObject
+imageObject =
+    object
+        [ field "/contentUrl" .contentUrl required
+        , field "/copyrightHolder" .copyrightHolder agent
+        , field "/copyrightNotice" .copyrightNotice optional
+        , field "/license" .license optional
         ]
 
 

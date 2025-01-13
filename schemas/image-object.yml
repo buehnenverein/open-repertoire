@@ -1,0 +1,42 @@
+"$schema": "http://json-schema.org/draft-07/schema#"
+"$id": https://peret.github.io/uc3-openapi/image-object.json
+title: ImageObject
+
+type: object
+additionalProperties: false
+required: 
+  - "@type"
+  - contentUrl
+  - copyrightHolder
+properties: 
+  "@type": 
+    type: string
+    enum: 
+      - ImageObject
+  contentUrl: 
+    type: string
+    description: The URL of the image file
+    format: uri
+    example: "https://example.com/img/production123.png"
+  height:
+    type: integer
+    description: Height of the image in pixels
+    example: 768
+  width:
+    type: integer
+    description: Width of the image in pixels
+    example: 1024
+  copyrightHolder:
+    $ref: ./agent.yml
+  copyrightNotice:
+    type: string
+    description: Text of a notice appropriate for describing the copyright aspects of this image, ideally indicating the owner of the copyright
+  copyrightYear:
+    type: integer
+    description: The year during which the claimed copyright for the image was first asserted
+    example: 2024
+  license:
+    type: string
+    format: uri
+    description: A license document that applies to this image, typically indicated by URL
+    example: https://creativecommons.org/licenses/by-sa/4.0/

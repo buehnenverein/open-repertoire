@@ -4,6 +4,7 @@ import Browser
 import Components.DataEntry as Entry exposing (asDate, asDateAndTime, asLink, asLogo, asTime)
 import Data.Agent exposing (Agent(..))
 import Data.Event exposing (Event, EventStatus(..), EventTypeItem(..), LocationItem(..), Offer, OfferAvailability(..), PerformanceRoleItem, SubEventType)
+import Data.ImageObject exposing (ImageObject)
 import Data.Root exposing (ContentWarningItem, CreatorRoleItem, GenreItem(..), Name(..), Production, ProductionProductionType(..), Root, rootDecoder)
 import Data.SuperEvent exposing (SuperEvent)
 import Helper.CustomValidations as CustomValidations
@@ -335,6 +336,9 @@ productionGrid production =
             [ viewProductionAudience production
             ]
         , div [ class "cell box mb-0 is-col-span-3-widescreen is-col-span-3" ]
+            [ viewProductionImages production.image
+            ]
+        , div [ class "cell box mb-0 is-col-span-3-widescreen is-col-span-3" ]
             [ viewOriginalWork production
             ]
         , div [ class "cell box mb-0 is-col-span-2-widescreen is-col-span-3" ]
@@ -451,6 +455,37 @@ viewProductionAudience production =
                 |> Entry.withWarnings CustomValidations.minMaxAge
                 |> Entry.map formatAge
             ]
+        ]
+
+
+viewProductionImages : Maybe (List ImageObject) -> Html Msg
+viewProductionImages images =
+    div []
+        [ div [ class "title is-5" ] [ text "Bilder" ]
+
+        , case images of
+            Nothing ->
+                em [] [ text "Die Daten enthalten keine Bilder für diese Produktion" ]
+
+            Just list ->
+                div [] (List.map viewProductionImage list)
+        ]
+
+
+viewProductionImage : ImageObject -> Html Msg
+viewProductionImage image =
+    Entry.view
+        [ Entry.required "Bild" image.contentUrl
+            |> Entry.asLogo
+
+        , Entry.required "Urheber" image.copyrightHolder
+            |> Entry.map agent
+        , Entry.optional "Jahr" image.copyrightYear
+            |> Entry.map String.fromInt
+        , Entry.optional "Urheberrechtshinweis" image.copyrightNotice
+        , Entry.optional "Lizenz" image.license
+            |> Entry.asLink Nothing
+
         ]
 
 

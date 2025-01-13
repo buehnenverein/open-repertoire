@@ -9,14 +9,16 @@ schemas = internationalized-string \
 		  organization \
 		  agent \
 		  super-event \
-		  event
+		  event \
+		  image-object
 sources = InternationalizedString \
 		  PostalAddress \
 		  Person \
 		  Organization \
 		  Agent \
 		  SuperEvent \
-		  Event
+		  Event \
+		  ImageObject
 schema_files = $(foreach schema,$(schemas),$(SCHEMA_DIR)/$(schema).json)
 
 generated_elm_files = $(foreach source,$(sources),elm/src/Data/$(source).elm)

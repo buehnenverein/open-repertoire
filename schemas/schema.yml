@@ -153,6 +153,12 @@ definitions:
             - LocalPremiere
             - CountryPremiere
             - Revival
+        image:
+          type: array
+          description: List of photos of the production
+          items:
+            $ref: ./image-object.yml
+
         accessibilityHazard:
           type: array
           description: A list of characteristics of the production that may be physiologically dangerous to some users.
