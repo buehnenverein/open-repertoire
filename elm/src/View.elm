@@ -1,7 +1,7 @@
 module View exposing (main)
 
 import Browser
-import Components.DataEntry as Entry exposing (asDate, asDateAndTime, asLink, asLogo, asTime)
+import Components.DataEntry as Entry exposing (asDate, asDateAndTime, asImage, asLink, asTime)
 import Data.Agent exposing (Agent(..))
 import Data.Event exposing (Event, EventStatus(..), EventTypeItem(..), LocationItem(..), Offer, OfferAvailability(..), PerformanceRoleItem, SubEventType)
 import Data.ImageObject exposing (ImageObject)
@@ -471,7 +471,7 @@ viewProductionImage : ImageObject -> Html Msg
 viewProductionImage image =
     Entry.view
         [ Entry.required "Bild" image.contentUrl
-            |> Entry.asLogo
+            |> Entry.asImage
 
         , Entry.required "Urheber" image.copyrightHolder
             |> Entry.map agent
@@ -554,7 +554,7 @@ viewAgent personOrOrg =
                 , Entry.optional "Addresse" organization.address |> Entry.nested .streetAddress
                 , Entry.optional "Postleitzahl" organization.address |> Entry.map .postalCode
                 , Entry.optional "Stadt" organization.address |> Entry.map .addressLocality
-                , Entry.optional "Logo" organization.logo |> asLogo
+                , Entry.optional "Logo" organization.logo |> asImage
                 ]
 
         AgentPe person ->

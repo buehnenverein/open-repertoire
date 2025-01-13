@@ -1,4 +1,4 @@
-module Components.DataEntry exposing (Model, ZoneWithName, abstract, asDate, asDateAndTime, asLink, asLogo, asTime, eventDescription, eventName, join, map, nested, optional, productionContentWarning, productionDescription, productionName, productionSubtitle, required, superEventDescription, superEventName, view, viewConcat, withHelp, withWarnings)
+module Components.DataEntry exposing (Model, ZoneWithName, abstract, asDate, asDateAndTime, asImage, asLink, asTime, eventDescription, eventName, join, map, nested, optional, productionContentWarning, productionDescription, productionName, productionSubtitle, required, superEventDescription, superEventName, view, viewConcat, withHelp, withWarnings)
 
 import Data.Event as Event
 import Data.InternationalizedString exposing (InternationalizedString)
@@ -118,8 +118,8 @@ asLink linkText entry =
     { entry | options = Link linkText }
 
 
-asLogo : Model a -> Model a
-asLogo entry =
+asImage : Model a -> Model a
+asImage entry =
     { entry | options = Logo }
 
 
