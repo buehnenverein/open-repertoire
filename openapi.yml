@@ -1,24 +1,39 @@
 openapi: 3.0.3
 info:
-  title: Use Case 3 - API
+  title: ORIF - Open Repertoire Interchange Format
   description: |-
-    ## Overview
     ### WIP: This document is a work in progress. The API documented here is subject to change and should not be widely adopted yet.
-    This document describes the public API implemented by theaters to provide their current repertoire.
-    The data structure is based on [schema.org](https://schema.org) types, in particular [CreativeWork](https://schema.org/CreativeWork) and [Event](https://schema.org/Event).
 
-    This document is intended as documentation for consumers of the API *as well as* anyone who intends to implement an API endpoint that is compatible with Use Case 3. 
+    # Overview
 
-    **Note for API implementors:** It's not required to use the same endpoint name as documented here. The important part is to implement a single endpoint that returns data in the format declared in this specification.
+    The *Open Repertoire Interchange Format* (ORIF) enables theaters to share comprehensive information about their productions and events in a machine-readable, standardized format. This specification provides a structured approach to exchanging theatrical repertoire data across different institutions and platforms.
 
-    ## Tools for API implementors
-    To aid theaters implementing this API, we provide two tools:
-    ### [Validator](validate)
-    Use the [Validator](validate) to test whether your implementation matches the API specification.
+    # Background
 
-    ### [Data Viewer](view)
-    You can use the [Data Viewer](view) to display information from the API in a more human-friendly way.
-    This can be helpful to quality control the data that is returned by your API implementation.
+    *ORIF* emerged from the need to standardize theatrical repertoire data exchange as a precursor to the [Datenraum Kultur](https://datenraum-kultur.de).
+    By building upon [schema.org](https://schema.org) (in particular, the existing types [CreativeWork](https://schema.org/CreativeWork) and [Event](https://schema.org/Event)), the format ensures:
+    - Wide compatibility with existing web technologies
+    - Flexibility to represent diverse theatrical productions
+    - Easy integration with cultural data platforms and event calendars
+
+    # Implementation Guidelines
+
+    ### API Requirements
+    - Provide a single endpoint returning repertoire data in the *ORIF* specification format
+    - the Endpoint name can vary from what's mentioned here; consistency of data structure is key
+
+    ### Tools for Implementors
+    - **[Validator](validate)**: Use this tool to test whether your implementation matches the API specification
+    - **[Data Viewer](view)**: Use this tool to display information from the API in a more human-friendly way. This can be helpful to quality control the data that is returned by your API implementation.
+
+    # Recommendations for Users
+
+    - When using an *ORIF* endpoint to import data, you should implement robust change tracking using the `identifier` and `dateModified` fields
+
+
+    # Note on multi-language support
+    Some of the fields (e.g. `name` and `description` on a production), can either contain a simple string or an `InternationalizedString` object.
+    This object can be used to include the same text in different translations.
   # termsOfService: http://swagger.io/terms/
   contact:
     email: retzlaff@buehnenverein.de
