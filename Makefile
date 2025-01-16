@@ -10,7 +10,8 @@ schemas = internationalized-string \
 		  agent \
 		  super-event \
 		  event \
-		  image-object
+		  image-object \
+		  work
 sources = InternationalizedString \
 		  PostalAddress \
 		  Person \
@@ -18,7 +19,8 @@ sources = InternationalizedString \
 		  Agent \
 		  SuperEvent \
 		  Event \
-		  ImageObject
+		  ImageObject \
+		  Work
 schema_files = $(foreach schema,$(schemas),$(SCHEMA_DIR)/$(schema).json)
 
 generated_elm_files = $(foreach source,$(sources),elm/src/Data/$(source).elm)

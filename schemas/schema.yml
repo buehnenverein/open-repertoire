@@ -15,40 +15,6 @@ definitions:
     StringType:
       type: string
 
-    OriginalWork:
-      type: object
-      description: |-
-        An object describing the work that this production is based on (if any).
-        E.g. this could describe the original dramatic text that was used as the basis of a theater production.
-      additionalProperties: false
-      required:
-        - "@type"
-        - "name"
-      properties:
-        "@type":
-          $ref: "#/definitions/CommonCreativeWorkType"
-        name:
-          type: string
-          description: The original work's name or title.
-          example: Hedwig and the Angry Inch
-        author:
-          type: array
-          description: The original work's author(s).
-          example:
-            - "@type": "Person"
-              name: Stephen Trask
-            - "@type": "Person"
-              name: John Cameron Mitchell
-          items:
-            $ref: "./agent.yml"
-        translator:
-          type: array
-          description: Person or Organization whose translation of the original work is the basis for this production.
-          example:
-            - "@type": "Person"
-              name: Mona Mustermann
-          items:
-            $ref: "./agent.yml"
     Production:
       type: object
       description: "An object containing information about the production and its events."
@@ -90,7 +56,30 @@ definitions:
           description: A short abstract or teaser text describing the production.
           example: "Das Kult-Rockmusical »Hedwig and the Angry Inch« wurde innerhalb weniger Jahre vom Off-Broadway-Geheimtipp zu einem Hit am Broadway selbst. 2023 erobert Hedwig, die »weltweit ignorierte Queen of Glamrock« endlich auch die Herzen des Augsburger Publikums – mit dem langjährigen Schauspiel-Ensemble-Mitglied Thomas Prazak in der Hauptrolle. Die Live-Musik steuern Stefan Leibold, Jonas Horche, Tilman Herpichböhm und Niklas Rehle als Band »The Angry Inch« bei."
         isBasedOn:
-          $ref: "#/definitions/OriginalWork"
+          type: array
+          description: |-
+            List of original works that this production is based on.
+            E.g. this could describe the original dramatic text that was used as the basis of a theater production.
+          items:
+            $ref: "./work.yml"
+        workPerformed:
+          description: |-
+            List of original works that are performed in this production, e.g. the music compositions that are performed in a classical concert.
+          type: array
+          items:
+            $ref: "./work.yml"
+          example:
+            - "@type": MusicComposition
+              name: La Bohème
+              composer:
+                - "@type": "Person"
+                  name: Giacomo Puccini
+              lyricist:
+                - "@type": "Person"
+                  name: Giuseppe Giacosa
+                - "@type": "Person"
+                  name: Luigi Illica
+            
         events:
           type: array
           description: A list of events at which this production will be performed. 

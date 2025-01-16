@@ -32,6 +32,7 @@ import Data.Root
         , Subtitle(..)
         )
 import Data.SuperEvent as SuperEvent exposing (SuperEvent)
+import Data.Work exposing (MusicComposition, OriginalWork, Work(..))
 import Helper.LanguageCodes as LanguageCodes
 import Iso8601
 import LanguageTag.Parser
@@ -624,7 +625,7 @@ production =
         , field "/subtitle" .subtitle (maybe productionSubtitle)
         , field "/abstract" .abstract (maybe productionAbstract)
         , field "/name" .name productionName
-        , field "/isBasedOn" .isBasedOn (maybe originalWork)
+        , field "/isBasedOn" .isBasedOn (maybe (list work))
         , field "/image" .image (maybe (list imageObject))
 
         -- , abstractOrDescription
@@ -721,12 +722,31 @@ internationalizedString =
         ]
 
 
-originalWork : Validator Data.Root.OriginalWork
+work : Validator Work
+work path data =
+    case data of
+        WorkOr original ->
+            originalWork path original
+
+        WorkMu composition ->
+            musicComposition path composition
+
+
+originalWork : Validator OriginalWork
 originalWork =
     object
         [ field "/author" .author (maybe (list agent))
         , field "/name" .name required
         , field "/translator" .translator (maybe (list agent))
+        ]
+
+
+musicComposition : Validator MusicComposition
+musicComposition =
+    object
+        [ field "/composer" .composer (maybe (list agent))
+        , field "/name" .name required
+        , field "/lyricist" .lyricist (maybe (list agent))
         ]
 
 

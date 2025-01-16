@@ -1,0 +1,81 @@
+"$schema": "http://json-schema.org/draft-07/schema#"
+"$id": https://peret.github.io/uc3-openapi/work.json
+title: Work
+definitions:
+  OriginalWork:
+    type: object
+    description: |-
+      An object describing the work that this production is based on (if any).
+      E.g. this could describe the original dramatic text that was used as the basis of a theater production.
+    additionalProperties: false
+    required:
+      - "@type"
+      - "name"
+    properties:
+      "@type":
+        type: string
+        enum:
+          - "CreativeWork"
+          - "Play"
+      name:
+        type: string
+        description: The original work's name or title.
+        example: Hedwig and the Angry Inch
+      author:
+        type: array
+        description: The original work's author(s).
+        example:
+          - "@type": "Person"
+            name: Stephen Trask
+          - "@type": "Person"
+            name: John Cameron Mitchell
+        items:
+          $ref: "./agent.yml"
+      translator:
+        type: array
+        description: Person or Organization whose translation of the original work is the basis for this production.
+        example:
+          - "@type": "Person"
+            name: Mona Mustermann
+        items:
+          $ref: "./agent.yml"
+
+  MusicComposition:
+    type: object
+    description: |-
+      A musical composition.
+    additionalProperties: false
+    required:
+      - "@type"
+      - "name"
+    properties:
+      "@type":
+        type: string
+        enum:
+          - MusicComposition
+      name:
+        type: string
+        description: The original work's name or title.
+        example: La Bohème
+      composer:
+        type: array
+        description: The original work's composer(s).
+        example:
+          - "@type": "Person"
+            name: Giacomo Puccini
+        items:
+          $ref: "./agent.yml"
+      lyricist:
+        type: array
+        description: Person or Organization who wrote the words of this composition.
+        example:
+          - "@type": "Person"
+            name: Giuseppe Giacosa
+          - "@type": "Person"
+            name: Luigi Illica
+        items:
+          $ref: "./agent.yml"
+
+oneOf:
+  - $ref: "#/definitions/OriginalWork"
+  - $ref: "#/definitions/MusicComposition"

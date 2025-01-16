@@ -7,6 +7,7 @@ import Data.Event exposing (Event, EventStatus(..), EventTypeItem(..), LocationI
 import Data.ImageObject exposing (ImageObject)
 import Data.Root exposing (ContentWarningItem, CreatorRoleItem, GenreItem(..), Name(..), Production, ProductionProductionType(..), Root, rootDecoder)
 import Data.SuperEvent exposing (SuperEvent)
+import Data.Work exposing (MusicComposition, OriginalWork, Work(..))
 import Helper.CustomValidations as CustomValidations
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -339,7 +340,10 @@ productionGrid production =
             [ viewProductionImages production.image
             ]
         , div [ class "cell box mb-0 is-col-span-3-widescreen is-col-span-3" ]
-            [ viewOriginalWork production
+            [ viewIsBasedOn production
+            ]
+        , div [ class "cell box mb-0 is-col-span-3-widescreen is-col-span-3" ]
+            [ viewWorkPerformed production
             ]
         , div [ class "cell box mb-0 is-col-span-2-widescreen is-col-span-3" ]
             [ viewProductionAccessibility production
@@ -497,20 +501,55 @@ viewProductionImage image =
         ]
 
 
-viewOriginalWork : Production -> Html Msg
-viewOriginalWork production =
+viewWork : Work -> Html Msg
+viewWork work =
+    case work of
+        WorkOr original ->
+            viewOriginalWork original
+
+        WorkMu composition ->
+            viewMusicComposition composition
+
+
+viewMusicComposition : MusicComposition -> Html Msg
+viewMusicComposition composition =
+    Entry.view
+        [ Entry.required "Titel" composition.name
+        , Entry.required "Komponist:in" composition
+            |> Entry.nested .composer
+            |> Entry.join agent
+        , Entry.required "Libretto" composition
+            |> Entry.nested .lyricist
+            |> Entry.join agent
+        ]
+
+
+viewOriginalWork : OriginalWork -> Html Msg
+viewOriginalWork originalWork =
+    Entry.view
+        [ Entry.required "Titel" originalWork.name
+        , Entry.required "Autor:in" originalWork
+            |> Entry.nested .author
+            |> Entry.join agent
+        , Entry.required "Übersetzung" originalWork
+            |> Entry.nested .translator
+            |> Entry.join agent
+        ]
+
+
+viewIsBasedOn : Production -> Html Msg
+viewIsBasedOn production =
     div []
-        [ div [ class "title is-5" ] [ text "Informationen zum Werk" ]
-        , Entry.view
-            [ Entry.optional "Titel" production.isBasedOn
-                |> Entry.map .name
-            , Entry.optional "Autor:in" production.isBasedOn
-                |> Entry.nested .author
-                |> Entry.join agent
-            , Entry.optional "Übersetzung" production.isBasedOn
-                |> Entry.nested .translator
-                |> Entry.join agent
-            ]
+        [ div [ class "title is-5" ] [ text "Werkvorlage" ]
+        , viewList "Die Daten enthalten keine Informationen zur Werkvorlage" viewWork production.isBasedOn
+        ]
+
+
+viewWorkPerformed : Production -> Html Msg
+viewWorkPerformed production =
+    div []
+        [ div [ class "title is-5" ] [ text "Werkinformationen" ]
+        , viewList "Die Daten enthalten keine Werkinformationen" viewWork production.workPerformed
         ]
 
 
