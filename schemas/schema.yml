@@ -31,6 +31,10 @@ definitions:
           type: string
           description: The unique ID of this production. This could be an internal database ID, for example.
           example: "123"
+        dateModified:
+          type: string
+          description: "Timestamp of when this production entry was last modified"
+          format: date-time
         name:
           oneOf:
             - $ref: "#/definitions/StringType"

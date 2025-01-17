@@ -263,6 +263,10 @@ properties:
     type: string
     description: The unique ID of this event. This could be an internal database ID, for example.
     example: "345"
+  dateModified:
+    type: string
+    description: "Timestamp of when this event entry was last modified"
+    format: date-time
   startDate:
     type: string
     description: "The start date and time of the event (in ISO 8601 date format)."
