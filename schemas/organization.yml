@@ -12,6 +12,10 @@ properties:
     type: string
     enum:
       - "Organization"
+  identifier:
+    type: string
+    description: A unique ID that can be used to identify this organization. This could be an internal database ID, for example.
+    example: "836"
   name:
     type: string
     description: "The organization's name"

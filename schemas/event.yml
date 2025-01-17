@@ -68,6 +68,10 @@ definitions:
         enum:
           - Place
         description: The type of this location object. Must be "Place" for physical locations.
+      identifier:
+        type: string
+        description: A unique ID that can be used to identify this place. This could be an internal database ID, for example.
+        example: "835"
       name:
         type: string
         example: brechtbühne im Gaswerk
@@ -103,6 +107,10 @@ definitions:
         enum:
           - VirtualLocation
         description: The type of this location object. Must be "VirtualLocation" for virtual locations.
+      identifier:
+        type: string
+        description: A unique ID that can be used to identify this virtual location. This could be an internal database ID, for example.
+        example: "836"
       name:
         type: string
         description:

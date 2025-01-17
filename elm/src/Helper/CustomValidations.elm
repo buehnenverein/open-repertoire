@@ -100,6 +100,7 @@ organization =
     object
         [ field "/address" .address (maybe address)
         , field "/name" .name required
+        , field "/identifier" .identifier optional
         ]
 
 
@@ -580,6 +581,7 @@ person : Validator Person
 person =
     object
         [ field "/name" .name required
+        , field "/identifier" .identifier optional
         ]
 
 
@@ -784,6 +786,7 @@ place =
     object
         [ field "/name" .name optional
         , field "/address" .address address
+        , field "/identifier" .identifier optional
         , geocoordinates
         ]
 
@@ -794,6 +797,7 @@ virtualLocation =
         [ field "/name" .name optional
         , field "/url" .url optional
         , field "/description" .description optional
+        , field "/identifier" .identifier optional
         ]
 
 

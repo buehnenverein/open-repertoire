@@ -848,7 +848,8 @@ locationTable location =
     case location of
         LocationItemPl place ->
             Entry.view
-                [ Entry.optional "Name" place.name
+                [ Entry.optional "ID" place.identifier
+                , Entry.optional "Name" place.name
                 , Entry.optional "Addresse" place.address.streetAddress
                 , Entry.required "Postleitzahl" place.address.postalCode
                 , Entry.required "Stadt" place.address.addressLocality
@@ -869,7 +870,8 @@ locationTable location =
 
         LocationItemVi info ->
             Entry.view
-                [ Entry.optional "Name" info.name
+                [ Entry.optional "ID" info.identifier
+                , Entry.optional "Name" info.name
                 , Entry.optional "Link" info.url
                 , Entry.optional "Beschreibung" info.description
                 ]
