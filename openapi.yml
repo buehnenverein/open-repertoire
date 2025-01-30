@@ -36,7 +36,7 @@ info:
     This object can be used to include the same text in different translations.
   # termsOfService: http://swagger.io/terms/
   contact:
-    email: retzlaff@buehnenverein.de
+    email: datenraum@buehnenverein.de
   # license:
   #   name: Apache 2.0
   #   url: http://www.apache.org/licenses/LICENSE-2.0.html
