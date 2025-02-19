@@ -1416,12 +1416,12 @@ collapseExpandButtons =
             [ class "button is-primary is-small"
             , onClick ExpandAllClicked
             ]
-            [ text "Expand all" ]
+            [ text "Alle ausklappen" ]
         , button
             [ class "button is-primary is-small"
             , onClick CollapseAllClicked
             ]
-            [ text "Collapse all" ]
+            [ text "Alle einklappen" ]
         ]
 
 
