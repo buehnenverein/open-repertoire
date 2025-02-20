@@ -1246,10 +1246,10 @@ viewJsonError =
         , h1 [ class "title is-size-5 mt-5" ] [ text "Nächste Schritte:" ]
         , ul []
             [ li []
-                [ text "Wahrscheinlich muss ihre Schnittstelle angepasst werden, um dem vorgegebenen Datenformat zu entsprechen."
+                [ text "Wahrscheinlich muss Ihre Schnittstelle angepasst werden, um dem vorgegebenen Datenformat zu entsprechen."
                 ]
             , li []
-                [ text "Bitte kontaktieren Sie den Betreuer Ihrer Schnittstelle und bitten Sie ihn sicherzustellen, dass der Endpunkt gültige Daten zurückgibt."
+                [ text "Bitte kontaktieren Sie den Support Ihrer Schnittstelle und bitten Sie darum, sicherzustellen, dass der Endpunkt gültige Daten zurückgibt."
                 ]
             , li []
                 [ text "Das "
