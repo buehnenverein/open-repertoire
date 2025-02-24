@@ -353,7 +353,7 @@ geocoordinates path data =
 --         ( Just description, Just abstract ) ->
 --             if sameText description abstract then
 --                 [ warning (path ++ "/abstract") "is the same"
---                     |> forView "Kurzbeschreibung und Beschreibung enthalten den selben Text. Vermeiden Sie es, Ihre Beschreibungstexte zu doppeln."
+--                     |> forView "Kurzbeschreibung und Beschreibung enthalten denselben Text. Vermeiden Sie es, Ihre Beschreibungstexte zu doppeln."
 --                 ]
 --             else
 --                 []
@@ -405,21 +405,21 @@ previousStartPresent path data =
 
 previousStartNotRequired : Validator Event
 previousStartNotRequired path data =
+    let
+        errorMsg =
+            [ warning (path ++ "/previousStartDate") "should only be set if the event status is either 'rescheduled, 'postponed', or 'cancelled'"
+                |> forView "Die vorherige Startzeit sollte nur bei verschobenen oder abgesagten Veranstaltungen angegeben werden."
+            ]
+    in
     case ( data.eventStatus, data.previousStartDate ) of
         ( Just EventScheduled, Just _ ) ->
-            [ warning (path ++ "/previousStartDate") "should only be set if the event status is either 'rescheduled, 'postponed', or 'cancelled'"
-                |> forView "Die vorherige Startzeit sollte nur bei verschobenen oder abgesagten Veranstaltungen angegeben werden."
-            ]
+            errorMsg
 
         ( Just EventMovedOnline, Just _ ) ->
-            [ warning (path ++ "/previousStartDate") "should only be set if the event status is either 'rescheduled, 'postponed', or 'cancelled'"
-                |> forView "Die vorherige Startzeit sollte nur bei verschobenen oder abgesagten Veranstaltungen angegeben werden."
-            ]
+            errorMsg
 
         ( Nothing, Just _ ) ->
-            [ warning (path ++ "/previousStartDate") "should only be set if the event status is either 'rescheduled, 'postponed', or 'cancelled'"
-                |> forView "Die vorherige Startzeit sollte nur bei verschobenen oder abgesagten Veranstaltungen angegeben werden."
-            ]
+            errorMsg
 
         ( _, _ ) ->
             []
@@ -430,7 +430,7 @@ languageTagValid path data =
     let
         validationMsg =
             warning path "doesn't seem to be a valid language code. This field should contain language codes like 'en', 'de', etc."
-                |> forView "Dieses Feld sollte einen Sprachcode enthalten und nicht, z.B. den vollen Namen der Sprache. Beispiele für Codes dieser Art sind \"de\" und \"en-GB\"."
+                |> forView "Dieses Feld sollte einen Sprachcode enthalten und nicht z.B. den vollen Namen der Sprache. Beispiele für Codes dieser Art sind \"de\" und \"en-GB\"."
     in
     case LanguageTag.Parser.parseBcp47 data of
         Just ( lang, _ ) ->

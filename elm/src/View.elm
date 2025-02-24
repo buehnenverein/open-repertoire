@@ -466,7 +466,7 @@ viewProductionImages : Maybe (List ImageObject) -> Html Msg
 viewProductionImages images =
     div []
         [ div [ class "title is-5" ] [ text "Bilder" ]
-        , viewList "Die Daten enthalten keine Bilder für diese Produktion" viewProductionImage images
+        , viewList "Die Daten enthalten keine Bilder für diese Produktion." viewProductionImage images
         ]
 
 
@@ -541,7 +541,7 @@ viewIsBasedOn : Production -> Html Msg
 viewIsBasedOn production =
     div []
         [ div [ class "title is-5" ] [ text "Werkvorlage" ]
-        , viewList "Die Daten enthalten keine Informationen zur Werkvorlage" viewWork production.isBasedOn
+        , viewList "Die Daten enthalten keine Informationen zur Werkvorlage." viewWork production.isBasedOn
         ]
 
 
@@ -549,7 +549,7 @@ viewWorkPerformed : Production -> Html Msg
 viewWorkPerformed production =
     div []
         [ div [ class "title is-5" ] [ text "Werkinformationen" ]
-        , viewList "Die Daten enthalten keine Werkinformationen" viewWork production.workPerformed
+        , viewList "Die Daten enthalten keine Werkinformationen." viewWork production.workPerformed
         ]
 
 
@@ -571,7 +571,7 @@ viewContentWarnings : Production -> Html Msg
 viewContentWarnings production =
     div []
         [ div [ class "title is-5" ] [ text "Inhaltswarnungen" ]
-        , viewList "Die Daten enthalten keine Informationen zu Inhaltswarnungen" viewContentWarning production.contentWarning
+        , viewList "Die Daten enthalten keine Informationen zu Inhaltswarnungen." viewContentWarning production.contentWarning
         ]
 
 
@@ -585,7 +585,7 @@ viewFunders : Production -> Html Msg
 viewFunders production =
     div []
         [ div [ class "title is-5" ] [ text "Förderer" ]
-        , viewList "Die Daten enthalten keine Informationen zu Förderern" viewAgent production.funder
+        , viewList "Die Daten enthalten keine Informationen zu Förderern." viewAgent production.funder
         ]
 
 
@@ -593,7 +593,7 @@ viewSponsors : Production -> Html Msg
 viewSponsors production =
     div []
         [ div [ class "title is-5" ] [ text "Sponsoren" ]
-        , viewList "Die Daten enthalten keine Informationen zu Sponsoren" viewAgent production.sponsor
+        , viewList "Die Daten enthalten keine Informationen zu Sponsoren." viewAgent production.sponsor
         ]
 
 
@@ -603,7 +603,7 @@ viewAgent personOrOrg =
         AgentOr organization ->
             Entry.view
                 [ Entry.required "Name" organization.name
-                , Entry.optional "Addresse" organization.address |> Entry.nested .streetAddress
+                , Entry.optional "Adresse" organization.address |> Entry.nested .streetAddress
                 , Entry.optional "Postleitzahl" organization.address |> Entry.map .postalCode
                 , Entry.optional "Stadt" organization.address |> Entry.map .addressLocality
                 , Entry.optional "Logo" organization.logo |> asImage
@@ -676,7 +676,7 @@ viewEventTable zone allEvents event =
             |> Entry.withWarnings (CustomValidations.validDerniere allEvents)
             |> Entry.nested .eventType
             |> Entry.join humanReadableEventType
-        , Entry.optional "Untertitel in" event.subtitleLanguage
+        , Entry.optional "Untertitel-Sprachen" event.subtitleLanguage
             |> Entry.withWarnings (CustomValidations.list CustomValidations.languageTagValid)
             |> Entry.join identity
         , Entry.required "Status" (eventStatusToString event.eventStatus)
@@ -743,7 +743,7 @@ viewSubEvents : Entry.ZoneWithName -> Maybe (List SubEventType) -> Html Msg
 viewSubEvents zone subEvents =
     div []
         [ div [ class "title is-5" ] [ text "Zusatzveranstaltungen" ]
-        , viewList "Die Daten enthalten keine Informationen zu Zusatzveranstaltungen" (viewSubEvent zone) subEvents
+        , viewList "Die Daten enthalten keine Informationen zu Zusatzveranstaltungen." (viewSubEvent zone) subEvents
         ]
 
 
@@ -850,11 +850,11 @@ locationTable location =
             Entry.view
                 [ Entry.optional "ID" place.identifier
                 , Entry.optional "Name" place.name
-                , Entry.optional "Addresse" place.address.streetAddress
+                , Entry.optional "Adresse" place.address.streetAddress
                 , Entry.required "Postleitzahl" place.address.postalCode
                 , Entry.required "Stadt" place.address.addressLocality
                 , Entry.optional "Land" place.address.addressCountry
-                , Entry.required "Koordinaten" place
+                , Entry.required "Geokoordinaten" place
                     |> Entry.nested osmUrl
                     |> asLink (Just "Karte anzeigen")
                 , Entry.optional "Rollstuhlplätze" place.wheelChairPlaces
@@ -902,7 +902,7 @@ viewCreators creators =
         [ div [ class "title is-5" ] [ text "Team" ]
         , case creators of
             Nothing ->
-                div [] [ em [] [ text "Die Daten enthalten keine Informationen zum Produktionsteam" ] ]
+                div [] [ em [] [ text "Die Daten enthalten keine Informationen zum Produktionsteam." ] ]
 
             Just list ->
                 Entry.view
@@ -936,7 +936,7 @@ viewPerformers performers =
         [ div [ class "title is-5" ] [ text "Besetzung" ]
         , case performers of
             Nothing ->
-                div [] [ em [] [ text "Die Daten enthalten keine Informationen zur Besetzung" ] ]
+                div [] [ em [] [ text "Die Daten enthalten keine Informationen zur Besetzung." ] ]
 
             Just list ->
                 Entry.view
@@ -964,7 +964,7 @@ viewOffers : Maybe (List Offer) -> Html Msg
 viewOffers offers =
     div []
         [ div [ class "title is-5" ] [ text "Ticketinformationen" ]
-        , viewList "Die Daten enthalten keine Ticketinformationen für diese Veranstaltung" viewOffer offers
+        , viewList "Die Daten enthalten keine Ticketinformationen für diese Veranstaltung." viewOffer offers
         ]
 
 
@@ -1230,10 +1230,10 @@ viewNetworkError url =
                 , a [ href url, target "_blank" ] [ text url ]
                 ]
             , li []
-                [ text "Kopieren Sie die angezeigten Daten"
+                [ text "Kopieren Sie die angezeigten Daten."
                 ]
             , li []
-                [ text "Fügen Sie die kopierten Daten in das Textfeld auf dieser Seite ein und versuchen Sie es erneut"
+                [ text "Fügen Sie die kopierten Daten in das Textfeld auf dieser Seite ein und versuchen Sie es erneut."
                 ]
             ]
         ]
@@ -1268,10 +1268,10 @@ viewIntroduction : Html Msg
 viewIntroduction =
     section
         [ h1 [ class "is-size-1" ]
-            [ text "Anwendungsfall 3 - Datenbetrachter"
+            [ text "Lektoratstool der »Smarten Theaterdienste«"
             ]
         , p []
-            [ text "Verwenden Sie dieses Tool, um die Daten anzuzeigen, die von Ihrem Repertoire-Endpunkt zurückgegeben werden."
+            [ text "Hier können Sie sich die Daten anzeigen lassen, die momentan über Ihre Spielplan-Schnittstelle gesendet werden und überprüfen, ob die Inhalte richtig zugeordnet sind."
             ]
         ]
 
@@ -1290,10 +1290,10 @@ viewInput inputString buttonEnabled =
 
         controlAttrs =
             if invalidUrl then
-                [ attribute "data-tooltip" "Invalider Link" ]
+                [ attribute "data-tooltip" "Ungültiger Link" ]
 
             else if invalidJson then
-                [ attribute "data-tooltip" "Invalides Datenformat" ]
+                [ attribute "data-tooltip" "Ungültiges Datenformat" ]
 
             else
                 []
