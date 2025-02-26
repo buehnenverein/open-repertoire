@@ -490,13 +490,16 @@ viewProductionImage image =
     Entry.view
         [ Entry.required "Bild" image.contentUrl
             |> Entry.asImage
-        , Entry.required "Urheber" image.copyrightHolder
+        , Entry.required "Fotograf:in" image.copyrightHolder
             |> Entry.map agent
+            |> Entry.withHelp "Name der Fotograf:in oder Urheber:in."
         , Entry.optional "Jahr" image.copyrightYear
             |> Entry.map String.fromInt
         , Entry.optional "Urheberrechtshinweis" image.copyrightNotice
-        , Entry.optional "Lizenz" image.license
+            |> Entry.withHelp "Text des zu diesem Foto gehörenden Urheberrechtshinweises."
+        , Entry.optional "Bildlizenz" image.license
             |> Entry.asLink Nothing
+            |> Entry.withHelp "Link zu weiterführenden Informationen über die Lizenzbedingungen dieses Bildes."
         , Entry.required "Auflösung" imageDimensions
         ]
 
@@ -558,11 +561,11 @@ viewProductionAccessibility production =
     div []
         [ div [ class "title is-5" ] [ text "Barrierefreiheit" ]
         , Entry.view
-            [ Entry.optional "Inhaltswarnungen" production.accessibilityHazard
+            [ Entry.optional "Warnungen zu sensorischen Reizen" production.accessibilityHazard
                 |> Entry.join Data.Root.accessibilityHazardItemToString
-                |> Entry.withHelp "Eigenschaften der Produktion, die für bestimtme Personen gefährlich sein könnten (z.B. Lichtblitze/Stroboskoplicht)."
+                |> Entry.withHelp "Eigenschaften der Produktion, die für bestimtme Personen gefährlich oder schwierig sein könnten (z.B. Lichtblitze/Stroboskoplicht/Schussgeräusche)."
             , Entry.optional "Barrierefreiheitsbeschreibung" production.accessibilitySummary
-                |> Entry.withHelp "Eine textuelle Beschreibung möglicher Barrieren bei dieser Produktion."
+                |> Entry.withHelp "Eine textuelle Beschreibung möglicher inhaltlicher Barrieren der Produktion oder physikalischer Barrieren des Aufführungsortes."
             ]
         ]
 
@@ -570,8 +573,8 @@ viewProductionAccessibility production =
 viewContentWarnings : Production -> Html Msg
 viewContentWarnings production =
     div []
-        [ div [ class "title is-5" ] [ text "Inhaltswarnungen" ]
-        , viewList "Die Daten enthalten keine Informationen zu Inhaltswarnungen." viewContentWarning production.contentWarning
+        [ div [ class "title is-5" ] [ text "Warnungen zu sensiblen Themen" ]
+        , viewList "Die Daten enthalten keine Informationen zu sensiblen Themen." viewContentWarning production.contentWarning
         ]
 
 
@@ -742,8 +745,8 @@ eventStatusToString eventStatus =
 viewSubEvents : Entry.ZoneWithName -> Maybe (List SubEventType) -> Html Msg
 viewSubEvents zone subEvents =
     div []
-        [ div [ class "title is-5" ] [ text "Zusatzveranstaltungen" ]
-        , viewList "Die Daten enthalten keine Informationen zu Zusatzveranstaltungen." (viewSubEvent zone) subEvents
+        [ div [ class "title is-5" ] [ text "Begleitveranstaltungen" ]
+        , viewList "Die Daten enthalten keine Informationen zu Begleitveranstaltungen." (viewSubEvent zone) subEvents
         ]
 
 
@@ -860,12 +863,14 @@ locationTable location =
                 , Entry.optional "Rollstuhlplätze" place.wheelChairPlaces
                     |> Entry.map .count
                     |> Entry.map String.fromInt
+                    |> Entry.withHelp "Anzahl der Rollstuhlplätze am Aufführungsort."
                 , Entry.optional "Platz für Assistent:in?" place.wheelChairPlaces
                     |> Entry.nested .hasSpaceForAssistant
                     |> Entry.map boolString
                 , Entry.optional "Rollstuhlkapazität" place.wheelChairPlaces
                     |> Entry.nested .wheelchairUserCapacity
                     |> Entry.map String.fromInt
+                    |> Entry.withHelp "Anzahl der Rollstuhlbenutzer die an der Veranstaltung teilnehmen können."
                 ]
 
         LocationItemVi info ->
@@ -963,8 +968,8 @@ viewPerformer performer =
 viewOffers : Maybe (List Offer) -> Html Msg
 viewOffers offers =
     div []
-        [ div [ class "title is-5" ] [ text "Ticketinformationen" ]
-        , viewList "Die Daten enthalten keine Ticketinformationen für diese Veranstaltung." viewOffer offers
+        [ div [ class "title is-5" ] [ text "Ticketing" ]
+        , viewList "Die Daten enthalten keine Informationen zum Ticketing." viewOffer offers
         ]
 
 
@@ -986,7 +991,7 @@ viewOffer offer =
             |> Entry.map formatPrice
         , Entry.optional "Verfügbarkeit" offer.availability
             |> Entry.map humanReadableAvailability
-        , Entry.optional "Link" offer.url
+        , Entry.optional "Ticketlink" offer.url
             |> asLink Nothing
         ]
 
@@ -1300,7 +1305,7 @@ viewInput inputString buttonEnabled =
     in
     section
         [ div [ class "field" ]
-            [ h3 [ class "label is-size-3" ] [ text "Geben Sie die URL Ihres Endpunkts ein ODER kopieren & fügen Sie Ihre Daten ein" ]
+            [ h3 [ class "label is-size-3" ] [ text "Geben Sie die URL Ihres Endpunkts ein ODER kopieren & fügen Sie Ihre Spielplandaten ein" ]
             , div (class "control has-icons-right has-tooltip-arrow" :: controlAttrs)
                 [ textarea
                     [ onInput TextChange
