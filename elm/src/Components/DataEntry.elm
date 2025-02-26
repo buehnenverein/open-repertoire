@@ -128,14 +128,16 @@ asDate zone entry =
     { entry | options = Date zone }
 
 
-asTime : ZoneWithName -> Model a -> Model a
+asTime : ZoneWithName -> Model String -> Model String
 asTime zone entry =
     { entry | options = Time zone }
+        |> withWarnings Helper.CustomValidations.dateTime
 
 
-asDateAndTime : ZoneWithName -> Model a -> Model a
+asDateAndTime : ZoneWithName -> Model String -> Model String
 asDateAndTime zone entry =
     { entry | options = DateTime zone }
+        |> withWarnings Helper.CustomValidations.dateTime
 
 
 withHelp : String -> Model a -> Model a

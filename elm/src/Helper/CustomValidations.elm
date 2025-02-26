@@ -1,4 +1,21 @@
-module Helper.CustomValidations exposing (MessageType(..), ValidationMessage, Validator, checkAll, duration, eventStartAndEndDates, eventStatusAndDate, languageTagValid, list, minMaxAge, minMaxPrice, production, validDerniere, validPremiere, viewerMessage)
+module Helper.CustomValidations exposing
+    ( MessageType(..)
+    , ValidationMessage
+    , Validator
+    , checkAll
+    , dateTime
+    , duration
+    , eventStartAndEndDates
+    , eventStatusAndDate
+    , languageTagValid
+    , list
+    , minMaxAge
+    , minMaxPrice
+    , production
+    , validDerniere
+    , validPremiere
+    , viewerMessage
+    )
 
 import Data.Agent exposing (Agent(..))
 import Data.Event as Event
@@ -37,6 +54,7 @@ import Helper.LanguageCodes as LanguageCodes
 import Iso8601
 import LanguageTag.Parser
 import List.Extra
+import Regex
 import Time
 
 
@@ -510,20 +528,48 @@ startAndEndDates path data =
             []
 
 
+hasTimeZoneInformation : Validator String
+hasTimeZoneInformation path data =
+    let
+        endsWithZ =
+            Maybe.withDefault Regex.never <|
+                Regex.fromString "Z$"
+
+        endsWithUTCOffset =
+            Maybe.withDefault Regex.never <|
+                Regex.fromString "[+-]\\d{2}:?(\\d{2})?$"
+    in
+    if Regex.contains endsWithZ data then
+        []
+
+    else if Regex.contains endsWithUTCOffset data then
+        []
+
+    else
+        [ error path "does not contain timezone information"
+            |> forView "Die Zeitangabe enthält keine Informationen zur Zeitzone und wird deshalb eventuell falsch angezeigt."
+        ]
+
+
 
 -- MODEL VALIDATORS
+
+
+dateTime : Validator String
+dateTime =
+    hasTimeZoneInformation
 
 
 event : Validator Event
 event =
     object
         [ field "/duration" .duration (maybe duration)
-        , field "/endDate" .endDate optional
+        , field "/endDate" .endDate (maybe dateTime)
         , field "/location" .location (maybe (list location))
         , field "/offers" .offers (maybe (list offer))
         , field "/performer" .performer (maybe (list performer))
         , field "/previousStartDate" .previousStartDate optional
-        , field "/startDate" .startDate required
+        , field "/startDate" .startDate dateTime
         , field "/subtitleLanguage" .subtitleLanguage (maybe (list languageTagValid))
         , field "/url" .url optional
         , field "/subEvent" .subEvent (maybe (list subEvent))
@@ -537,9 +583,9 @@ subEvent : Validator SubEventType
 subEvent =
     object
         [ field "/duration" .duration (maybe duration)
-        , field "/endDate" .endDate optional
+        , field "/endDate" .endDate (maybe dateTime)
         , field "/location" .location optional
-        , field "/startDate" .startDate optional
+        , field "/startDate" .startDate (maybe dateTime)
         , field "/description" .description (maybe subEventDescription)
         , field "/inLanguage" .inLanguage (maybe (list languageTagValid))
         , startAndEndDates
@@ -550,9 +596,9 @@ superEvent : Validator SuperEvent
 superEvent =
     object
         [ field "/duration" .duration (maybe duration)
-        , field "/endDate" .endDate optional
+        , field "/endDate" .endDate (maybe dateTime)
         , field "/location" .location optional
-        , field "/startDate" .startDate optional
+        , field "/startDate" .startDate (maybe dateTime)
         , field "/description" .description (maybe superEventDescription)
         , field "/inLanguage" .inLanguage (maybe (list languageTagValid))
         , startAndEndDates
