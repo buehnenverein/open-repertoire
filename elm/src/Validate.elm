@@ -3,13 +3,14 @@ port module Validate exposing (main)
 import Browser
 import Data.Root
 import Helper.CustomValidations as CustomValidations
-import Html exposing (Html, button, div, h1, h3, input, p, span, table, tbody, td, text, textarea, th, thead, tr)
-import Html.Attributes exposing (class, classList, disabled, style, type_, value)
+import Html exposing (Html, button, div, h1, h3, i, input, p, span, table, tbody, td, text, textarea, th, thead, tr)
+import Html.Attributes exposing (attribute, autocomplete, class, classList, disabled, spellcheck, style, value)
 import Html.Events exposing (onClick, onInput)
 import Http exposing (Error(..))
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode
 import List.Extra
+import Url
 
 
 port sendData : Encode.Value -> Cmd msg
@@ -29,7 +30,7 @@ main =
 
 
 type alias Model =
-    { inputs : Inputs
+    { input : String
     , state : State
     }
 
@@ -72,16 +73,8 @@ type alias ValidationIssueGroup =
     ( ValidationIssue, List ValidationIssue )
 
 
-type alias Inputs =
-    { url : String
-    , text : String
-    }
-
-
 type Msg
-    = SubmitUrl String
-    | SubmitJson String
-    | UrlChange String
+    = Submit String
     | TextChange String
     | Response (Result Http.Error Encode.Value)
     | ReceiveValidationResult Encode.Value Encode.Value
@@ -89,44 +82,17 @@ type Msg
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    let
-        inputs =
-            { url = "", text = "" }
-    in
-    ( { inputs = inputs, state = Init }, Cmd.none )
+    ( { input = "", state = Init }, Cmd.none )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    let
-        inputs =
-            getInputs model
-    in
     case msg of
-        SubmitUrl url ->
-            ( { model | state = Validating Nothing }, Http.get { url = url, expect = Http.expectJson Response jsonDecoder } )
-
-        SubmitJson text ->
-            case Decode.decodeString jsonDecoder text of
-                Ok jsonValue ->
-                    ( { model | state = Validating (Just jsonValue) }, sendData jsonValue )
-
-                Err parsingError ->
-                    ( { model | state = JsonParsingError (Decode.errorToString parsingError) }, Cmd.none )
-
-        UrlChange url ->
-            let
-                newInputs =
-                    { inputs | url = url }
-            in
-            ( { model | inputs = newInputs }, Cmd.none )
+        Submit input ->
+            fetchData model input
 
         TextChange text ->
-            let
-                newInputs =
-                    { inputs | text = text }
-            in
-            ( { model | inputs = newInputs }, Cmd.none )
+            ( { model | input = text }, Cmd.none )
 
         Response (Ok value) ->
             ( { model | state = Validating (Just value) }, sendData value )
@@ -136,6 +102,25 @@ update msg model =
 
         ReceiveValidationResult responseValue validationResult ->
             ( { model | state = handleValidationResult responseValue validationResult }, Cmd.none )
+
+
+fetchData : Model -> String -> ( Model, Cmd Msg )
+fetchData model inputString =
+    if isUrl inputString then
+        ( { model | state = Validating Nothing }
+        , Http.get
+            { url = inputString
+            , expect = Http.expectJson Response jsonDecoder
+            }
+        )
+
+    else
+        case Decode.decodeString jsonDecoder inputString of
+            Ok jsonValue ->
+                ( { model | state = Validating (Just jsonValue) }, sendData jsonValue )
+
+            Err parsingError ->
+                ( { model | state = JsonParsingError (Decode.errorToString parsingError) }, Cmd.none )
 
 
 handleValidationResult : Decode.Value -> Decode.Value -> State
@@ -191,7 +176,7 @@ view model =
     in
     div [ class "container" ]
         [ viewIntroduction
-        , viewInputs (getInputs model) enableButton
+        , viewInput model.input enableButton
         , case model.state of
             Init ->
                 text ""
@@ -203,33 +188,37 @@ view model =
                 viewRequestError error
 
             ResultSuccess warnings jsonValue ->
-                div []
+                section
                     [ viewValid
                     , viewValidationWarnings warnings jsonValue
                     ]
 
             ResultError { errors, warnings } jsonValue ->
-                div []
+                section
                     [ viewValidationErrors errors jsonValue
                     , viewValidationWarnings warnings jsonValue
                     ]
 
             JsonParsingError message ->
-                div [ class "notification is-danger", style "white-space" "pre-wrap" ]
-                    [ text
-                        ("Unfortunately, I wasn't able to parse the data you provided. Are you sure that it is valid JSON?"
-                            ++ " The error was:\n"
-                            ++ message
-                        )
+                section
+                    [ div [ class "notification is-danger", style "white-space" "pre-wrap" ]
+                        [ text
+                            ("Unfortunately, I wasn't able to parse the data you provided. Are you sure that it is valid JSON?"
+                                ++ " The error was:\n"
+                                ++ message
+                            )
+                        ]
                     ]
 
             ValidationParsingError message ->
-                div [ class "notification is-danger", style "white-space" "pre-wrap" ]
-                    [ text
-                        ("Unfortunately, I encountered an error while parsing the validation result, so I could not check whether your JSON is valid or not."
-                            ++ " This is most likely a bug in the validator. The error was:\n"
-                            ++ message
-                        )
+                section
+                    [ div [ class "notification is-danger", style "white-space" "pre-wrap" ]
+                        [ text
+                            ("Unfortunately, I encountered an error while parsing the validation result, so I could not check whether your JSON is valid or not."
+                                ++ " This is most likely a bug in the validator. The error was:\n"
+                                ++ message
+                            )
+                        ]
                     ]
         ]
 
@@ -240,29 +229,31 @@ view model =
 
 viewRequestError : Http.Error -> Html Msg
 viewRequestError error =
-    div [ class "notification is-danger" ]
-        [ case error of
-            BadUrl invalidUrl ->
-                text ("Unfortunately, it looks like " ++ invalidUrl ++ " is not a valid URL.")
+    section
+        [ div [ class "notification is-danger" ]
+            [ case error of
+                BadUrl invalidUrl ->
+                    text ("Unfortunately, it looks like " ++ invalidUrl ++ " is not a valid URL.")
 
-            Timeout ->
-                text "Unfortunately, the request to your endpoint timed out."
+                Timeout ->
+                    text "Unfortunately, the request to your endpoint timed out."
 
-            NetworkError ->
-                text "Unfortunately, I encountered an issue when requesting data from your endpoint. Please check your browser's console logs for more information."
+                NetworkError ->
+                    text "Unfortunately, I encountered an issue when requesting data from your endpoint. Please check your browser's console logs for more information."
 
-            BadStatus code ->
-                text
-                    ("Unfortunately, your endpoint returned an unsuccessful status code ("
-                        ++ String.fromInt code
-                        ++ "), so I could not check whether your JSON is valid or not. Please check your browser's console logs for more information."
-                    )
+                BadStatus code ->
+                    text
+                        ("Unfortunately, your endpoint returned an unsuccessful status code ("
+                            ++ String.fromInt code
+                            ++ "), so I could not check whether your JSON is valid or not. Please check your browser's console logs for more information."
+                        )
 
-            BadBody reason ->
-                text
-                    ("Unfortunately, I could not parse the response from your endpoint. Are you sure that it is valid JSON? Here is why I couldn't parse the response: "
-                        ++ reason
-                    )
+                BadBody reason ->
+                    text
+                        ("Unfortunately, I could not parse the response from your endpoint. Are you sure that it is valid JSON? Here is why I couldn't parse the response: "
+                            ++ reason
+                        )
+            ]
         ]
 
 
@@ -279,8 +270,8 @@ viewValidationErrors : List ValidationIssueGroup -> Encode.Value -> Html Msg
 viewValidationErrors errors jsonValue =
     div []
         [ div [ class "notification is-danger" ] [ text "I have found some issues in your JSON." ]
-        , div [ class "row" ]
-            [ table []
+        , div []
+            [ table [ class "table" ]
                 [ thead []
                     [ tr []
                         [ th [] [ text "Error" ]
@@ -308,8 +299,8 @@ viewValidationWarnings warnings jsonValue =
             [ div [ class "notification is-warning" ]
                 [ text "I have found some potential issues. These are not technically validation errors, but they might indicate issues with your data."
                 ]
-            , div [ class "row" ]
-                [ table []
+            , div []
+                [ table [ class "table" ]
                     [ thead []
                         [ tr []
                             [ th [] [ text "Warning" ]
@@ -418,11 +409,18 @@ viewHighlightedJson ( err, others ) jsonValue =
             )
 
 
+section : List (Html Msg) -> Html Msg
+section content =
+    div [ class "section" ]
+        [ div [ class "container" ] content
+        ]
+
+
 viewIntroduction : Html Msg
 viewIntroduction =
-    div []
-        [ h1 []
-            [ text "Use Case 3 - JSON Schema validator"
+    section
+        [ h1 [ class "is-size-1" ]
+            [ text "ORIF - JSON Schema validator"
             ]
         , p []
             [ text "Use this tool to test whether your API/JSON data conforms to the specification of the Use Case 3 data schema."
@@ -430,51 +428,96 @@ viewIntroduction =
         ]
 
 
-viewInputs : Inputs -> Bool -> Html Msg
-viewInputs inputs buttonEnabled =
-    div [ class "inputs grid-container" ]
-        [ endpointInput inputs buttonEnabled
-        , div [ class "grid-item-centered" ] [ h3 [] [ text "- OR -" ] ]
-        , jsonInput inputs buttonEnabled
-        ]
+isJson : String -> Bool
+isJson string =
+    case Decode.decodeString Decode.value string of
+        Ok _ ->
+            True
+
+        Err _ ->
+            False
 
 
-endpointInput : Inputs -> Bool -> Html Msg
-endpointInput inputs buttonEnabled =
-    div [ class "grid-column" ]
-        [ h3 [] [ text "Enter the URL of your endpoint" ]
-        , input
-            [ type_ "text"
-            , onInput UrlChange
-            , value inputs.url
-            , class "u-full-width"
-            ]
-            []
-        , button
-            [ onClick (SubmitUrl inputs.url)
-            , disabled (not buttonEnabled || String.isEmpty inputs.url)
-            , class "button-primary u-pull-right"
-            ]
-            [ text "Validate endpoint" ]
-        ]
+looksLikeUrl : String -> Bool
+looksLikeUrl string =
+    (String.startsWith "http" string
+        || String.startsWith "www" string
+        || not (looksLikeJson string)
+    )
+        && not (String.isEmpty string)
 
 
-jsonInput : Inputs -> Bool -> Html Msg
-jsonInput inputs buttonEnabled =
-    div [ class "grid-column" ]
-        [ h3 [] [ text "Paste your JSON output" ]
-        , textarea
-            [ onInput TextChange
-            , value inputs.text
-            , class "u-full-width"
+looksLikeJson : String -> Bool
+looksLikeJson string =
+    (String.startsWith "{" string
+        || String.startsWith "[" string
+    )
+        && not (String.isEmpty string)
+
+
+isUrl : String -> Bool
+isUrl string =
+    case ( Url.fromString string, Url.fromString ("https://" ++ string) ) of
+        ( Just _, _ ) ->
+            True
+
+        ( _, Just _ ) ->
+            True
+
+        ( Nothing, Nothing ) ->
+            False
+
+
+viewInput : String -> Bool -> Html Msg
+viewInput inputString buttonEnabled =
+    let
+        invalidUrl =
+            looksLikeUrl inputString && not (isUrl inputString)
+
+        invalidJson =
+            looksLikeJson inputString && not (isJson inputString)
+
+        invalid =
+            invalidUrl || invalidJson
+
+        controlAttrs =
+            if invalidUrl then
+                [ attribute "data-tooltip" "Ungültiger Link" ]
+
+            else if invalidJson then
+                [ attribute "data-tooltip" "Ungültiges Datenformat" ]
+
+            else
+                []
+    in
+    section
+        [ div [ class "field" ]
+            [ h3 [ class "label is-size-3" ] [ text "Enter the URL of your endpoint OR paste your JSON output" ]
+            , div (class "control has-icons-right has-tooltip-arrow" :: controlAttrs)
+                [ textarea
+                    [ onInput TextChange
+                    , value inputString
+                    , class "input"
+                    , autocomplete False
+                    , spellcheck False
+                    , attribute "autocorrect" "off"
+                    , attribute "autocapitalize" "off"
+                    , classList [ ( "is-danger", invalid ) ]
+                    ]
+                    []
+                , span [ class "icon is-right" ]
+                    [ i [ class "fas has-text-danger", classList [ ( "fa-xmark", invalid ) ] ] []
+                    ]
+                ]
             ]
-            []
-        , button
-            [ onClick (SubmitJson inputs.text)
-            , disabled (not buttonEnabled || String.isEmpty inputs.text)
-            , class "button-primary u-pull-right"
+        , div [ class "control" ]
+            [ button
+                [ onClick (Submit inputString)
+                , disabled (not buttonEnabled || invalid || String.isEmpty inputString)
+                , class "button is-primary"
+                ]
+                [ text "Daten anzeigen" ]
             ]
-            [ text "Validate JSON" ]
         ]
 
 
@@ -494,11 +537,6 @@ subscriptions model =
 
 
 -- HELPERS
-
-
-getInputs : Model -> Inputs
-getInputs model =
-    model.inputs
 
 
 jsonIndentSpaces : Int
