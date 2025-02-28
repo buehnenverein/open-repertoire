@@ -66,7 +66,7 @@ $(SCHEMA_DIR)/%.json : schemas/%.yml | $(SCHEMA_DIR)
 	# Convert YML file to JSON
 	npx js-yaml $< > $@
 	# Expand relative references to other schema-files to fully-qualified schema URLs
-	jq '(..|objects|select(has("$$ref"))).["$$ref"] |= sub("\\.(?<n>.*)\\.yml"; "https://peret.github.io/uc3-openapi\(.n).json")' $@ > $@.tmp
+	jq '(..|objects|select(has("$$ref"))).["$$ref"] |= sub("\\.(?<n>.*)\\.yml"; "https://buehnenverein.github.io/open-repertoire\(.n).json")' $@ > $@.tmp
 	mv $@.tmp $@
 
 $(VALIDATE_DIR)/bundle.js : validate/interop.js $(VALIDATE_DIR)/validator.js

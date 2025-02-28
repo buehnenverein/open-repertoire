@@ -1,5 +1,5 @@
 "$schema": "http://json-schema.org/draft-07/schema#"
-"$id": https://peret.github.io/uc3-openapi/schema.json
+"$id": https://buehnenverein.github.io/open-repertoire/schema.json
 definitions: 
     CommonEventType:
       type: string

@@ -1,5 +1,5 @@
 "$schema": "http://json-schema.org/draft-07/schema#"
-"$id": https://peret.github.io/uc3-openapi/person.json
+"$id": https://buehnenverein.github.io/open-repertoire/person.json
 title: Person
 
 type: object
