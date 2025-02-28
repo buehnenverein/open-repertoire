@@ -1,16 +1,17 @@
 port module Validate exposing (main)
 
 import Browser
+import Components.InputBox
 import Data.Root
 import Helper.CustomValidations as CustomValidations
-import Html exposing (Html, button, div, h1, h3, i, input, p, span, table, tbody, td, text, textarea, th, thead, tr)
-import Html.Attributes exposing (attribute, autocomplete, class, classList, disabled, spellcheck, style, value)
-import Html.Events exposing (onClick, onInput)
+import Helper.Util as Util
+import Html exposing (Html, div, h1, input, p, span, table, tbody, td, text, th, thead, tr)
+import Html.Attributes exposing (class, classList, style, value)
+import Html.Lazy exposing (lazy)
 import Http exposing (Error(..))
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode
 import List.Extra
-import Url
 
 
 port sendData : Encode.Value -> Cmd msg
@@ -106,7 +107,7 @@ update msg model =
 
 fetchData : Model -> String -> ( Model, Cmd Msg )
 fetchData model inputString =
-    if isUrl inputString then
+    if Util.isUrl inputString then
         ( { model | state = Validating Nothing }
         , Http.get
             { url = inputString
@@ -174,9 +175,15 @@ view model =
                 _ ->
                     True
     in
-    div [ class "container" ]
+    div []
         [ viewIntroduction
-        , viewInput model.input enableButton
+        , lazy Components.InputBox.view <|
+            Components.InputBox.forValidator
+                { value = model.input
+                , buttonEnabled = enableButton
+                , onChange = TextChange
+                , onSubmit = Submit
+                }
         , case model.state of
             Init ->
                 text ""
@@ -424,99 +431,6 @@ viewIntroduction =
             ]
         , p []
             [ text "Use this tool to test whether your API/JSON data conforms to the specification of the Use Case 3 data schema."
-            ]
-        ]
-
-
-isJson : String -> Bool
-isJson string =
-    case Decode.decodeString Decode.value string of
-        Ok _ ->
-            True
-
-        Err _ ->
-            False
-
-
-looksLikeUrl : String -> Bool
-looksLikeUrl string =
-    (String.startsWith "http" string
-        || String.startsWith "www" string
-        || not (looksLikeJson string)
-    )
-        && not (String.isEmpty string)
-
-
-looksLikeJson : String -> Bool
-looksLikeJson string =
-    (String.startsWith "{" string
-        || String.startsWith "[" string
-    )
-        && not (String.isEmpty string)
-
-
-isUrl : String -> Bool
-isUrl string =
-    case ( Url.fromString string, Url.fromString ("https://" ++ string) ) of
-        ( Just _, _ ) ->
-            True
-
-        ( _, Just _ ) ->
-            True
-
-        ( Nothing, Nothing ) ->
-            False
-
-
-viewInput : String -> Bool -> Html Msg
-viewInput inputString buttonEnabled =
-    let
-        invalidUrl =
-            looksLikeUrl inputString && not (isUrl inputString)
-
-        invalidJson =
-            looksLikeJson inputString && not (isJson inputString)
-
-        invalid =
-            invalidUrl || invalidJson
-
-        controlAttrs =
-            if invalidUrl then
-                [ attribute "data-tooltip" "Ungültiger Link" ]
-
-            else if invalidJson then
-                [ attribute "data-tooltip" "Ungültiges Datenformat" ]
-
-            else
-                []
-    in
-    section
-        [ div [ class "field" ]
-            [ h3 [ class "label is-size-3" ] [ text "Enter the URL of your endpoint OR paste your JSON output" ]
-            , div (class "control has-icons-right has-tooltip-arrow" :: controlAttrs)
-                [ textarea
-                    [ onInput TextChange
-                    , value inputString
-                    , class "input"
-                    , autocomplete False
-                    , spellcheck False
-                    , attribute "autocorrect" "off"
-                    , attribute "autocapitalize" "off"
-                    , classList [ ( "is-danger", invalid ) ]
-                    ]
-                    []
-                , span [ class "icon is-right" ]
-                    [ i [ class "fas has-text-danger", classList [ ( "fa-xmark", invalid ) ] ] []
-                    ]
-                ]
-            ]
-        , div [ class "control" ]
-            [ button
-                [ onClick (Submit inputString)
-                , disabled (not buttonEnabled || invalid || String.isEmpty inputString)
-                , class "button is-primary"
-                ]
-                [ text "Daten anzeigen" ]
             ]
         ]
 

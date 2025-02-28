@@ -2,6 +2,7 @@ module View exposing (main)
 
 import Browser
 import Components.DataEntry as Entry exposing (asDate, asDateAndTime, asImage, asLink, asTime)
+import Components.InputBox
 import Data.Agent exposing (Agent(..))
 import Data.Event exposing (Event, EventStatus(..), EventTypeItem(..), LocationItem(..), Offer, OfferAvailability(..), PerformanceRoleItem, SubEventType)
 import Data.ImageObject exposing (ImageObject)
@@ -9,10 +10,11 @@ import Data.Root exposing (ContentWarningItem, CreatorRoleItem, GenreItem(..), N
 import Data.SuperEvent exposing (SuperEvent)
 import Data.Work exposing (MusicComposition, OriginalWork, Work(..))
 import Helper.CustomValidations as CustomValidations
+import Helper.Util as Util
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
-import Html.Lazy exposing (lazy2)
+import Html.Lazy exposing (lazy, lazy2)
 import Http exposing (Error(..))
 import Json.Decode as Decode
 import Maybe.Extra
@@ -21,7 +23,6 @@ import Set exposing (Set)
 import Task
 import Time
 import TimeZone
-import Url
 
 
 main : Program () Model Msg
@@ -145,7 +146,7 @@ update msg model =
 
 fetchData : Model -> String -> ( Model, Cmd Msg )
 fetchData model inputString =
-    if isUrl inputString then
+    if Util.isUrl inputString then
         ( { model | data = Loading }
         , Http.get
             { url = inputString
@@ -179,7 +180,13 @@ view model =
     in
     div [ class "container" ]
         [ viewIntroduction
-        , lazy2 viewInput model.input enableButton
+        , lazy Components.InputBox.view <|
+            Components.InputBox.forDataViewer
+                { value = model.input
+                , buttonEnabled = enableButton
+                , onChange = TextChange
+                , onSubmit = Submit
+                }
         , case model.data of
             NotAsked ->
                 text ""
@@ -191,7 +198,7 @@ view model =
                 lazy2 viewRequestError model.input error
 
             Failure (JsonError _) ->
-                section
+                Util.section
                     [ div [ class "notification is-danger" ]
                         [ viewJsonError ]
                     ]
@@ -234,7 +241,7 @@ viewJsonData data zone =
                     (EventCardClicked index (not (eventOpen index)))
                 ]
     in
-    section
+    Util.section
         [ controlBar data
         , div
             [ class "block" ]
@@ -262,46 +269,6 @@ isProductionVisible : Data -> Production -> Bool
 isProductionVisible data production =
     productionNameMatches data.nameFilter production
         && (not data.showOnlyWarning || hasWarnings production)
-
-
-looksLikeUrl : String -> Bool
-looksLikeUrl string =
-    (String.startsWith "http" string
-        || String.startsWith "www" string
-        || not (looksLikeJson string)
-    )
-        && not (String.isEmpty string)
-
-
-looksLikeJson : String -> Bool
-looksLikeJson string =
-    (String.startsWith "{" string
-        || String.startsWith "[" string
-    )
-        && not (String.isEmpty string)
-
-
-isUrl : String -> Bool
-isUrl string =
-    case ( Url.fromString string, Url.fromString ("https://" ++ string) ) of
-        ( Just _, _ ) ->
-            True
-
-        ( _, Just _ ) ->
-            True
-
-        ( Nothing, Nothing ) ->
-            False
-
-
-isJson : String -> Bool
-isJson string =
-    case Decode.decodeString Decode.value string of
-        Ok _ ->
-            True
-
-        Err _ ->
-            False
 
 
 
@@ -1162,13 +1129,6 @@ card title content isOpen clickHandler =
         ]
 
 
-section : List (Html Msg) -> Html Msg
-section content =
-    div [ class "section" ]
-        [ div [ class "container" ] content
-        ]
-
-
 formatDuration : Int -> String
 formatDuration duration =
     let
@@ -1199,7 +1159,7 @@ boolString value =
 
 viewRequestError : String -> Http.Error -> Html Msg
 viewRequestError url error =
-    section
+    Util.section
         [ div [ class "notification is-danger" ]
             [ case error of
                 BadUrl invalidUrl ->
@@ -1271,65 +1231,12 @@ viewJsonError =
 
 viewIntroduction : Html Msg
 viewIntroduction =
-    section
+    Util.section
         [ h1 [ class "is-size-1" ]
             [ text "Lektoratstool der »Smarten Theaterdienste«"
             ]
         , p []
             [ text "Hier können Sie sich die Daten anzeigen lassen, die momentan über Ihre Spielplan-Schnittstelle gesendet werden und überprüfen, ob die Inhalte richtig zugeordnet sind."
-            ]
-        ]
-
-
-viewInput : String -> Bool -> Html Msg
-viewInput inputString buttonEnabled =
-    let
-        invalidUrl =
-            looksLikeUrl inputString && not (isUrl inputString)
-
-        invalidJson =
-            looksLikeJson inputString && not (isJson inputString)
-
-        invalid =
-            invalidUrl || invalidJson
-
-        controlAttrs =
-            if invalidUrl then
-                [ attribute "data-tooltip" "Ungültiger Link" ]
-
-            else if invalidJson then
-                [ attribute "data-tooltip" "Ungültiges Datenformat" ]
-
-            else
-                []
-    in
-    section
-        [ div [ class "field" ]
-            [ h3 [ class "label is-size-3" ] [ text "Geben Sie die URL Ihres Endpunkts ein ODER kopieren & fügen Sie Ihre Spielplandaten ein" ]
-            , div (class "control has-icons-right has-tooltip-arrow" :: controlAttrs)
-                [ textarea
-                    [ onInput TextChange
-                    , value inputString
-                    , class "input"
-                    , autocomplete False
-                    , spellcheck False
-                    , attribute "autocorrect" "off"
-                    , attribute "autocapitalize" "off"
-                    , classList [ ( "is-danger", invalid ) ]
-                    ]
-                    []
-                , span [ class "icon is-right" ]
-                    [ i [ class "fas has-text-danger", classList [ ( "fa-xmark", invalid ) ] ] []
-                    ]
-                ]
-            ]
-        , div [ class "control" ]
-            [ button
-                [ onClick (Submit inputString)
-                , disabled (not buttonEnabled || invalid || String.isEmpty inputString)
-                , class "button is-primary"
-                ]
-                [ text "Daten anzeigen" ]
             ]
         ]
 
