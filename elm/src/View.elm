@@ -178,7 +178,7 @@ view model =
                 _ ->
                     True
     in
-    div [ class "container" ]
+    div []
         [ viewIntroduction
         , lazy Components.InputBox.view <|
             Components.InputBox.forDataViewer

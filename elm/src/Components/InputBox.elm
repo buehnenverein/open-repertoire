@@ -1,6 +1,6 @@
 module Components.InputBox exposing (forDataViewer, forValidator, view)
 
-import Helper.Util exposing (isJson, isUrl, looksLikeJson, looksLikeUrl)
+import Helper.Util as Util exposing (isJson, isUrl, looksLikeJson, looksLikeUrl)
 import Html exposing (Html, button, div, h3, i, span, text, textarea)
 import Html.Attributes exposing (attribute, autocomplete, class, classList, disabled, spellcheck, value)
 import Html.Events exposing (onClick, onInput)
@@ -58,35 +58,33 @@ view (Settings params labels) =
             else
                 []
     in
-    div [ class "section" ]
-        [ div [ class "container" ]
-            [ div [ class "field" ]
-                [ h3 [ class "label is-size-3" ] [ text labels.inputLabel ]
-                , div (class "control has-icons-right has-tooltip-arrow" :: controlAttrs)
-                    [ textarea
-                        [ onInput params.onChange
-                        , value params.value
-                        , class "input"
-                        , autocomplete False
-                        , spellcheck False
-                        , attribute "autocorrect" "off"
-                        , attribute "autocapitalize" "off"
-                        , classList [ ( "is-danger", invalid ) ]
-                        ]
-                        []
-                    , span [ class "icon is-right" ]
-                        [ i [ class "fas has-text-danger", classList [ ( "fa-xmark", invalid ) ] ] []
-                        ]
+    Util.section
+        [ div [ class "field" ]
+            [ h3 [ class "label is-size-3" ] [ text labels.inputLabel ]
+            , div (class "control has-icons-right has-tooltip-arrow" :: controlAttrs)
+                [ textarea
+                    [ onInput params.onChange
+                    , value params.value
+                    , class "input"
+                    , autocomplete False
+                    , spellcheck False
+                    , attribute "autocorrect" "off"
+                    , attribute "autocapitalize" "off"
+                    , classList [ ( "is-danger", invalid ) ]
+                    ]
+                    []
+                , span [ class "icon is-right" ]
+                    [ i [ class "fas has-text-danger", classList [ ( "fa-xmark", invalid ) ] ] []
                     ]
                 ]
-            , div [ class "control" ]
-                [ button
-                    [ onClick (params.onSubmit params.value)
-                    , disabled (not params.buttonEnabled || invalid || String.isEmpty params.value)
-                    , class "button is-primary"
-                    ]
-                    [ text labels.buttonLabel ]
+            ]
+        , div [ class "control" ]
+            [ button
+                [ onClick (params.onSubmit params.value)
+                , disabled (not params.buttonEnabled || invalid || String.isEmpty params.value)
+                , class "button is-primary"
                 ]
+                [ text labels.buttonLabel ]
             ]
         ]
 

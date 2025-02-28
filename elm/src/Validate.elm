@@ -195,19 +195,19 @@ view model =
                 viewRequestError error
 
             ResultSuccess warnings jsonValue ->
-                section
+                Util.section
                     [ viewValid
                     , viewValidationWarnings warnings jsonValue
                     ]
 
             ResultError { errors, warnings } jsonValue ->
-                section
+                Util.section
                     [ viewValidationErrors errors jsonValue
                     , viewValidationWarnings warnings jsonValue
                     ]
 
             JsonParsingError message ->
-                section
+                Util.section
                     [ div [ class "notification is-danger", style "white-space" "pre-wrap" ]
                         [ text
                             ("Unfortunately, I wasn't able to parse the data you provided. Are you sure that it is valid JSON?"
@@ -218,7 +218,7 @@ view model =
                     ]
 
             ValidationParsingError message ->
-                section
+                Util.section
                     [ div [ class "notification is-danger", style "white-space" "pre-wrap" ]
                         [ text
                             ("Unfortunately, I encountered an error while parsing the validation result, so I could not check whether your JSON is valid or not."
@@ -236,7 +236,7 @@ view model =
 
 viewRequestError : Http.Error -> Html Msg
 viewRequestError error =
-    section
+    Util.section
         [ div [ class "notification is-danger" ]
             [ case error of
                 BadUrl invalidUrl ->
@@ -416,16 +416,9 @@ viewHighlightedJson ( err, others ) jsonValue =
             )
 
 
-section : List (Html Msg) -> Html Msg
-section content =
-    div [ class "section" ]
-        [ div [ class "container" ] content
-        ]
-
-
 viewIntroduction : Html Msg
 viewIntroduction =
-    section
+    Util.section
         [ h1 [ class "is-size-1" ]
             [ text "ORIF - JSON Schema validator"
             ]
