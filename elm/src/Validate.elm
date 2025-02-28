@@ -407,9 +407,9 @@ viewHighlightedJson ( err, others ) jsonValue =
         |> String.split "\n"
         |> List.map
             (\line ->
-                p [ class "json-line" ]
+                p []
                     [ span
-                        [ classList [ ( "is-danger", highlightAdditionalProperties line ) ]
+                        [ classList [ ( "has-background-danger has-text-danger-invert", highlightAdditionalProperties line ) ]
                         ]
                         [ text line ]
                     ]
