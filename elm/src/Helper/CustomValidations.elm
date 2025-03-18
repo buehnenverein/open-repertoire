@@ -347,7 +347,7 @@ geocoordinates path data =
 --                 ++ Maybe.withDefault "" data.description
 --         message =
 --             [ warning path "has neither a description nor an abstract. You should set at least one of these fields."
---                 |> forView "Diese Produktion hat weder eine Beschreibung noch eine Kurzbeschreibung. Wenigstens eines der beiden Felder sollte gesetzt sein."
+--                 |> forView "Diese Produktion hat weder eine Beschreibung noch eine Kurzbeschreibung. Mindestens eines der beiden Felder sollte ausgefüllt werden."
 --             ]
 --     in
 --     if isEmptyString combinedString then
@@ -394,7 +394,7 @@ previousStartDateDifferentFromCurrent path data =
         Just previousStart ->
             if data.startDate == previousStart then
                 [ warning (path ++ "/previousStartDate") "should be different from startDate for rescheduled events"
-                    |> forView "Die vorherige Startzeit sollte sich von der neuen Startzeit unterscheiden."
+                    |> forView "Die neue Startzeit sollte sich von der ursprünglichen Startzeit unterscheiden."
                 ]
 
             else
@@ -409,12 +409,12 @@ previousStartPresent path data =
     case ( data.eventStatus, data.previousStartDate ) of
         ( Just EventPostponed, Nothing ) ->
             [ warning (path ++ "/previousStartDate") "should be set for postponed events"
-                |> forView "Die vorherige Startzeit sollte bei verschobenen Veranstaltungen angegeben werden."
+                |> forView "Die ursprüngliche Startzeit sollte bei verschobenen Veranstaltungen angegeben werden."
             ]
 
         ( Just EventRescheduled, Nothing ) ->
             [ warning (path ++ "/previousStartDate") "should be set for rescheduled events"
-                |> forView "Die vorherige Startzeit sollte bei verschobenen Veranstaltungen angegeben werden."
+                |> forView "Die ursprüngliche Startzeit sollte bei verschobenen Veranstaltungen angegeben werden."
             ]
 
         ( _, _ ) ->
@@ -426,7 +426,7 @@ previousStartNotRequired path data =
     let
         errorMsg =
             [ warning (path ++ "/previousStartDate") "should only be set if the event status is either 'rescheduled, 'postponed', or 'cancelled'"
-                |> forView "Die vorherige Startzeit sollte nur bei verschobenen oder abgesagten Veranstaltungen angegeben werden."
+                |> forView "Die ursprüngliche Startzeit sollte nur bei verschobenen oder abgesagten Veranstaltungen angegeben werden."
             ]
     in
     case ( data.eventStatus, data.previousStartDate ) of

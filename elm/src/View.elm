@@ -650,11 +650,11 @@ viewEventTable zone allEvents event =
             |> Entry.withWarnings (CustomValidations.list CustomValidations.languageTagValid)
             |> Entry.join identity
         , Entry.required "Status" (eventStatusToString event.eventStatus)
-        , Entry.required "Vorheriges Startdatum" event
+        , Entry.required "Ursprüngliches Startdatum" event
             |> Entry.withWarnings CustomValidations.eventStatusAndDate
             |> Entry.nested .previousStartDate
             |> asDate zone
-        , Entry.required "Vorherige Startzeit" event
+        , Entry.required "Ursprüngliche Startzeit" event
             |> Entry.withWarnings CustomValidations.eventStatusAndDate
             |> Entry.nested .previousStartDate
             |> asTime zone
@@ -706,7 +706,7 @@ eventStatusToString eventStatus =
             "Verschoben"
 
         Just EventRescheduled ->
-            "Geändertes Datum"
+            "Neuer Veranstaltungstermin"
 
 
 viewSubEvents : Entry.ZoneWithName -> Maybe (List SubEventType) -> Html Msg
