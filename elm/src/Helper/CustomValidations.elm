@@ -31,7 +31,7 @@ import Data.Event as Event
         , SubEventType
         , VirtualLocation
         )
-import Data.ImageObject exposing (ImageObject)
+import Data.ImageObject exposing (ImageCoordinates, ImageObject)
 import Data.InternationalizedString exposing (InternationalizedString)
 import Data.Organization exposing (Organization)
 import Data.Person exposing (Person)
@@ -688,6 +688,15 @@ imageObject =
         , field "/copyrightHolder" .copyrightHolder agent
         , field "/copyrightNotice" .copyrightNotice optional
         , field "/license" .license optional
+        , field "/focalPoint" .focalPoint (maybe imageCoordinates)
+        ]
+
+
+imageCoordinates : Validator ImageCoordinates
+imageCoordinates =
+    object
+        [ field "/x" .x required
+        , field "/y" .y required
         ]
 
 

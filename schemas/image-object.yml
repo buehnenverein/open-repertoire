@@ -2,6 +2,29 @@
 "$id": https://buehnenverein.github.io/open-repertoire/image-object.json
 title: ImageObject
 
+definitions: 
+  ImageCoordinates:
+    type: object
+    required:
+      - "@type"
+      - x
+      - y
+    description:
+      The point of focus for this image. This information is intended to be used to crop the image while preserving the most important image content.
+    properties:
+      "@type":
+        type: string
+        enum:
+          - ImageCoordinates
+      x:
+        type: string
+        description:
+          Horizontal distance of the focal point from the origin point (top-left corner) of the image. This measurement should be specified using a percentage.
+      y:
+        type: string
+        description:
+          Vertical distance of the focal point from the origin point (top-left corner) of the image. This measurement should be specified using a percentage.
+
 type: object
 additionalProperties: false
 required: 
@@ -26,6 +49,8 @@ properties:
     type: integer
     description: Width of the image in pixels
     example: 1024
+  focalPoint:
+    $ref: "#/definitions/ImageCoordinates"
   copyrightHolder:
     $ref: ./agent.yml
   copyrightNotice:
