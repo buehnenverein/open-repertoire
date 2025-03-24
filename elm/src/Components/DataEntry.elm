@@ -29,7 +29,7 @@ type Value a
 type Options
     = Default
     | Link (Maybe String)
-    | Logo
+    | Image
     | Date ZoneWithName
     | Time ZoneWithName
     | DateTime ZoneWithName
@@ -120,7 +120,7 @@ asLink linkText entry =
 
 asImage : Model a -> Model a
 asImage entry =
-    { entry | options = Logo }
+    { entry | options = Image }
 
 
 asDate : ZoneWithName -> Model a -> Model a
@@ -216,7 +216,7 @@ viewRequired value options =
                 [ Html.a [ href value, target "_blank" ] [ text (Maybe.withDefault value linkText) ]
                 ]
 
-        Logo ->
+        Image ->
             td []
                 [ Html.a [ href value, target "_blank" ] [ img [ attribute "loading" "lazy", class "logo", src value ] [] ]
                 ]
@@ -249,7 +249,7 @@ viewOptional value options =
                 [ Html.a [ href v, target "_blank" ] [ text (Maybe.withDefault v linkText) ]
                 ]
 
-        ( Just v, Logo ) ->
+        ( Just v, Image ) ->
             td
                 []
                 [ Html.a [ href v, target "_blank" ] [ img [ attribute "loading" "lazy", class "logo", src v ] [] ]
