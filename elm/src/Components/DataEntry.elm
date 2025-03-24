@@ -218,7 +218,7 @@ viewRequired value options =
 
         Logo ->
             td []
-                [ Html.a [ href value, target "_blank" ] [ img [ class "logo", src value ] [] ]
+                [ Html.a [ href value, target "_blank" ] [ img [ attribute "loading" "lazy", class "logo", src value ] [] ]
                 ]
 
         Date zone ->
@@ -252,7 +252,7 @@ viewOptional value options =
         ( Just v, Logo ) ->
             td
                 []
-                [ Html.a [ href v, target "_blank" ] [ img [ class "logo", src v ] [] ]
+                [ Html.a [ href v, target "_blank" ] [ img [ attribute "loading" "lazy", class "logo", src v ] [] ]
                 ]
 
         ( Just v, Date zone ) ->
