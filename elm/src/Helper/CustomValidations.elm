@@ -49,6 +49,7 @@ import Data.Root
         , Subtitle(..)
         )
 import Data.SuperEvent as SuperEvent exposing (SuperEvent)
+import Data.VideoObject exposing (VideoObject)
 import Data.Work exposing (MusicComposition, OriginalWork, Work(..))
 import Helper.LanguageCodes as LanguageCodes
 import Iso8601
@@ -675,6 +676,7 @@ production =
         , field "/name" .name productionName
         , field "/isBasedOn" .isBasedOn (maybe (list work))
         , field "/image" .image (maybe (list imageObject))
+        , field "/video" .video (maybe (list videoObject))
 
         -- , abstractOrDescription
         -- , abstractDifferentFromDescription
@@ -689,6 +691,16 @@ imageObject =
         , field "/copyrightNotice" .copyrightNotice optional
         , field "/license" .license optional
         , field "/focalPoint" .focalPoint (maybe imageCoordinates)
+        ]
+
+
+videoObject : Validator VideoObject
+videoObject =
+    object
+        [ field "/contentUrl" .contentUrl required
+        , field "/copyrightHolder" .copyrightHolder (maybe agent)
+        , field "/copyrightNotice" .copyrightNotice optional
+        , field "/license" .license optional
         ]
 
 

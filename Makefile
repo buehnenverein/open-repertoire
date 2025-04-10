@@ -11,6 +11,7 @@ schemas = internationalized-string \
 		  super-event \
 		  event \
 		  image-object \
+		  video-object \
 		  work
 sources = InternationalizedString \
 		  PostalAddress \
@@ -20,6 +21,7 @@ sources = InternationalizedString \
 		  SuperEvent \
 		  Event \
 		  ImageObject \
+		  VideoObject \
 		  Work
 schema_files = $(foreach schema,$(schemas),$(SCHEMA_DIR)/$(schema).json)
 

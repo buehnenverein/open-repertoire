@@ -151,6 +151,11 @@ definitions:
           description: List of photos of the production
           items:
             $ref: ./image-object.yml
+        video:
+          type: array
+          description: List of video (trailers) of the production
+          items:
+            $ref: ./video-object.yml
 
         accessibilityHazard:
           type: array
