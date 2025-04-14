@@ -51,7 +51,7 @@ definitions:
           oneOf:
             - $ref: "#/definitions/StringType"
             - $ref: "./internationalized-string.yml"
-          description: A text describing the production.
+          description: "**[recommended]** A text describing the production."
           example: Hedwig, die Queen des Glamrock, kommt auf ihrer Tournee in Augsburg vorbei! Gemeinsam mit ihrer Band The Angry Inch gibt sie eines ihrer mitreißenden Konzerte. Zwischen den Songs, die – mal Rocknummer, mal Country-Ballade – von ihrem Leben und der Suche nach der eigenen Identität erzählen, kommt sie dem Publikum so nah wie nie.\nDiese Show sollten Sie nicht verpassen!
         abstract:
           oneOf:
@@ -91,7 +91,7 @@ definitions:
             $ref: "./event.yml"
         genre:
           type: array
-          description: The genre of this production. Must use one of the pre-defined values.
+          description: "**[recommended]** The genre of this production. Must use one of the pre-defined values."
           example: ["musical"]
           items:
             type: string
@@ -148,7 +148,7 @@ definitions:
             - Revival
         image:
           type: array
-          description: List of photos of the production
+          description: "**[recommended]** List of photos of the production"
           items:
             $ref: ./image-object.yml
         video:
@@ -265,7 +265,7 @@ definitions:
 
     CreatorRole:
       description: |-
-        List of people and organizations that contributed to the creation of this production, e.g. directors, stage designers, musical directors, etc.
+        **[recommended]** List of people and organizations that contributed to the creation of this production, e.g. directors, stage designers, musical directors, etc.
         If this production is a collaboration with another organization, e.g. another theater or orchestra, this organization should also be included
         in this field.
 
@@ -290,7 +290,7 @@ definitions:
 
           roleName:
             type: string
-            description: 'The name of the role this person played in the creation of the production.'
+            description: "**[recommended]** The name of the role this person played in the creation of the production."
             example: Regie
             # enum:
             #   - akrobatik

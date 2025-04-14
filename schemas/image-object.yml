@@ -43,11 +43,11 @@ properties:
     example: "https://example.com/img/production123.png"
   height:
     type: integer
-    description: Height of the image in pixels
+    description: "**[recommended]** Height of the image in pixels"
     example: 768
   width:
     type: integer
-    description: Width of the image in pixels
+    description: "**[recommended]** Width of the image in pixels"
     example: 1024
   focalPoint:
     $ref: "#/definitions/ImageCoordinates"
@@ -63,5 +63,5 @@ properties:
   license:
     type: string
     format: uri
-    description: A license document that applies to this image, typically indicated by URL
+    description: "**[recommended]** A license document that applies to this image, typically indicated by URL"
     example: https://creativecommons.org/licenses/by-sa/4.0/

@@ -21,7 +21,7 @@ properties:
   streetAddress:
     type: string
     example: Am Alten Gaswerk 7
-    description: The street address.
+    description: "**[recommended]** The street address."
   addressLocality:
     type: string
     example: Augsburg
@@ -29,4 +29,4 @@ properties:
   addressCountry:
     type: string
     example: Germany
-    description: The country of this address.
+    description: "**[recommended]** The country of this address."

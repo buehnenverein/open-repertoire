@@ -75,7 +75,7 @@ definitions:
       name:
         type: string
         example: brechtbühne im Gaswerk
-        description: The location's name
+        description: "**[recommended]** The location's name"
       address:
         $ref: "./postal-address.yml"
       wheelChairPlaces:
@@ -114,13 +114,13 @@ definitions:
       name:
         type: string
         description:
-          The virtual location's name
+          "**[recommended]** The virtual location's name"
         example: Zoom
       url:
         type: string
         format: uri
         description: |-
-          The virtual location's URL. This should be the link that is used to participate in the event
+          **[recommended]** The virtual location's URL. This should be the link that is used to participate in the event
           (e.g. a link to join an online meeting) or a link that lets the user sign up to attend the event.
       description:
         type: string
@@ -201,14 +201,14 @@ definitions:
             example: EUR
       url:
         type: string
-        description: Ticketing link for this offer
+        description: "**[recommended]** Ticketing link for this offer"
         format: uri
         example: "https://webshop-tickets.staatstheater-augsburg.de/de/tickets/hedwig-and-the-angry-inch/brechtbuehne-im-gaswerk-14-12-2023-19-30"
 
   PerformanceRole:
     type: array
     description: |-
-      A list of people performing at the event, e.g. actors, dancers, etc.
+      **[recommended]** A list of people performing at the event, e.g. actors, dancers, etc.
   
       If multiple people perform the same role on stage (e.g. there is multiple actors
       performing the same character), each person should get their own entry in the `performer` array.
@@ -236,7 +236,7 @@ definitions:
             - PerformanceRole
         characterName:
           type: string
-          description: The name of the character performed on stage, if any.
+          description: "**[recommended]** The name of the character performed on stage, if any."
         roleName:
           type: string
           description: |-
@@ -273,7 +273,7 @@ properties:
     format: date-time
   endDate:
     type: string
-    description: "The end date and time of the event (in ISO 8601 date format)."
+    description: "**[recommended]** The end date and time of the event (in ISO 8601 date format)."
     format: date-time
   doorTime:
     type: string
@@ -282,7 +282,7 @@ properties:
   duration:
     type: integer
     format: int64
-    description: The duration of the event in minutes.
+    description: "**[recommended]** The duration of the event in minutes."
     example: 90
     minimum: 0
   intermission:
@@ -291,7 +291,7 @@ properties:
       description: The number of intermissions during this event. Set to 0 or omit this field, if there is no intermission during this event. 
   url:
     type: string
-    description: Link to further information about the event
+    description: "**[recommended]** Link to further information about the event"
     format: uri
     example: "https://example.com/events/123"
   subtitleLanguage:
@@ -306,8 +306,8 @@ properties:
       example: en-US
   
   location:
-    description: The location of this event. An event can take place at one or more physical locations,
-       one or more virtual locations, or both, if it's a hybrid event.
+    description: "**[recommended]** The location of this event. An event can take place at one or more physical locations,
+       one or more virtual locations, or both, if it's a hybrid event."
     type: array
     items:
       oneOf:
@@ -318,13 +318,13 @@ properties:
       
   offers:
     type: array
-    description: A list of offers for this event, i.e. information about prices, tickets, etc.
+    description: "**[recommended]** A list of offers for this event, i.e. information about prices, tickets, etc."
     items:
       $ref: "#/definitions/Offer"
   eventType:
     type: array
     description: |-
-      A list of values indicating special characteristics of this event:
+      **[recommended]** A list of values indicating special characteristics of this event:
       * `Premiere`: The first public performance of a theatrical production.
       * `LastShow`: The final performance of a theatrical production at a specific venue.
       * `GuestPerformance`: A performance by a theater company or artist presented at a venue where they are not the resident performers.
@@ -340,7 +340,7 @@ properties:
   eventStatus:
     type: string
     description: |-
-      The status of this event.
+      **[recommended]** The status of this event.
 
       - `EventScheduled`: The event is taking place or has taken place on the `startDate` as scheduled. Use of this value is optional, as it is assumed by default.
       - `EventCancelled`: The event has been cancelled. Either `startDate` or `previousStartDate` may be used to specify the event's cancelled date(s).
