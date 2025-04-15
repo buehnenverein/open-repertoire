@@ -148,7 +148,7 @@ definitions:
             - Revival
         image:
           type: array
-          description: "**[recommended]** List of photos of the production"
+          description: "**[recommended]** List of photos of the production. Please provide photos that have a maximum width and height of 1500px."
           items:
             $ref: ./image-object.yml
         video:
