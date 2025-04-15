@@ -49,6 +49,11 @@ info:
     - **[Validator](validate)**: Use this tool to test whether your implementation matches the API specification
     - **[Data Viewer](view)**: Use this tool to display information from the API in a more human-friendly way. This can be helpful to quality control the data that is returned by your API implementation.
 
+    ### Image requirements
+    For each production, you can provide a list of (promotional) photos in your data.
+    These photos should be provided as links (through the `contentUrl` field) and should have a **maximum width and height of 1500px**.
+    
+
     # Recommendations for Users
 
     - When using an *ORIF* endpoint to import data, you should implement robust change tracking using the `identifier` and `dateModified` fields (when available)
