@@ -1,0 +1,392 @@
+{
+  "@context": "https:\/\/schema.org",
+  "version": "v2",
+  "organization": {
+    "@type": "Organization",
+    "name": "Staatstheater Augsburg",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Provinostr. 52",
+      "postalCode": "86153",
+      "addressLocality": "Augsburg",
+      "addressCountry": "Germany"
+    }
+  },
+  "productions": [
+    {
+      "@type": "Play",
+      "identifier": "9693",
+      "name": "Romeo und Julia",
+      "description": "Deutsche Fassung von Sven-Eric Bechtolf und Wolfgang Wiens\nDie wohl bekannteste Liebesgeschichte der Weltliteratur: Zwei junge Menschen verlieben sich, aber dürfen nicht zusammen sein, denn ihre Familien sind seit jeher verfeindet. Romeo und Julia heiraten heimlich und hoffen auf Versöhnung. Doch dann eskaliert der Streit: Julias Vetter Tybalt erschießt Mercutio, den besten Freund Romeos und Romeo erschießt Tybalt. Daraufhin wird Romeo verbannt. Julia soll Graf Paris heiraten und erbittet Hilfe bei Bruder Lorenzo, der ihr einen Trank gibt, der ihren Tod vortäuscht. Romeo erhält die Nachricht von ihrem Tod und bringt sich an ihrem Grab um, sie erwacht und begeht auch Selbstmord.\nRomeos und Julias Liebe ist schon zum Scheitern verurteilt, kaum dass sie begonnen hat. Und doch stellt dieses über 400 Jahre alte Stück immer wieder auf berührende Weise die Frage nach Hoffnung in der Welt. Für die Augsburger Inszenierung hat sich Lilli-Hannah Hoepner, die am Staatstheater Augsburg 2021 zuletzt Tracy Letts‘ »Mary Page Marlowe – Eine Frau« inszenierte, entschieden, den Konflikt in eine zukünftige Welt zu setzen; der Streit der Familien findet vor dem Hintergrund einer zerstörten Welt statt. Auf diesem Grund feiert die Inszenierung das berühmte Werk in seiner poetischen Sprache und mit zeitlos-eleganten Kostümen. Die Ästhetik wird dabei von Musikerin Charlotte Brandi und Choreograf Rônni Maciel durch atmosphärische und klangvolle Bilder komplettiert.",
+      "abstract": "Mit der Premiere von »Romeo und Julia« präsentiert das Staatstheater Augsburg in seiner großen Spielstätte eines der berühmtesten Werke der Bühnenliteratur. Den atmosphärischen Sound zur Inszenierung liefert die bekannte Pop-Musikerin Charlotte Brandi. Bei Regisseurin Lilli-Hannah Hoepner spielt William Shakespeares bereits Ende des 16. Jahrhunderts verfasstes Drama in einer unwirtlichen Welt, in der sich die zärtliche, tragische Liebesgeschichte von Romeo und Julia entspinnt.",
+      "genre": [
+        "sprechtheater"
+      ],
+      "creator": [
+        {
+          "@type": "Role",
+          "roleName": "Inszenierung",
+          "creator": [
+            {
+              "@type": "Person",
+              "name": "Lilli-Hannah Hoepner"
+            }
+          ]
+        },
+        {
+          "@type": "Role",
+          "roleName": "Bühne",
+          "creator": [
+            {
+              "@type": "Person",
+              "name": "Katrin Hieronimus"
+            }
+          ]
+        },
+        {
+          "@type": "Role",
+          "roleName": "Kostüme",
+          "creator": [
+            {
+              "@type": "Person",
+              "name": "Katharina Beth"
+            }
+          ]
+        },
+        {
+          "@type": "Role",
+          "roleName": "Musik",
+          "creator": [
+            {
+              "@type": "Person",
+              "name": "Charlotte Brandi"
+            }
+          ]
+        },
+        {
+          "@type": "Role",
+          "roleName": "Choreografie",
+          "creator": [
+            {
+              "@type": "Person",
+              "name": "Rônni Maciel"
+            }
+          ]
+        },
+        {
+          "@type": "Role",
+          "roleName": "Licht",
+          "creator": [
+            {
+              "@type": "Person",
+              "name": "Ron Heinrich"
+            }
+          ]
+        },
+        {
+          "@type": "Role",
+          "roleName": "Dramaturgie",
+          "creator": [
+            {
+              "@type": "Person",
+              "name": "Sabeth Braun"
+            }
+          ]
+        }
+      ],
+      "events": [
+        {
+          "@type": "Event",
+          "identifier": "271987",
+          "duration": 180,
+          "startDate": "2024-05-18T18:00:00Z",
+          "endDate": "2024-05-18T21:00:00Z",
+          "eventType": [
+            "Premiere"
+          ],
+          "eventStatus": "EventScheduled",
+          "location": [
+            {
+              "@type": "Place",
+              "name": "martini-Park",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Provinostr. 52",
+                "postalCode": "86153",
+                "addressLocality": "Augsburg",
+                "addressCountry": "Germany"
+              }
+            }
+          ],
+          "url": "https:\/\/staatstheater-augsburg.de\/romeo_und_julia",
+          "offers": [
+            {
+              "@type": "Offer",
+              "url": "https:\/\/webshop-tickets.staatstheater-augsburg.de\/de\/veranstaltung\/a707d36b-76e7-47f0-a10a-33033a333c21\/9532",
+              "priceSpecification": {
+                "@type": "PriceSpecification",
+                "minPrice": 17,
+                "maxPrice": 42,
+                "priceCurrency": "€"
+              }
+            }
+          ],
+          "performer": [
+            {
+              "@type": "PerformanceRole",
+              "characterName": "Romeo",
+              "performer": [
+                {
+                  "@type": "Person",
+                  "name": "Mehdi Salim"
+                }
+              ]
+            },
+            {
+              "@type": "PerformanceRole",
+              "characterName": "Julia",
+              "performer": [
+                {
+                  "@type": "Person",
+                  "name": "Sarah Maria Grünig"
+                }
+              ]
+            },
+            {
+              "@type": "PerformanceRole",
+              "characterName": "Montague, Vater Romeos",
+              "performer": [
+                {
+                  "@type": "Person",
+                  "name": "Patrick Rupar"
+                }
+              ]
+            },
+            {
+              "@type": "PerformanceRole",
+              "characterName": "Lady Montague, Mutter Romeos",
+              "performer": [
+                {
+                  "@type": "Person",
+                  "name": "Christina Jung"
+                }
+              ]
+            },
+            {
+              "@type": "PerformanceRole",
+              "characterName": "Capulet, Vater Julias",
+              "performer": [
+                {
+                  "@type": "Person",
+                  "name": "Kai Windhövel"
+                }
+              ]
+            },
+            {
+              "@type": "PerformanceRole",
+              "characterName": "Lady Capulet, Mutter Julias",
+              "performer": [
+                {
+                  "@type": "Person",
+                  "name": "Mirjam Birkl"
+                }
+              ]
+            },
+            {
+              "@type": "PerformanceRole",
+              "characterName": "Mercutio, ein Verwandter des Fürsten & Freund Romeos",
+              "performer": [
+                {
+                  "@type": "Person",
+                  "name": "Christina Jung"
+                }
+              ]
+            },
+            {
+              "@type": "PerformanceRole",
+              "characterName": "Benvolio, Neffe der Montagues & Freund Romeos",
+              "performer": [
+                {
+                  "@type": "Person",
+                  "name": "Paul Langemann"
+                }
+              ]
+            },
+            {
+              "@type": "PerformanceRole",
+              "characterName": "Julias Amme",
+              "performer": [
+                {
+                  "@type": "Person",
+                  "name": "Ute Fiedler"
+                }
+              ]
+            },
+            {
+              "@type": "PerformanceRole",
+              "characterName": "Tybalt, Neffe der Capulets",
+              "performer": [
+                {
+                  "@type": "Person",
+                  "name": "Niko Lukic"
+                }
+              ]
+            },
+            {
+              "@type": "PerformanceRole",
+              "characterName": "Bruder Lorenzo",
+              "performer": [
+                {
+                  "@type": "Person",
+                  "name": "Thomas Prazak"
+                }
+              ]
+            },
+            {
+              "@type": "PerformanceRole",
+              "characterName": "Paris, Graf & Verwandter des Fürsten",
+              "performer": [
+                {
+                  "@type": "Person",
+                  "name": "Patrick Rupar"
+                }
+              ]
+            },
+            {
+              "@type": "PerformanceRole",
+              "characterName": "Escalus, Fürst von Verona",
+              "performer": [
+                {
+                  "@type": "Person",
+                  "name": "Elif Esmen"
+                }
+              ]
+            },
+            {
+              "@type": "PerformanceRole",
+              "characterName": "Balthasar, Romeos Diener",
+              "performer": [
+                {
+                  "@type": "Person",
+                  "name": "Niko Lukic"
+                }
+              ]
+            },
+            {
+              "@type": "PerformanceRole",
+              "characterName": "Peter, Diener bei den Capulets",
+              "performer": [
+                {
+                  "@type": "Person",
+                  "name": "Thomas Prazak"
+                }
+              ]
+            },
+            {
+              "@type": "PerformanceRole",
+              "characterName": "Bruder Johannes",
+              "performer": [
+                {
+                  "@type": "Person",
+                  "name": "Paul Langemann"
+                }
+              ]
+            },
+            {
+              "@type": "PerformanceRole",
+              "characterName": "Ein Apotheker",
+              "performer": [
+                {
+                  "@type": "Person",
+                  "name": "Elif Esmen"
+                }
+              ]
+            },
+            {
+              "@type": "PerformanceRole",
+              "characterName": "Drei Montagues",
+              "performer": [
+                {
+                  "@type": "Person",
+                  "name": "Elias Hammler"
+                }
+              ]
+            },
+            {
+              "@type": "PerformanceRole",
+              "characterName": "Drei Capulets",
+              "performer": [
+                {
+                  "@type": "Person",
+                  "name": "Veronika Bauer"
+                }
+              ]
+            },
+            {
+              "@type": "PerformanceRole",
+              "characterName": "Adjutant des Fürsten",
+              "performer": [
+                {
+                  "@type": "Person",
+                  "name": "Katja Blessing"
+                }
+              ]
+            },
+            {
+              "@type": "PerformanceRole",
+              "characterName": "Statisterie",
+              "performer": [
+                {
+                  "@type": "Organization",
+                  "name": "Statisterie des Staatstheater Augsburg"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "image": [
+        {
+          "@type": "ImageObject",
+          "contentUrl": "https:\/\/staatstheater-augsburg.de\/img\/romeo_und_julia\/1500x1000\/romeo_und_julia_foto_jan-pieter_fuhr_2305.jpg",
+          "width": 1500,
+          "height": 998,
+          "copyrightHolder": {
+            "@type": "Person",
+            "name": "Jan-Pieter Fuhr"
+          }
+        },
+        {
+          "@type": "ImageObject",
+          "contentUrl": "https:\/\/staatstheater-augsburg.de\/img\/romeo_und_julia\/1500x1000\/romeo_und_julia_foto_jan-pieter_fuhr_2306.jpg",
+          "width": 1500,
+          "height": 998,
+          "copyrightHolder": {
+            "@type": "Person",
+            "name": "Jan-Pieter Fuhr"
+          }
+        },
+        {
+          "@type": "ImageObject",
+          "contentUrl": "https:\/\/staatstheater-augsburg.de\/img\/romeo_und_julia\/1500x1000\/romeo_und_julia_foto_jan-pieter_fuhr_2254.jpg",
+          "width": 1500,
+          "height": 998,
+          "copyrightHolder": {
+            "@type": "Person",
+            "name": "Jan-Pieter Fuhr"
+          }
+        },
+        {
+          "@type": "ImageObject",
+          "contentUrl": "https:\/\/staatstheater-augsburg.de\/img\/romeo_und_julia\/1500x1000\/romeo_und_julia_foto_jan-pieter_fuhr_2017.jpg",
+          "width": 1500,
+          "height": 998,
+          "copyrightHolder": {
+            "@type": "Person",
+            "name": "Jan-Pieter Fuhr"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -34,6 +34,7 @@ elm_src_files += $(wildcard elm/src/Helper/*)
 
 .PHONY : all
 all : $(BUILD_DIR)/index.html \
+		$(BUILD_DIR)/example.json \
 		$(VALIDATE_DIR)/validator.js $(VALIDATE_DIR)/bundle.js $(VALIDATE_DIR)/main.min.js \
 		$(VIEW_DIR)/bundle.js $(VIEW_DIR)/main.min.js
 
@@ -52,6 +53,9 @@ $(VIEW_DIR) : | view/
 
 $(VALIDATE_DIR) : | validate/
 	cp -R validate/ $(VALIDATE_DIR)
+
+$(BUILD_DIR)/example.json : example.json
+	cp example.json $(BUILD_DIR)/example.json
 
 $(BUILD_DIR)/index.html : openapi.yml $(schema_files)
 	npx @redocly/cli build-docs openapi.yml -o $(BUILD_DIR)/index.html \
