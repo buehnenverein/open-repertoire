@@ -45,7 +45,7 @@ info:
     ### Example dataset
     To guide your implementation, we provide an [example dataset](example.json), with one production and one event, that contains all required and recommended fields.
 
-    ### Tools for Implementers
+    ### Additional tools
     - **[Validator](validate)**: Use this tool to test whether your implementation matches the API specification
     - **[Data Viewer](view)**: Use this tool to display information from the API in a more human-friendly way. This can be helpful to quality control the data that is returned by your API implementation.
 
