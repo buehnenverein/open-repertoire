@@ -8,6 +8,7 @@ import Data.Event exposing (Event, EventStatus(..), EventTypeItem(..), LocationI
 import Data.ImageObject exposing (ImageObject)
 import Data.Root exposing (ContentWarningItem, CreatorRoleItem, GenreItem(..), Name(..), Production, ProductionProductionType(..), Root, rootDecoder)
 import Data.SuperEvent exposing (SuperEvent)
+import Data.VideoObject exposing (VideoObject)
 import Data.Work exposing (MusicComposition, OriginalWork, Work(..))
 import Helper.CustomValidations as CustomValidations
 import Helper.Util as Util
@@ -307,6 +308,9 @@ productionGrid production =
             [ viewProductionImages production.image
             ]
         , div [ class "cell box mb-0 is-col-span-3-widescreen is-col-span-3" ]
+            [ viewProductionVideos production.video
+            ]
+        , div [ class "cell box mb-0 is-col-span-3-widescreen is-col-span-3" ]
             [ viewIsBasedOn production
             ]
         , div [ class "cell box mb-0 is-col-span-3-widescreen is-col-span-3" ]
@@ -468,6 +472,31 @@ viewProductionImage image =
             |> Entry.asLink Nothing
             |> Entry.withHelp "Link zu weiterführenden Informationen über die Lizenzbedingungen dieses Bildes."
         , Entry.required "Auflösung" imageDimensions
+        ]
+
+
+viewProductionVideos : Maybe (List VideoObject) -> Html Msg
+viewProductionVideos images =
+    div []
+        [ div [ class "title is-5" ] [ text "Videos" ]
+        , viewList "Die Daten enthalten keine Video-Links für diese Produktion." viewProductionVideo images
+        ]
+
+
+viewProductionVideo : VideoObject -> Html Msg
+viewProductionVideo image =
+    Entry.view
+        [ Entry.required "Video" image.contentUrl
+            |> Entry.asLink Nothing
+        , Entry.optional "Urheber:in" image.copyrightHolder
+            |> Entry.map agent
+        , Entry.optional "Jahr" image.copyrightYear
+            |> Entry.map String.fromInt
+        , Entry.optional "Urheberrechtshinweis" image.copyrightNotice
+            |> Entry.withHelp "Text des zu diesem Video gehörenden Urheberrechtshinweises."
+        , Entry.optional "Videolizenz" image.license
+            |> Entry.asLink Nothing
+            |> Entry.withHelp "Link zu weiterführenden Informationen über die Lizenzbedingungen dieses Videos."
         ]
 
 
