@@ -472,6 +472,7 @@ viewProductionImage image =
             |> Entry.asLink Nothing
             |> Entry.withHelp "Link zu weiterführenden Informationen über die Lizenzbedingungen dieses Bildes."
         , Entry.required "Auflösung" imageDimensions
+            |> Entry.withHelp "Das Bild sollte maximal 1500px hoch und breit sein."
         ]
 
 
