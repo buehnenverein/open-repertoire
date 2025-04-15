@@ -35,6 +35,7 @@ elm_src_files += $(wildcard elm/src/Helper/*)
 .PHONY : all
 all : $(BUILD_DIR)/index.html \
 		$(BUILD_DIR)/example.json \
+		$(BUILD_DIR)/images \
 		$(VALIDATE_DIR)/validator.js $(VALIDATE_DIR)/bundle.js $(VALIDATE_DIR)/main.min.js \
 		$(VIEW_DIR)/bundle.js $(VIEW_DIR)/main.min.js
 
@@ -50,6 +51,9 @@ $(SCHEMA_DIR) :
 
 $(VIEW_DIR) : | view/
 	cp -R view/ $(VIEW_DIR)
+
+$(BUILD_DIR)/images : | images/
+	cp -R images/ $(BUILD_DIR)/images
 
 $(VALIDATE_DIR) : | validate/
 	cp -R validate/ $(VALIDATE_DIR)

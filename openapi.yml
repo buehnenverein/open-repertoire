@@ -2,38 +2,69 @@ openapi: 3.0.3
 info:
   title: ORIF - Open Repertoire Interchange Format
   description: |-
-    ### WIP: This document is a work in progress. The API documented here is subject to change and should not be widely adopted yet.
 
     # Overview
+    The *Open Repertoire Interchange Format* (ORIF) enables theaters to share comprehensive information about their productions and events in a machine-readable, standardized format.
+    This specification provides a structured approach to exchanging theatrical repertoire data across different institutions and platforms.
+    It is intended as a reference for both, users that want to provide their repertoire data in a machine-readable format (i.e. theaters) and users who want to
+    work with the data from different theaters (e.g. event platforms, archives, researchers, etc.).
 
-    The *Open Repertoire Interchange Format* (ORIF) enables theaters to share comprehensive information about their productions and events in a machine-readable, standardized format. This specification provides a structured approach to exchanging theatrical repertoire data across different institutions and platforms.
+    # For theaters
+    Implementing the *Open Repertoire Interchange Format* (ORIF) enables your theater to automatically distribute your performance schedule to multiple platforms through a standardized export interface.
+    I.e. in addition to presenting your schedule in a human-readable fashion on your website, you will also provide it in a machine-readable format through an API endpoint.
+    External platforms, archives, and event aggregators can then call this API endpoint and access your current repertoire in an automated fashion, without the need for human interaction.
+    The data returned through this API endpoint should follow the ORIF specification to ensure it can be properly processed by these external data consumers.
+
+    As an implementer, your primary task is to create an endpoint on your website that returns your current performance schedule as JSON data in the ORIF format.
+    This can typically be integrated with your existing Content Management System, ticketing platform, or custom website backend.
+
+    Both required and recommended fields are specified in the documentation. While only required fields are necessary for basic compatibility,
+    implementing the recommended fields provides a richer data set that benefits both your theater and downstream consumers.
+    This leads to better presentation of your productions on third-party platforms and more comprehensive data collection for cultural research and archiving purposes.
+
+    For reference, we provide an [example dataset](example.json) that includes all recommended fields to help guide your implementation.
+    We also provide two tools to [validate](validate) and [view](view) the data returned from your API endpoint.
+
+    ### API endpoint naming
+    - You should provide a single endpoint returning repertoire data in the *ORIF* specification format
+    - the endpoint name can vary from what's mentioned here, but everything else (i.e. field names) should follow the *ORIF* specification
+
+    ### Required vs. recommended fields
+    **Required** fields are marked by a "required" tag below the field name and MUST be present in the data returned by your API endpoint, to conform to the ORIF data format:
+    ![Example required field](images/required.png)
+
+    **Recommended** fields are marked by a "recommended" tag in their description and SHOULD be present in the data returned by your API endpoint,
+    especially if the information is readily available in your system:
+    ![Example required field](images/recommended.png)
+    Including these recommended fields in your data will make your repertoire data much more useful for consumers of your API endpoint and will lead to better representation of your
+    events, e.g. in online event calendars.
+
+    All other fields are optional, i.e. they can be omitted from your data. However, including them will still provide value, so you should add them,
+    if the information is already available in your system.
+
+    ### Example dataset
+    To guide your implementation, we provide an [example dataset](example.json), with one production and one event, that contains all required and recommended fields.
+
+    ### Tools for Implementers
+    - **[Validator](validate)**: Use this tool to test whether your implementation matches the API specification
+    - **[Data Viewer](view)**: Use this tool to display information from the API in a more human-friendly way. This can be helpful to quality control the data that is returned by your API implementation.
+
+    # Recommendations for Users
+
+    - When using an *ORIF* endpoint to import data, you should implement robust change tracking using the `identifier` and `dateModified` fields (when available)
+
+
+    # Note on multi-language support
+    Some of the fields (e.g. `name` and `description` on a production), can either contain a simple string or an `InternationalizedString` object.
+    This object can be used to include the same text in different translations.
 
     # Background
-
     *ORIF* emerged from the need to standardize theatrical repertoire data exchange as a precursor to the [Datenraum Kultur](https://datenraum-kultur.de).
     By building upon [schema.org](https://schema.org) (in particular, the existing types [CreativeWork](https://schema.org/CreativeWork) and [Event](https://schema.org/Event)), the format ensures:
     - Wide compatibility with existing web technologies
     - Flexibility to represent diverse theatrical productions
     - Easy integration with cultural data platforms and event calendars
 
-    # Implementation Guidelines
-
-    ### API Requirements
-    - Provide a single endpoint returning repertoire data in the *ORIF* specification format
-    - the Endpoint name can vary from what's mentioned here; consistency of data structure is key
-
-    ### Tools for Implementors
-    - **[Validator](validate)**: Use this tool to test whether your implementation matches the API specification
-    - **[Data Viewer](view)**: Use this tool to display information from the API in a more human-friendly way. This can be helpful to quality control the data that is returned by your API implementation.
-
-    # Recommendations for Users
-
-    - When using an *ORIF* endpoint to import data, you should implement robust change tracking using the `identifier` and `dateModified` fields
-
-
-    # Note on multi-language support
-    Some of the fields (e.g. `name` and `description` on a production), can either contain a simple string or an `InternationalizedString` object.
-    This object can be used to include the same text in different translations.
   # termsOfService: http://swagger.io/terms/
   contact:
     email: datenraum@buehnenverein.de
@@ -52,7 +83,6 @@ paths:
       tags:
         - events
       summary: Provides public information about events
-      description: "TODO: Write description"
       operationId: getEvents
       responses:
         "200":
