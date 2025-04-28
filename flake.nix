@@ -54,7 +54,7 @@
                     make && cd elm && npx elm-watch hot
                   '';
                   httpserver.exec = ''
-                    npx http-server build/
+                    npx http-server build/ -p 8080
                   '';
                 };
               }
