@@ -65,3 +65,7 @@ and are also copied to `elm/src/Data` and `elm/src/Helper` for compilation.
 To release changes to the data model (OpenAPI documentation) or tools, you just need to merge your changes into
 the branch `release-v2` and push that branch. There's a GitHub Workflow defined in `.github/workflows/static.yml`
 that will build and upload the project.
+
+# License
+This project is available under the terms of the
+[GNU General Public License v3.0](https://github.com/buehnenverein/open-repertoire/blob/main/LICENSE) (GPL-3.0).
