@@ -150,7 +150,7 @@ fetchData model inputString =
     if Util.isUrl inputString then
         ( { model | data = Loading }
         , Http.get
-            { url = inputString
+            { url = inputString ++ "?" ++ Time.Posix
             , expect = Http.expectJson (RemoteData.fromResult >> Response) rootDecoder
             }
         )
